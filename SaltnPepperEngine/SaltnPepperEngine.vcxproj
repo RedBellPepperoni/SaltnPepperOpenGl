@@ -45,11 +45,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -88,11 +88,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\System\Events\Event.h" />
+    <ClInclude Include="Engine\Core\System\Events\KeyboardEvent.h" />
+    <ClInclude Include="Engine\Core\System\Input\InputKeyCodes.h" />
     <ClInclude Include="Engine\Utils\Maths\MathDefinitions.h" />
     <ClInclude Include="Engine\Core\Memory\MemoryDefinitions.h" />
+    <ClInclude Include="Engine\Core\System\Window\Window.h" />
+    <ClInclude Include="Engine\Utils\Maths\Random.h" />
+    <ClInclude Include="Engine\Utils\Time\Time.h" />
+    <ClInclude Include="Engine\Utils\GLUtils.h" />
+    <ClInclude Include="Engine\Utils\Loading\FileSystem.h" />
+    <ClInclude Include="Engine\Utils\Logging\Log.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Utils\Maths\Random.cpp" />
+    <ClCompile Include="Engine\Utils\GLUtils.cpp" />
+    <ClCompile Include="Engine\Utils\Loading\FileSystem.cpp" />
+    <ClCompile Include="Engine\Utils\Logging\Log.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
+    <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
+    <ClCompile Include="Engine\Utils\Time\Time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
