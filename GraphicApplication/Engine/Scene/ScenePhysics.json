@@ -1,0 +1,507 @@
+{
+  "Scene":  "SceneOne",
+  "Models": [
+
+
+    {
+      "Name": "ColliderTree",
+      "Path": "Assets\\Models\\ColliderTree.fbx"
+    },
+
+    {
+      "Name": "ColliderTreeLeaves",
+      "Path": "Assets\\Models\\ColliderTreeLeaves.fbx"
+    },
+
+    {
+      "Name": "Drone",
+      "Path": "Assets\\Models\\Drone.fbx"
+    },
+    {
+      "Name": "TreeDry",
+      "Path": "Assets\\Models\\TreeDry.fbx"
+    },
+
+    {
+      "Name": "Tree",
+      "Path": "Assets\\Models\\Tree.fbx"
+    },
+    {
+      "Name": "Leaves",
+      "Path": "Assets\\Models\\leaves.fbx"
+    },
+
+    {
+      "Name": "Crack",
+      "Path": "Assets\\Models\\crack.fbx"
+    },
+
+    {
+      "Name": "Sphere",
+      "Path": "Assets\\Models\\Sphere.fbx"
+    },
+
+    {
+      "Name": "Ground",
+      "Path": "Assets\\Models\\Ground.fbx"
+    }
+
+
+
+
+
+  ],
+  
+  "Textures": [
+
+    {
+      "Name": "DroneAlbedo",
+      "Path": "Assets\\Textures\\drone.png"
+    },
+
+    {
+      "Name": "TreeDryAlbedo",
+      "Path": "Assets\\Textures\\tree.png"
+    },
+
+    {
+      "Name": "LeavesAlbedo",
+      "Path": "Assets\\Textures\\leaves.png"
+    },
+
+    {
+      "Name": "CrackAlbedo",
+      "Path": "Assets\\Textures\\crack.tga"
+    },
+
+    {
+      "Name": "GroundAlbedo",
+      "Path": "Assets\\Textures\\ground.png"
+    }
+
+
+  ],
+
+  "Objects" :[
+
+    {  
+      "Mesh": "Tree",
+      "Position": [ -14.58, 0.0, 8.95 ],
+      "Rotation": [4.0,10.0,-2.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    } ,
+
+    {  
+      "Mesh": "Tree",
+      "Position": [ 5.18, 0.0, -8.50 ],
+      "Rotation": [6.0,-70.0,-3.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+
+    {  
+      "Mesh": "Tree",
+      "Position": [ -3.23, 0.0, 2.90 ],
+      "Rotation": [6.0,20.0,-3.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+
+    {  
+      "Mesh": "Tree",
+      "Position": [ -18.16, 0.0, -0.60 ],
+      "Rotation": [-8.0,7.0,2.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -22.38, 0.0, 12.58 ],
+      "Rotation": [2.0,8.0,3.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -35.64, 0.0, -9.42 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -19.95, 0.0, -19.53 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+
+    {  
+      "Mesh": "Tree",
+      "Position": [ 9.74, 0.0, -20.74 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ 27.11, 0.0, 4.21 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+
+    {  
+      "Mesh": "Tree",
+      "Position": [ 11.67, 0.0, 20.34 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+
+    {  
+      "Mesh": "Tree",
+      "Position": [ -7.69, 0.0, 22.58 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+
+    {  
+      "Mesh": "Tree",
+      "Position": [ -10.16, 0.0, 17.32 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -23.16, 0.0, 23.37 ],
+      "Rotation": [6.0,0.0,-3.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves":false
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -36.43, 0.0, 12.11 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },  
+    
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -26.41, 0.0, 2.68 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ 6.84, 0.0, 12.21 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ 11.0, 0.0, 2.31 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : false
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -26.41, 0.0, -16.00 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ 7.52, 0.0, 23.67 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -26.41, 0.0, 7.08 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+
+    {  
+
+      "Mesh": "TreeDry",
+      "Position": [ -29.01, 0.0, 7.84 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -28.00, 0.0, 13.43 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -16.82, 0.0, 14.86 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -12.83, 0.0, -2.83 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -34.13, 0.0, -3.97 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -40.32, 0.0, -5.42 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -41.77, 0.0, -10.47],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -46.32, 0.0, -6.56 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -46.51, 0.0, 1.77 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -27.11, 0.0, -9.97 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -14.35, 0.0, -18.06 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -15.30, 0.0, -23.11 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ 5.10, 0.0, -13.91 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ 2.64, 0.0, -4.36 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ 2.70, 0.0, 5.19 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -9.25, 0.0, -16.23 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "TreeDry",
+      "Position": [ -14.10, 0.0,21.93 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },
+    {  
+      "Mesh": "Tree",
+      "Position": [ -2.57, 0.0, 23.21 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    },  {  
+      "Mesh": "Tree",
+      "Position": [ 2.50, 0.0, 22.40 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    }
+    ,  {  
+      "Mesh": "Tree",
+      "Position": [ 16.48, 0.0, 2.18 ],
+      "Rotation": [0.0,0.0,0.0],
+      "Scale": [ 1.0, 1.0, 1.0 ],
+      "Albedo": "TreeDryAlbedo",
+      "Metallic" : 0.1,
+      "MeshCollider" :true,
+      "Leaves" : true
+    }
+
+
+
+   
+  ]
+
+
+
+
+
+}

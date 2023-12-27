@@ -235,7 +235,11 @@ namespace SaltnPepperEngine
         // Converts a Quaternion into a readable vector3 format
         inline Vector3 GetEularAnglesDegrees(const Quaternion& quat)
         {
-            return Degrees(glm::eulerAngles(quat));
+            Vector3 radianRotation = GetEularAnglesRadians(quat);
+
+            Vector3 DegreeRotaiton = Vector3(radianRotation.x * RADtoDEG, radianRotation.y * RADtoDEG, radianRotation.z * RADtoDEG);
+
+            return DegreeRotaiton;
         }
         
 
@@ -338,6 +342,22 @@ namespace SaltnPepperEngine
         {
             return RADtoDEG * atan2(y, x);
 
+        }
+
+        inline float Square(float value)
+        {
+            return value * value;
+        }
+
+        template<typename T>
+        inline constexpr T Clamp(const T& value, const T& low, const T& high)
+        {
+            return glm::clamp(value, low, high);
+        }
+
+        inline float Abs(float value)
+        {
+            return glm::abs(value);
         }
       
 		

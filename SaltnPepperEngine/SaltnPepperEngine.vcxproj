@@ -45,11 +45,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -88,26 +88,97 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Rendering\Lights\Light.h" />
+    <ClInclude Include="Engine\Utils\Bounding\BoundingSphere.h" />
+    <ClInclude Include="Engine\Utils\Bounding\BoundingBox.h" />
+    <ClInclude Include="Engine\Core\Rendering\Renderer\DebugRenderer.h" />
+    <ClInclude Include="Engine\Core\Components\SceneComponents.h" />
+    <ClInclude Include="Engine\Core\Rendering\Textures\CubeMap.h" />
+    <ClInclude Include="Engine\Core\Rendering\Camera\Camera.h" />
+    <ClInclude Include="Engine\Core\EntitySystem\Entity.h" />
+    <ClInclude Include="Engine\Core\System\Application\Application.h" />
     <ClInclude Include="Engine\Core\System\Events\Event.h" />
     <ClInclude Include="Engine\Core\System\Events\KeyboardEvent.h" />
+    <ClInclude Include="Engine\Core\System\Events\MouseEvent.h" />
+    <ClInclude Include="Engine\Core\System\Events\WindowEvent.h" />
     <ClInclude Include="Engine\Core\System\Input\InputKeyCodes.h" />
+    <ClInclude Include="Engine\Macros.h" />
     <ClInclude Include="Engine\Utils\Maths\MathDefinitions.h" />
     <ClInclude Include="Engine\Core\Memory\MemoryDefinitions.h" />
     <ClInclude Include="Engine\Core\System\Window\Window.h" />
     <ClInclude Include="Engine\Utils\Maths\Random.h" />
+    <ClInclude Include="Engine\Utils\Singleton.h" />
     <ClInclude Include="Engine\Utils\Time\Time.h" />
     <ClInclude Include="Engine\Utils\GLUtils.h" />
     <ClInclude Include="Engine\Utils\Loading\FileSystem.h" />
     <ClInclude Include="Engine\Utils\Logging\Log.h" />
+    <ClInclude Include="Engine\Utils\UniqueId\UniqueId.h" />
+    <ClInclude Include="Engine\Core\System\Input\InputSystem.h" />
+    <ClInclude Include="Engine\Core\Scene\Scene.h" />
+    <ClInclude Include="Engine\Core\Rendering\Textures\Image.h" />
+    <ClInclude Include="Engine\Utils\Loading\ImageLoader.h" />
+    <ClInclude Include="Engine\Core\Rendering\Buffers\IndexBuffer.h" />
+    <ClInclude Include="Engine\Core\Rendering\Buffers\FrameBuffer.h" />
+    <ClInclude Include="Engine\Core\Rendering\Geometry\Mesh.h" />
+    <ClInclude Include="Engine\Core\Rendering\Material\Material.h" />
+    <ClInclude Include="Engine\Core\Rendering\Geometry\Model.h" />
+    <ClInclude Include="Engine\Utils\Loading\ModelLoader.h" />
+    <ClInclude Include="Engine\Core\Rendering\Geometry\Primitives.h" />
+    <ClInclude Include="Engine\Core\Resources\ResourceManager.h" />
+    <ClInclude Include="Engine\Core\Rendering\Textures\Texture.h" />
+    <ClInclude Include="Engine\Core\Rendering\Buffers\VertexBuffer.h" />
+    <ClInclude Include="Engine\Core\Rendering\Buffers\VertexArray.h" />
+    <ClInclude Include="Engine\Core\Rendering\Buffers\VertexAttribute.h" />
+    <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h" />
+    <ClInclude Include="Engine\Core\Components\Transform.h" />
+    <ClInclude Include="Engine\Core\Scene\SceneGraph.h" />
+    <ClInclude Include="Engine\Core\EntitySystem\EntityManager.h" />
+    <ClInclude Include="Engine\Core\Rendering\Renderer\Renderer.h" />
+    <ClInclude Include="Engine\Core\Rendering\Skybox\Skybox.h" />
+    <ClInclude Include="Engine\Core\Rendering\Skybox\SkyboxObject.h" />
+    <ClInclude Include="Engine\Core\Rendering\Renderer\RenderManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Components\SceneComponents.cpp" />
+    <ClCompile Include="Engine\Utils\Bounding\BoundingSphere.cpp" />
+    <ClCompile Include="Engine\Utils\Bounding\BoundingBox.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Renderer\DebugRenderer.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Textures\CubeMap.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Camera\Camera.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\RenderDefinitions.h" />
+    <ClCompile Include="Engine\Core\System\Application\Application.cpp" />
     <ClCompile Include="Engine\Utils\Maths\Random.cpp" />
     <ClCompile Include="Engine\Utils\GLUtils.cpp" />
     <ClCompile Include="Engine\Utils\Loading\FileSystem.cpp" />
     <ClCompile Include="Engine\Utils\Logging\Log.cpp" />
+    <ClCompile Include="Engine\Core\System\Input\InputSystem.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Textures\Image.cpp" />
+    <ClCompile Include="Engine\Utils\Loading\ImageLoader.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Buffers\IndexBuffer.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Buffers\FrameBuffer.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Geometry\Mesh.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Geometry\Model.cpp" />
+    <ClCompile Include="Engine\Utils\Loading\ModelLoader.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Geometry\Primitives.cpp" />
+    <ClCompile Include="Engine\Core\Resources\ResourceManager.cpp" />
+    <ClCompile Include="Engine\Core\EntitySystem\EntityManager.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Renderer\Renderer.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Renderer\RenderManager.cpp" />
+    <ClCompile Include="Externals\glad\src\glad.c" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />
+    <ClCompile Include="Engine\Utils\UniqueId\UniqueId.cpp" />
+    <ClCompile Include="Engine\Core\Scene\Scene.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Textures\Texture.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Buffers\VertexArray.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Buffers\VertexAttribute.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Shader\Shader.cpp" />
+    <ClCompile Include="Engine\Core\Components\Transform.cpp" />
+    <ClCompile Include="Engine\Core\Scene\SceneGraph.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Skybox\Skybox.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Skybox\SkyboxObject.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
