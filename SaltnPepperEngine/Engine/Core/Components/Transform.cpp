@@ -12,6 +12,7 @@ namespace SaltnPepperEngine
 			, m_worldMatrix(Matrix4(1.0f))
 		{
 			UpdateMatrix(m_worldMatrix);
+	
 		}
 
 		Transform::~Transform()
@@ -49,7 +50,7 @@ namespace SaltnPepperEngine
 			return m_worldMatrix;
 		}
 
-		const Matrix4 Transform::GetLocalMatrix()
+		Matrix4 Transform::GetLocalMatrix()
 		{
 			Matrix4 localMat = Matrix4(1.0f);
 			UpdateMatrix(localMat);

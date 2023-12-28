@@ -18,6 +18,7 @@
 // ========== MACROS =======================
 #include "Engine/Macros.h"
 
+#include "Engine/Core/Resources/ResourceManager.h"
 
 // ============ INPUT SYSTEM ==============
 #include "Engine/Core/System/Input/InputSystem.h"

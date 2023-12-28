@@ -198,7 +198,8 @@ namespace SaltnPepperEngine
             }
 
 
-            newElement.ModelMatrix = transform.GetMatrix();
+           // newElement.ModelMatrix = transform.GetMatrix();
+            newElement.ModelMatrix = transform.GetLocalMatrix();
 
             // New!! - For lighting
             newElement.NormalMatrix = transform.GetNormalMatrix();
@@ -573,9 +574,11 @@ namespace SaltnPepperEngine
                         //Matrix4 view = Math::GetLookAt(camera.viewPosition, camera.viewPosition + cameraRef.GetDirection(), cameraRef.GetUpVector());
 
 
-            Matrix4 transformMatrix = transform.GetMatrix();
+            //Matrix4 transformMatrix = transform.GetMatrix();
+            Matrix4 transformMatrix = transform.GetLocalMatrix();
 
             // get the inverse of the Camera trasfrom
+           // Matrix4 view = Math::Inverse(transformMatrix);
             Matrix4 view = Math::Inverse(transformMatrix);
 
             // get the inverse of the Camera transform without any position data (only Rotation0

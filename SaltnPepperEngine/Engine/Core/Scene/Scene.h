@@ -25,13 +25,13 @@ namespace SaltnPepperEngine
 		class Transform;
 	}
 
-	namespace Audio
+	/*namespace Audio
 	{
 		class AudioListener;
-	}
+	}*/
 
 	using Components::Transform;
-	using Audio::AudioListener;
+	//using Audio::AudioListener;
 
 
 	class Scene
@@ -54,7 +54,7 @@ namespace SaltnPepperEngine
 
 		Transform* mainCameraTransform = nullptr;
 		CameraController* mainCameraController = nullptr;
-		AudioListener* mainAudioListener = nullptr;
+		//AudioListener* mainAudioListener = nullptr;
 
 		void DestroyInternal(entt::entity, entt::registry& registry);
 
@@ -111,7 +111,7 @@ namespace SaltnPepperEngine
 		// Loops through all the Entitys in the scene and destroys them
 		void DestroyAllGameObjects();
 
-		void SetMainCamera(CameraController* controller, Transform* transform, AudioListener* listener);
+		void SetMainCamera(CameraController* controller, Transform* transform);
 
 		void SetMainCameraPosition(const Vector3 position);
 

@@ -6,13 +6,16 @@
 // All the Component Includes
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+
+#include "Engine/Core/System/Application/Application.h"
 
 
 namespace SaltnPepperEngine
 {
 	
 	using namespace Rendering;
-
+	using namespace Components;
 
 	Scene::Scene(const std::string& name)
 	{
@@ -41,15 +44,17 @@ namespace SaltnPepperEngine
 		Camera* camera = &cameraEntity.AddComponent<Camera>();
 		Transform* transform = &cameraEntity.AddComponent<Transform>();
 
-
+		
 
 		////AudioListener* listener = &cameraEntity.AddComponent<Audio::AudioListener>(transform);
 
 
-		//transform->SetPosition(Vector3(2.2f, 28.97f, 18.65f));
-		//transform->SetEularRotation(Vector3(-45.0f, 3.6f, 0.0f));
+		transform->SetPosition(Vector3(2.2f, 0.97f, 0.65f));
+		transform->SetEularRotation(Vector3(-45.0f, 3.6f, 0.0f));
 
-		//cameraEntity.AddComponent<EditorCameraController>();
+		CameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
+		controller.SetCamera(camera);
+
 		//cameraEntity.AddComponent<DefaultCameraController>(DefaultCameraController::CameraType::Orbital);
 
 
@@ -76,10 +81,10 @@ namespace SaltnPepperEngine
 		Vector2 mousePosition = Input::InputSystem::GetInstance().GetMousePosition();
 
 
-		/*ComponentView cameraControllerView = m_EntityManager->GetComponentsOfType<EditorCameraController>();
+		ComponentView cameraControllerView = m_EntityManager->GetComponentsOfType<FlyCameraController>();
 
 		ComponentView cameraview = m_EntityManager->GetComponentsOfType<Camera>();
-		ComponentView audioListenerView = m_EntityManager->GetComponentsOfType<AudioListener>();
+		//ComponentView audioListenerView = m_EntityManager->GetComponentsOfType<AudioListener>();
 
 
 		Camera* camera = nullptr;
@@ -94,15 +99,15 @@ namespace SaltnPepperEngine
 
 		if (!cameraControllerView.IsEmpty())
 		{
-			DefaultCameraController& controller = cameraControllerView[0].GetComponent<DefaultCameraController>();
+			FlyCameraController& controller = cameraControllerView[0].GetComponent<FlyCameraController>();
 			Transform* transform = cameraControllerView[0].TryGetComponent<Transform>();
 
-			if (transform && controller.GetController())
+			if (transform)
 			{
 
-				controller.GetController()->SetCamera(camera);
-				controller.GetController()->KeyboardInput(*transform, deltaTime);
-				controller.GetController()->MouseInput(*transform, mousePosition, deltaTime);
+				controller.SetCamera(camera);
+				controller.KeyboardInput(*transform, deltaTime);
+				controller.MouseInput(*transform, mousePosition, deltaTime);
 
 				Vector3 pos = transform->GetPosition();
 				Vector3 rot = transform->GetEulerRotation();
@@ -117,11 +122,11 @@ namespace SaltnPepperEngine
 
 
 
-		}*/
+		}
 
 
 		
-		UpdateSceneGraph();
+	//	UpdateSceneGraph();
 
 
 	}
@@ -222,11 +227,11 @@ namespace SaltnPepperEngine
 	}
 
 
-	void Scene::SetMainCamera(CameraController* controller, Transform* transform, AudioListener* listener)
+	void Scene::SetMainCamera(CameraController* controller, Transform* transform)
 	{
 		mainCameraTransform = transform;
 		mainCameraController = controller;
-		mainAudioListener = listener;
+		//mainAudioListener = listener;
 		//LOG_ERROR("Camera Transform : {0} : {1} : {2}", mainCameraTransform->GetPosition().x, mainCameraTransform->GetPosition().y, mainCameraTransform->GetPosition().z);
 
 	}

@@ -112,6 +112,16 @@ namespace SaltnPepperEngine
             return m_orthographic;
         }
 
+        const float Camera::GetFOV() const
+        {
+            return m_fov;
+        }
+
+        void Camera::SetFOV(float newFOV)
+        {
+            m_fov = newFOV;
+        }
+
         void Camera::SetDirection(const Vector3 vector)
         {
             m_direction = Math::Normalize(vector);

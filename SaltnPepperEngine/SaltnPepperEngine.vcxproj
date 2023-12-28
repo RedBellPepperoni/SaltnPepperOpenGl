@@ -88,6 +88,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Rendering\Camera\CameraController.h" />
+    <ClInclude Include="Engine\Core\Rendering\Camera\FlyCameraController.h" />
     <ClInclude Include="Engine\Core\Rendering\Lights\Light.h" />
     <ClInclude Include="Engine\Utils\Bounding\BoundingSphere.h" />
     <ClInclude Include="Engine\Utils\Bounding\BoundingBox.h" />
@@ -139,6 +141,7 @@
     <ClInclude Include="Engine\Core\Rendering\Renderer\RenderManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Rendering\Camera\FlyCameraController.cpp" />
     <ClCompile Include="Engine\Core\Components\SceneComponents.cpp" />
     <ClCompile Include="Engine\Utils\Bounding\BoundingSphere.cpp" />
     <ClCompile Include="Engine\Utils\Bounding\BoundingBox.cpp" />

@@ -52,6 +52,9 @@ namespace SaltnPepperEngine
             void SetOrthographic(bool ortho);
             const bool IsOrthographic() const;
 
+            const float GetFOV() const;
+            void SetFOV(float newFOV);
+
             void SetDirection(const Vector3 vector);
             const Vector3& GetDirection();
 

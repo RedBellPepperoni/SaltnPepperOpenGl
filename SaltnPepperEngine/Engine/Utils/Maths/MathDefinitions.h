@@ -50,6 +50,19 @@ namespace SaltnPepperEngine
         // =============== Quaternion floats ====================
         using Quaternion = glm::quat;
 
+        template<typename T>
+        inline constexpr T Radians(const T& degrees)
+        {
+            return glm::radians(degrees);
+        }
+
+        template<typename T>
+        inline constexpr T Degrees(const T& radians)
+        {
+            return glm::degrees(radians);
+        }
+
+
         // =============== Vector Functionality =======================
 
         template<typename Vector> 
@@ -110,7 +123,7 @@ namespace SaltnPepperEngine
 
         inline Matrix4 GetPerspectiveMatrix(float fov, float aspect, float znear, float zfar)
         {
-            return glm::perspective(fov, aspect, znear, zfar);
+            return glm::perspective(Radians(fov), aspect, znear, zfar);
         }
 
         inline Matrix4 MakeFrustrumMatrix(float left, float right, float bottom, float top, float znear, float zfar)
@@ -147,18 +160,7 @@ namespace SaltnPepperEngine
         }
         
 
-        template<typename T>
-        inline constexpr T Radians(const T& degrees)
-        {
-            return glm::radians(degrees);
-        }
-
-        template<typename T>
-        inline constexpr T Degrees(const T& radians)
-        {
-            return glm::degrees(radians);
-        }
-
+   
 
 
         

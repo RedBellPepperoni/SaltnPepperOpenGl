@@ -6,7 +6,16 @@ class GraphicRuntime : public Application
 {
 	void OnInit()
 	{
+        SharedPtr<Mesh> mesh = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx")->GetMeshes()[0];
 
+        Entity entity = GetCurrentScene()->CreateEntity("Entity");
+        Transform& transform = entity.AddComponent<Transform>();
+
+        transform.SetPosition(Vector3(0.0f));
+        transform.SetEularRotation(Vector3(0.0f));
+
+        entity.AddComponent<MeshComponent>(mesh);
+        entity.AddComponent<MeshRenderer>();
 	}
 
 	void OnUpdate(float deltaTime)

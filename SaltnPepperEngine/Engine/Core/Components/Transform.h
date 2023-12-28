@@ -54,7 +54,7 @@ namespace SaltnPepperEngine
 
 
 			Matrix4& GetMatrix();
-			const Matrix4 GetLocalMatrix();
+			Matrix4 GetLocalMatrix();
 			Matrix4& GetNormalMatrix();
 
 			void SetMatrix(const Matrix4& mat);
