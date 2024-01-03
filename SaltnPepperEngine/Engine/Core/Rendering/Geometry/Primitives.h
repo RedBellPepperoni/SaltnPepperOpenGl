@@ -20,7 +20,7 @@ namespace SaltnPepperEngine
             Cube        = 4,
             Cylinder    = 5,
             Capsule     = 6,
-            Terrian     = 7,
+            Terrain     = 7,
             External    = 8
             
         };

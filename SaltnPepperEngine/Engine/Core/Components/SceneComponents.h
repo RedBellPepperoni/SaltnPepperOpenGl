@@ -6,18 +6,26 @@
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Logging/Log.h"
 
+
 namespace SaltnPepperEngine
 {
 
+
 	//Forward Declaration
+
+	class Model;
+
 	namespace Rendering
 	{
 		class Mesh;
 		class Material;
+		enum class PrimitiveType : uint8_t;
+		
 	}
 
 	using Rendering::Mesh;
 	using Rendering::Material;
+	using Rendering::PrimitiveType;
 
 	namespace Components
 	{
@@ -67,6 +75,26 @@ namespace SaltnPepperEngine
 			SharedPtr<Mesh> m_handle;
 			bool isVisible = true;
 			bool castsShadow = true;
+
+		};
+
+
+		struct ModelComponent
+		{
+			ModelComponent();
+			ModelComponent(const std::string& filePath);
+			ModelComponent(const SharedPtr<Model>& modelRef);
+			//ModelComponent(PrimitiveType type);
+
+
+			void LoadLibraryModel(const std::string firendlyName);
+
+			void LoadPrimitive(PrimitiveType type);
+
+
+			SharedPtr<Model> m_handle;
+			
+			
 
 		};
 

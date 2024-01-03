@@ -17,14 +17,14 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		Mesh::Mesh(const Mesh& mesh)
+		/*Mesh::Mesh(const Mesh& mesh)
 			: m_vertices(mesh.m_vertices)
 			, m_indicies(mesh.m_indicies)
 			, m_VBO(mesh.m_VBO)
 			, m_IBO(mesh.m_IBO)
 			, m_meshName(mesh.GetName())
 		{
-		}
+		}*/
 
 		Mesh::Mesh(const std::vector<Vertex>& inVertices, const std::vector<uint32_t>& inIndicies)
 		{

@@ -2,6 +2,7 @@
 #define LOG_H
 
 #include "spdlog/spdlog.h"
+#include <spdlog/fmt/ostr.h>
 
 #define LOG_TRACE(...) ::SaltnPepperEngine::Debug::Log::GetCoreLogger()->trace(__VA_ARGS__)
 #define LOG_INFO(...) ::SaltnPepperEngine::Debug::Log::GetCoreLogger()->info(__VA_ARGS__)

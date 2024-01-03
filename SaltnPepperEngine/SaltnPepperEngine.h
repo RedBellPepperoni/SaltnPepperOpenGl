@@ -41,5 +41,7 @@
 #include "Engine/Core/Components/SceneComponents.h"
 #include "Engine/Core/Components/Transform.h"
 
+#include "Engine/Core/Rendering/Lights/Light.h"
+
 
 using namespace SaltnPepperEngine;

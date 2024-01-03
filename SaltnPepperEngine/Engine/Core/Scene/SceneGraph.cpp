@@ -58,6 +58,7 @@ namespace SaltnPepperEngine
             {
                 // Recursively update children
                 UpdateTransform(entity, registry);
+
             }
         }
     }

@@ -73,7 +73,7 @@ namespace SaltnPepperEngine
 		//LuaManager::GetInstance().GetState().collect_garbage();
 
 		// Clear other managers if needed
-
+		 
 	}
 	void Scene::Update(float deltaTime)
 	{
@@ -126,7 +126,7 @@ namespace SaltnPepperEngine
 
 
 		
-	//	UpdateSceneGraph();
+	 	UpdateSceneGraph();
 
 
 	}

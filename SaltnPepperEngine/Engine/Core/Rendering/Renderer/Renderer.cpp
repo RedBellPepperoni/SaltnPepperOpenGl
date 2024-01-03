@@ -198,8 +198,8 @@ namespace SaltnPepperEngine
             }
 
 
-           // newElement.ModelMatrix = transform.GetMatrix();
-            newElement.ModelMatrix = transform.GetLocalMatrix();
+            newElement.ModelMatrix = transform.GetMatrix();
+            //newElement.ModelMatrix = transform.GetLocalMatrix();
 
             // New!! - For lighting
             newElement.NormalMatrix = transform.GetNormalMatrix();

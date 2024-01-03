@@ -40,7 +40,7 @@ namespace SaltnPepperEngine
 		public:
 
 			Mesh();
-			Mesh(const Mesh& mesh);
+			//Mesh(const Mesh& mesh);
 			Mesh(const std::vector<Vertex>& inVertices, const std::vector<uint32_t>& inIndicies);
 
 			~Mesh();

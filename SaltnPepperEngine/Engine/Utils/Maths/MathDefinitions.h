@@ -143,6 +143,8 @@ namespace SaltnPepperEngine
                 d / aspect, 0.0f, 0.0f, 0.0f,
                 0.0f, d, 0.0f, 0.0f,
                 0.0f, 0.0f, -1.0f, 0.0f,
+
+
                 0.0f, znear, 0.0f, 0.0f);
 
             return reversePerspective;

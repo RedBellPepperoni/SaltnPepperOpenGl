@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Engine/Utils/Maths/MathDefinitions.h"
+#include "Engine/Utils/Logging/Log.h"
 
 namespace SaltnPepperEngine
 {
@@ -13,6 +14,7 @@ namespace SaltnPepperEngine
 			DirectionLight = 0,
 			SpotLight = 1,
 			PointLight = 2
+
 		};
 
 
@@ -35,6 +37,27 @@ namespace SaltnPepperEngine
 				default:
 					return "UndefinedType";
 				}
+			}
+
+			static LightType GetTypeFromString(const std::string& lightString)
+			{
+				if (lightString == "Direction")
+				{
+					return LightType::DirectionLight;
+				}
+
+				else if (lightString == "Spot")
+				{
+					return LightType::SpotLight;
+				}
+
+				else if (lightString == "Point")
+				{
+					return LightType::PointLight;
+				}
+
+				LOG_ERROR("UNsupportedLight Type String");
+				return LightType::DirectionLight;
 			}
 
 			Vector3 color = Vector3(1.0f);

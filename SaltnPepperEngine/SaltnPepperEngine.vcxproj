@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\CameraController.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\FlyCameraController.h" />
     <ClInclude Include="Engine\Core\Rendering\Lights\Light.h" />
@@ -139,8 +140,14 @@
     <ClInclude Include="Engine\Core\Rendering\Skybox\Skybox.h" />
     <ClInclude Include="Engine\Core\Rendering\Skybox\SkyboxObject.h" />
     <ClInclude Include="Engine\Core\Rendering\Renderer\RenderManager.h" />
+    <ClInclude Include="Editor\Windows\EntityEditorUtils.hpp" />
+    <ClInclude Include="Editor\Windows\HierarchyWindow.h" />
+    <ClInclude Include="Editor\Windows\InspectorWindow.h" />
+    <ClInclude Include="Editor\Windows\TextEditWindow.h" />
+    <ClInclude Include="Editor\ImGuiUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Camera\FlyCameraController.cpp" />
     <ClCompile Include="Engine\Core\Components\SceneComponents.cpp" />
     <ClCompile Include="Engine\Utils\Bounding\BoundingSphere.cpp" />
@@ -168,6 +175,9 @@
     <ClCompile Include="Engine\Core\Rendering\Renderer\Renderer.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Renderer\RenderManager.cpp" />
     <ClCompile Include="Externals\glad\src\glad.c" />
+    <ClCompile Include="Editor\Windows\HierarchyWindow.cpp" />
+    <ClCompile Include="Editor\Windows\InspectorWindow.cpp" />
+    <ClCompile Include="Editor\ImGuiUtils.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />
@@ -182,6 +192,7 @@
     <ClCompile Include="Engine\Core\Scene\SceneGraph.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Skybox\Skybox.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Skybox\SkyboxObject.cpp" />
+    <ClCompile Include="Editor\Windows\TextEditWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

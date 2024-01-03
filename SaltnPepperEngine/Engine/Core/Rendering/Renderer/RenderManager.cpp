@@ -88,8 +88,9 @@ namespace SaltnPepperEngine
 				Transform& transform = meshObject.GetComponent<Transform>();
 
 
+				
 				// Sending the mesh data for processing
-				m_renderer->ProcessRenderElement(meshComp.GetMesh(), materialComp.GetMaterial(), transform);
+				 m_renderer->ProcessRenderElement(meshComp.GetMesh(), materialComp.GetMaterial(), transform);
 
 			}
 

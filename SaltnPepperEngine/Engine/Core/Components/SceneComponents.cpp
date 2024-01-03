@@ -1,7 +1,10 @@
 #include "SceneComponents.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
-#include "Engine/Core/Rendering/Material/material.h"
+#include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Resources/ResourceManager.h"
+#include "Engine/Core/Rendering/Geometry/Primitives.h"
+#include "Engine/Core/System/Application/Application.h"
 
 namespace SaltnPepperEngine
 {
@@ -78,6 +81,35 @@ namespace SaltnPepperEngine
 		}
 
 
+
+		ModelComponent::ModelComponent()
+		{
+		}
+
+		ModelComponent::ModelComponent(const std::string& filePath)	
+		{
+			LoadLibraryModel(filePath);
+		}
+
+		ModelComponent::ModelComponent(const SharedPtr<Model>& modelRef)
+			: m_handle(modelRef)
+		{
+		}
+
+		/*ModelComponent::ModelComponent(PrimitiveType type)
+			: m_handle(Factory<Model>::Create(type))
+		{
+		}*/
+
+		void ModelComponent::LoadLibraryModel(const std::string firendlyName)
+		{
+			m_handle = Application::GetCurrent().GetModelLibrary()->GetResource(firendlyName);
+		}
+
+		void ModelComponent::LoadPrimitive(PrimitiveType type)
+		{
+			//m_handle = Factory<Model>::Create(type);
+		}
 
 	}
 }
