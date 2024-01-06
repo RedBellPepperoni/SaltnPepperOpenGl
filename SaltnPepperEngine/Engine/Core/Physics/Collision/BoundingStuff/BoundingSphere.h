@@ -1,20 +1,23 @@
-#ifndef BOUNDINGSPHERE_H
-#define BOUNDINGSPHERE_H
-
+#pragma once
 #include "Engine/Utils/Maths/MathDefinitions.h"
+
 
 namespace SaltnPepperEngine
 {
+
+
+
+
 	class BoundingSphere
 	{
 	public:
 
 		BoundingSphere();
-		BoundingSphere(const Vector3& center, const float radius);
+		BoundingSphere(const Vector3& center,const float radius);
 		BoundingSphere(const BoundingSphere& otherSphere);
 
 		~BoundingSphere();
-
+		
 
 		void Transform(const Matrix4& newtransform);
 
@@ -39,4 +42,3 @@ namespace SaltnPepperEngine
 	};
 }
 
-#endif // !BOUNDINGSPHERE_H

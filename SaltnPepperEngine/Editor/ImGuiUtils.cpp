@@ -7,39 +7,39 @@
 
 namespace SaltnPepperEngine
 {
-    Vector4 SelectedColour = Vector4(0.28f, 0.56f, 0.9f, 1.0f);
-    Vector4 IconColor = Vector4(0.2f, 0.2f, 0.2f, 1.0f);
-    static char* s_MultilineBuffer = nullptr;
-    static uint32_t s_Counter = 0;
-    static char s_IDBuffer[16] = "##";
-    static char s_LabelIDBuffer[1024];
-    static int s_UIContextID = 0;
+    Vector4 selectedColor = Vector4(0.28f, 0.56f, 0.9f, 1.0f);
+    Vector4 iconColor = Vector4(0.2f, 0.2f, 0.2f, 1.0f);
+    static char* s_multilineBuffer = nullptr;
+    static uint32_t s_counter = 0;
+    static char s_idBuffer[16] = "##";
+    static char s_labelIDBuffer[1024];
+    static int s_uiContextID = 0;
 
     const char* ImGuiUtils::GenerateID()
     {
         //sprintf(s_IDBuffer + 2, "%x", s_Counter++);
-        sprintf_s(s_IDBuffer + 2, 16, "%x", s_Counter++);
+        sprintf_s(s_idBuffer + 2, 16, "%x", s_counter++);
 
         //_itoa(s_Counter++, s_IDBuffer + 2, 16);
-        return s_IDBuffer;
+        return s_idBuffer;
     }
 
     const char* ImGuiUtils::GenerateLabelID(std::string_view label)
     {
-        *fmt::format_to_n(s_LabelIDBuffer, std::size(s_LabelIDBuffer), "{}##{}", label, s_Counter++).out = 0;
-        return s_LabelIDBuffer;
+        *fmt::format_to_n(s_labelIDBuffer, std::size(s_labelIDBuffer), "{}##{}", label, s_counter++).out = 0;
+        return s_labelIDBuffer;
     }
 
     void ImGuiUtils::PushID()
     {
-        ImGui::PushID(s_UIContextID++);
-        s_Counter = 0;
+        ImGui::PushID(s_uiContextID++);
+        s_counter = 0;
     }
 
     void ImGuiUtils::PopID()
     {
         ImGui::PopID();
-        s_UIContextID--;
+        s_uiContextID--;
     }
 
     bool ImGuiUtils::ToggleButton(const char* label, bool state, ImVec2 size, float alpha, float pressedAlpha, ImGuiButtonFlags buttonFlags)
@@ -128,20 +128,20 @@ namespace SaltnPepperEngine
         ImGui::PushItemWidth(-1);
         ImGui::AlignTextToFramePadding();
 
-        if (!s_MultilineBuffer)
+        if (!s_multilineBuffer)
         {
-            s_MultilineBuffer = new char[1024 * 1024]; // 1KB
-            memset(s_MultilineBuffer, 0, 1024 * 1024);
+            s_multilineBuffer = new char[1024 * 1024]; // 1KB
+            memset(s_multilineBuffer, 0, 1024 * 1024);
         }
 
        // strcpy(s_MultilineBuffer, value.c_str());
 
-        strcpy_s(s_MultilineBuffer, 1024 * 1024, value.c_str());
+        strcpy_s(s_multilineBuffer, 1024 * 1024, value.c_str());
 
         // std::string id = "##" + label;
-        if (ImGui::InputTextMultiline(GenerateID(), s_MultilineBuffer, 1024 * 1024))
+        if (ImGui::InputTextMultiline(GenerateID(), s_multilineBuffer, 1024 * 1024))
         {
-            value = s_MultilineBuffer;
+            value = s_multilineBuffer;
             modified = true;
         }
 
@@ -682,7 +682,7 @@ namespace SaltnPepperEngine
 
         auto& style = ImGui::GetStyle();
         ImVec4* colors = style.Colors;
-        SelectedColour = Vector4(0.28f, 0.56f, 0.9f, 1.0f);
+        selectedColor = Vector4(0.28f, 0.56f, 0.9f, 1.0f);
 
         // colours[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
         // colours[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
@@ -753,13 +753,13 @@ namespace SaltnPepperEngine
 
             ImVec4 imColor = ImVec4(155.0f / 255.0f, 130.0f / 255.0f, 207.0f / 255.0f, 1.00f);
 
-            SelectedColour = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
+            selectedColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
             colors[ImGuiCol_Text] = ImVec4(200.0f / 255.0f, 200.0f / 255.0f, 200.0f / 255.0f, 1.00f);
             colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
 
 
             imColor = colors[ImGuiCol_Text];
-            IconColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
+            iconColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
             colors[ImGuiCol_WindowBg] = TabActive;
             colors[ImGuiCol_ChildBg] = TabActive;
 
@@ -830,7 +830,7 @@ namespace SaltnPepperEngine
             colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
 
             ImVec4 imColor = colors[ImGuiCol_Text];
-            IconColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
+            iconColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
 
             colors[ImGuiCol_WindowBg] = ImVec4(0.94f, 0.94f, 0.94f, 0.94f);
             colors[ImGuiCol_PopupBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.94f);
@@ -878,7 +878,7 @@ namespace SaltnPepperEngine
             colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
 
             ImVec4 imColor = colors[ImGuiCol_Text];
-            IconColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
+            iconColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
             colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.14f, 0.17f, 1.00f);
             colors[ImGuiCol_PopupBg] = BG(0.9f);
             colors[ImGuiCol_Border] = ImVec4(0.31f, 0.31f, 1.00f, 0.00f);
@@ -920,7 +920,7 @@ namespace SaltnPepperEngine
             ImGui::StyleColorsClassic();
 
             ImVec4 imColor = colors[ImGuiCol_Text];
-            IconColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
+            iconColor = Vector4(imColor.x, imColor.y, imColor.z, imColor.w);
         }
        
 
@@ -948,14 +948,14 @@ namespace SaltnPepperEngine
         colors[ImGuiCol_TableBorderStrong] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     }
 
-    Vector4 ImGuiUtils::GetSelectedColour()
+    Vector4 ImGuiUtils::GetSelectedColor()
     {
-        return SelectedColour;
+        return selectedColor;
     }
 
     Vector4 ImGuiUtils::GetIconColour()
     {
-        return IconColor;
+        return iconColor;
     }
 
     bool ImGuiUtils::PropertyDropdown(const char* label, const char** options, int32_t optionCount, int32_t* selected)

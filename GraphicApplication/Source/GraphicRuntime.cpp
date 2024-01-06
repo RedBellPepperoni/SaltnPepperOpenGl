@@ -16,7 +16,29 @@ class GraphicRuntime : public Application
 
         entity.AddComponent<MeshComponent>(mesh);
         entity.AddComponent<MeshRenderer>();
+
+
+
+
+
+        Entity dirLightEntity = GetCurrentScene()->CreateEntity("DirLight");
+        transform = dirLightEntity.AddComponent<Transform>();
+
+        transform.SetPosition(Vector3(0.0f));
+        transform.SetEularRotation(Vector3(10.0f, 20.0f,0.0f));
+
+        Light& light = dirLightEntity.AddComponent<Light>();
+        light.direction = transform.GetForwardVector();
+
+        light.intensity = 1.0f;
+        light.color = Vector3(1.0f,1.0f,1.0f);
+        light.type = LightType::DirectionLight;
+
 	}
+
+
+
+    
 
 	void OnUpdate(float deltaTime)
 	{

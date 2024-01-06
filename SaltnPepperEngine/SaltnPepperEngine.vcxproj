@@ -89,11 +89,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Editor\EditorWindow.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\Plane.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\BroadPhase.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\BoxCollider.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\CapsuleCollider.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\Collider.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\ConvexHull.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\MeshCollider.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\SphereCollider.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\NarrowPhase\Manifold.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\NarrowPhase\NarrowPhase.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\PhysicsEngine.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\RigidBody3D.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\RungeKuttaIntegration.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\CameraController.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\FlyCameraController.h" />
     <ClInclude Include="Engine\Core\Rendering\Lights\Light.h" />
-    <ClInclude Include="Engine\Utils\Bounding\BoundingSphere.h" />
-    <ClInclude Include="Engine\Utils\Bounding\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Rendering\Renderer\DebugRenderer.h" />
     <ClInclude Include="Engine\Core\Components\SceneComponents.h" />
     <ClInclude Include="Engine\Core\Rendering\Textures\CubeMap.h" />
@@ -148,10 +163,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor\EditorWindow.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\Plane.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\BoxCollider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\CapsuleCollider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\Collider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\ConvexHull.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\MeshCollider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\SphereCollider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\NarrowPhase\Manifold.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\NarrowPhase\NarrowPhase.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\PhysicsEngine.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\RigidBody3D.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\RungeKuttaIntegration.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Camera\FlyCameraController.cpp" />
     <ClCompile Include="Engine\Core\Components\SceneComponents.cpp" />
-    <ClCompile Include="Engine\Utils\Bounding\BoundingSphere.cpp" />
-    <ClCompile Include="Engine\Utils\Bounding\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Renderer\DebugRenderer.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Textures\CubeMap.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Camera\Camera.cpp" />

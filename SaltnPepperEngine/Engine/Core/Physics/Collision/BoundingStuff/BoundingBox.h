@@ -1,16 +1,14 @@
-#ifndef BOUNDINGBOX_H
-#define BOUNDINGBOX_H
-
+#pragma once
 #include "Engine/Utils/Maths/MathDefinitions.h"
 
 namespace SaltnPepperEngine
 {
 	enum IntersectionResult : uint8_t
 	{
-		OUTSIDE = 0,
-		INSIDE = 1,
-		INTERSECTING = 2
-
+		OUTSIDE			= 0,
+		INSIDE			= 1,
+		INTERSECTING	= 2
+		
 	};
 
 
@@ -52,7 +50,7 @@ namespace SaltnPepperEngine
 		IntersectionResult CheckInterscetion(const BoundingBox& otherBox) const;
 
 		IntersectionResult CheckInterscetion(const BoundingSphere& otherSphere) const;
-
+		 
 		void Merge(const Vector3& point);
 		void Merge(const BoundingBox& other);
 
@@ -69,7 +67,7 @@ namespace SaltnPepperEngine
 
 
 	};
+
+
 }
 
-
-#endif // !BOUNDINGBOX_H

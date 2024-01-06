@@ -1,6 +1,5 @@
 #include "BoundingSphere.h"
 
-
 namespace SaltnPepperEngine
 {
 	BoundingSphere::BoundingSphere()
@@ -51,11 +50,11 @@ namespace SaltnPepperEngine
 		return LengthSquared(otherSphere.m_center - this->m_center) <= Square(this->m_radius + otherSphere.m_radius);
 	}
 
-
+	
 
 	bool BoundingSphere::Intersects(const BoundingSphere& otherSphere) const
 	{
-		return DistanceSquared(otherSphere.m_center, this->m_center) <= Square(this->m_radius + otherSphere.m_radius);
+		return DistanceSquared(otherSphere.m_center,this->m_center) <= Square(this->m_radius + otherSphere.m_radius);
 	}
 	const float BoundingSphere::GetRadius() const
 	{

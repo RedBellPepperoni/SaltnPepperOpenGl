@@ -80,7 +80,7 @@ namespace SaltnPepperEngine
         bool Spinner(const char* label, float radius, int thickness, const uint32_t& colour);
 
         void DrawRowsBackground(int row_count, float line_height, float x1, float x2, float y_offset, ImU32 col_even, ImU32 col_odd);
-        Vector4 GetSelectedColour();
+        Vector4 GetSelectedColor();
         Vector4 GetIconColour();
 
         void DrawItemActivityOutline(float rounding = 0.0f, bool drawWhenInactive = false, ImColor colourWhenActive = ImColor(80, 80, 80));
