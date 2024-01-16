@@ -12,7 +12,11 @@
 #include "Engine/Core/System/Input/InputKeyCodes.h"
 
 #include "Engine/Utils/Logging/Log.h"
+#include "Imgui/imgui.h"
+#include "Imgui/imgui_internal.h"
 
+#include "Imgui/imgui_impl_glfw.h"
+#include "Imgui/imgui_impl_opengl3.h"
 
 
 namespace SaltnPepperEngine
@@ -282,7 +286,7 @@ namespace SaltnPepperEngine
 
         void Window::InitializeImGui()
         {
-            /*ImGuiContext* context = ImGui::CreateContext();
+            ImGuiContext* context = ImGui::CreateContext();
             ImGui::SetCurrentContext(context);
 
             ImGuiIO& imguiIO = ImGui::GetIO();
@@ -297,15 +301,15 @@ namespace SaltnPepperEngine
             ImGui::StyleColorsDark();
 
 
-             ImGui::PushFont(ImGui::GetFont());*/
+            //ImGui::PushFont(ImGui::GetFont());
 
         }
 
         void Window::UpdateImGui()
         {
-           /* ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();*/
+            ImGui::NewFrame();
 
 
 
@@ -313,8 +317,8 @@ namespace SaltnPepperEngine
 
         void Window::RenderImGui()
         {
-           /* ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         }
 

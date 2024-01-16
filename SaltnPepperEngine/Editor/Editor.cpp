@@ -60,14 +60,18 @@ namespace SaltnPepperEngine
 		void RuntimeEditor::OnImGui()
 		{
 			// Work on this later
-			DrawMenuBar();
+			//DrawMenuBar();
+
+			static bool isopen = true;
+			ImGui::Begin("Hello", &isopen);
 
 
-			ImGui::Begin("Hello");
+			ImGui::Text("current FPS");
+
 
 			ImGui::End();
 
-			BeginDockSpace(m_properties.m_fullscreenLaunch && m_editorState == EditorState::Play);
+			/*BeginDockSpace(m_properties.m_fullscreenLaunch && m_editorState == EditorState::Play);
 
 			for (SharedPtr<EditorWindow> window : m_editorWindows)
 			{
@@ -109,7 +113,7 @@ namespace SaltnPepperEngine
 								tab.Window->DrawList->AddLine(bb.Min, bb.Max, (!tab_bar_focused) ? ImGui::GetColorU32(ImGuiCol_SliderGrabActive) : ImGui::GetColorU32(ImGuiCol_Text), 2.0f);
 							}
 						}
-				}
+				}*/
 
 		}
 

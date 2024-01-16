@@ -175,16 +175,16 @@ namespace SaltnPepperEngine
 		m_renderManager->Init();
 
 		m_editor->OnInit();
-		ImGui::CreateContext();	
-		ImGui::StyleColorsDark();
+		//ImGui::CreateContext();	
+		//ImGui::StyleColorsDark();
 		
 
-		m_imguiManager = MakeUnique<ImGuiManager>(false);
-		m_imguiManager->Init();
+		//m_imguiManager = MakeUnique<ImGuiManager>(false);
+		//m_imguiManager->Init();
 		
 
 
-		m_editor->ToggleEditor();
+		//m_editor->ToggleEditor();
 
 		//LuaManager::GetInstance().OnInit();
 
@@ -235,9 +235,10 @@ namespace SaltnPepperEngine
 			m_window->UpdateViewPort();
 			m_window->UpdateImGui();
 
-			ImGui::NewFrame();
+				
+			m_editor->OnImGui();
 
-			m_imguiManager->Update(m_deltaTime, GetCurrentScene());
+			//m_imguiManager->Update(m_deltaTime, GetCurrentScene());
 		
 
 			// Render all the vertices in the current Render array
@@ -253,7 +254,7 @@ namespace SaltnPepperEngine
 //
 			
 
-			m_imguiManager->OnRender(GetCurrentScene());
+			//m_imguiManager->OnRender(GetCurrentScene());
 
 			OnUpdate(m_deltaTime);
 

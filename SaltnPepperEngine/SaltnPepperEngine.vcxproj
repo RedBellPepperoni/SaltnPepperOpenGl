@@ -91,6 +91,7 @@
     <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Editor\ImGuiRenderer.h" />
+    <ClInclude Include="EngineEditor.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\Plane.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Editor\Editor.cpp" />
     <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Editor\ImGuiRenderer.cpp" />
+    <ClCompile Include="EngineEditor.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\Plane.cpp" />

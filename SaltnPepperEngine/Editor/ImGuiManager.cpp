@@ -59,29 +59,34 @@ namespace SaltnPepperEngine
 		{
 			LOG_INFO("ImGui Loaded with version : {0}", IMGUI_VERSION);
 		
+			ImGuiContext* context = ImGui::CreateContext();
+			ImGui::SetCurrentContext(context);
+
+		
+
 			Application& app = Application::GetCurrent();
 			ImGuiIO& io = ImGui::GetIO();
 
 			uint32_t width = app.GetAppWindow().GetSize().x;
 			uint32_t height = app.GetAppWindow().GetSize().y;
 
-
-			io.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
-			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-			io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-			io.ConfigWindowsMoveFromTitleBarOnly = true;
-
-			SetImGuiKeyBinds();
-			SetImGuiStyle();
-
-			m_imguiRenderer = MakeUnique<ImGuiRenderer>(width, height,m_clearScreen);
+			m_imguiRenderer = MakeUnique<ImGuiRenderer>(m_clearScreen);
 
 			if (m_imguiRenderer)
-			{	
+			{
 				m_imguiRenderer->SetWindowRef(Application::GetCurrent().GetAppWindow().GetHandle());
 				m_imguiRenderer->Init();
 
 			}
+			//io.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
+			//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+			//io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+			//io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+			//SetImGuiKeyBinds();
+			//SetImGuiStyle();
+
+		
 
 			io.SetClipboardTextFn = ImGui_ImplGlfw_SetClipboardText;
 			io.GetClipboardTextFn = ImGui_ImplGlfw_GetClipboardText;
@@ -96,6 +101,8 @@ namespace SaltnPepperEngine
 			}
 
 			Application::GetCurrent().OnImGui();
+
+			
 		}
 
 

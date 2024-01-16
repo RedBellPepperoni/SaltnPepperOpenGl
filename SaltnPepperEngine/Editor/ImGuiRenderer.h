@@ -15,7 +15,7 @@ namespace SaltnPepperEngine
 		{
 		public:
 
-			ImGuiRenderer(uint32_t width, uint32_t height, bool clearScreen);
+			ImGuiRenderer(bool clearScreen);
 			~ImGuiRenderer();
 
 			void Init();

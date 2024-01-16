@@ -8,7 +8,7 @@ namespace SaltnPepperEngine
 {
 	namespace Editor
 	{
-		ImGuiRenderer::ImGuiRenderer(uint32_t width, uint32_t height, bool clearScreen)
+		ImGuiRenderer::ImGuiRenderer(bool clearScreen)
 			: m_windowHandle(nullptr)
 		{
 			m_clearScreen = clearScreen;
@@ -21,6 +21,7 @@ namespace SaltnPepperEngine
 
 		void ImGuiRenderer::Init()
 		{
+			
 			ImGui_ImplGlfw_InitForOpenGL(m_windowHandle, true);
 
 			ImGui_ImplOpenGL3_Init();
@@ -30,16 +31,18 @@ namespace SaltnPepperEngine
 		void ImGuiRenderer::NewFrame()
 		{
 			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 		}
 
 		void ImGuiRenderer::Render()
 		{
 			ImGui::Render();
 
-			if (m_clearScreen)
+			/*if (m_clearScreen)
 			{
 				GLDEBUG(glClear(GL_COLOR_BUFFER_BIT));
-			}
+			}*/
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		}
