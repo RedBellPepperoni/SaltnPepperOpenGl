@@ -8,9 +8,7 @@ namespace SaltnPepperEngine
 
 	namespace Editor
 	{
-		class Editor;
-
-
+		class RuntimeEditor;
 
 		class EditorWindow
 		{
@@ -19,7 +17,7 @@ namespace SaltnPepperEngine
 
 			bool m_active = true;
 			std::string m_name = "DefaultWindow";
-
+			RuntimeEditor* m_editorHandle = nullptr;
 
 		public:
 
@@ -27,14 +25,18 @@ namespace SaltnPepperEngine
 
 			virtual void OnImgui() = 0;
 
-
 			virtual void OnInit();
 			virtual void OnUpdate();
+
+			virtual void Release();
 
 			const bool GetActive() const;
 			void SetActive(bool active);
 
 			const std::string& GetName() const;
+
+			void SetEditor(RuntimeEditor* editor);
+			RuntimeEditor* GetEditor();
 
 
 		};

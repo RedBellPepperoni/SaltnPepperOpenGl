@@ -15,6 +15,10 @@ namespace SaltnPepperEngine
 
 		}
 
+		void EditorWindow::Release()
+		{
+		}
+
 		const bool EditorWindow::GetActive() const
 		{
 			return m_active;
@@ -27,6 +31,15 @@ namespace SaltnPepperEngine
 		const std::string& EditorWindow::GetName() const
 		{
 			return m_name;
+		}
+
+		void EditorWindow::SetEditor(RuntimeEditor* editor)
+		{
+			m_editorHandle = editor;
+		}
+		RuntimeEditor* EditorWindow::GetEditor()
+		{
+			return m_editorHandle;
 		}
 	}
 }

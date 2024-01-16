@@ -1,4 +1,8 @@
-#pragma once
+#ifndef PHYSICSENGINE_H
+#define PHYSICSENGINE_H
+
+
+
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/Physics/Collision/BroadPhase/BroadPhase.h"
@@ -122,4 +126,6 @@ namespace SaltnPepperEngine
 		};
 	}
 }
+
+#endif // !PHYSICSENGINE_H
 

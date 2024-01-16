@@ -420,7 +420,7 @@ namespace SaltnPepperEngine
 
 
             // Two Passes one for no depth and other for Depthtested
-            DebugPassInternal(camera, false);
+            DebugPassInternal(camera, false); 
             DebugPassInternal(camera, true);
 
 

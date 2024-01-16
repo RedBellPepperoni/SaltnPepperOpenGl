@@ -121,6 +121,18 @@ namespace SaltnPepperEngine
 		return IntersectionResult();
 	}
 
+	IntersectionResult BoundingBox::CheckIntersection(const Vector3& point) const
+	{
+		if (point.x < m_min.x || point.x > m_max.x || point.y < m_min.y || point.y > m_max.y || point.z < m_min.z || point.z > m_max.z)
+		{
+			return OUTSIDE;
+		}
+		else
+		{
+			return INSIDE;
+		}
+	}
+
 	void BoundingBox::Merge(const Vector3& point)
 	{
 		if (point.x < m_min.x)

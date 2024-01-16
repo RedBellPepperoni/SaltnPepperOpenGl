@@ -59,6 +59,9 @@ namespace SaltnPepperEngine
 			const Vector2& GetMousePosition() const;
 
 
+			MouseState GetMouseState() { return m_mouseState; }
+			void SetMouseState(MouseState state) { m_mouseState = state; }
+
 			// ================ SCROLL STUFF ==========================
 
 			void SetScrollDelta(float newOffset);

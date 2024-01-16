@@ -1,4 +1,7 @@
-#pragma once
+#ifndef BOUNDINGBOX_H
+#define BOUNDINGBOX_H
+
+
 #include "Engine/Utils/Maths/MathDefinitions.h"
 
 namespace SaltnPepperEngine
@@ -51,6 +54,8 @@ namespace SaltnPepperEngine
 
 		IntersectionResult CheckInterscetion(const BoundingSphere& otherSphere) const;
 		 
+		IntersectionResult CheckIntersection(const Vector3& point) const;
+
 		void Merge(const Vector3& point);
 		void Merge(const BoundingBox& other);
 
@@ -70,4 +75,6 @@ namespace SaltnPepperEngine
 
 
 }
+
+#endif // !BOUNDINGBOX_H
 

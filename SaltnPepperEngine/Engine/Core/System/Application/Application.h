@@ -6,6 +6,8 @@
 
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/System/Events/Event.h"
+#include "Engine/Core/System/Events/WindowEvent.h"
+
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Utils/Time/Time.h"
 
@@ -32,19 +34,20 @@ namespace SaltnPepperEngine
 	using Rendering::Window;
 	using Rendering::Camera;
 
-	//namespace EditorGUI
-	//{
-	//	class RuntimeEditor;
-	//}
+	namespace Editor
+	{
+		class RuntimeEditor;
+		class ImGuiManager;
+	}
 
-	//using EditorGUI::RuntimeEditor;
+	using namespace Editor;
 
-	/*namespace Physics
+	namespace Physics
 	{
 		class PhysicsEngine;
 	}
 
-	using Physics::PhysicsEngine;*/
+	using Physics::PhysicsEngine;
 
 
 
@@ -61,9 +64,9 @@ namespace SaltnPepperEngine
 
 		UniquePtr<Window> m_window = nullptr;
 
-		/*UniquePtr<PhysicsEngine> m_physicsSystem = nullptr;
+		UniquePtr<PhysicsEngine> m_physicsSystem = nullptr;
 
-		UniquePtr<RuntimeEditor> m_editor = nullptr;*/
+		UniquePtr<RuntimeEditor> m_editor = nullptr;
 
 
 		bool m_isRunning = false;
@@ -86,6 +89,9 @@ namespace SaltnPepperEngine
 
 		// Pointer to the currently loaded scene
 		SharedPtr<Scene> m_currentScene;
+
+
+		UniquePtr<ImGuiManager> m_imguiManager;
 
 		// Default Scale
 		float m_timeScale = 1.0f;
@@ -112,7 +118,7 @@ namespace SaltnPepperEngine
 		virtual void OnInit() {};
 		virtual void OnCreate() {};
 		virtual void OnUpdate(float deltaTime) {};
-
+		
 
 		void UpdateDeltaTime(float& lastFrameEnd, float& lastSecondEnd, size_t& fps);
 
@@ -134,7 +140,7 @@ namespace SaltnPepperEngine
 		// Reference Getter for teh current scene
 		Scene* GetCurrentScene() const;
 
-		//PhysicsEngine* GetPhysicsEngine() const;
+		PhysicsEngine* GetPhysicsEngine() const;
 
 		// The start up setup for the apllication
 		void Initialize();
@@ -142,6 +148,7 @@ namespace SaltnPepperEngine
 		// This methods initaitzes the runtime and starts the gameloop
 		void Run();
 
+		void OnImGui();
 
 		// Deals with the Event queue to be processed by the glfw runtime
 		void ProcessEvent(EventBase& event);
@@ -192,7 +199,8 @@ namespace SaltnPepperEngine
 		void StartPhysics(bool shouldstart);
 		const Vector2Int GetWindowSize();
 
-
+		bool OnWindowClose(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
 
 
 

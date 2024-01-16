@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -88,7 +88,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
+    <ClInclude Include="Editor\ImGuiRenderer.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\Plane.h" />
@@ -160,9 +162,22 @@
     <ClInclude Include="Editor\Windows\InspectorWindow.h" />
     <ClInclude Include="Editor\Windows\TextEditWindow.h" />
     <ClInclude Include="Editor\ImGuiUtils.h" />
+    <ClInclude Include="Engine\Utils\Ray.h" />
+    <ClInclude Include="Externals\Imgui\imconfig.h" />
+    <ClInclude Include="Externals\Imgui\imgui.h" />
+    <ClInclude Include="Externals\Imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Externals\Imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Externals\Imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Externals\Imgui\imgui_internal.h" />
+    <ClInclude Include="Externals\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="Externals\Imgui\imstb_textedit.h" />
+    <ClInclude Include="Externals\Imgui\imstb_truetype.h" />
+    <ClInclude Include="Editor\ImGuiManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Editor\Editor.cpp" />
     <ClCompile Include="Editor\EditorWindow.cpp" />
+    <ClCompile Include="Editor\ImGuiRenderer.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\Plane.cpp" />
@@ -207,6 +222,15 @@
     <ClCompile Include="Editor\Windows\HierarchyWindow.cpp" />
     <ClCompile Include="Editor\Windows\InspectorWindow.cpp" />
     <ClCompile Include="Editor\ImGuiUtils.cpp" />
+    <ClCompile Include="Engine\Utils\Ray.cpp" />
+    <ClCompile Include="Externals\Imgui\imgui.cpp" />
+    <ClCompile Include="Externals\Imgui\imgui_demo.cpp" />
+    <ClCompile Include="Externals\Imgui\imgui_draw.cpp" />
+    <ClCompile Include="Externals\Imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Externals\Imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Externals\Imgui\imgui_tables.cpp" />
+    <ClCompile Include="Externals\Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Editor\ImGuiManager.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />

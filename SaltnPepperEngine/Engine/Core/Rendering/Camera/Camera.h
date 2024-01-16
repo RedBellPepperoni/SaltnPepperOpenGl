@@ -6,12 +6,13 @@
 
 namespace SaltnPepperEngine
 {
+    class Ray;
 
     namespace Rendering
     {
 
         class Texture;
-
+      
 
         class Camera
         {
@@ -64,6 +65,8 @@ namespace SaltnPepperEngine
             const Vector3& GetForwardVector() const;
 
             SharedPtr<Texture>& GetRenderTexture();
+
+            Ray GetRay(float xPos, float yPos, Matrix4 viewMatrix, bool flipY);
 
 
         private:

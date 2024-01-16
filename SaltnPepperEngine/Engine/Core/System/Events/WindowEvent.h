@@ -2,6 +2,7 @@
 #define WINDOWEVENT_H
 
 #include "Engine/Core/System/Events/Event.h"
+#include "Engine/Utils/Maths/MathDefinitions.h"
 
 namespace SaltnPepperEngine
 {

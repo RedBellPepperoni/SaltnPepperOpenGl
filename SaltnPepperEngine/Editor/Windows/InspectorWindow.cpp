@@ -10,6 +10,7 @@
 // 
 
 #include "Editor/ImGuiUtils.h"
+#include "Editor/Editor.h"
 
 // Change this later to the includes that are really needed
 #include "SaltnPepperEngine.h"
@@ -1029,16 +1030,90 @@ namespace SaltnPepperEngine
 	
 	namespace Editor
 	{
+        static bool init = false;
+
 		InspectorWindow::InspectorWindow()
 		{
-
+            m_name = "Inspector";
 		}
-
-	
 
 		void InspectorWindow::OnImgui()
 		{
+            auto selectedEntities = m_editorHandle->GetSelectedEntities();
 
+            if (ImGui::Begin(m_name.c_str(), &m_active))
+            {
+                ImGuiUtils::PushID();
+
+                Scene* currentScene = Application::GetCurrent().GetCurrentScene();
+
+                if (!currentScene)
+                {
+                    m_editorHandle->SelectEntity(entt::null);
+                    ImGuiUtils::PopID();
+                    ImGui::End();
+                    return;
+                }
+
+                entt::registry& registry = currentScene->GetRegistry();
+
+                if (selectedEntities.size() != 1 || !registry.valid(selectedEntities.front()))
+                {
+                    m_editorHandle->SelectEntity(entt::null);
+                    ImGuiUtils::PopID();
+                    ImGui::End();
+                    return;
+                }
+
+                entt::entity selected = selectedEntities.front();
+                Entity selectedEntity = { selected, currentScene };
+
+                ActiveComponent* activeComp = registry.try_get<ActiveComponent>(selected);
+                bool active = activeComp ? activeComp->active : true;
+
+                if (ImGui::Checkbox("Active?", &active))
+                {
+                    if (!activeComp)
+                    {
+                        registry.emplace<ActiveComponent>(selected, active);
+                    }
+                    else
+                    {
+                        activeComp->active = active;
+                    }
+
+                    bool hasName = registry.all_of<NameComponent>(selected);
+                    std::string name;
+
+                    if (hasName)
+                    {
+                        name = registry.get<NameComponent>(selected).name;
+                    }
+                    else
+                    {
+                        name = std::to_string((entt::to_integral(selected)));
+                    }
+
+                    ImGui::SameLine();
+                    ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::GetFontSize() * 4.0f);
+                    {
+                        ImGuiUtils::ScopedFont boldFont(ImGui::GetIO().Fonts->Fonts[1]);
+                        if (ImGuiUtils::InputText(name))
+                            registry.get_or_emplace<NameComponent>(selected).name = name;
+                    }
+                    ImGui::SameLine();
+
+                    //ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.7f, 0.7f, 0.0f));
+                    
+                        
+                }
+
+               
+               
+            }
+
+            ImGui::End();
+            
 		}
 
 		void InspectorWindow::OnInit()

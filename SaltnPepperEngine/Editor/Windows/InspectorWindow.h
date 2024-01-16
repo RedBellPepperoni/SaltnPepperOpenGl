@@ -10,6 +10,8 @@ namespace SaltnPepperEngine
 
 	namespace Editor
 	{
+		
+
 		class InspectorWindow : public EditorWindow
 		{
 		public :

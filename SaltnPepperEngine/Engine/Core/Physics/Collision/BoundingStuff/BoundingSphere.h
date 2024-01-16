@@ -1,4 +1,8 @@
-#pragma once
+#ifndef BOUNDINGSPHERE_H
+#define BOUNDINGSPHERE_H
+
+
+
 #include "Engine/Utils/Maths/MathDefinitions.h"
 
 
@@ -41,4 +45,6 @@ namespace SaltnPepperEngine
 
 	};
 }
+
+#endif // !BOUNDINGSPHERE_H
 

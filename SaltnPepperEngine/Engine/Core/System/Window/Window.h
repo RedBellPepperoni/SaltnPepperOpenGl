@@ -91,6 +91,8 @@ namespace SaltnPepperEngine
 			void SwapBuffers();
 			void CloseWindow();
 
+			GLFWwindow* GetHandle() { return windowHandle; }
+
 			float GetAspectRatio() { return m_properties.aspectRatio; };
 
 			float GetGLFWTime() const;

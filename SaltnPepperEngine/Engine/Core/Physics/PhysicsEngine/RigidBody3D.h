@@ -1,4 +1,7 @@
-#pragma once
+#ifndef RIGIDBODY3D_H
+#define RIGIDBODY3D_H
+
+
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/UniqueId/UniqueId.h"
@@ -221,5 +224,6 @@ namespace SaltnPepperEngine
 	}
 
 }
+#endif // !RIGIDBODY3D_H
 
 

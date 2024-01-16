@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "Engine/Utils/GLUtils.h"
-//#include "Editor/Utils/ImGuiUtils.h"
+#include "Editor/ImGuiUtils.h"
 
 #include "Engine/Core/System/Events/WindowEvent.h"
 #include "Engine/Core/System/Events/KeyboardEvent.h"
@@ -12,7 +12,7 @@
 #include "Engine/Core/System/Input/InputKeyCodes.h"
 
 #include "Engine/Utils/Logging/Log.h"
-#include "Engine/Utils/GLUtils.h"
+
 
 
 namespace SaltnPepperEngine
@@ -282,7 +282,7 @@ namespace SaltnPepperEngine
 
         void Window::InitializeImGui()
         {
-           /* ImGuiContext* context = ImGui::CreateContext();
+            /*ImGuiContext* context = ImGui::CreateContext();
             ImGui::SetCurrentContext(context);
 
             ImGuiIO& imguiIO = ImGui::GetIO();
@@ -294,10 +294,10 @@ namespace SaltnPepperEngine
 
             ImGui_ImplOpenGL3_Init();
 
-            ImGui::StyleColorsDark();*/
+            ImGui::StyleColorsDark();
 
 
-            // ImGui::PushFont(ImGui::GetFont());
+             ImGui::PushFont(ImGui::GetFont());*/
 
         }
 

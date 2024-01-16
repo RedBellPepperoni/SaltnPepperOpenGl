@@ -2,6 +2,7 @@
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
 #include "Engine/Core/Resources/ResourceManager.h"
+#include "Engine/Utils/Ray.h"
 
 namespace SaltnPepperEngine
 {
@@ -170,6 +171,32 @@ namespace SaltnPepperEngine
         SharedPtr<Texture>& Camera::GetRenderTexture()
         {
             return m_renderTexture;
+        }
+
+        Ray Camera::GetRay(float xPos, float yPos, Matrix4 viewMatrix, bool flipY)
+        {
+            Ray returnRay;
+            Matrix4 inverseViewProj = Inverse(m_projection * viewMatrix);
+        
+            xPos = 2.0f * xPos - 1.0f;
+            yPos = 2.0f * yPos - 1.0f;
+
+            if(flipY)
+            {
+                yPos *= -1.0f;
+            }
+
+            Vector4 n = inverseViewProj * Vector4(xPos, yPos, 0.0f, 1.0f);
+            n /= n.w;
+
+            Vector4 f = inverseViewProj * Vector4(xPos, yPos, 1.0f, 1.0f);
+            f /= f.w;
+
+            returnRay.m_origin = Vector3(n);
+            returnRay.m_direction = Normalize(Vector3(f) - returnRay.m_origin);
+
+            return returnRay;
+        
         }
 
         void Camera::InitializeRenderTexture()

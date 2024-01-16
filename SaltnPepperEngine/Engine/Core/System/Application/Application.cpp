@@ -11,7 +11,9 @@
 #include "Engine/Core/Rendering/Renderer/RenderManager.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
 
-
+#include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+#include "Editor/Editor.h"
+#include "Editor/ImGuiManager.h"
 
 
 namespace SaltnPepperEngine
@@ -41,17 +43,17 @@ namespace SaltnPepperEngine
 		//m_audioLibrary = MakeShared<AudioLibrary>();
 
 
-		//m_objectRegistry = MakeShared<GameObjectRegistry>();
+		
 
 		m_currentScene = MakeShared<Scene>("testScene");
 
-		//m_physicsSystem = MakeUnique<PhysicsEngine>();
+		m_physicsSystem = MakeUnique<PhysicsEngine>();
 
 		// Initializing teh Render manager
 		m_renderManager = MakeUnique<RenderManager>();
 
 
-		//m_editor = MakeUnique<RuntimeEditor>();
+		m_editor = MakeUnique<RuntimeEditor>();
 
 
 		// Setting the Instance reference of the creatd application
@@ -62,6 +64,11 @@ namespace SaltnPepperEngine
 
 
 
+	}
+
+	void Application::OnImGui()
+	{
+		m_editor->OnImGui();
 	}
 
 	void Application::UpdateDeltaTime(float& lastFrameEnd, float& lastSecondEnd, size_t& fps)
@@ -143,10 +150,10 @@ namespace SaltnPepperEngine
 		return m_currentScene.get();
 	}
 
-	/*PhysicsEngine* Application::GetPhysicsEngine() const
+	PhysicsEngine* Application::GetPhysicsEngine() const
 	{
 		return m_physicsSystem.get();
-	}*/
+	}
 
 	void Application::Initialize()
 	{
@@ -160,18 +167,28 @@ namespace SaltnPepperEngine
 
 		m_mainCameraIndex = 0;
 
-		//m_physicsSystem->Init();
-		//m_physicsSystem->UpdateScene(m_currentScene.get());
+		m_physicsSystem->Init();
+		m_physicsSystem->UpdateScene(m_currentScene.get());
 
-		//m_physicsSystem->SetPaused(false);
+		m_physicsSystem->SetPaused(false);
 
 		m_renderManager->Init();
 
+		m_editor->OnInit();
+		ImGui::CreateContext();	
+		ImGui::StyleColorsDark();
 		
 
-		//m_editor->Toggle(true);
+		m_imguiManager = MakeUnique<ImGuiManager>(false);
+		m_imguiManager->Init();
+		
+
+
+		m_editor->ToggleEditor();
 
 		//LuaManager::GetInstance().OnInit();
+
+
 
 		// Calling Init on the child applications
 		OnInit();
@@ -218,8 +235,10 @@ namespace SaltnPepperEngine
 			m_window->UpdateViewPort();
 			m_window->UpdateImGui();
 
-			//m_editor->OnUpdate();
+			ImGui::NewFrame();
 
+			m_imguiManager->Update(m_deltaTime, GetCurrentScene());
+		
 
 			// Render all the vertices in the current Render array
 			RenderObjects();
@@ -228,12 +247,13 @@ namespace SaltnPepperEngine
 			m_window->SwapBuffers();
 
 
-			//m_physicsSystem->Update(m_deltaTime);
+			m_physicsSystem->Update(m_deltaTime);
 
-			//m_physicsSystem->UpdateECSTransforms();
+			m_physicsSystem->UpdateECSTransforms();
 //
+			
 
-
+			m_imguiManager->OnRender(GetCurrentScene());
 
 			OnUpdate(m_deltaTime);
 
@@ -257,6 +277,15 @@ namespace SaltnPepperEngine
 	{
 		EventDispatcher dispatcher(event);
 
+		dispatcher.dispatch<WindowCloseEvent>(BIND_FN(Application::OnWindowClose));
+		dispatcher.dispatch<WindowResizeEvent>(BIND_FN(Application::OnWindowResize));
+
+
+		if (m_imguiManager)
+		{
+			m_imguiManager->OnEvent(event);
+		}
+		
 		// Event already handled
 		if (event.GetHandled()) { return; }
 
@@ -371,7 +400,7 @@ namespace SaltnPepperEngine
 
 	void Application::StartPhysics(bool shouldstart)
 	{
-		//m_physicsSystem->SetPaused(shouldstart);
+		m_physicsSystem->SetPaused(shouldstart);
 
 
 	}
@@ -379,6 +408,16 @@ namespace SaltnPepperEngine
 	const Vector2Int Application::GetWindowSize()
 	{
 		return GetAppWindow().GetSize();
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& event)
+	{
+		return false;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& event)
+	{
+		return false;
 	}
 
 

@@ -1,4 +1,8 @@
-#pragma once
+#ifndef RUNGEKUTTAINTEGRATION_H
+#define RUNGEKUTTAINTEGRATION_H
+
+
+
 #include "Engine/Utils/Maths/MathDefinitions.h"
 
 namespace SaltnPepperEngine
@@ -36,4 +40,5 @@ namespace SaltnPepperEngine
 
 }
 
+#endif // !RUNGEKUTTAINTEGRATION_H
 
