@@ -62,16 +62,7 @@ namespace SaltnPepperEngine
 			// Work on this later
 			//DrawMenuBar();
 
-			static bool isopen = true;
-			ImGui::Begin("Hello", &isopen);
-
-
-			ImGui::Text("current FPS");
-
-
-			ImGui::End();
-
-			/*BeginDockSpace(m_properties.m_fullscreenLaunch && m_editorState == EditorState::Play);
+			BeginDockSpace(m_properties.m_fullscreenLaunch && m_editorState == EditorState::Play);
 
 			for (SharedPtr<EditorWindow> window : m_editorWindows)
 			{
@@ -113,7 +104,7 @@ namespace SaltnPepperEngine
 								tab.Window->DrawList->AddLine(bb.Min, bb.Max, (!tab_bar_focused) ? ImGui::GetColorU32(ImGuiCol_SliderGrabActive) : ImGui::GetColorU32(ImGuiCol_Text), 2.0f);
 							}
 						}
-				}*/
+				}
 
 		}
 
@@ -147,6 +138,7 @@ namespace SaltnPepperEngine
 		
 			// making no docking since it would mess having 2 docking tagets within eatch other
 			ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking;
+			//ImGuiWindowFlags windowFlags = ImGuiWindowFlags_None;;
 			
 			if (optionalFullscreen)
 			{
@@ -225,9 +217,10 @@ namespace SaltnPepperEngine
 					hiddenWindows.clear();
 
 				}
+			}
 
-				if (!ImGui::DockBuilderGetNode(dockspaceID))
-				{
+			if (!ImGui::DockBuilderGetNode(dockspaceID))
+			{
 					ImGui::DockBuilderRemoveNode(dockspaceID); // Clear out existing layout
 					ImGui::DockBuilderAddNode(dockspaceID);    // Add empty node
 					ImGui::DockBuilderSetNodeSize(dockspaceID, ImGui::GetIO().DisplaySize * ImGui::GetIO().DisplayFramebufferScale);
@@ -267,8 +260,15 @@ namespace SaltnPepperEngine
 
 					ImGui::DockBuilderFinish(dockspaceID);
 
-				}
 			}
+
+
+			ImGuiIO& io = ImGui::GetIO();
+			if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+			{	
+				ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), optionalFlags);
+			}
+			
 		
 		}
 

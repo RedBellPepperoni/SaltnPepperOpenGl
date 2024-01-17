@@ -286,7 +286,7 @@ namespace SaltnPepperEngine
 
         void Window::InitializeImGui()
         {
-            ImGuiContext* context = ImGui::CreateContext();
+           /* ImGuiContext* context = ImGui::CreateContext();
             ImGui::SetCurrentContext(context);
 
             ImGuiIO& imguiIO = ImGui::GetIO();
@@ -298,7 +298,7 @@ namespace SaltnPepperEngine
 
             ImGui_ImplOpenGL3_Init();
 
-            ImGui::StyleColorsDark();
+            ImGui::StyleColorsDark();*/
 
 
             //ImGui::PushFont(ImGui::GetFont());

@@ -174,14 +174,13 @@ namespace SaltnPepperEngine
 
 		m_renderManager->Init();
 
-		m_editor->OnInit();
-		//ImGui::CreateContext();	
-		//ImGui::StyleColorsDark();
-		
 
-		//m_imguiManager = MakeUnique<ImGuiManager>(false);
-		//m_imguiManager->Init();
 		
+		m_editor->OnInit();
+
+		
+		m_imguiManager = MakeUnique<ImGuiManager>(false);
+		m_imguiManager->Init();
 
 
 		//m_editor->ToggleEditor();
@@ -233,28 +232,30 @@ namespace SaltnPepperEngine
 
 			// Update window and listen and process window events
 			m_window->UpdateViewPort();
-			m_window->UpdateImGui();
+			//m_window->UpdateImGui();
 
 				
-			m_editor->OnImGui();
-
-			//m_imguiManager->Update(m_deltaTime, GetCurrentScene());
 		
+
+			m_imguiManager->Update(m_deltaTime, GetCurrentScene());
+			
 
 			// Render all the vertices in the current Render array
 			RenderObjects();
 
-			m_window->RenderImGui();
+
+			// Do all the ImGUI Rendering before Swapping the buffers
+			m_imguiManager->OnRender(GetCurrentScene());
+
+
+			// Swapping the framebuffers 
 			m_window->SwapBuffers();
 
-
+			// Do the Physics Update here
 			m_physicsSystem->Update(m_deltaTime);
-
 			m_physicsSystem->UpdateECSTransforms();
 //
 			
-
-			//m_imguiManager->OnRender(GetCurrentScene());
 
 			OnUpdate(m_deltaTime);
 

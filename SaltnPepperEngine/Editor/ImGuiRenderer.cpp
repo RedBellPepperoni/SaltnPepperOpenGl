@@ -9,7 +9,6 @@ namespace SaltnPepperEngine
 	namespace Editor
 	{
 		ImGuiRenderer::ImGuiRenderer(bool clearScreen)
-			: m_windowHandle(nullptr)
 		{
 			m_clearScreen = clearScreen;
 		}
@@ -19,13 +18,20 @@ namespace SaltnPepperEngine
 			ImGui_ImplOpenGL3_Shutdown();
 		}
 
-		void ImGuiRenderer::Init()
-		{
-			
-			ImGui_ImplGlfw_InitForOpenGL(m_windowHandle, true);
+		void ImGuiRenderer::Init(GLFWwindow* windowHandle)
+		{		
+			ImGuiContext* context = ImGui::CreateContext();
+			ImGui::SetCurrentContext(context);
 
+			ImGuiIO& imguiIO = ImGui::GetIO();
+
+			imguiIO.ConfigFlags |= ImGuiConfigFlags_::ImGuiConfigFlags_DockingEnable;
+			imguiIO.ConfigDockingAlwaysTabBar = true;
+
+			ImGui_ImplGlfw_InitForOpenGL(windowHandle, true);
 			ImGui_ImplOpenGL3_Init();
-			ImGui_ImplOpenGL3_NewFrame();
+			ImGui::StyleColorsDark();
+
 		}
 
 		void ImGuiRenderer::NewFrame()
@@ -39,10 +45,10 @@ namespace SaltnPepperEngine
 		{
 			ImGui::Render();
 
-			/*if (m_clearScreen)
+			if (m_clearScreen)
 			{
 				GLDEBUG(glClear(GL_COLOR_BUFFER_BIT));
-			}*/
+			}
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		}
@@ -50,10 +56,6 @@ namespace SaltnPepperEngine
 		void ImGuiRenderer::OnResize(uint32_t width, uint32_t height)
 		{
 			// Implement later
-		}
-		void ImGuiRenderer::SetWindowRef(GLFWwindow* windowRef)
-		{
-			m_windowHandle = windowRef;
 		}
 	}
 }

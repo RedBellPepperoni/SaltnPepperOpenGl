@@ -18,17 +18,13 @@ namespace SaltnPepperEngine
 			ImGuiRenderer(bool clearScreen);
 			~ImGuiRenderer();
 
-			void Init();
+			void Init(GLFWwindow* windowHandle);
 			void NewFrame();
 			void Render();
 			void OnResize(uint32_t width, uint32_t height);
 
-			void SetWindowRef(GLFWwindow* windowRef);
-
-		
 		private:
 
-			GLFWwindow* m_windowHandle = nullptr;
 			bool m_clearScreen = false;
 		
 		};

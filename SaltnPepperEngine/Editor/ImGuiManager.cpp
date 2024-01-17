@@ -73,10 +73,8 @@ namespace SaltnPepperEngine
 			m_imguiRenderer = MakeUnique<ImGuiRenderer>(m_clearScreen);
 
 			if (m_imguiRenderer)
-			{
-				m_imguiRenderer->SetWindowRef(Application::GetCurrent().GetAppWindow().GetHandle());
-				m_imguiRenderer->Init();
-
+			{		
+				m_imguiRenderer->Init(Application::GetCurrent().GetAppWindow().GetHandle());
 			}
 			//io.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 			//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;

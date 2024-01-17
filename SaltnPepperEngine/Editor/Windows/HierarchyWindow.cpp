@@ -22,6 +22,13 @@ namespace SaltnPepperEngine
 
 		void HierarchyWindow::OnImgui()
 		{
+			static bool start = true;
+			ImGui::Begin("Hierarchy",&start);
+
+			ImGui::Text("Hellllllloooooooo !!!!");
+
+			ImGui::End();
+
 		}
 	
 		bool HierarchyWindow::IsParentOfEntity(entt::entity entity, entt::entity child, entt::registry& registry)
