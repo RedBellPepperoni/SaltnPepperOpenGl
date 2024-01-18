@@ -1,6 +1,6 @@
 #include "DebugRenderer.h"
-#include "Engine/Utils/Bounding/BoundingBox.h"
-#include "Engine/Utils/Bounding/BoundingSphere.h"
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 
 #include "Engine/Utils/Logging/Log.h"

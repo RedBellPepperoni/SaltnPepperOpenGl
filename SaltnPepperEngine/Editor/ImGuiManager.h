@@ -42,7 +42,7 @@ namespace SaltnPepperEngine
 
 			void SetImGuiKeyBinds();
 			void SetImGuiStyle();
-
+			void AddIconFont();
 			float m_fontSize = 1.0f;
 			float m_DPIScale = 1.0f;
 

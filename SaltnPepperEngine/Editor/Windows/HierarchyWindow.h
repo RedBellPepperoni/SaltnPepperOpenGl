@@ -30,7 +30,7 @@ namespace SaltnPepperEngine
 			HierarchyWindow();
 			virtual ~HierarchyWindow() = default;
 
-			void DrawEntity(entt::entity entity, entt::registry& registry);
+			void DrawNode(entt::entity entity, entt::registry& registry);
 			void OnImgui() override;
 			bool IsParentOfEntity(entt::entity entity, entt::entity child, entt::registry& registry);
 

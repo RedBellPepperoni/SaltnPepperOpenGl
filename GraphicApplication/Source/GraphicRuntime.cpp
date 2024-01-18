@@ -8,7 +8,7 @@ class GraphicRuntime : public Application
 	{
         SharedPtr<Mesh> mesh = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx")->GetMeshes()[0];
 
-        Entity entity = GetCurrentScene()->CreateEntity("Entity");
+        Entity entity = GetCurrentScene()->CreateEntity("Main Test Entity");
         Transform& transform = entity.AddComponent<Transform>();
 
         transform.SetPosition(Vector3(0.0f));
@@ -21,7 +21,7 @@ class GraphicRuntime : public Application
 
 
 
-        Entity dirLightEntity = GetCurrentScene()->CreateEntity("DirLight");
+        Entity dirLightEntity = GetCurrentScene()->CreateEntity("Directional Light");
         transform = dirLightEntity.AddComponent<Transform>();
 
         transform.SetPosition(Vector3(0.0f));

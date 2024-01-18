@@ -128,6 +128,17 @@ namespace SaltnPepperEngine
 
 		};
 
+		struct PrefabComponent
+		{
+			PrefabComponent(const std::string& path)
+			{
+				Path = path;
+			}
+
+			std::string Path;
+			
+		};
+
 
 
 	}

@@ -45,11 +45,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -175,6 +175,7 @@
     <ClInclude Include="Externals\Imgui\imstb_textedit.h" />
     <ClInclude Include="Externals\Imgui\imstb_truetype.h" />
     <ClInclude Include="Editor\ImGuiManager.h" />
+    <ClInclude Include="Font.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor\Editor.cpp" />
@@ -234,6 +235,7 @@
     <ClCompile Include="Externals\Imgui\imgui_tables.cpp" />
     <ClCompile Include="Externals\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Editor\ImGuiManager.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />
