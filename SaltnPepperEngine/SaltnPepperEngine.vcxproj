@@ -90,6 +90,7 @@
   <ItemGroup>
     <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
+    <ClInclude Include="Editor\MDIcons.h" />
     <ClInclude Include="Editor\ImGuiRenderer.h" />
     <ClInclude Include="EngineEditor.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />

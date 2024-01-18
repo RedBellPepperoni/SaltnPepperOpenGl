@@ -92,6 +92,12 @@ namespace SaltnPepperEngine
 
 		}
 
+		template <typename T, typename... Args>
+		T& GetOrAddComponent(Args&&... args)
+		{
+			return m_scene->GetRegistry().get_or_emplace<T>(m_entityHandle, std::forward<Args>(args)...);
+		}
+
 		template<typename T>
 		T& GetComponent()
 		{

@@ -273,6 +273,9 @@
     <ClInclude Include="EngineEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\MDIcons.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SaltnPepperEngine.h">

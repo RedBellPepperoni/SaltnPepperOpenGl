@@ -5,7 +5,10 @@
 
 // All the Component Includes
 #include "Engine/Core/Components/Transform.h"
+#include "Engine/Core/Components/SceneComponents.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 
 #include "Engine/Core/System/Application/Application.h"
@@ -16,6 +19,11 @@ namespace SaltnPepperEngine
 	
 	using namespace Rendering;
 	using namespace Components;
+	using namespace Physics;
+
+
+#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light, RigidBody3D 
+
 
 	Scene::Scene(const std::string& name)
 	{
@@ -170,11 +178,39 @@ namespace SaltnPepperEngine
 
 	void Scene::Duplicate(Entity entity)
 	{
+		Duplicate(entity, Entity(entt::null, nullptr));
 	}
 
 	void Scene::Duplicate(Entity entity, Entity parent)
 	{
-		
+		m_SceneGraph->DisableOnConstruct(true, m_EntityManager->GetRegistry());
+
+		Entity newEntity = m_EntityManager->Create();
+
+		CopyEntity<ALL_COMPONENTS>(newEntity.GetHandle(), entity.GetHandle(), m_EntityManager->GetRegistry());
+		newEntity.GetComponent<IdComponent>().ID = UniqueId().GetId();
+
+		Hierarchy* hierarchyComponent = newEntity.TryGetComponent<Hierarchy>();
+		if (hierarchyComponent)
+		{
+			hierarchyComponent->m_First = entt::null;
+			hierarchyComponent->m_Parent = entt::null;
+			hierarchyComponent->m_Next = entt::null;
+			hierarchyComponent->m_Prev = entt::null;
+		}
+
+		auto children = entity.GetChildren();
+		std::vector<Entity> copiedChildren;
+
+		for (auto child : children)
+		{
+			Duplicate(child, newEntity);
+		}
+
+		if (parent)
+			newEntity.SetParent(parent);
+
+		m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
 	}
 
 	Entity Scene::GetEntitybyId(const uint64_t id)

@@ -19,6 +19,8 @@ namespace SaltnPepperEngine
 			std::string m_name = "DefaultWindow";
 			RuntimeEditor* m_editorHandle = nullptr;
 
+
+
 		public:
 
 			virtual ~EditorWindow() = default;
@@ -39,6 +41,7 @@ namespace SaltnPepperEngine
 			RuntimeEditor* GetEditor();
 
 
+		
 		};
 
 	}

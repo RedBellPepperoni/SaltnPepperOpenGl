@@ -86,6 +86,15 @@ namespace SaltnPepperEngine
 
 			bool IsEntitySelected(entt::entity entity);
 
+
+			bool IsCopied(entt::entity entity);
+			void SetCopiedEntity(entt::entity entity, bool cut = false);
+			const std::vector<entt::entity>& GetCopiedEntity()const;
+
+			bool GetCutCopyEntity();
+
+
+
 			void FocusCamera(const Vector3& targetpoint, float distance, float speed = 1.0f);
 
 			void ShowPreview();
@@ -103,6 +112,11 @@ namespace SaltnPepperEngine
 
 			void ActivateSceneView(bool active);
 
+
+			EditorState GetEditorState() { return  m_editorState; }
+
+
+			std::unordered_map<size_t, const char*>& GetComponentIconMap();
 
 			struct EditorProperties
 			{
@@ -152,11 +166,17 @@ namespace SaltnPepperEngine
 			std::vector<SharedPtr<EditorWindow>> m_editorWindows;
 
 			std::vector<entt::entity> m_selectedEntities;
+			std::vector<entt::entity> m_copiedEntities;
+
+			bool m_cutCopyEntity = false;
 
 			Camera* m_currentCamera = nullptr;
 
 			Transform m_editorCameraTransform;
 			SharedPtr<Camera> m_editorCamera = nullptr;
+
+
+			std::unordered_map<size_t, const char*> m_componentIconMap;
 
 			EditorState m_editorState = EditorState::Preview;
 

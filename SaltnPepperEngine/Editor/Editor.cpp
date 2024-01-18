@@ -10,11 +10,17 @@
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
 #include "Engine/Core/System/Input/InputSystem.h"
+#include "Editor/MDIcons.h"
+#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
+#include "Engine/Core/Components/SceneComponents.h"
+#include "Engine/Core/Rendering/Geometry/Model.h"
 
 #include "ImGuiManager.h"
 
 namespace SaltnPepperEngine
 {
+	using namespace Physics;
 
 	namespace Editor
 	{
@@ -33,8 +39,20 @@ namespace SaltnPepperEngine
 			//m_editorCamera = MakeShared<Camera>();
 			//m_currentCamera = m_editorCamera.get();
 
+			
+
+			m_componentIconMap[typeid(Light).hash_code()] = ICON_MDI_LIGHTBULB;
+			m_componentIconMap[typeid(Camera).hash_code()] = ICON_MDI_CAMERA;
+			m_componentIconMap[typeid(Transform).hash_code()] = ICON_MDI_VECTOR_LINE;
+			m_componentIconMap[typeid(RigidBody3D).hash_code()] = ICON_MDI_CUBE_OUTLINE;
+			m_componentIconMap[typeid(ModelComponent).hash_code()] = ICON_MDI_VECTOR_POLYGON;
+			m_componentIconMap[typeid(Model).hash_code()] = ICON_MDI_VECTOR_POLYGON;
+			m_componentIconMap[typeid(RuntimeEditor).hash_code()] = ICON_MDI_SQUARE;
+			
+
 			m_editorWindows.emplace_back(MakeShared<InspectorWindow>());
 			m_editorWindows.emplace_back(MakeShared<HierarchyWindow>());
+
 
 			for (SharedPtr<EditorWindow> window : m_editorWindows)
 			{
@@ -94,7 +112,7 @@ namespace SaltnPepperEngine
 							const bool tab_bar_focused = (node->TabBar->Flags & ImGuiTabBarFlags_IsFocused) != 0;
 							if (tab_bar_focused || tab_visible)
 							{
-								auto tab = node->TabBar->Tabs[n];
+								ImGuiTabItem tab = node->TabBar->Tabs[n];
 
 								ImVec2 pos = tab.Window->Pos;
 								pos.x = pos.x + tab.Offset + ImGui::GetStyle().FramePadding.x;
@@ -347,6 +365,35 @@ namespace SaltnPepperEngine
 			return false;
 		}
 
+		bool RuntimeEditor::IsCopied(entt::entity entity)
+		{
+			if (std::find(m_copiedEntities.begin(), m_copiedEntities.end(), entity) != m_copiedEntities.end())
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		void RuntimeEditor::SetCopiedEntity(entt::entity entity, bool cut)
+		{
+			if (std::find(m_copiedEntities.begin(), m_copiedEntities.end(), entity) != m_copiedEntities.end())
+				return;
+
+			m_copiedEntities.push_back(entity);
+			m_cutCopyEntity = cut;
+		}
+
+		const std::vector<entt::entity>& RuntimeEditor::GetCopiedEntity() const
+		{
+			return m_copiedEntities;
+		}
+
+		bool RuntimeEditor::GetCutCopyEntity()
+		{
+			return m_cutCopyEntity;
+		}
+
 		void RuntimeEditor::FocusCamera(const Vector3& targetpoint, float distance, float speed)
 		{
 			if (m_currentCamera->IsOrthographic())
@@ -417,6 +464,11 @@ namespace SaltnPepperEngine
 
 		void RuntimeEditor::ActivateSceneView(bool active)
 		{
+		}
+
+		std::unordered_map<size_t, const char*>& RuntimeEditor::GetComponentIconMap()
+		{
+			return m_componentIconMap;
 		}
 
 		bool RuntimeEditor::OnWindowResize(WindowResizeEvent& event)
