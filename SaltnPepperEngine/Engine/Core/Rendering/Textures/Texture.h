@@ -112,6 +112,7 @@ namespace SaltnPepperEngine
             uint32_t GetTextureType() const;
 
 
+            const std::string& GetFilePath() const;
 
 
 

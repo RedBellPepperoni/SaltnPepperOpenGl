@@ -482,5 +482,9 @@ namespace SaltnPepperEngine
 		{
 			return m_textureType;
 		}
+		const std::string& Texture::GetFilePath() const
+		{
+			return m_filePath;
+		}
     }
 }

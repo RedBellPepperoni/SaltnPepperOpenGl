@@ -50,7 +50,9 @@ namespace SaltnPepperEngine
 			m_componentIconMap[typeid(RuntimeEditor).hash_code()] = ICON_MDI_SQUARE;
 			
 
-			m_editorWindows.emplace_back(MakeShared<InspectorWindow>());
+			SharedPtr<InspectorWindow> window = MakeShared<InspectorWindow>();
+			
+			m_editorWindows.emplace_back(window);
 			m_editorWindows.emplace_back(MakeShared<HierarchyWindow>());
 
 
@@ -58,6 +60,9 @@ namespace SaltnPepperEngine
 			{
 				window->SetEditor(this);
 			}
+
+			window->OnInit();
+
 		}
 
 		void RuntimeEditor::OnQuit()

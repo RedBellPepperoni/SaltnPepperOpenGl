@@ -9,6 +9,7 @@
 
 #include <functional>
 #include <string>
+#include "Editor/MDIcons.h"
 
 
 namespace MM 
@@ -104,7 +105,7 @@ namespace MM
                         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.7f, 0.7f, 0.0f));
 
                         static std::string removeName = "Remove Component";
-                        if (ImGui::Button("RemoveButton"))
+                        if (ImGui::Button(ICON_MDI_TUNE "##RemoveButton"))
                             ImGui::OpenPopup(removeName.c_str());
                         ImGui::PopStyleColor();
 
@@ -138,7 +139,7 @@ namespace MM
 
                 if (!has_not.empty())
                 {
-                    if (ImGui::Button(" Add Component", ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)))
+                    if (ImGui::Button(ICON_MDI_PLUS_BOX_OUTLINE " Add Component", ImVec2(ImGui::GetContentRegionAvail().x, 0.0f))) 
                     {
                         ImGui::OpenPopup("addComponent");
                     }
@@ -148,11 +149,12 @@ namespace MM
                         ImGui::Separator();
 
                         ImGui::AlignTextToFramePadding();
+                        ImGui::TextUnformatted(ICON_MDI_MAGNIFY);
                         ImGui::SameLine();
 
                         float filterSize = ImGui::GetContentRegionAvail().x - ImGui::GetStyle().IndentSpacing;
                         filterSize = filterSize < 200 ? 200 : filterSize;
-                        m_ComponentFilter.Draw("ComponentFilter", filterSize);
+                        m_ComponentFilter.Draw("##ComponentFilter", filterSize);
 
                         for (auto& [component_type_id, ci] : has_not)
                         {

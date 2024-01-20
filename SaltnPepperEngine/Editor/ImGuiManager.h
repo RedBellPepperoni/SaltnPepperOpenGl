@@ -43,7 +43,10 @@ namespace SaltnPepperEngine
 			void SetImGuiKeyBinds();
 			void SetImGuiStyle();
 			void AddIconFont();
-			float m_fontSize = 1.0f;
+
+			// Do not change Font size here !! :: Change the font size in the Constructor
+			float m_fontSize = 0.0f;
+
 			float m_DPIScale = 1.0f;
 
 			

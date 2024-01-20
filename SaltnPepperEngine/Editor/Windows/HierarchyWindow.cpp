@@ -9,6 +9,8 @@
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 
 
+#include <imgui/imgui_internal.h>
+
 namespace SaltnPepperEngine
 {
     using namespace Physics;
@@ -28,16 +30,24 @@ namespace SaltnPepperEngine
         {
            
             bool show = true;
+            Scene* scene = Application::GetCurrent().GetCurrentScene();
 
             if (!registry.valid(node))
+            {
                 return;
+            }
 
+            // Create a Entity Refernece with the Entt Id and scene
             Entity nodeEntity = { node, Application::GetCurrent().GetCurrentScene() };
 
+            // Default name if there is no name given to the Entity
             static const char* defaultName = "Entity";
-            const NameComponent* nameComponent = registry.try_get<NameComponent>(node);
-            const char* name = nameComponent ? nameComponent->name.c_str() : defaultName; // StringUtilities::ToString(entt::to_integral(node));
 
+            // get the name comp and gather the name given otherwise use default
+            const NameComponent* nameComponent = registry.try_get<NameComponent>(node);
+            const char* name = nameComponent ? nameComponent->name.c_str() : defaultName; 
+
+           // IMGUI Hierarchy filter active
             if (m_hierarchyFilter.IsActive())
             {
                 if (!m_hierarchyFilter.PassFilter(name))
@@ -46,14 +56,19 @@ namespace SaltnPepperEngine
                 }
             }
 
+
+            // Only Draw if the filter is active
             if (show)
             {
                 ImGui::PushID((int)node);
-                auto hierarchyComponent = registry.try_get<Hierarchy>(node);
+                Hierarchy* hierarchyComponent = registry.try_get<Hierarchy>(node);
+
                 bool noChildren = true;
 
                 if (hierarchyComponent != nullptr && hierarchyComponent->First() != entt::null)
+                {
                     noChildren = false;
+                }
 
                 ImGuiTreeNodeFlags nodeFlags = ((m_editorHandle->IsEntitySelected(node)) ? ImGuiTreeNodeFlags_Selected : 0);
 
@@ -64,11 +79,13 @@ namespace SaltnPepperEngine
                     nodeFlags |= ImGuiTreeNodeFlags_Leaf;
                 }
 
-                // auto activeComponent = registry.try_get<ActiveComponent>(node);
                 bool active = Entity(node, Application::GetCurrent().GetCurrentScene()).IsActive(); // activeComponent ? activeComponent->active : true;
 
                 if (!active)
+                {
+                    // if Inactive , Grey out the name
                     ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+                }
 
                 bool doubleClicked = false;
                 if (node == m_doubleClicked)
@@ -77,7 +94,9 @@ namespace SaltnPepperEngine
                 }
 
                 if (doubleClicked)
+                {
                     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 1.0f, 2.0f });
+                }
 
                 if (m_hadDroppedEntity == node)
                 {
@@ -85,39 +104,44 @@ namespace SaltnPepperEngine
                     m_hadDroppedEntity = entt::null;
                 }
 
+
+                // gather the correct C string values fro the icons
                 std::string icon = ICON_MDI_CUBE_OUTLINE;
-                auto& iconMap = m_editorHandle->GetComponentIconMap();
+
+                std::unordered_map<size_t, const char*>& iconMap = m_editorHandle->GetComponentIconMap();
 
                 if (registry.all_of<Camera>(node))
                 {
                     if (iconMap.find(typeid(Camera).hash_code()) != iconMap.end())
+                    {
                         icon = iconMap[typeid(Camera).hash_code()];
+                    }
                 }
                
                
                 else if (registry.all_of<RigidBody3D>(node))
                 {
                     if (iconMap.find(typeid(RigidBody3D).hash_code()) != iconMap.end())
+                    {
                         icon = iconMap[typeid(RigidBody3D).hash_code()];
+                    }
                 }
                 else if (registry.all_of<Light>(node))
                 {
                     if (iconMap.find(typeid(Light).hash_code()) != iconMap.end())
+                    {
                         icon = iconMap[typeid(Light).hash_code()];
+                    }
                 }
                
-               /* else if (registry.all_of<TextComponent>(node))
-                {
-                    if (iconMap.find(typeid(TextComponent).hash_code()) != iconMap.end())
-                        icon = iconMap[typeid(TextComponent).hash_code()];
-                }*/
-
+             
+                // Convert Vector4 color to ImVec4
                 Vector4 color = ImGuiUtils::GetIconColour();
                 ImVec4 iconColor = ImVec4(color.x, color.y, color.z, color.w);
 
 
                 ImGui::PushStyleColor(ImGuiCol_Text, iconColor);
-                // ImGui::BeginGroup();
+               
                 bool nodeOpen = ImGui::TreeNodeEx((void*)(intptr_t)entt::to_integral(node), nodeFlags, "%s", icon.c_str());
                 {
                     // Allow clicking of icon and text. Need twice as they are separated
@@ -125,26 +149,40 @@ namespace SaltnPepperEngine
                     {
                         bool ctrlDown = InputSystem::GetInstance().GetKeyHeld(Key::LeftControl) || InputSystem::GetInstance().GetKeyHeld(Key::RightControl);
                         if (!ctrlDown)
+                        {
                             m_editorHandle->ClearSelectedEntity();
+                        }
 
                         if (!m_editorHandle->IsEntitySelected(node))
+                        {
                             m_editorHandle->SelectEntity(node);
+                        }
                         else
+                        {
                             m_editorHandle->UnselectEntity(node);
+                        }
                     }
                     else if (m_doubleClicked == node && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsItemHovered(ImGuiHoveredFlags_None))
+                    {
                         m_doubleClicked = entt::null;
+                    }
                 }
+
                 ImGui::PopStyleColor();
                 ImGui::SameLine();
+
+
                 if (!doubleClicked)
                 {
                     bool isPrefab = false;
                     if (registry.any_of<PrefabComponent>(node))
+                    {
                         isPrefab = true;
+                    }
                     else
                     {
-                        auto Parent = nodeEntity.GetParent();
+                        Entity Parent = nodeEntity.GetParent();
+
                         while (Parent && Parent.IsValid())
                         {
                             if (Parent.HasComponent<PrefabComponent>())
@@ -160,27 +198,41 @@ namespace SaltnPepperEngine
                     }
 
                     if (isPrefab)
+                    {
                         ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_CheckMark));
+                    }
+
                     ImGui::TextUnformatted(name);
+
                     if (isPrefab)
+                    {
                         ImGui::PopStyleColor();
+                    }
                 }
-                // ImGui::EndGroup();
+               
 
                 if (doubleClicked)
                 {
                     static char objName[128];
                     strcpy_s(objName, name);
+
                     ImGui::PushItemWidth(-1);
+
                     if (ImGui::InputText("##Name", objName, IM_ARRAYSIZE(objName), 0))
+                    {
                         registry.get_or_emplace<NameComponent>(node).name = objName;
+                    }
+
                     ImGui::PopStyleVar();
                 }
 
                 if (!active)
+                {
                     ImGui::PopStyleColor();
+                }
 
                 bool deleteEntity = false;
+
                 if (ImGui::BeginPopupContextItem(name))
                 {
                     if (ImGui::Selectable("Copy"))
@@ -189,24 +241,30 @@ namespace SaltnPepperEngine
                         {
                             m_editorHandle->SetCopiedEntity(node);
                         }
-                        for (auto entity : m_editorHandle->GetSelectedEntities())
+                        for (entt::entity entity : m_editorHandle->GetSelectedEntities())
+                        {
                             m_editorHandle->SetCopiedEntity(entity);
+                        }
                     }
 
                     if (ImGui::Selectable("Cut"))
                     {
-                        for (auto entity : m_editorHandle->GetSelectedEntities())
+                        for (entt::entity entity : m_editorHandle->GetSelectedEntities())
+                        {
                             m_editorHandle->SetCopiedEntity(node, true);
+                        }
                     }
 
                     if (m_editorHandle->GetCopiedEntity().size() > 0 && registry.valid(m_editorHandle->GetCopiedEntity().front()))
                     {
                         if (ImGui::Selectable("Paste"))
                         {
-                            for (auto entity : m_editorHandle->GetCopiedEntity())
+                            for (entt::entity entity : m_editorHandle->GetCopiedEntity())
                             {
-                                auto scene = Application::GetCurrent().GetCurrentScene();
+                                //Scene* scene = Application::GetCurrent().GetCurrentScene();
+
                                 Entity copiedEntity = { entity, scene };
+
                                 if (!copiedEntity.IsValid())
                                 {
                                     m_editorHandle->SetCopiedEntity(entt::null);
@@ -216,7 +274,9 @@ namespace SaltnPepperEngine
                                     scene->Duplicate(copiedEntity, { node, scene });
 
                                     if (m_editorHandle->GetCutCopyEntity())
+                                    {
                                         deleteEntity = true;
+                                    }
                                 }
                             }
                         }
@@ -230,7 +290,7 @@ namespace SaltnPepperEngine
 
                     if (ImGui::Selectable("Duplicate"))
                     {
-                        auto scene = Application::GetCurrent().GetCurrentScene();
+                        //Scene* scene = Application::GetCurrent().GetCurrentScene();
                         scene->Duplicate({ node, scene });
                     }
                     if (ImGui::Selectable("Delete"))
@@ -244,8 +304,9 @@ namespace SaltnPepperEngine
 
                     if (ImGui::Selectable("Add Child"))
                     {
-                        auto scene = Application::GetCurrent().GetCurrentScene();
-                        auto child = scene->CreateEntity();
+                        //Scene* scene = Application::GetCurrent().GetCurrentScene();
+
+                        Entity child = scene->CreateEntity();
                         child.SetParent({ node, scene });
                     }
 
@@ -253,17 +314,20 @@ namespace SaltnPepperEngine
                     {
                         // if(Application::Get().GetEditorState() == EditorState::Preview)
                         {
-                            auto transform = registry.try_get<Transform>(node);
+                            Transform* transform = registry.try_get<Transform>(node);
                             if (transform)
+                            {
                                 m_editorHandle->FocusCamera(transform->GetWorldPosition(), 2.0f, 2.0f);
+                            }
                         }
                     }
+
                     ImGui::EndPopup();
                 }
 
                 if (!doubleClicked && ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
                 {
-                    auto ptr = node;
+                    entt::entity ptr = node;
                     ImGui::SetDragDropPayload("Drag_Entity", &ptr, sizeof(entt::entity*));
                     ImGui::Text(ICON_MDI_ARROW_UP);
                     ImGui::EndDragDropSource();
@@ -275,16 +339,21 @@ namespace SaltnPepperEngine
                     bool acceptable;
 
                     if (payload->DataSize != sizeof(entt::entity*))
-                    { LOG_ERROR("Error ImGUI drag entity"); }
+                    {
+                        LOG_ERROR("Error ImGUI drag entity"); 
+                    }
 
-                    auto entity = *reinterpret_cast<entt::entity*>(payload->Data);
-                    auto hierarchyComponent = registry.try_get<Hierarchy>(entity);
+                    entt::entity entity = *reinterpret_cast<entt::entity*>(payload->Data);
+                    Hierarchy* hierarchyComponent = registry.try_get<Hierarchy>(entity);
+
                     if (hierarchyComponent != nullptr)
                     {
                         acceptable = entity != node && (!IsParentOfEntity(entity, node, registry)) && (hierarchyComponent->Parent() != node);
                     }
                     else
+                    {
                         acceptable = entity != node;
+                    }
 
                     if (ImGui::BeginDragDropTarget())
                     {
@@ -311,18 +380,24 @@ namespace SaltnPepperEngine
                 }
 
                 if (ImGui::IsItemClicked() && !deleteEntity)
+                {
                     m_editorHandle->SelectEntity(node);
+                }
                 else if (m_doubleClicked == node && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsItemHovered(ImGuiHoveredFlags_None))
+                {
                     m_doubleClicked = entt::null;
+                }
 
                 if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered(ImGuiHoveredFlags_None))
                 {
                     m_doubleClicked = node;
                     if (m_editorHandle->GetEditorState() == EditorState::Preview)
                     {
-                        auto transform = registry.try_get<Transform>(node);
+                        Transform* transform = registry.try_get<Transform>(node);
                         if (transform)
+                        {
                             m_editorHandle->FocusCamera(transform->GetWorldPosition(), 2.0f, 2.0f);
+                        }
                     }
                 }
 
@@ -330,7 +405,9 @@ namespace SaltnPepperEngine
                 {
                     nodeEntity.GetScene()->DestroyEntity(nodeEntity);
                     if (nodeOpen)
+                    {
                         ImGui::TreePop();
+                    }
 
                     ImGui::PopID();
                     return;
@@ -361,7 +438,7 @@ namespace SaltnPepperEngine
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.7f, 0.7f, 0.0f));
                 if (ImGui::Button(active ? ICON_MDI_EYE : ICON_MDI_EYE_OFF))
                 {
-                    auto& activeComponent = registry.get_or_emplace<ActiveComponent>(node);
+                    ActiveComponent& activeComponent = registry.get_or_emplace<ActiveComponent>(node);
 
                     activeComponent.active = !active;
                 }
@@ -388,10 +465,10 @@ namespace SaltnPepperEngine
                     while (child != entt::null && registry.valid(child))
                     {
                         float HorizontalTreeLineSize = 20.0f * 1.0f; // chosen arbitrarily
-                        auto currentPos = ImGui::GetCursorScreenPos();
+                        ImVec2 currentPos = ImGui::GetCursorScreenPos();
                         ImGui::Indent(10.0f);
 
-                        auto childHerarchyComponent = registry.try_get<Hierarchy>(child);
+                        Hierarchy* childHerarchyComponent = registry.try_get<Hierarchy>(child);
 
                         if (childHerarchyComponent)
                         {
@@ -412,7 +489,7 @@ namespace SaltnPepperEngine
 
                         if (registry.valid(child))
                         {
-                            auto hierarchyComponent = registry.try_get<Hierarchy>(child);
+                            Hierarchy* hierarchyComponent = registry.try_get<Hierarchy>(child);
                             child = hierarchyComponent ? hierarchyComponent->Next() : entt::null;
                         }
                     }
@@ -430,7 +507,7 @@ namespace SaltnPepperEngine
 			
 
             
-            auto flags = ImGuiWindowFlags_NoCollapse;
+            ImGuiWindowFlags_ flags = ImGuiWindowFlags_NoCollapse;
             m_currentPrevious = entt::null;
             m_selectUp = false;
             m_selectDown = false;
@@ -440,15 +517,17 @@ namespace SaltnPepperEngine
 
             ImGui::Begin(m_name.c_str(), &m_active, flags);
             {
-                auto scene = Application::GetCurrent().GetCurrentScene();
+                Scene* scene = Application::GetCurrent().GetCurrentScene();
 
                 if (!scene)
                 {
                     ImGui::End();
                     return;
                 }
-                auto& registry = scene->GetRegistry();
 
+                entt::registry& registry = scene->GetRegistry();
+
+                // Using Auto for Lamda function
                 auto AddEntity = [scene]()
                     {
                         if (ImGui::Selectable("Add Empty Entity"))
@@ -458,23 +537,19 @@ namespace SaltnPepperEngine
 
                         if (ImGui::Selectable("Add Light"))
                         {
-                            auto entity = scene->CreateEntity("Light");
+                            Entity entity = scene->CreateEntity("Light");
                             entity.AddComponent<Light>();
                             entity.GetOrAddComponent<Transform>();
                         }
 
                         if (ImGui::Selectable("Add Rigid Body"))
                         {
-                          /*  auto entity = scene->CreateEntity("RigidBody");
-                            entity.AddComponent<RigidBody3D>();
-                            entity.GetOrAddComponent<Transform>();
                           
-                            entity.GetComponent<RigidBody3DComponent>().GetRigidBody()->SetCollisionShape(CollisionShapeType::CollisionCuboid);*/
                         }
 
                         if (ImGui::Selectable("Add Camera"))
                         {
-                            auto entity = scene->CreateEntity("Camera");
+                            Entity entity = scene->CreateEntity("Camera");
                             entity.AddComponent<Camera>();
                             entity.GetOrAddComponent<Transform>();
                         }
@@ -530,9 +605,9 @@ namespace SaltnPepperEngine
                     {
                         if (ImGui::Selectable("Paste"))
                         {
-                            for (auto entity : m_editorHandle->GetCopiedEntity())
+                            for (entt::entity entity : m_editorHandle->GetCopiedEntity())
                             {
-                                auto scene = Application::GetCurrent().GetCurrentScene();
+                                //Scene* scene = Application::GetCurrent().GetCurrentScene();
                                 Entity copiedEntity = { entity, scene };
                                 if (!copiedEntity.IsValid())
                                 {
@@ -567,8 +642,8 @@ namespace SaltnPepperEngine
                         if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Drag_Entity"))
                         {
                             if (payload->DataSize != sizeof(entt::entity*)) { LOG_ERROR("Error ImGUI drag entity"); }
-                            auto entity = *reinterpret_cast<entt::entity*>(payload->Data);
-                            auto hierarchyComponent = registry.try_get<Hierarchy>(entity);
+                            entt::entity entity = *reinterpret_cast<entt::entity*>(payload->Data);
+                            Hierarchy* hierarchyComponent = registry.try_get<Hierarchy>(entity);
                             if (hierarchyComponent)
                             {
                                 Hierarchy::Reparent(entity, entt::null, registry, *hierarchyComponent);
@@ -585,7 +660,7 @@ namespace SaltnPepperEngine
                     {
                         if (registry.valid(entity))
                         {
-                            auto hierarchyComponent = registry.try_get<Hierarchy>(entity);
+                            Hierarchy* hierarchyComponent = registry.try_get<Hierarchy>(entity);
 
                             if (!hierarchyComponent || hierarchyComponent->Parent() == entt::null)
                                 DrawNode(entity, registry);
@@ -609,8 +684,8 @@ namespace SaltnPepperEngine
                         bool acceptable = false;
 
                         if (payload->DataSize != sizeof(entt::entity*)) {LOG_ERROR( "Error ImGUI drag entity"); }
-                        auto entity = *reinterpret_cast<entt::entity*>(payload->Data);
-                        auto hierarchyComponent = registry.try_get<Hierarchy>(entity);
+                        entt::entity entity = *reinterpret_cast<entt::entity*>(payload->Data);
+                        Hierarchy* hierarchyComponent = registry.try_get<Hierarchy>(entity);
                         if (hierarchyComponent)
                         {
                             acceptable = hierarchyComponent->Parent() != entt::null;
@@ -621,8 +696,9 @@ namespace SaltnPepperEngine
                             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Drag_Entity"))
                             {
                                 if (payload->DataSize != sizeof(entt::entity*)) { LOG_ERROR("Error ImGUI drag entity"); }
-                                auto entity = *reinterpret_cast<entt::entity*>(payload->Data);
-                                auto hierarchyComponent = registry.try_get<Hierarchy>(entity);
+
+                                entt::entity entity = *reinterpret_cast<entt::entity*>(payload->Data);
+                                Hierarchy* hierarchyComponent = registry.try_get<Hierarchy>(entity);
                                 if (hierarchyComponent)
                                 {
                                     Hierarchy::Reparent(entity, entt::null, registry, *hierarchyComponent);
@@ -641,10 +717,11 @@ namespace SaltnPepperEngine
 	
 		bool HierarchyWindow::IsParentOfEntity(entt::entity entity, entt::entity child, entt::registry& registry)
 		{
-			auto nodeHierarchyComponent = registry.try_get<Hierarchy>(child);
+			Hierarchy* nodeHierarchyComponent = registry.try_get<Hierarchy>(child);
+
 			if (nodeHierarchyComponent)
 			{
-				auto parent = nodeHierarchyComponent->Parent();
+				entt::entity parent = nodeHierarchyComponent->Parent();
 				while (parent != entt::null)
 				{
 					if (parent == entity)

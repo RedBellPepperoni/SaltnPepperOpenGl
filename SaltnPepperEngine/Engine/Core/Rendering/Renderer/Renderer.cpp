@@ -574,8 +574,8 @@ namespace SaltnPepperEngine
                         //Matrix4 view = Math::GetLookAt(camera.viewPosition, camera.viewPosition + cameraRef.GetDirection(), cameraRef.GetUpVector());
 
 
-            //Matrix4 transformMatrix = transform.GetMatrix();
-            Matrix4 transformMatrix = transform.GetLocalMatrix();
+            Matrix4 transformMatrix = transform.GetMatrix();
+           // Matrix4 transformMatrix = transform.GetLocalMatrix();
 
             // get the inverse of the Camera trasfrom
            // Matrix4 view = Math::Inverse(transformMatrix);

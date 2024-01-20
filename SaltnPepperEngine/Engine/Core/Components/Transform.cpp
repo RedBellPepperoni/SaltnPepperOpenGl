@@ -1,6 +1,5 @@
 #include "Transform.h"
 
-
 namespace SaltnPepperEngine
 {
 	namespace Components
@@ -69,7 +68,9 @@ namespace SaltnPepperEngine
 
 		void Transform::SetMatrix(const Matrix4& mat)
 		{
-			m_worldMatrix = mat;
+			m_worldMatrix = mat * GetLocalMatrix();
+			//m_worldMatrix = mat;
+
 		}
 
 		const Vector3 Transform::GetScale() const

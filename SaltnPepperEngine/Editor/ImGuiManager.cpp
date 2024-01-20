@@ -11,7 +11,7 @@
 #include <Imgui/Plugins/ImGuiAl/fonts/RobotoMedium.inl>
 #include <Imgui/Plugins/ImGuiAl/fonts/RobotoRegular.inl>
 #include <Imgui/Plugins/ImGuiAl/fonts/RobotoBold.inl>
-
+//#include <Imgui//imgui_freetype.h>
 
 
 namespace SaltnPepperEngine
@@ -53,7 +53,9 @@ namespace SaltnPepperEngine
 		ImGuiManager::ImGuiManager(bool clearScreen)
 		{
 			m_clearScreen = clearScreen;
-			m_fontSize = 15.0f;
+
+			// Change Font Size Here
+			m_fontSize = 25.0f;
 
 		}
 
@@ -81,19 +83,27 @@ namespace SaltnPepperEngine
 			m_imguiRenderer = MakeUnique<ImGuiRenderer>(m_clearScreen);
 
 			if (m_imguiRenderer)
-			{		
+			{
 				m_imguiRenderer->Init(Application::GetCurrent().GetAppWindow().GetHandle());
 			}
+			
 			io.DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
 			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+
 			io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 			io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 			SetImGuiKeyBinds();
 			SetImGuiStyle();
 
-		
+			
+			io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+			io.KeyRepeatDelay = 0.400f;
+			io.KeyRepeatRate = 0.05f;
 
+			
+			
 			io.SetClipboardTextFn = ImGui_ImplGlfw_SetClipboardText;
 			io.GetClipboardTextFn = ImGui_ImplGlfw_GetClipboardText;
 
@@ -177,6 +187,7 @@ namespace SaltnPepperEngine
 			io.KeyShift = io.KeysDown[(int)Input::Key::LeftShift] || io.KeysDown[(int)Input::Key::RightShift];
 			io.KeyAlt = io.KeysDown[(int)Input::Key::LeftAlt] || io.KeysDown[(int)Input::Key::RightAlt];
 			
+			io.KeySuper = false;
 			
 			return io.WantTextInput;
 		}
@@ -184,6 +195,7 @@ namespace SaltnPepperEngine
 		bool ImGuiManager::OnKeyReleasedEvent(KeyUpEvent& event)
 		{
 			ImGuiIO& io = ImGui::GetIO();
+
 			io.KeysDown[(int)event.GetKeyCode()] = false;
 
 			return false;
@@ -194,7 +206,7 @@ namespace SaltnPepperEngine
 			ImGuiIO& io = ImGui::GetIO();
 			int keyCode = (int)event.character;
 
-			if (keyCode > 0 && keyCode < 0x100000)
+			if (keyCode > 0 && keyCode < 0x10000)
 			{
 				io.AddInputCharacter((unsigned short)keyCode);
 			}
@@ -207,8 +219,37 @@ namespace SaltnPepperEngine
 			ImGuiIO& io = ImGui::GetIO();
 			return false;
 		}
+
+
+
 		void ImGuiManager::SetImGuiKeyBinds()
 		{
+			/*ImGuiIO& io = ImGui::GetIO();
+			io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+			io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+			io.KeyMap[ImGuiKey_Tab] = (int)Key::Tab;
+			io.KeyMap[ImGuiKey_LeftArrow] = (int)Key::Left;
+			io.KeyMap[ImGuiKey_RightArrow] = (int)Key::Right;
+			io.KeyMap[ImGuiKey_UpArrow] = (int)Key::Up;
+			io.KeyMap[ImGuiKey_DownArrow] = (int)Key::Down;
+			io.KeyMap[ImGuiKey_PageUp] = (int)Key::PageUp;
+			io.KeyMap[ImGuiKey_PageDown] = (int)Key::PageDown;
+			io.KeyMap[ImGuiKey_Home] = (int)Key::Home;
+			io.KeyMap[ImGuiKey_End] = (int)Key::End;
+			io.KeyMap[ImGuiKey_Insert] = (int)Key::Insert;
+			io.KeyMap[ImGuiKey_Delete] = (int)Key::Delete;
+			io.KeyMap[ImGuiKey_Backspace] = (int)Key::Backspace;
+			io.KeyMap[ImGuiKey_Space] = (int)Key::Space;
+			io.KeyMap[ImGuiKey_Enter] = (int)Key::Enter;
+			io.KeyMap[ImGuiKey_Escape] = (int)Key::Escape;
+			io.KeyMap[ImGuiKey_A] = (int)Key::A;
+			io.KeyMap[ImGuiKey_C] = (int)Key::C;
+			io.KeyMap[ImGuiKey_V] = (int)Key::V;
+			io.KeyMap[ImGuiKey_X] = (int)Key::X;
+			io.KeyMap[ImGuiKey_Y] = (int)Key::Y;
+			io.KeyMap[ImGuiKey_Z] = (int)Key::Z;
+			io.KeyRepeatDelay = 0.400f;
+			io.KeyRepeatRate = 0.05f;*/
 		}
 
 
