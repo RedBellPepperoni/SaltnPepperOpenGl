@@ -478,19 +478,19 @@ namespace SaltnPepperEngine
 			CollisionData best_colData;
 			best_colData.penetration = -FLT_MAX;
 
-			std::vector<glm::vec3>& shape1CollisionAxes = colliderOne->GetCollisionNormals(bodyOne);
-			std::vector<glm::vec3>& shape2PossibleCollisionAxes = colliderTwo->GetCollisionNormals(bodyTwo);
+			std::vector<Vector3>& shape1CollisionAxes = colliderOne->GetCollisionNormals(bodyOne);
+			std::vector<Vector3>& shape2PossibleCollisionAxes = colliderTwo->GetCollisionNormals(bodyTwo);
 	
 			static const int MAX_COLLISION_AXES = 100;
-			static glm::vec3 possibleCollisionAxes[MAX_COLLISION_AXES];
+			static Vector3 possibleCollisionAxes[MAX_COLLISION_AXES];
 
 			uint32_t possibleCollisionAxesCount = 0;
-			for (const glm::vec3& axis : shape1CollisionAxes)
+			for (const Vector3& axis : shape1CollisionAxes)
 			{
 				possibleCollisionAxes[possibleCollisionAxesCount++] = axis;
 			}
 
-			for (const glm::vec3& axis : shape2PossibleCollisionAxes)
+			for (const Vector3& axis : shape2PossibleCollisionAxes)
 			{
 				possibleCollisionAxes[possibleCollisionAxesCount++] = axis;
 			}
@@ -502,19 +502,19 @@ namespace SaltnPepperEngine
 			{
 				for (const ColliderEdge& edge2 : shape2_edges)
 				{
-					glm::vec3 e1 = edge1.secondPosition - edge1.firstPosition;
-					glm::vec3 e2 = edge2.secondPosition - edge2.firstPosition;
+					Vector3 e1 = edge1.secondPosition - edge1.firstPosition;
+					Vector3 e2 = edge2.secondPosition - edge2.firstPosition;
 					e1 = glm::normalize(e1);
 					e2 = glm::normalize(e2);
 
-					glm::vec3 temp = glm::cross(e1, e2);
+					Vector3 temp = glm::cross(e1, e2);
 					AddPossibleCollisionAxis(temp, possibleCollisionAxes, possibleCollisionAxesCount);
 				}
 			}
 
 			for (uint32_t i = 0; i < possibleCollisionAxesCount; i++)
 			{
-				const glm::vec3& axis = possibleCollisionAxes[i];
+				const Vector3& axis = possibleCollisionAxes[i];
 				if (!CheckCollisionbySAT(axis, bodyOne, bodyTwo, colliderOne, colliderTwo, &cur_colData))
 					return false;
 

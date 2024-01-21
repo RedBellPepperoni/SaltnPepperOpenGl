@@ -36,7 +36,7 @@ namespace SaltnPepperEngine
        SharedPtr<Mesh> GenerateCube();
        SharedPtr<Mesh> GenerateSphere(uint32_t horizontalSegments = 32, uint32_t verticalSegments = 32);
        SharedPtr<Mesh> GenerateCapsule(float radius = 0.5f, float midHeight = 2.0f, int radialSegments = 64, int rings = 8);
-       SharedPtr<Mesh> GeneratePlane(float width, float height, const glm::vec3& normal);
+       SharedPtr<Mesh> GeneratePlane(float width, float height, const Vector3& normal);
        SharedPtr<Mesh> GenerateCylinder(float radius = 0.5f, float height = 1.0f, int radialSegments = 64, int rings = 8);
        SharedPtr<Mesh> CreateTerrain();
     }

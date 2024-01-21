@@ -162,10 +162,30 @@ namespace SaltnPepperEngine
         }
         
 
-   
+        inline Vector3 GetScaleFromMatrix(const Matrix4& transform)
+        {
+            Vector3 scale = Vector3(transform[0][0], transform[1][1], transform[2][2]);
+            return scale;
+        }
 
+        inline Vector3 GetRotationFromMatrix(const Matrix4& transform)
+        {
+            Vector3 rotation = glm::eulerAngles(glm::quat_cast(transform));
+            return rotation;
+        }
 
-        
+        inline Vector2 WorldToScreen(const Vector3& worldPos, const Matrix4& mvp, float width, float height, float winPosX, float winPosY)
+        {
+            Vector4 trans = mvp * Vector4(worldPos, 1.0f);
+            trans *= 0.5f / trans.w;
+            trans += Vector4(0.5f, 0.5f, 0.0f, 0.0f);
+            trans.y = 1.f - trans.y;
+            trans.x *= width;
+            trans.y *= height;
+            trans.x += winPosX;
+            trans.y += winPosY;
+            return Vector2(trans.x, trans.y);
+        }
         
         // Matrix Processing functions // Just simplified wrappers
 
@@ -296,6 +316,12 @@ namespace SaltnPepperEngine
             return result;
         }
 
+
+        template <class T>
+        inline bool FloatEquals(T lhs, T rhs, T eps = EPSILON)
+        {
+            return lhs + eps >= rhs && lhs - eps <= rhs;
+        }
 
 
         //Return sine of an angle in degrees.

@@ -17,6 +17,8 @@
 #include "Engine/Core/Rendering/Geometry/Model.h"
 
 #include "ImGuiManager.h"
+#include "Imgui/ImGuizmo.h"
+#include "Engine/Core/EntitySystem/Entity.h"
 
 namespace SaltnPepperEngine
 {
@@ -39,7 +41,12 @@ namespace SaltnPepperEngine
 			//m_editorCamera = MakeShared<Camera>();
 			//m_currentCamera = m_editorCamera.get();
 
-			
+			m_editorCamera = MakeShared<Camera>((16.0f / 10.0f), 0.01f, 1000.0f);
+			m_currentCamera = m_editorCamera.get();
+
+			m_editorCameraTransform.SetPosition(Vector3(0.0f,0.0f,-20.0f));
+			m_editorCameraTransform.SetMatrix(Matrix4(1.0f));
+
 
 			m_componentIconMap[typeid(Light).hash_code()] = ICON_MDI_LIGHTBULB;
 			m_componentIconMap[typeid(Camera).hash_code()] = ICON_MDI_CAMERA;
@@ -95,7 +102,7 @@ namespace SaltnPepperEngine
 				}
 			}
 
-			m_properties.m_view2D = false;
+			m_properties.m_view2D = m_currentCamera->IsOrthographic();
 
 			ImGuiIO& io = ImGui::GetIO();
 
@@ -131,8 +138,216 @@ namespace SaltnPepperEngine
 
 		}
 
+		void RuntimeEditor::OnImGuizmo()
+		{
+			Matrix4 view = Inverse(m_editorCameraTransform.GetMatrix());
+			Matrix4 proj = m_currentCamera->GetProjectionMatrix();
+
+
+			if (!m_properties.m_showGizmos || m_selectedEntities.empty() || m_imGuizmoOperation == 4)
+				return;
+
+			entt::registry& registry = Application::GetCurrent().GetCurrentScene()->GetRegistry();
+
+			if (m_selectedEntities.size() == 1)
+			{
+				entt::entity m_SelectedEntity = entt::null;
+
+				m_SelectedEntity = m_selectedEntities.front();
+				if (registry.valid(m_SelectedEntity))
+				{
+					ImGuizmo::SetDrawlist();
+					ImGuizmo::SetOrthographic(m_currentCamera->IsOrthographic());
+
+					Transform* transform = registry.try_get<Transform>(m_SelectedEntity);
+					if (transform != nullptr)
+					{
+						Matrix4 model = transform->GetMatrix();
+
+						float snapAmount[3] = { m_properties.m_snapAmount, m_properties.m_snapAmount, m_properties.m_snapAmount };
+						float delta[16];
+
+						ImGuizmo::Manipulate(glm::value_ptr(view),
+							glm::value_ptr(proj),
+							static_cast<ImGuizmo::OPERATION>(m_imGuizmoOperation),
+							ImGuizmo::LOCAL,
+							glm::value_ptr(model),
+							delta,
+							m_properties.m_snapQuizmo ? snapAmount : nullptr);
+
+						if (ImGuizmo::IsUsing())
+						{
+							Entity parent = Entity(m_SelectedEntity, Application::GetCurrent().GetCurrentScene()).GetParent(); // m_CurrentScene->TryGetEntityWithUUID(entity.GetParentUUID());
+							
+							if (parent && parent.HasComponent<Transform>())
+							{
+								Matrix4 parentTransform = parent.GetTransform().GetMatrix();
+								model = Inverse(parentTransform) * model;
+							}
+
+							if (ImGuizmo::IsScaleType()) // static_cast<ImGuizmo::OPERATION>(m_ImGuizmoOperation) & ImGuizmo::OPERATION::SCALE)
+							{
+								transform->SetScale(GetScaleFromMatrix(model));
+							}
+							else
+							{
+								transform->SetLocalMatrix(model);
+
+								RigidBody3D* rigidBody3DComponent = registry.try_get<RigidBody3D>(m_SelectedEntity);
+								if (rigidBody3DComponent)
+								{
+									rigidBody3DComponent->SetPosition(model[3]);
+									rigidBody3DComponent->SetRotation(GetRotationFromMatrix(model));
+								}		
+								
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				Vector3 medianPointLocation = Vector3(0.0f);
+				Vector3 medianPointScale = Vector3(0.0f);
+				int validcount = 0;
+				for (auto entityID : m_selectedEntities)
+				{
+					if (!registry.valid(entityID))
+						continue;
+
+					Entity entity = { entityID, Application::GetCurrent().GetCurrentScene()};
+
+					if (!entity.HasComponent<Transform>())
+						continue;
+
+					medianPointLocation += entity.GetTransform().GetWorldPosition();
+					medianPointScale += entity.GetTransform().GetScale();
+					validcount++;
+				}
+				medianPointLocation /= validcount; // m_SelectedEntities.size();
+				medianPointScale /= validcount;    // m_SelectedEntities.size();
+
+				Matrix4 medianPointMatrix = Translate(Matrix4(1.0f), medianPointLocation) * Scale(Matrix4(1.0f), medianPointScale);
+
+				ImGuizmo::SetDrawlist();
+				ImGuizmo::SetOrthographic(m_currentCamera->IsOrthographic());
+
+				float snapAmount[3] = { m_properties.m_snapAmount, m_properties.m_snapAmount, m_properties.m_snapAmount };
+				Matrix4 deltaMatrix = Matrix4(1.0f);
+
+				ImGuizmo::Manipulate(glm::value_ptr(view),
+					glm::value_ptr(proj),
+
+					static_cast<ImGuizmo::OPERATION>(m_imGuizmoOperation),
+					ImGuizmo::LOCAL,
+					glm::value_ptr(medianPointMatrix),
+					glm::value_ptr(deltaMatrix),
+					m_properties.m_snapQuizmo ? snapAmount : nullptr);
+
+				if (ImGuizmo::IsUsing())
+				{
+					Vector3 deltaTranslation, deltaScale;
+					Quaternion deltaRotation;
+					Vector3 skew;
+					Vector4 perspective;
+					glm::decompose(deltaMatrix, deltaScale, deltaRotation, deltaTranslation, skew, perspective);
+
+					
+					static const bool MedianPointOrigin = false;
+
+					if (MedianPointOrigin)
+					{
+						for (auto entityID : m_selectedEntities)
+						{
+							if (!registry.valid(entityID))
+								continue;
+							auto transform = registry.try_get<Transform>(entityID);
+
+							if (!transform)
+								continue;
+							if (ImGuizmo::IsScaleType()) // static_cast<ImGuizmo::OPERATION>(m_ImGuizmoOperation) == ImGuizmo::OPERATION::SCALE)
+							{
+								transform->SetScale(transform->GetScale() * deltaScale);
+								// transform->SetLocalTransform(deltaMatrix * transform->GetLocalMatrix());
+							}
+							else
+							{
+								transform->SetLocalMatrix(deltaMatrix * transform->GetLocalMatrix());
+
+								// World matrix wont have updated yet so need to multiply by delta
+								// TODO: refactor
+								auto worldMatrix = deltaMatrix * transform->GetMatrix();
+
+								
+								RigidBody3D* rigidBody3DComponent = registry.try_get<RigidBody3D>(entityID);
+								if (rigidBody3DComponent)
+								{
+									rigidBody3DComponent->SetPosition(worldMatrix[3]);
+									rigidBody3DComponent->SetRotation(GetRotationFromMatrix(worldMatrix));
+								}
+								
+								
+									
+								
+							}
+						}
+					}
+					else
+					{
+						for (auto entityID : m_selectedEntities)
+						{
+							if (!registry.valid(entityID))
+								continue;
+							auto transform = registry.try_get<Transform>(entityID);
+
+							if (!transform)
+								continue;
+							if (ImGuizmo::IsScaleType()) // static_cast<ImGuizmo::OPERATION>(m_ImGuizmoOperation) & ImGuizmo::OPERATION::SCALE)
+							{
+								transform->SetScale(transform->GetScale() * deltaScale);
+								// transform->SetLocalTransform(deltaMatrix * transform->GetLocalMatrix());
+							}
+							else if (ImGuizmo::IsRotateType()) // static_cast<ImGuizmo::OPERATION>(m_ImGuizmoOperation) & ImGuizmo::OPERATION::ROTATE)
+							{
+								transform->SetRotation(Quaternion(GetEularAnglesRadians(transform->GetRotation()) + GetEularAnglesRadians(deltaRotation)));
+							}
+							else
+							{
+								transform->SetLocalMatrix(deltaMatrix * transform->GetLocalMatrix());
+
+								// World matrix wont have updated yet so need to multiply by delta
+								// TODO: refactor
+								Matrix4 worldMatrix = deltaMatrix * transform->GetMatrix();
+
+								RigidBody3D* rigidBody3DComponent = registry.try_get<RigidBody3D>(entityID);
+								if (rigidBody3DComponent)
+								{
+									rigidBody3DComponent->SetPosition(worldMatrix[3]);
+									rigidBody3DComponent->SetRotation(GetRotationFromMatrix(worldMatrix));
+								}
+									
+								
+							}
+						}
+					}
+				}
+			}
+
+		}
+
 		void RuntimeEditor::OnUpdate()
 		{
+			if (InputSystem::GetInstance().GetKeyDown(Key::Delete))
+			{
+				auto* scene = Application::GetCurrent().GetCurrentScene();
+				for (auto entity : m_selectedEntities)
+				{
+					scene->DestroyEntity(Entity(entity, scene));
+				}
+			}
+
+
+
 		}
 
 		void RuntimeEditor::OnDebugDraw()

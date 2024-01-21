@@ -95,7 +95,7 @@
     <ClInclude Include="EngineEditor.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\Plane.h" />
+    <ClInclude Include="Engine\Utils\Plane.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\BroadPhase.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.h" />
@@ -175,7 +175,10 @@
     <ClInclude Include="Externals\Imgui\imstb_textedit.h" />
     <ClInclude Include="Externals\Imgui\imstb_truetype.h" />
     <ClInclude Include="Editor\ImGuiManager.h" />
+    <ClInclude Include="Externals\Imgui\ImGuizmo.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="Engine\Utils\Frustum.h" />
+    <ClInclude Include="SceneWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor\Editor.cpp" />
@@ -184,7 +187,7 @@
     <ClCompile Include="EngineEditor.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\Plane.cpp" />
+    <ClCompile Include="Engine\Utils\Plane.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\Colliders\BoxCollider.cpp" />
@@ -235,7 +238,9 @@
     <ClCompile Include="Externals\Imgui\imgui_tables.cpp" />
     <ClCompile Include="Externals\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Editor\ImGuiManager.cpp" />
+    <ClCompile Include="Externals\Imgui\ImGuizmo.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="Engine\Utils\Frustum.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />
@@ -251,6 +256,7 @@
     <ClCompile Include="Engine\Core\Rendering\Skybox\Skybox.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Skybox\SkyboxObject.cpp" />
     <ClCompile Include="Editor\Windows\TextEditWindow.cpp" />
+    <ClCompile Include="SceneWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

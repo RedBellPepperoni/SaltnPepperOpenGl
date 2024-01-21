@@ -19,7 +19,7 @@ namespace SaltnPepperEngine
         struct HullVertex
         {
             int idx = 0;
-            glm::vec3 pos;
+            Vector3 pos;
             std::vector<int> enclosing_edges;
             std::vector<int> enclosing_faces;
         };
@@ -35,7 +35,7 @@ namespace SaltnPepperEngine
         struct HullFace
         {
             int idx = 0;
-            glm::vec3 normal;
+            Vector3 normal;
             std::vector<int> vert_ids;
             std::vector<int> edge_ids;
             std::vector<int> adjoining_face_ids;

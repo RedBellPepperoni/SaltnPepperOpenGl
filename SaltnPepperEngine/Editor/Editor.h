@@ -57,6 +57,7 @@ namespace SaltnPepperEngine
 
 
 			void OnImGui();
+			void OnImGuizmo();
 
 			void OnUpdate();
 			void OnDebugDraw();
@@ -74,6 +75,16 @@ namespace SaltnPepperEngine
 
 
 			// Editor Display
+
+			void SetImGuizmoOperation(uint32_t operation)
+			{
+				m_imGuizmoOperation = operation;
+			}
+			uint32_t GetImGuizmoOperation() const
+			{
+				return m_imGuizmoOperation;
+			}
+
 			bool& ShowGizmos();
 			bool& ShowViewSelected();
 			bool& FullScreenOnLaunch();
@@ -116,6 +127,9 @@ namespace SaltnPepperEngine
 			EditorState GetEditorState() { return  m_editorState; }
 
 
+			Camera* GetCamera() const { return m_editorCamera.get(); }
+			Transform& GetEditorCameraTransform() { return m_editorCameraTransform; }
+
 			std::unordered_map<size_t, const char*>& GetComponentIconMap();
 
 			struct EditorProperties
@@ -126,6 +140,9 @@ namespace SaltnPepperEngine
 
 				bool m_showGrid = true;
 				bool m_showGizmos = true;
+				bool m_snapQuizmo = false;
+				float m_snapAmount = 1.0f;
+				float m_imGuizmoScale = 0.25f;
 
 				bool m_showViewSelected = false;
 				bool m_view2D = false;
@@ -134,6 +151,10 @@ namespace SaltnPepperEngine
 				bool m_fullscreenScene = false;
 
 				ImGuiUtils::Theme m_theme = ImGuiUtils::Theme::Black;
+				
+				bool m_freeAspect = true;
+				float m_fixedAspect = 1.0f;
+				bool m_halfRes = false;
 				float m_aspectRatio = 16.0f / 9.0f;
 
 
@@ -143,7 +164,7 @@ namespace SaltnPepperEngine
 
 			};
 
-
+			EditorProperties& GetProperties() { return m_properties; }
 			Vector2 m_sceneViewPosition;
 
 		protected:
@@ -180,7 +201,7 @@ namespace SaltnPepperEngine
 
 			EditorState m_editorState = EditorState::Preview;
 
-
+			uint32_t m_imGuizmoOperation = 14463;
 
 
 			SharedPtr<Texture> m_previewTexture;

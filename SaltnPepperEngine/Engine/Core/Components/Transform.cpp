@@ -73,6 +73,13 @@ namespace SaltnPepperEngine
 
 		}
 
+		void Transform::SetLocalMatrix(const Matrix4& mat)
+		{
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(mat, m_scale, m_rotation, m_position, skew, perspective);
+		}
+
 		const Vector3 Transform::GetScale() const
 		{
 			return m_scale;

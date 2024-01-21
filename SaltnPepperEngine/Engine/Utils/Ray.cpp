@@ -54,7 +54,7 @@ namespace SaltnPepperEngine
             float x = (Box.Max().x - m_origin.x) / m_direction.x;
             if (x < distance)
             {
-                glm::vec3 point = m_origin + x * m_direction;
+                Vector3 point = m_origin + x * m_direction;
                 if (point.y >= Box.Min().y && point.y <= Box.Max().y && point.z >= Box.Min().z && point.z <= Box.Max().z)
                     distance = x;
             }
@@ -66,7 +66,7 @@ namespace SaltnPepperEngine
             float x = (Box.Min().y - m_origin.y) / m_direction.y;
             if (x < distance)
             {
-                glm::vec3 point = m_origin + x * m_direction;
+                Vector3 point = m_origin + x * m_direction;
                 if (point.x >= Box.Min().x && point.x <= Box.Max().x && point.z >= Box.Min().z && point.z <= Box.Max().z)
                     distance = x;
             }
@@ -79,7 +79,7 @@ namespace SaltnPepperEngine
             float x = (Box.Max().y - m_origin.y) / m_direction.y;
             if (x < distance)
             {
-                glm::vec3 point = m_origin + x * m_direction;
+                Vector3 point = m_origin + x * m_direction;
                 if (point.x >= Box.Min().x && point.x <= Box.Max().x && point.z >= Box.Min().z && point.z <= Box.Max().z)
                     distance = x;
             }
@@ -90,7 +90,7 @@ namespace SaltnPepperEngine
             float x = (Box.Min().z - m_origin.z) / m_direction.z;
             if (x < distance)
             {
-                glm::vec3 point = m_origin + x * m_direction;
+                Vector3 point = m_origin + x * m_direction;
                 if (point.x >= Box.Min().x && point.x <= Box.Max().x && point.y >= Box.Min().y && point.y <= Box.Max().y)
                     distance = x;
             }
@@ -100,7 +100,7 @@ namespace SaltnPepperEngine
             float x = (Box.Max().z - m_origin.z) / m_direction.z;
             if (x < distance)
             {
-                glm::vec3 point = m_origin + x * m_direction;
+                Vector3 point = m_origin + x * m_direction;
                 if (point.x >= Box.Min().x && point.x <= Box.Max().x && point.y >= Box.Min().y && point.y <= Box.Max().y)
                     distance = x;
             }

@@ -339,13 +339,13 @@ namespace SaltnPepperEngine
         return updated;
     }
 
-    bool ImGuiUtils::Property(const char* name, glm::vec3& value, ImGuiUtils::PropertyFlag flags)
+    bool ImGuiUtils::Property(const char* name, Vector3& value, ImGuiUtils::PropertyFlag flags)
     {
         
         return ImGuiUtils::Property(name, value, -1.0f, 1.0f, flags);
     }
 
-    bool ImGuiUtils::Property(const char* name, glm::vec3& value, float min, float max, ImGuiUtils::PropertyFlag flags)
+    bool ImGuiUtils::Property(const char* name, Vector3& value, float min, float max, ImGuiUtils::PropertyFlag flags)
     {
         
         bool updated = false;
@@ -416,7 +416,7 @@ namespace SaltnPepperEngine
         return updated;
     }
 
-    bool ImGuiUtils::PropertyTransform(const char* name, glm::vec3& vector, float width)
+    bool ImGuiUtils::PropertyTransform(const char* name, Vector3& vector, float width)
     {
         const float labelIndetation = ImGui::GetFontSize();
         bool updated = false;

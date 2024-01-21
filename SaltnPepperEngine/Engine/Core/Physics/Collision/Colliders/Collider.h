@@ -1,6 +1,6 @@
 #pragma once
 #include "Engine/Utils/Maths/MathDefinitions.h"
-#include "Engine/Core/Physics/Collision/BoundingStuff/Plane.h"
+#include "Engine/Utils/Plane.h"
 #include <vector>
 
 namespace SaltnPepperEngine
@@ -28,9 +28,9 @@ namespace SaltnPepperEngine
 
 		struct ManifoldPolygon
 		{
-			glm::vec3 Faces[8];
+			Vector3 Faces[8];
 			Plane AdjacentPlanes[8];
-			glm::vec3 Normal;
+			Vector3 Normal;
 			uint32_t FaceCount = 0;
 			uint32_t PlaneCount = 0;
 		};
