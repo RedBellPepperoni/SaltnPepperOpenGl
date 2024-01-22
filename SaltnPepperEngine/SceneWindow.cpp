@@ -94,16 +94,16 @@ namespace SaltnPepperEngine
 			ImVec2 minBound = sceneViewPosition;
 
 			ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
-			bool updateCamera = ImGui::IsMouseHoveringRect(minBound, maxBound); // || Input::Get().GetMouseMode() == MouseMode::Captured;
+			bool updateCamera = ImGui::IsMouseHoveringRect(minBound, maxBound); 
 
-			/*app.SetSceneActive(ImGui::IsWindowFocused() && !ImGuizmo::IsUsing() && updateCamera);
+			m_editorHandle->SetSceneActive(ImGui::IsWindowFocused() && !ImGuizmo::IsUsing() && updateCamera);
 
 			ImGuizmo::SetRect(sceneViewPosition.x, sceneViewPosition.y, sceneViewSize.x, sceneViewSize.y);
 
-			m_editorHandle->SetSceneViewActive(updateCamera);
+			m_editorHandle->ActivateSceneView(updateCamera);
 			{
 				ImGui::GetWindowDrawList()->PushClipRect(sceneViewPosition, { sceneViewSize.x + sceneViewPosition.x, sceneViewSize.y + sceneViewPosition.y - 2.0f });
-			}*/
+			}
 
 
 		}

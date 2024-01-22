@@ -125,7 +125,8 @@ namespace SaltnPepperEngine
 
 
 			EditorState GetEditorState() { return  m_editorState; }
-
+			void SetSceneActive(bool active) { m_sceneActive = active; }
+			bool GetSceneActive() { return m_sceneActive; }
 
 			Camera* GetCamera() const { return m_editorCamera.get(); }
 			Transform& GetEditorCameraTransform() { return m_editorCameraTransform; }
@@ -176,6 +177,7 @@ namespace SaltnPepperEngine
 			Vector3 m_cameraOrigin = Vector3{ 0.0f };
 
 			bool m_sceneViewActive = false;
+			bool m_sceneActive = false;
 			bool m_editorActive = false;
 
 			bool m_camerainTransition = false;
