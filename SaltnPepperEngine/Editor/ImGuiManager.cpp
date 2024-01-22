@@ -11,11 +11,117 @@
 #include <Imgui/Plugins/ImGuiAl/fonts/RobotoMedium.inl>
 #include <Imgui/Plugins/ImGuiAl/fonts/RobotoRegular.inl>
 #include <Imgui/Plugins/ImGuiAl/fonts/RobotoBold.inl>
+
+//#include "Imgui/imconfig.h"
 //#include <Imgui//imgui_freetype.h>
 
 
 namespace SaltnPepperEngine
 {
+	
+	
+	static ImGuiKey GetImGuiKey(Input::Key keycode)
+	{
+		static std::map<Input::Key,ImGuiKey> inputMap =
+		{
+					{Key::A, ImGuiKey_A},
+					{Key::B,ImGuiKey_B},
+					{Key::C,ImGuiKey_C},
+					{Key::D,ImGuiKey_D},
+					{Key::E,ImGuiKey_E},
+					{Key::F,ImGuiKey_F},
+					{Key::G,ImGuiKey_G},
+					{Key::H,ImGuiKey_H},
+					{Key::I,ImGuiKey_I},
+					{Key::J,ImGuiKey_J},
+					{Key::K,ImGuiKey_K},
+					{Key::L,ImGuiKey_L},
+					{Key::M,ImGuiKey_M},
+					{Key::N,ImGuiKey_N},
+					{Key::O,ImGuiKey_O},
+					{Key::P,ImGuiKey_P},
+					{Key::Q,ImGuiKey_Q},
+					{Key::R,ImGuiKey_R},
+					{Key::S,ImGuiKey_S},
+					{Key::T,ImGuiKey_T},
+					{Key::U,ImGuiKey_U},
+					{Key::V,ImGuiKey_V},
+					{Key::W,ImGuiKey_W},
+					{Key::X,ImGuiKey_X},
+					{Key::Y,ImGuiKey_Y},
+					{Key::Z,ImGuiKey_Z},
+
+					{Key::num0,ImGuiKey_0},
+					{Key::num1,ImGuiKey_1},
+					{Key::num2,ImGuiKey_2},
+					{Key::num3,ImGuiKey_3},
+					{Key::num4,ImGuiKey_4},
+					{Key::num5,ImGuiKey_5},
+					{Key::num6,ImGuiKey_6},
+					{Key::num7,ImGuiKey_7},
+					{Key::num8,ImGuiKey_8},
+					{Key::num9,ImGuiKey_9},
+
+					{Key::Numpad0,ImGuiKey_Keypad0},
+					{Key::Numpad1,ImGuiKey_Keypad1},
+					{Key::Numpad2,ImGuiKey_Keypad2},
+					{Key::Numpad3,ImGuiKey_Keypad3},
+					{Key::Numpad4,ImGuiKey_Keypad4},
+					{Key::Numpad5,ImGuiKey_Keypad5},
+					{Key::Numpad6,ImGuiKey_Keypad6},
+					{Key::Numpad7,ImGuiKey_Keypad7},
+					{Key::Numpad8,ImGuiKey_Keypad8},
+					{Key::Numpad9,ImGuiKey_Keypad9},
+
+					{Key::Semicolon , ImGuiKey_Semicolon},
+					{Key::Equal, ImGuiKey_Equal},
+
+					{Key::NumpadAdd,ImGuiKey_KeypadAdd },
+					{Key::NumpadEnter,ImGuiKey_KeypadEnter},
+
+					{ Key::Up,ImGuiKey_UpArrow },
+					{ Key::Down,ImGuiKey_DownArrow },
+					{ Key::Left,ImGuiKey_LeftArrow },
+					{ Key::Right,ImGuiKey_RightArrow },
+
+					{ Key::Space,ImGuiKey_Space },
+
+					{ Key::Minus,ImGuiKey_Minus },
+					{ Key::Delete,ImGuiKey_Delete },
+
+					{ Key::LeftShift,ImGuiKey_LeftShift },
+					{ Key::RightShift,ImGuiKey_RightShift },
+					{ Key::Escape,ImGuiKey_Escape },
+
+					{ Key::Comma,ImGuiKey_Comma },
+					{ Key::Backspace,ImGuiKey_Backspace },
+					{ Key::Enter,ImGuiKey_Enter },
+
+					{ Key::LeftAlt,ImGuiKey_LeftAlt },
+					{ Key::RightAlt,ImGuiKey_RightAlt },
+					{ Key::LeftControl,ImGuiKey_LeftCtrl },
+					{ Key::RightControl,ImGuiKey_RightCtrl },
+					{ Key::Tab,ImGuiKey_Tab },
+
+					{ Key::GraveAccent,ImGuiKey_GraveAccent},
+					{Key::Escape, ImGuiKey_Escape},
+					{Key::F1, ImGuiKey_F1},
+					{Key::F2, ImGuiKey_F2},
+					{Key::F3, ImGuiKey_F3},
+					{Key::F4, ImGuiKey_F4},
+					{Key::F5, ImGuiKey_F5},
+					{Key::F6, ImGuiKey_F6},
+					{Key::F7, ImGuiKey_F7},
+					{Key::F8, ImGuiKey_F8},
+					{Key::F9, ImGuiKey_F9},
+					{Key::F10, ImGuiKey_F10}
+		};
+
+		return inputMap[keycode];
+
+	}
+
+
 	namespace Editor
 	{
 		static const char* ImGui_ImplGlfw_GetClipboardText(void*)
@@ -181,13 +287,16 @@ namespace SaltnPepperEngine
 		{
 			ImGuiIO& io = ImGui::GetIO();
 
-			io.KeysDown[(int)event.GetKeyCode()] = true;
+			/*io.KeysDown[(int)event.GetKeyCode()] = true;
 
 			io.KeyCtrl = io.KeysDown[(int)Input::Key::LeftControl] || io.KeysDown[(int)Input::Key::RightControl];
 			io.KeyShift = io.KeysDown[(int)Input::Key::LeftShift] || io.KeysDown[(int)Input::Key::RightShift];
 			io.KeyAlt = io.KeysDown[(int)Input::Key::LeftAlt] || io.KeysDown[(int)Input::Key::RightAlt];
 			
-			io.KeySuper = false;
+			io.KeySuper = false;*/
+
+
+			io.AddKeyEvent(GetImGuiKey(event.GetKeyCode()), true);
 			
 			return io.WantTextInput;
 		}
@@ -196,7 +305,9 @@ namespace SaltnPepperEngine
 		{
 			ImGuiIO& io = ImGui::GetIO();
 
-			io.KeysDown[(int)event.GetKeyCode()] = false;
+			//io.KeysDown[(int)event.GetKeyCode()] = false;
+
+			io.AddKeyEvent(GetImGuiKey(event.GetKeyCode()), false);
 
 			return false;
 		}
