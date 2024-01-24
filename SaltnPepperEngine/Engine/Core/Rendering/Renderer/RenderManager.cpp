@@ -174,8 +174,8 @@ namespace SaltnPepperEngine
 	
 			SharedPtr<FrameBuffer>& buffer = m_renderer->SecondaryFrameBuffer;
 			SharedPtr<Texture>& texture = m_renderer->SecondaryTexture;
-			/*AttachFrameBuffer(buffer);
-			buffer->AttachTexture(texture);*/
+			AttachFrameBuffer(buffer);
+			/*buffer->AttachTexture(texture); */
 
 			buffer->Validate();
 
@@ -184,11 +184,11 @@ namespace SaltnPepperEngine
 
 			
 
-			// ===== Post Render Skybox Pass =================
-			m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
+			//// ===== Post Render Skybox Pass =================
+			//m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
 
-			// ===== Forward Pass for Opaque Elements ================ 
-			m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, MaterialType::Opaque);
+			//// ===== Forward Pass for Opaque Elements ================ 
+			//m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, MaterialType::Opaque);
 
 			//RenderToTextureNoClear(editorCameraRef->GetRenderTexture(), m_ShaderLibrary->GetResource("StandardShader"));
 			//RenderToTexture(editorCameraRef->GetRenderTexture(), m_ShaderLibrary->GetResource("StandardShader"));
@@ -211,24 +211,24 @@ namespace SaltnPepperEngine
 			//
 
 			// Multiple Camera Rendering for actual Game View
-			//for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
-			//{
-			//	//if (cameraElement.shouldRenderToTexture) { continue; }
+			for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
+			{
+				//if (cameraElement.shouldRenderToTexture) { continue; }
 
-			//	// Store the data for the current rendering camera
-			//	//const CameraElement& cameraElement = m_renderer->GetPipeLine().cameraList[cameraIndex];
+				// Store the data for the current rendering camera
+				//const CameraElement& cameraElement = m_renderer->GetPipeLine().cameraList[cameraIndex];
 
-			//	AttachFrameBuffer(cameraElement.gBuffer);
-			//	cameraElement.gBuffer->AttachTexture(cameraElement.outputTexture);
+				/*AttachFrameBuffer(cameraElement.gBuffer);
+				cameraElement.gBuffer->AttachTexture(cameraElement.outputTexture);*/
 
-			//	// ===== Post Render Skybox Pass =================
-			//	m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
+				// ===== Post Render Skybox Pass =================
+				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
 
-			//	// ===== Forward Pass for Opaque Elements ================ 
-			//	m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, MaterialType::Opaque);
+				// ===== Forward Pass for Opaque Elements ================ 
+				m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, MaterialType::Opaque);
 
 
-			//}
+			}
 
 
 
