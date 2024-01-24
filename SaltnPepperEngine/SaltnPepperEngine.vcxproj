@@ -178,7 +178,8 @@
     <ClInclude Include="Externals\Imgui\ImGuizmo.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Engine\Utils\Frustum.h" />
-    <ClInclude Include="SceneWindow.h" />
+    <ClInclude Include="Editor\Windows\SceneWindow.h" />
+    <ClInclude Include="Engine\Core\Rendering\Geometry\RectangleObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor\Editor.cpp" />
@@ -241,6 +242,7 @@
     <ClCompile Include="Externals\Imgui\ImGuizmo.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Engine\Utils\Frustum.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Geometry\RectangleObject.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />
@@ -256,7 +258,7 @@
     <ClCompile Include="Engine\Core\Rendering\Skybox\Skybox.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Skybox\SkyboxObject.cpp" />
     <ClCompile Include="Editor\Windows\TextEditWindow.cpp" />
-    <ClCompile Include="SceneWindow.cpp" />
+    <ClCompile Include="Editor\Windows\SceneWindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

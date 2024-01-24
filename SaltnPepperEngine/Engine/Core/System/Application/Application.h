@@ -11,6 +11,7 @@
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Utils/Time/Time.h"
 
+
 namespace SaltnPepperEngine
 {
 
@@ -50,6 +51,12 @@ namespace SaltnPepperEngine
 	using Physics::PhysicsEngine;
 
 
+	namespace Components
+	{
+		class Transform;
+	}
+
+	using Components::Transform;
 
 	class Application
 	{
@@ -202,7 +209,10 @@ namespace SaltnPepperEngine
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
 
+		// Editor Variables
 
+		Camera* GetEditorCamera();
+		Transform* GetEditorCameraTransform();
 
 	};
 }

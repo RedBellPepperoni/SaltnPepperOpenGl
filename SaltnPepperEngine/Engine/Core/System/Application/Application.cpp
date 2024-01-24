@@ -1,4 +1,4 @@
-#include "Application.h"
+  #include "Application.h"
 #include "Engine/Utils/Logging/Log.h"
 #include "Engine/Utils/Time/Time.h"
 #include "Engine/Core/System/Input/InputSystem.h"
@@ -10,10 +10,12 @@
 #include "Engine/Macros.h"
 #include "Engine/Core/Rendering/Renderer/RenderManager.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Components/Transform.h"
 
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
 #include "Editor/Editor.h"
 #include "Editor/ImGuiManager.h"
+#include "Engine/Core/EntitySystem/EntityManager.h"
 
 
 namespace SaltnPepperEngine
@@ -232,24 +234,27 @@ namespace SaltnPepperEngine
 
 			// Update window and listen and process window events
 			m_window->UpdateViewPort();
+			m_renderManager->SetWindowSize(m_window->GetSize());
+
 			//m_window->UpdateImGui();
 
 				
 		
 
-			m_imguiManager->Update(m_deltaTime, GetCurrentScene());
+			
 			
 
 			// Render all the vertices in the current Render array
 			RenderObjects();
 
+			m_imguiManager->Update(m_deltaTime, GetCurrentScene());
 
 			// Do all the ImGUI Rendering before Swapping the buffers
 			m_imguiManager->OnRender(GetCurrentScene());
 
-
 			// Swapping the framebuffers 
 			m_window->SwapBuffers();
+			
 
 			// Do the Physics Update here
 			m_physicsSystem->Update(m_deltaTime);
@@ -371,6 +376,8 @@ namespace SaltnPepperEngine
 
 
 		m_mainCameraIndex = index;
+
+		LOG_ERROR("SetMainCameraIndex function Turned OFF");
 	}
 
 	void Application::SetCursorPosition(Vector2 position)
@@ -420,6 +427,16 @@ namespace SaltnPepperEngine
 	bool Application::OnWindowResize(WindowResizeEvent& event)
 	{
 		return false;
+	}
+
+	Camera* Application::GetEditorCamera()
+	{
+	    return m_editor->GetCamera(); 
+	}
+
+	Transform* Application::GetEditorCameraTransform()
+	{
+		return &m_editor->GetEditorCameraTransform();
 	}
 
 

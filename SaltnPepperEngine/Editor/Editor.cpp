@@ -2,6 +2,7 @@
 #include "Engine/Core/System/Events/WindowEvent.h"
 #include "Windows/InspectorWindow.h"
 #include "Windows/HierarchyWindow.h"
+#include "Windows/SceneWindow.h"
 #include <imgui/imgui_internal.h>
 
 #include "Engine/Utils/Ray.h"
@@ -44,7 +45,7 @@ namespace SaltnPepperEngine
 			m_editorCamera = MakeShared<Camera>((16.0f / 10.0f), 0.01f, 1000.0f);
 			m_currentCamera = m_editorCamera.get();
 
-			m_editorCameraTransform.SetPosition(Vector3(0.0f,0.0f,-20.0f));
+			m_editorCameraTransform.SetPosition(Vector3(0.0f,0.0f,-40.0f));
 			m_editorCameraTransform.SetMatrix(Matrix4(1.0f));
 
 
@@ -62,13 +63,20 @@ namespace SaltnPepperEngine
 			m_editorWindows.emplace_back(window);
 			m_editorWindows.emplace_back(MakeShared<HierarchyWindow>());
 
+			SharedPtr<SceneWindow> sceneWindow = MakeShared<SceneWindow>();
+			
+			m_editorWindows.emplace_back(sceneWindow);
 
-			for (SharedPtr<EditorWindow> window : m_editorWindows)
+
+			for (SharedPtr<EditorWindow> windows : m_editorWindows)
 			{
-				window->SetEditor(this);
+				windows->SetEditor(this);
 			}
 
 			window->OnInit();
+
+			sceneWindow->OnInit();
+			sceneWindow->OnNewScene(Application::GetCurrent().GetCurrentScene());
 
 		}
 

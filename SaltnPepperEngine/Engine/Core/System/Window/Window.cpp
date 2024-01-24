@@ -190,12 +190,10 @@ namespace SaltnPepperEngine
             GLDEBUG(glViewport(0, 0, m_properties.width, m_properties.height));
             GLDEBUG(glClearColor(0.2f, 0.2f, 0.2f, 1.0f));
             // GLDEBUG(glClearColor(0.7f, 0.7f, 0.7f, 1.0f));
+
+
+            // Might Need to change This Later
             GLDEBUG(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-
-
-
-
-
 
 
         }

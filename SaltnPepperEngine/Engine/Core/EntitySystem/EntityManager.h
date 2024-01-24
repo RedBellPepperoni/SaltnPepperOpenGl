@@ -4,10 +4,17 @@
 #include "Entity.h"
 #include <string>
 
+//// GEt the Entt Registry header
+//DISABLE_PUSH_WARNING
+//DISABLE_WARNING_CONVERSION_TO_SMALLER_TYPE
+//#include <entt/entity/registry.hpp>
+//DISABLE_POP_WARNING
+
 
 namespace SaltnPepperEngine
 {
 	class Scene;
+	class Entity;
 
 	template <typename... Component>
 	struct ComponentView

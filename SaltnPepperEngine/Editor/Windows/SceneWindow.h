@@ -45,6 +45,9 @@ namespace SaltnPepperEngine
 
 			void ToolBar();
 			void Resize(uint32_t width, uint32_t height);
+            void DrawGizmos(float width, float height, float xPos, float yPos, Scene* scene);
+
+            void OnNewScene(Scene* sceneRef);
 
 		private:
 
@@ -73,7 +76,9 @@ namespace SaltnPepperEngine
 
                         ImGui::TextUnformatted(m_editorHandle->GetComponentIconMap()[typeid(T).hash_code()]);
                         ImGui::PopStyleColor();
-                        ImGuiUtils::Tooltip(typeid(T).name().c_str());
+
+                        const char* msg = typeid(T).name();
+                        ImGuiUtils::Tooltip(msg);
                    
                     
                     }

@@ -83,6 +83,47 @@ namespace SaltnPepperEngine
 			LOG_INFO("Texture : created with Id : {0}", m_textureId);
 		}
 
+		Texture::Texture(Texture&& texture) noexcept
+		{
+			m_width = texture.m_width;
+			m_height = texture.m_height;
+			m_textureType = texture.m_textureType;
+			m_filePath = std::move(texture.m_filePath);
+			m_samples = texture.m_samples;
+			m_format = texture.m_format;
+			m_textureId = texture.m_textureId;
+
+			texture.m_textureId = 0;
+			texture.m_activeId = 0;
+			texture.m_width = 0;
+			texture.m_height = 0;
+			texture.m_filePath = "[[deleted]]";
+			texture.m_samples = 0;
+
+		}
+
+
+		Texture& Texture::operator=(Texture&& texture) noexcept
+		{
+			this->DeleteTexture();
+
+			this->m_width = texture.m_width;
+			this->m_height = texture.m_height;
+			this->m_textureType = texture.m_textureType;
+			this->m_filePath = std::move(texture.m_filePath);
+			this->m_samples = texture.m_samples;
+			this->m_format = texture.m_format;
+			this->m_textureId = texture.m_textureId;
+
+			texture.m_textureId = 0;
+			texture.m_activeId = 0;
+			texture.m_width = 0;
+			texture.m_height = 0;
+			texture.m_filePath = "[[deleted]]";
+			texture.m_samples = 0;
+
+			return *this;
+		}
 
 		Texture::~Texture()
 		{
@@ -485,6 +526,10 @@ namespace SaltnPepperEngine
 		const std::string& Texture::GetFilePath() const
 		{
 			return m_filePath;
+		}
+		void Texture::SetFilePath(const std::string& path)
+		{
+			m_filePath = path;
 		}
     }
 }

@@ -279,13 +279,16 @@
     <ClInclude Include="Font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SceneWindow.h">
+    <ClInclude Include="Editor\Windows\SceneWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Utils\Frustum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Externals\Imgui\ImGuizmo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Rendering\Geometry\RectangleObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -509,13 +512,16 @@
     <ClCompile Include="Font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SceneWindow.cpp">
+    <ClCompile Include="Editor\Windows\SceneWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Utils\Frustum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Externals\Imgui\ImGuizmo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Rendering\Geometry\RectangleObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

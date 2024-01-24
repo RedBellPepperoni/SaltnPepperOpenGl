@@ -90,6 +90,8 @@ namespace SaltnPepperEngine
 			bool& FullScreenOnLaunch();
 
 		
+			bool& ShowGrid() { return m_properties.m_showGrid; }
+
 			void SelectEntity(entt::entity entity);
 			void UnselectEntity(entt::entity entity);
 			void ClearSelectedEntity();
