@@ -38,9 +38,6 @@ namespace SaltnPepperEngine
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugPointShader", FileSystem::GetShaderDir().string() + "DebugPointVert.glsl", FileSystem::GetShaderDir().string() + "DebugPointFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShader", FileSystem::GetShaderDir().string() + "renderBufferVert.glsl", FileSystem::GetShaderDir().string() + "renderBufferFrag.glsl"));
 			
-			//CHECKNULL(GetShaderLibrary()->LoadShader("StandardShader", File::GetShaderDir().string() + "textureVert.glsl", File::GetShaderDir().string() + "textureFrag.glsl"));
-			//CHECKNULL(GetShaderLibrary()->LoadShader("StandardShader", File::GetShaderDir().string() + "vert.glsl", File::GetShaderDir().string() + "frag.glsl"));
-
 		}
 
 		void RenderManager::ProcessScene(Scene* scene)
@@ -83,13 +80,13 @@ namespace SaltnPepperEngine
 			for (Entity meshObject : meshView)
 			{
 
-				MeshComponent& meshComp = meshObject.GetComponent<MeshComponent>();
-
-				if (!meshComp.isVisible)
+				if (!meshObject.TryGetComponent<ActiveComponent>()->active)
 				{
 					//The mesh is not visible , so dont need to render it
 					continue;
 				}
+
+				MeshComponent& meshComp = meshObject.GetComponent<MeshComponent>();
 
 				// getting the required components
 				MeshRenderer& materialComp = meshObject.GetComponent<MeshRenderer>();
@@ -133,8 +130,6 @@ namespace SaltnPepperEngine
 
 			GLDEBUG(glEnable(GL_DEPTH_TEST));
 			GLDEBUG(glEnable(GL_STENCIL_TEST));
-			//GLDEBUG(glEnable(GL_CULL_FACE));
-			//GLDEBUG(glCullFace(GL_BACK));
 
 			// Initializing Defaults that will be reused / instanced
 			m_renderer = MakeUnique<Renderer>();
@@ -147,9 +142,6 @@ namespace SaltnPepperEngine
 			m_renderer->SetupDebugShaders(lineShader, pointShader);
 
 			//m_renderer->SetSkyboxCubeMap(m_Texture->GetResource("DefaultSkyBox");
-
-
-
 
 		}
 
@@ -175,7 +167,8 @@ namespace SaltnPepperEngine
 			SharedPtr<FrameBuffer>& buffer = m_renderer->SecondaryFrameBuffer;
 			SharedPtr<Texture>& texture = m_renderer->SecondaryTexture;
 			AttachFrameBuffer(buffer);
-			/*buffer->AttachTexture(texture); */
+			//buffer->AttachTexture(texture);
+			
 
 			buffer->Validate();
 
@@ -227,14 +220,8 @@ namespace SaltnPepperEngine
 				// ===== Forward Pass for Opaque Elements ================ 
 				m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, MaterialType::Opaque);
 
-
+				m_renderer->DebugPass(cameraElement);
 			}
-
-
-
-			
-
-			//m_renderer->DebugPass(cameraElement);
 
 			//const CameraElement & cameraElement = m_renderer->GetPipeLine().cameraList[cameraIndex];
 
@@ -275,9 +262,9 @@ namespace SaltnPepperEngine
 		{
 			AttachFrameBufferNoClear(frameBuffer);
 
-			//frameBuffer->Validate();
+			frameBuffer->Validate(); 
 
-			//GetRenderer()->Clear();
+			GetRenderer()->Clear();
 		}
 
 		void RenderManager::AttachFrameBufferNoClear(const SharedPtr<FrameBuffer>& frameBuffer)

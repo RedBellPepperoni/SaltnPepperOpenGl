@@ -28,6 +28,11 @@ namespace SaltnPepperEngine
 		//Add a ID Component to give an unique ID to the newly created Entity
 		m_registry.emplace<IdComponent>(newEntity);
 
+		//Add an active component that define if the body is active : 
+		//  Active models are included in rendering 
+		// Active Physics object are simulated
+		m_registry.emplace<ActiveComponent>(newEntity);
+
 		return Entity(newEntity, m_scene);
 	}
 
