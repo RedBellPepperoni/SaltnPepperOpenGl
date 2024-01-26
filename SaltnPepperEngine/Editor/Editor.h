@@ -5,13 +5,15 @@
 #include "ImGuiUtils.h"
 
 #include "Engine/Core/System/Application/Application.h"
-
+#include "Engine/Core/Rendering/Camera/EditorCameraController.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/Components/Transform.h"
 
 
 #include <imgui/imgui.h>
 #include <entt/entt.hpp>
+
+
 
 namespace SaltnPepperEngine
 {
@@ -59,7 +61,7 @@ namespace SaltnPepperEngine
 			void OnImGui();
 			void OnImGuizmo();
 
-			void OnUpdate();
+			void OnUpdate(float deltaTime);
 			void OnDebugDraw();
 
 			void SetEditorActive(bool active);
@@ -87,6 +89,9 @@ namespace SaltnPepperEngine
 
 			bool& ShowGizmos();
 			bool& ShowViewSelected();
+
+			void ToggleSnap();
+
 			bool& FullScreenOnLaunch();
 
 		
@@ -124,7 +129,7 @@ namespace SaltnPepperEngine
 			Ray GetScreenRay(uint32_t xPos, uint32_t yPos, Camera* camera, uint32_t width, uint32_t height);
 
 			void ActivateSceneView(bool active);
-
+			void SetSceneViewSize(uint32_t width, uint32_t height);
 
 			EditorState GetEditorState() { return  m_editorState; }
 			void SetSceneActive(bool active) { m_sceneActive = active; }
@@ -175,7 +180,7 @@ namespace SaltnPepperEngine
 
 			bool OnWindowResize(WindowResizeEvent& event);
 
-			Vector3 m_cameraDestition = Vector3{ 0.0f };
+			Vector3 m_cameraDestination = Vector3{ 0.0f };
 			Vector3 m_cameraOrigin = Vector3{ 0.0f };
 
 			bool m_sceneViewActive = false;
@@ -183,7 +188,7 @@ namespace SaltnPepperEngine
 			bool m_editorActive = false;
 
 			bool m_camerainTransition = false;
-			float m_cameraTrasitionStartTime = 0.0f;
+			float m_cameraTransitionStartTime = 0.0f;
 			float m_cameraTransitionSpeed = 0.0f;
 
 			EditorProperties m_properties;
@@ -196,9 +201,10 @@ namespace SaltnPepperEngine
 			bool m_cutCopyEntity = false;
 
 			Camera* m_currentCamera = nullptr;
-
 			Transform m_editorCameraTransform;
 			SharedPtr<Camera> m_editorCamera = nullptr;
+
+			EditorCameraController m_editorCameraController;
 
 
 			std::unordered_map<size_t, const char*> m_componentIconMap;
@@ -210,6 +216,10 @@ namespace SaltnPepperEngine
 
 			SharedPtr<Texture> m_previewTexture;
 			SharedPtr<Mesh> m_previewSphere;
+
+			uint32_t m_sceneViewWidth = 0;
+			uint32_t m_sceneViewHeight = 0;
+			bool m_sceneViewSizeUpdated = false;
 
 		};
 

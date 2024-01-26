@@ -6,7 +6,8 @@ class GraphicRuntime : public Application
 {
 	void OnInit()
 	{
-        SharedPtr<Mesh> mesh = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx")->GetMeshes()[0];
+        //SharedPtr<Mesh> mesh = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx")->GetMeshes()[0];
+        SharedPtr<Model> model = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx");
 
         Entity entity = GetCurrentScene()->CreateEntity("Main Test Entity");
         Transform& transform = entity.AddComponent<Transform>();
@@ -14,7 +15,8 @@ class GraphicRuntime : public Application
         transform.SetPosition(Vector3(0.0f));
         transform.SetEularRotation(Vector3(0.0f));
 
-        entity.AddComponent<MeshComponent>(mesh);
+       // entity.AddComponent<MeshComponent>(mesh);
+        entity.AddComponent<ModelComponent>(model);
         entity.AddComponent<MeshRenderer>();
 
 

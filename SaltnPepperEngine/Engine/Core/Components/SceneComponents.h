@@ -84,7 +84,7 @@ namespace SaltnPepperEngine
 			ModelComponent();
 			ModelComponent(const std::string& filePath);
 			ModelComponent(const SharedPtr<Model>& modelRef);
-			//ModelComponent(PrimitiveType type);
+			ModelComponent(PrimitiveType type);
 
 
 			void LoadLibraryModel(const std::string firendlyName);
@@ -113,12 +113,8 @@ namespace SaltnPepperEngine
 			MeshRenderer(MaterialList materials);
 	
 
-			MaterialRef GetMaterial();
-			
-
+			MaterialRef GetMaterial();		
 			MaterialList GetMaterials() const;
-		
-
 			MaterialRef GetMaterial(int index) const;
 			
 

@@ -7,12 +7,14 @@ namespace SaltnPepperEngine
 
     }
 
-   /* Model::Model(PrimitiveType primitive)
+   
+
+    Model::Model(PrimitiveType primitive)
         : m_filePath ("Primitive")
         , m_primitiveType(primitive)
     {
-        m_meshes.push_back(MakeShared<Mesh>(GeneratePrimitive(primitive)));
-    }*/
+        m_meshes.push_back(GeneratePrimitive(primitive));
+    }
 
     Model::Model(SharedPtr<Mesh>& mesh, PrimitiveType primitive)
         :m_filePath("Primitive")

@@ -29,14 +29,16 @@ namespace SaltnPepperEngine
 	{
 		// Setting up a new Entity Manager with the current scene's Reference
 		m_EntityManager = MakeUnique<EntityManager>(this);
-		
+		/*m_EntityManager->AddComponentOnConstructDependency<Camera, Transform>();
+		m_EntityManager->AddComponentOnConstructDependency<ModelComponent, Transform>();
+		m_EntityManager->AddComponentOnConstructDependency<Light, Transform>();*/
+
 
 		m_SceneGraph = MakeUnique<SceneGraph>();
 		m_SceneGraph->Init(GetRegistry());
 
 
-		//m_EntityManager->AddComponentOnConstructDependency<Transform>()
-
+		
 
 	}
 

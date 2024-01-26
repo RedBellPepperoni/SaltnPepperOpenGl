@@ -5,6 +5,7 @@
 #include "Engine/Core/Rendering/Buffers/IndexBuffer.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 
+
 #include "Engine/Core/Rendering/RenderDefinitions.h"
 #include <vector>
 #include <string>
@@ -14,6 +15,7 @@ namespace SaltnPepperEngine
 
     namespace Rendering
     {
+		class Material;
 
 		class Mesh
 		{
@@ -34,7 +36,10 @@ namespace SaltnPepperEngine
 			uint32_t m_vertexCount;
 			uint32_t m_indiciesCount;
 
+			// Material Stuuff
 
+
+			SharedPtr<Material> m_material;
 
 
 		public:
@@ -62,6 +67,9 @@ namespace SaltnPepperEngine
 			SharedPtr<VertexBuffer>& GetVBO();
 			SharedPtr<IndexBuffer>& GetIBO();
 
+			void SetMaterial(const SharedPtr<Material>& newMaterial);
+			const SharedPtr<Material>& GetMaterial() const;
+ 
 
 
 		};

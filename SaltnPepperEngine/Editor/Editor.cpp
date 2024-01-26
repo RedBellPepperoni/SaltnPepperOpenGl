@@ -42,12 +42,19 @@ namespace SaltnPepperEngine
 			//m_editorCamera = MakeShared<Camera>();
 			//m_currentCamera = m_editorCamera.get();
 
+			ImGuizmo::Style& guizmoStyle = ImGuizmo::GetStyle();
+			guizmoStyle.HatchedAxisLineThickness = -1.0f;
+			ImGuizmo::SetGizmoSizeClipSpace(m_properties.m_imGuizmoScale);
+
+			// Create a new Editor camera
 			m_editorCamera = MakeShared<Camera>((16.0f / 10.0f), 0.01f, 1000.0f);
 			m_currentCamera = m_editorCamera.get();
-
+			// Set the initial  postion
 			m_editorCameraTransform.SetPosition(Vector3(0.0f,0.0f,-40.0f));
 			m_editorCameraTransform.SetMatrix(Matrix4(1.0f));
 
+			// Set the camera the controoler will access
+			m_editorCameraController.SetCamera(m_editorCamera.get());
 
 			m_componentIconMap[typeid(Light).hash_code()] = ICON_MDI_LIGHTBULB;
 			m_componentIconMap[typeid(Camera).hash_code()] = ICON_MDI_CAMERA;
@@ -343,7 +350,7 @@ namespace SaltnPepperEngine
 
 		}
 
-		void RuntimeEditor::OnUpdate()
+		void RuntimeEditor::OnUpdate(float deltaTime)
 		{
 			if (InputSystem::GetInstance().GetKeyDown(Key::Delete))
 			{
@@ -354,6 +361,132 @@ namespace SaltnPepperEngine
 				}
 			}
 
+			if (m_sceneViewActive)
+			{
+				entt::registry& registry = Application::GetCurrent().GetCurrentScene()->GetRegistry();
+
+				// if(Application::Get().GetSceneActive())
+				{
+					const Vector2 mousePos = InputSystem::GetInstance().GetMousePosition();
+					//m_editorCameraController.SetCamera(m_EditorCamera);
+					m_editorCameraController.MouseInput(m_editorCameraTransform, mousePos,deltaTime);
+					m_editorCameraController.KeyboardInput(m_editorCameraTransform, deltaTime);
+					m_editorCameraTransform.SetMatrix(Matrix4(1.0f));
+
+					if (!m_selectedEntities.empty() && InputSystem::GetInstance().GetKeyDown(Key::F))
+					{
+						if (registry.valid(m_selectedEntities.front()))
+						{
+							Transform* transform = registry.try_get<Transform>(m_selectedEntities.front());
+							if (transform)
+							{
+								FocusCamera(transform->GetWorldPosition(), 2.0f, 2.0f);
+							}
+						}
+					}
+				}
+
+				if (InputSystem::GetInstance().GetKeyHeld(Key::O))
+				{
+					FocusCamera(Vector3(0.0f, 0.0f, 0.0f), 2.0f, 2.0f);
+				}
+
+				if (m_camerainTransition)
+				{
+					if (m_cameraTransitionStartTime < 0.0f)
+					{
+						m_cameraTransitionStartTime = Application::GetCurrent().GetTotalElapsed();
+					}
+
+					float focusProgress = Min(((Application::GetCurrent().GetTotalElapsed() - m_cameraTransitionStartTime) / m_cameraTransitionSpeed), 1.0f);
+					Vector3 newCameraPosition = glm::mix(m_cameraOrigin, m_cameraDestination, focusProgress);
+					m_editorCameraTransform.SetPosition(newCameraPosition);
+
+					if (m_editorCameraTransform.GetPosition() == m_cameraDestination)
+					{
+						m_camerainTransition = false;
+					}
+				}
+
+				if (!InputSystem::GetInstance().GetMouseBtnHeld(MouseButton::Right) && !ImGuizmo::IsUsing())
+				{
+					if (InputSystem::GetInstance().GetKeyDown(Key::Q))
+					{
+						SetImGuizmoOperation(ImGuizmo::OPERATION::BOUNDS);
+					}
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::W))
+					{
+						SetImGuizmoOperation(ImGuizmo::OPERATION::TRANSLATE);
+					}
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::E))
+					{
+						SetImGuizmoOperation(ImGuizmo::OPERATION::ROTATE);
+					}
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::R))
+					{
+						SetImGuizmoOperation(ImGuizmo::OPERATION::SCALE);
+					}
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::T))
+					{
+						SetImGuizmoOperation(ImGuizmo::OPERATION::UNIVERSAL);
+					}
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::Y))
+					{
+						ToggleSnap();
+					}
+				}
+
+				if ((InputSystem::GetInstance().GetKeyHeld(Key::LeftControl)))
+				{
+					
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::X))
+					{
+						for (entt::entity entity : m_selectedEntities)
+						{
+							SetCopiedEntity(entity, true);
+						}
+					}
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::C))
+					{
+						for (entt::entity entity : m_selectedEntities)
+						{
+							SetCopiedEntity(entity, false);
+						}
+					}
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::V) && !m_copiedEntities.empty())
+					{
+						for (entt::entity entity : m_copiedEntities)
+						{
+							Application::GetCurrent().GetCurrentScene()->Duplicate({ entity, Application::GetCurrent().GetCurrentScene() });
+							if (entity != entt::null)
+							{
+								
+								Entity(entity, Application::GetCurrent().GetCurrentScene()).Destroy();
+							}
+						}
+					}
+
+					if (InputSystem::GetInstance().GetKeyDown(Key::D) && !m_selectedEntities.empty())
+					{
+						for (entt::entity entity : m_copiedEntities)
+						{
+							Application::GetCurrent().GetCurrentScene()->Duplicate({ entity, Application::GetCurrent().GetCurrentScene() });
+						}
+					}
+				}
+			}
+			else
+			{
+				m_editorCameraController.StopMovement();
+			}
 
 
 		}
@@ -537,6 +670,11 @@ namespace SaltnPepperEngine
 			return m_properties.m_showViewSelected;
 		}
 
+		void RuntimeEditor::ToggleSnap()
+		{
+			m_properties.m_snapQuizmo = !m_properties.m_snapQuizmo;
+		}
+
 		bool& RuntimeEditor::FullScreenOnLaunch()
 		{
 			return m_properties.m_fullscreenLaunch;
@@ -634,8 +772,8 @@ namespace SaltnPepperEngine
 			{
 				m_camerainTransition = true;
 
-				m_cameraDestition = targetpoint + m_editorCameraTransform.GetForwardVector() * distance;
-				m_cameraTrasitionStartTime = -1.0f;
+				m_cameraDestination = targetpoint + m_editorCameraTransform.GetForwardVector() * distance;
+				m_cameraTransitionStartTime = -1.0f;
 				m_cameraTransitionSpeed = 1.0f / speed;
 				m_cameraOrigin = m_editorCameraTransform.GetPosition();
 			}
@@ -692,6 +830,21 @@ namespace SaltnPepperEngine
 
 		void RuntimeEditor::ActivateSceneView(bool active)
 		{
+		}
+
+		void RuntimeEditor::SetSceneViewSize(uint32_t width, uint32_t height)
+		{
+			if (width != m_sceneViewWidth)
+			{
+				m_sceneViewWidth = width;
+				m_sceneViewSizeUpdated = true;
+			}
+
+			if (height != m_sceneViewHeight)
+			{
+				m_sceneViewHeight = height;
+				m_sceneViewSizeUpdated = true;
+			}
 		}
 
 		std::unordered_map<size_t, const char*>& RuntimeEditor::GetComponentIconMap()

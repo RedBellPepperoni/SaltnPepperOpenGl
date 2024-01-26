@@ -18,6 +18,7 @@
 
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
+#include "Engine/Core/Rendering/Geometry/Model.h"
 
 
 namespace SaltnPepperEngine
@@ -74,29 +75,71 @@ namespace SaltnPepperEngine
 
 
 			// Getting a view of all the Objects which have a "mesh" componenet
-			ComponentView meshView = scene->GetEntityManager()->GetComponentsOfType<MeshComponent>();
+			//ComponentView meshView = scene->GetEntityManager()->GetComponentsOfType<MeshComponent>();
+
+			//// Looping through all the entities that have a mesh component
+			//for (Entity meshObject : meshView)
+			//{
+
+			//	if (!meshObject.TryGetComponent<ActiveComponent>()->active)
+			//	{
+			//		//The mesh is not visible , so dont need to render it
+			//		continue;
+			//	}
+
+			//	MeshComponent& meshComp = meshObject.GetComponent<MeshComponent>();
+
+			//	// getting the required components
+			//	MeshRenderer& materialComp = meshObject.GetComponent<MeshRenderer>();
+			//	Transform& transform = meshObject.GetComponent<Transform>();
+
+
+			//	
+			//	// Sending the mesh data for processing
+			//	 m_renderer->ProcessRenderElement(meshComp.GetMesh(), materialComp.GetMaterial(), transform);
+
+			//}
+
+
+			ComponentView modelView = scene->GetEntityManager()->GetComponentsOfType<ModelComponent>();
 
 			// Looping through all the entities that have a mesh component
-			for (Entity meshObject : meshView)
+			for (Entity modelObject : modelView)
 			{
 
-				if (!meshObject.TryGetComponent<ActiveComponent>()->active)
+				//if (!modelObject.TryGetComponent<ActiveComponent>()->active)
+				if (!modelObject.IsActive())
 				{
 					//The mesh is not visible , so dont need to render it
 					continue;
 				}
 
-				MeshComponent& meshComp = meshObject.GetComponent<MeshComponent>();
+				// Cache the model ref and trasnfrom for later use
+				ModelComponent& modelComp = modelObject.GetComponent<ModelComponent>();
+				Transform& transform = modelObject.GetComponent<Transform>();
 
-				// getting the required components
-				MeshRenderer& materialComp = meshObject.GetComponent<MeshRenderer>();
-				Transform& transform = meshObject.GetComponent<Transform>();
+				const std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
+
+				for (SharedPtr<Mesh> mesh : meshes)
+				{
+					Matrix4& worldTransform = transform.GetMatrix();
+					
+					// Check for frustum Optimization later
+					// Might need to add bound boxes to each mesh for this
+				
+					const SharedPtr<Material>& material = mesh->GetMaterial();
+				    
+					m_renderer->ProcessRenderElement(mesh, material, transform);
+
+				}
+
+				
+				
 
 
 				
 				// Sending the mesh data for processing
-				 m_renderer->ProcessRenderElement(meshComp.GetMesh(), materialComp.GetMaterial(), transform);
-
+				
 			}
 
 			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();

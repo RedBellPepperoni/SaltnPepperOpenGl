@@ -43,7 +43,7 @@ namespace SaltnPepperEngine
 
 			ImGuiUtils::ScopedStyle windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
-			auto flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+			int flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 
 
 			if (!ImGui::Begin(m_name.c_str(), &m_active, flags) || !m_CurrentScene)
@@ -73,8 +73,8 @@ namespace SaltnPepperEngine
 			}
 
 			ImGuizmo::SetDrawlist();
-			auto sceneViewSize = ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin() - offset * 0.5f; // - offset * 0.5f;
-			auto sceneViewPosition = ImGui::GetWindowPos() + offset;
+			ImVec2 sceneViewSize = ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin() - offset * 0.5f; // - offset * 0.5f;
+			ImVec2 sceneViewPosition = ImGui::GetWindowPos() + offset;
 
 			sceneViewSize.x -= static_cast<int>(sceneViewSize.x) % 2 != 0 ? 1.0f : 0.0f;
 			sceneViewSize.y -= static_cast<int>(sceneViewSize.y) % 2 != 0 ? 1.0f : 0.0f;
@@ -163,6 +163,7 @@ namespace SaltnPepperEngine
 
 		void SceneWindow::Resize(uint32_t width, uint32_t height)
 		{
+			
 
 		}
 

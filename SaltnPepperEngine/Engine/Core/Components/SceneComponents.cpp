@@ -96,10 +96,12 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		/*ModelComponent::ModelComponent(PrimitiveType type)
-			: m_handle(Factory<Model>::Create(type))
+		
+
+		ModelComponent::ModelComponent(PrimitiveType type)
+			: m_handle(MakeShared<Model>(type))
 		{
-		}*/
+		}
 
 		void ModelComponent::LoadLibraryModel(const std::string firendlyName)
 		{

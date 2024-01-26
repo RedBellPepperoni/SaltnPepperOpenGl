@@ -24,7 +24,7 @@ namespace SaltnPepperEngine
 
 		Model() = default;
 		Model(const FilePath& filepath);
-		//Model(PrimitiveType primitive);
+		Model(PrimitiveType primitive);
 		Model(SharedPtr<Mesh>& mesh, PrimitiveType primitive);
 
 
