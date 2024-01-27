@@ -36,7 +36,15 @@ namespace SaltnPepperEngine
         {
         public:
 
-            Material() = default;
+            Material()
+            {
+                textureMaps.albedoMap = MakeShared<Texture>();
+                textureMaps.normalMap = MakeShared<Texture>();
+                textureMaps.metallicMap = MakeShared<Texture>();
+                textureMaps.aoMap = MakeShared<Texture>();
+                textureMaps.roughnessMap = MakeShared<Texture>();
+                textureMaps.emissiveMap = MakeShared<Texture>();
+            }
             ~Material() = default;
 
             std::string name = "DefaultMaterial";
@@ -47,16 +55,17 @@ namespace SaltnPepperEngine
             float roughness = 0.8f;
             float metallic = 0.1f;
             float emissive = 0.0f;
+            float reflectance = 0.0f;
             float ao = 1.0f;
             float normalMultiplier = 1.0f;
             float emissiveMultiplier = 1.0f;
 
-            float albedomapFactor = 1.0f;
-            float roughnessmapFactor = 1.0f;
-            float metallicmapFactor = 1.0f;
-            float aomapFactor = 1.0f;
-            float normalmapFactor = 1.0f;
-            float emissivemapFactor = 1.0f;
+            float albedoMapFactor = 1.0f;
+            float roughnessMapFactor = 1.0f;
+            float metallicMapFactor = 1.0f;
+            float aoMapFactor = 1.0f;
+            float normalMapFactor = 1.0f;
+            float emissiveMapFactor = 1.0f;
 
 
             MaterialType type = MaterialType::Opaque;
@@ -65,6 +74,9 @@ namespace SaltnPepperEngine
 
             constexpr static size_t TextureCount = 4;
 
+
+            const std::string& GetName() const { return name; }
+            const MaterialType GetType() const { return type; }
         };
     }
 }

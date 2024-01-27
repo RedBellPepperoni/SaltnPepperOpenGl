@@ -8,11 +8,15 @@
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 
+#include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Geometry/Mesh.h"
+#include "Engine/Core/Rendering/Material/Material.h"
+
 
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
-// 
+#include "Engine/Core/Rendering/Geometry/Primitives.h"
 
 #include "Editor/ImGuiUtils.h"
 #include "Editor/Editor.h"
@@ -382,7 +386,311 @@ namespace MM
         }
     }
 
-   
+    PrimitiveType GetPrimitive(const std::string& name)
+    {
+
+        //Plane = 1,
+        //    Quad = 2,
+        //    Sphere = 3,
+        //    Cube = 4,
+        //    Cylinder = 5,
+        //    Capsule = 6,
+        //    Terrain = 7,
+        //    External = 8
+        if (name == "Cube")
+        {
+            return PrimitiveType::Cube;
+        }
+        else if (name == "Plane")
+        {
+            return PrimitiveType::Plane;
+        }
+        else if (name == "Quad")
+        {
+            return PrimitiveType::Quad;
+        }
+        else if (name == "Sphere")
+        {
+            return PrimitiveType::Sphere;
+        }
+        else if (name == "Cylinder")
+        {
+            return PrimitiveType::Cylinder;
+        }
+        else if (name == "Capsule")
+        {
+            return PrimitiveType::Capsule;
+        }
+        else if (name == "Terrain")
+        {
+            return PrimitiveType::Terrain;
+        }
+
+        LOG_ERROR("Unsupported Primitive name");
+        return PrimitiveType::Cube;
+    }
+
+    std::string GetPrimitiveName(const PrimitiveType type)
+    {
+        switch (type)
+        {
+        case SaltnPepperEngine::Rendering::PrimitiveType::None: return "None";
+            break;
+        case SaltnPepperEngine::Rendering::PrimitiveType::Plane: return "Plane";
+            break;
+        case SaltnPepperEngine::Rendering::PrimitiveType::Quad: return "Quad";
+            break;
+        case SaltnPepperEngine::Rendering::PrimitiveType::Sphere: return "Sphere";
+            break;
+        case SaltnPepperEngine::Rendering::PrimitiveType::Cube: return "Cube";
+            break;
+        case SaltnPepperEngine::Rendering::PrimitiveType::Cylinder: return "Cylinder";
+            break;
+        case SaltnPepperEngine::Rendering::PrimitiveType::Capsule: return "Capsule";
+            break;
+        case SaltnPepperEngine::Rendering::PrimitiveType::Terrain: return "Terrain";
+            break;
+        case SaltnPepperEngine::Rendering::PrimitiveType::External: return "External";
+            break;
+       
+        }
+
+        LOG_ERROR("Unsupported Primitive type");
+        return "";
+    }
+
+    template <>
+    void ComponentEditorWidget<ModelComponent>(entt::registry& reg, entt::registry::entity_type e)
+    {
+        
+        Model& model = *reg.get<ModelComponent>(e).m_handle.get();
+
+        PrimitiveType primitiveType = reg.get<ModelComponent>(e).m_handle ? model.GetPrimitiveType() : PrimitiveType::None;
+
+        ImGuiUtils::PushID();
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+        ImGui::Columns(2);
+        ImGui::Separator();
+
+        ImGui::TextUnformatted("Primitive Type");
+
+        ImGui::NextColumn();
+        ImGui::PushItemWidth(-1);
+
+        const char* shapes[] = { "Sphere", "Cube", "External", "Quad", "None" };
+       // const char* shapes[] = { "Sphere", "Cube", "Capsule", "Cylinder", "Terrain", "External", "Quad", "None" };
+        std::string shape_current = GetPrimitiveName(primitiveType).c_str();
+        if (ImGui::BeginCombo("", shape_current.c_str(), 0)) // The second parameter is the label previewed before opening the combo.
+        {
+            for (int n = 0; n < 8; n++)
+            {
+                bool is_selected = (shape_current.c_str() == shapes[n]);
+                if (ImGui::Selectable(shapes[n], shape_current.c_str()))
+                {
+                    if (reg.get<ModelComponent>(e).m_handle)
+                        model.GetMeshes().clear();
+
+                    if (strcmp(shapes[n], "External") != 0)
+                    {
+                        if (reg.get<ModelComponent>(e).m_handle)
+                        {
+                            model.GetMeshes().push_back(SharedPtr<Mesh>(GeneratePrimitive(GetPrimitive(shapes[n]))));
+                            model.SetPrimitiveType(GetPrimitive(shapes[n]));
+                        }
+                        else
+                        {
+                            reg.get<ModelComponent>(e).LoadPrimitive(GetPrimitive(shapes[n]));
+                        }
+                    }
+                    else
+                    {
+                        if (reg.get<ModelComponent>(e).m_handle)
+                            model.SetPrimitiveType(PrimitiveType::External);
+                    }
+                }
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        ImGui::PopItemWidth();
+        ImGui::NextColumn();
+
+        if (primitiveType == PrimitiveType::External)
+        {
+            ImGui::TextUnformatted("FilePath");
+
+            ImGui::NextColumn();
+            ImGui::PushItemWidth(-1);
+            ImGui::TextUnformatted(model.GetFilePath().c_str());
+            ImGuiUtils::Tooltip(model.GetFilePath().c_str());
+
+            ImGui::PopItemWidth();
+            ImGui::NextColumn();
+        }
+
+        ImGui::Columns(1);
+        ImGui::Separator();
+        ImGui::PopStyleVar();
+
+        int matIndex = 0;
+
+        auto modelRef = reg.get<ModelComponent>(e).m_handle;
+        if (!modelRef)
+        {
+            ImGuiUtils::PopID();
+            return;
+        }
+
+        ImGui::Separator();
+        const auto& meshes = modelRef->GetMeshes();
+        if (ImGui::TreeNode("Meshes"))
+        {
+            for (auto mesh : meshes)
+            {
+                if (!mesh->GetName().empty())
+                    ImGui::TextUnformatted(mesh->GetName().c_str());
+            }
+            ImGui::TreePop();
+        }
+
+        ImGui::Separator();
+
+       
+
+        ImGui::Separator();
+        if (ImGui::TreeNode("Materials"))
+        {
+            Material* MaterialShown[1000];
+            uint32_t MaterialCount = 0;
+            for (auto mesh : meshes)
+            {
+                auto material = mesh->GetMaterial();
+                std::string matName = material ? material->GetName() : "";
+
+                bool materialFound = false;
+                for (uint32_t i = 0; i < MaterialCount; i++)
+                {
+                    if (MaterialShown[i] == material.get())
+                        materialFound = true;
+                }
+
+                if (materialFound)
+                    continue;
+
+                MaterialShown[MaterialCount++] = material.get();
+
+                if (matName.empty())
+                {
+                    matName = "Material";
+                    matName += std::to_string(matIndex);
+                }
+
+                matName += "##" + std::to_string(matIndex);
+                matIndex++;
+                if (!material)
+                {
+                    ImGui::TextUnformatted("Empty Material");
+                    if (ImGui::Button("Add Material", ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)))
+                        mesh->SetMaterial(MakeShared<Material>());
+                }
+                else if (ImGui::TreeNodeEx(matName.c_str(), ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth))
+                {
+                   
+                    //ImGui::Indent();
+                    //if (ImGui::Button("Save to file"))
+                    //{
+                    //    std::string filePath = "//Meshes"; // Materials/" + matName + ".lmat";
+                    //    std::string physicalPath;
+                    //    if (ResolvePhysicalPath(filePath, physicalPath))
+                    //    {
+                    //        physicalPath += "/Materials/" + matName + ".lmat";
+                    //        std::stringstream storage;
+
+                    //        cereal::JSONOutputArchive output{ storage };
+                    //        material->save(output);
+
+                    //        FileSystem::WriteTextFile(physicalPath, storage.str());
+                    //    }
+                    //}
+                    bool flipImage = true;
+
+                    bool opaque = material->GetType() == MaterialType::Opaque;
+                   
+
+                    ImGui::Columns(2);
+                    ImGui::Separator();
+
+                    ImGui::AlignTextToFramePadding();
+
+                    if (ImGuiUtils::Property("Opaque", opaque))
+                    {
+                        material->type = opaque ? MaterialType::Opaque : MaterialType::Transparent;
+                    }
+
+                   
+
+                    ImGui::Columns(1);
+
+                    Vector4 colour = Vector4();
+                    float normal = 0.0f;
+                    MaterialTextures& textures = material->textureMaps;
+
+                    Vector2 textureSize = Vector2(100.0f, 100.0f);
+
+                 /*   TextureWidget("Albedo", material.get(), textures.albedoMap.get(), flipImage, material->albedoMapFactor, material->albedoColour, std::bind(&Material::SetAlbedoTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    ImGui::Separator();
+
+                    TextureWidget("Normal", material.get(), textures.normalMap.get(), flipImage, material->normalMapFactor, normal, false, std::bind(&Material::SetNormalTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    ImGui::Separator();
+
+                    TextureWidget("Metallic", material.get(), textures.metallicMap.get(), flipImage, material->metallicMapFactor, material->metallic, true, std::bind(&Material::SetMetallicTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    ImGui::Separator();
+
+                    TextureWidget("Roughness", material.get(), textures.roughnessMap.get(), flipImage, material->roughnessMapFactor, material->roughness, true, std::bind(&Material::SetRoughnessTexture, material, std::placeholders::_1), textureSize * 1.0f);
+
+                    if (ImGui::TreeNodeEx("Reflectance", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth))
+                    {
+                        ImGui::SliderFloat("##Reflectance", &material->reflectance, 0.0f, 1.0f);
+                        ImGui::TreePop();
+                    }
+
+
+
+                    TextureWidget("AO",                     ImGui::Separator();material.get(), textures.aoMap.get(), flipImage, material->aoMapFactor, normal, false, std::bind(&Material::SetAOTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    ImGui::Separator();
+
+                    TextureWidget("Emissive", material.get(), textures.emissiveMap.get(), flipImage, material->emissiveMapFactor, material->emissive, true, std::bind(&Material::SetEmissiveTexture, material, std::placeholders::_1), textureSize * 1.0f);*/
+
+                    ImGui::Columns(2);
+
+                   /* ImGui::AlignTextToFramePadding();
+                    ImGui::TextUnformatted("WorkFlow");
+                    ImGui::NextColumn();
+                    ImGui::PushItemWidth(-1);
+
+                    int workFlow = (int)material->GetProperties()->workflow;
+
+                    if (ImGui::DragInt("##WorkFlow", &workFlow, 0.3f, 0, 2))
+                    {
+                        material->GetProperties()->workflow = (float)workFlow;
+                    }*/
+
+                  /*  ImGui::PopItemWidth();
+                    ImGui::NextColumn();
+
+                    material->SetMaterialProperites(*prop);*/
+                    ImGui::Columns(1);
+                    ImGui::Unindent();
+                    ImGui::TreePop();
+                }
+            }
+            ImGui::TreePop();
+        }
+
+        ImGuiUtils::PopID();
+    }
 
 }
 
