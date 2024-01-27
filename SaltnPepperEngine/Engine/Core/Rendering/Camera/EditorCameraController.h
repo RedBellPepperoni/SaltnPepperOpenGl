@@ -46,7 +46,7 @@ namespace SaltnPepperEngine
 
 	private:
 
-		EditorCameraMode m_cameraMode = EditorCameraMode::ARCBALL;
+		EditorCameraMode m_cameraMode = EditorCameraMode::FLYCAM;
 
 		Vector2 m_storedCursorPosition;
 		float m_cameraSpeed;

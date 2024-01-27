@@ -240,7 +240,7 @@ namespace SaltnPepperEngine
 
 				
 		
-
+			m_editor->OnUpdate(m_deltaTime);
 			
 			
 

@@ -86,7 +86,7 @@ namespace SaltnPepperEngine
 				camera->SetAspectRatio(aspect);
 			}
 
-			m_editorHandle->m_sceneViewPosition = glm::vec2(sceneViewPosition.x, sceneViewPosition.y);
+			m_editorHandle->m_sceneViewPosition = Vector2(sceneViewPosition.x, sceneViewPosition.y);
 
 			if (m_editorHandle->GetProperties().m_halfRes)
 			{
@@ -108,13 +108,19 @@ namespace SaltnPepperEngine
 			Texture* texture = Application::GetCurrent().GetRenderManager()->GetRenderer()->SecondaryTexture.get();
 			ImGuiUtils::Image(texture, glm::vec2(sceneViewSize.x, sceneViewSize.y));
 
-			auto windowSize = ImGui::GetWindowSize();
+			ImVec2 windowSize = ImGui::GetWindowSize();
 			ImVec2 minBound = sceneViewPosition;
 
 			ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
-			bool updateCamera = ImGui::IsMouseHoveringRect(minBound, maxBound);
 
+			//bool updateCamera = ImGui::IsMouseHoveringRect(minBound, maxBound);
+
+			// Idiotic fix until , I fix the real Issue
+			bool updateCamera = true;
+
+			
 			m_editorHandle->SetSceneActive(ImGui::IsWindowFocused() && !ImGuizmo::IsUsing() && updateCamera);
+			//m_editorHandle->SetSceneActive(ImGui::IsWindowFocused() && !ImGuizmo::IsUsing());
 
 			ImGuizmo::SetRect(sceneViewPosition.x, sceneViewPosition.y, sceneViewSize.x, sceneViewSize.y);
 

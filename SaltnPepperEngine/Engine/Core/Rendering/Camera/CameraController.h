@@ -30,7 +30,7 @@ namespace SaltnPepperEngine
 		virtual void KeyboardInput(Transform& transform, float deltaTime) = 0;
 		virtual void MouseInput(Transform& transform, Vector2 mousePosition, float deltaTime) = 0;
 		virtual void UpdateScroll(Transform& transform, float offset, float deltaTime) {};
-		virtual void SetFocalPoint(const Vector3& point) {};
+		//virtual void SetFocalPoint(const Vector3& point) {};
 
 
 

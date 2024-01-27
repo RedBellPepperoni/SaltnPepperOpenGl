@@ -364,7 +364,6 @@ namespace SaltnPepperEngine
 
         void Window::SetMousePosition(Vector2 position)
         {
-
             glfwSetCursorPos(windowHandle, position.x, position.y);
         }
 

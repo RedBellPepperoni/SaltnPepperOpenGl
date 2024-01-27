@@ -51,6 +51,7 @@ namespace SaltnPepperEngine
 			m_currentCamera = m_editorCamera.get();
 			// Set the initial  postion
 			m_editorCameraTransform.SetPosition(Vector3(0.0f,0.0f,-40.0f));
+			m_editorCameraTransform.SetEularRotation(Vector3(0.0f, 2.0f, 0.0f));
 			m_editorCameraTransform.SetMatrix(Matrix4(1.0f));
 
 			// Set the camera the controoler will access
@@ -368,7 +369,7 @@ namespace SaltnPepperEngine
 				// if(Application::Get().GetSceneActive())
 				{
 					const Vector2 mousePos = InputSystem::GetInstance().GetMousePosition();
-					//m_editorCameraController.SetCamera(m_EditorCamera);
+					m_editorCameraController.SetCamera(m_editorCamera.get());
 					m_editorCameraController.MouseInput(m_editorCameraTransform, mousePos,deltaTime);
 					m_editorCameraController.KeyboardInput(m_editorCameraTransform, deltaTime);
 					m_editorCameraTransform.SetMatrix(Matrix4(1.0f));
@@ -830,6 +831,7 @@ namespace SaltnPepperEngine
 
 		void RuntimeEditor::ActivateSceneView(bool active)
 		{
+			m_sceneViewActive = active;
 		}
 
 		void RuntimeEditor::SetSceneViewSize(uint32_t width, uint32_t height)

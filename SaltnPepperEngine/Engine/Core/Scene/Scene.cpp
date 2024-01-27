@@ -94,15 +94,15 @@ namespace SaltnPepperEngine
 		ComponentView cameraControllerView = m_EntityManager->GetComponentsOfType<FlyCameraController>();
 
 		ComponentView cameraview = m_EntityManager->GetComponentsOfType<Camera>();
-		//ComponentView audioListenerView = m_EntityManager->GetComponentsOfType<AudioListener>();
+		////ComponentView audioListenerView = m_EntityManager->GetComponentsOfType<AudioListener>();
 
 
-		Camera* camera = nullptr;
+		//Camera* camera = nullptr;
 
-		if (!cameraview.IsEmpty())
-		{
-			camera = &cameraview[0].GetComponent<Camera>();
-		}
+		//if (!cameraview.IsEmpty())
+		//{
+		//	camera = &cameraview[0].GetComponent<Camera>();
+		//}
 
 
 
@@ -115,9 +115,9 @@ namespace SaltnPepperEngine
 			if (transform)
 			{
 
-				controller.SetCamera(camera);
-				controller.KeyboardInput(*transform, deltaTime);
-				controller.MouseInput(*transform, mousePosition, deltaTime);
+				//controller.SetCamera(camera);
+				//controller.KeyboardInput(*transform, deltaTime);
+				//controller.MouseInput(*transform, mousePosition, deltaTime);
 
 				Vector3 pos = transform->GetPosition();
 				Vector3 rot = transform->GetEulerRotation();

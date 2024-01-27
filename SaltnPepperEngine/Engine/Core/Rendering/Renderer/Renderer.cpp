@@ -664,6 +664,10 @@ namespace SaltnPepperEngine
 
 
             Matrix4 transformMatrix = transform.GetMatrix();
+            Vector3 Newposition = transformMatrix[3];
+
+            //LOG_INFO("{0} : {1} : {2}",Newposition.x,Newposition.y,Newposition.z);
+
             // Matrix4 transformMatrix = transform.GetLocalMatrix();
 
              // get the inverse of the Camera trasfrom

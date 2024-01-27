@@ -18,7 +18,11 @@ namespace SaltnPepperEngine
 		m_previousCursorPosition = Vector3{ 0.0f };
 		m_rotationalVelocity = Vector2{ 0.0f };
 
-
+		m_sensitivity = 0.00001f;
+		m_zoomDampening = 0.00001f;
+		m_linearDampening = 0.00001f;
+		m_rotationalDampening = 0.0000001f;
+		m_cameraMode = EditorCameraMode::FLYCAM;
 
 	}
 
@@ -29,13 +33,13 @@ namespace SaltnPepperEngine
 
 	void EditorCameraController::MouseInput(Transform& transform, Vector2 mousePosition, float deltaTime)
 	{
-     
+		//return;
 
 		m_distance = Distance(transform.GetPosition(), m_focalPoint);
 		
 		if (m_cameraMode == EditorCameraMode::TWODIM)
 		{
-			static bool mouseHeld = false;
+			//static bool mouseHeld = false;
 
 			// Work on this Later
 		}
@@ -106,15 +110,17 @@ namespace SaltnPepperEngine
 
 					transform.SetRotation(rotation);
 					m_previousCursorPosition = mousePosition;
+
+					//LOG_INFO("{0} : {1} : {2} : {3}",rotation.x, rotation.y,rotation.z,rotation.w);
 				}
 
 
 
 			}
-			else
+			/*else
 			{
 				m_rotationalVelocity = Vector3(0.0f);
-			}
+			}*/
 
 
 
@@ -144,10 +150,10 @@ namespace SaltnPepperEngine
 		m_cameraSpeed = 80.0f * deltaTime;
 
 		// Way more if needed
-		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::LeftShift))
+		/*if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::LeftShift))
 		{
 			m_cameraSpeed = 1600.0f * deltaTime;
-		}
+		}*/
 
 
 
@@ -215,6 +221,9 @@ namespace SaltnPepperEngine
 			m_velocity = Vector3(0.0f);
 
 		}
+
+		/*Vector3 position = transform.GetPosition();
+		LOG_WARN("{0} : {1} : {2}", position.x, position.y, position.z);*/
 	}
 
 	void EditorCameraController::UpdateCameraView(Transform& transform, float delta)
@@ -268,7 +277,7 @@ namespace SaltnPepperEngine
 
 	Vector3 EditorCameraController::CalculatePosition(Transform& transform) const
 	{
-		return Vector3();
+		return m_focalPoint + transform.GetForwardVector() * m_distance + m_PositionDelta;
 	}
 	std::pair<float, float> EditorCameraController::PanSpeed() const
 	{
