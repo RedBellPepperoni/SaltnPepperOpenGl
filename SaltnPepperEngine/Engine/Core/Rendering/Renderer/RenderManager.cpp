@@ -204,32 +204,55 @@ namespace SaltnPepperEngine
 			// Second Render Pass for Editor
 			 //Make a bool here to not render scene view when the editor is turned off
 
+			if (Application::GetCurrent().GetEditorActive())
+			{
+				Camera* editorCameraRef = Application::GetCurrent().GetEditorCamera();
 
-			Camera* editorCameraRef = Application::GetCurrent().GetEditorCamera();
-	
-			SharedPtr<FrameBuffer>& buffer = m_renderer->SecondaryFrameBuffer;
-			SharedPtr<Texture>& texture = m_renderer->SecondaryTexture;
-			AttachFrameBuffer(buffer);
-			//buffer->AttachTexture(texture);
-			
-
-			buffer->Validate();
+				SharedPtr<FrameBuffer>& buffer = m_renderer->SecondaryFrameBuffer;
+				SharedPtr<Texture>& texture = m_renderer->SecondaryTexture;
+				AttachFrameBuffer(buffer);
+				//buffer->AttachTexture(texture);
 
 
-			m_renderer->Clear();
-
-			
-
-			//// ===== Post Render Skybox Pass =================
-			m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
-
-			//// ===== Forward Pass for Opaque Elements ================ 
-			m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, MaterialType::Opaque);
-			m_renderer->DebugPass(m_editorCameraElement);
-			//RenderToTextureNoClear(editorCameraRef->GetRenderTexture(), m_ShaderLibrary->GetResource("StandardShader"));
-			//RenderToTexture(editorCameraRef->GetRenderTexture(), m_ShaderLibrary->GetResource("StandardShader"));
+				buffer->Validate();
 
 
+				m_renderer->Clear();
+
+
+
+				//// ===== Post Render Skybox Pass =================
+				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
+
+				//// ===== Forward Pass for Opaque Elements ================ 
+				m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, MaterialType::Opaque);
+				m_renderer->DebugPass(m_editorCameraElement);
+				
+
+				EndFrame();
+			}
+			else
+			{
+				// Multiple Camera Rendering for actual Game View
+				for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
+				{
+				//if (cameraElement.shouldRenderToTexture) { continue; }
+
+				// Store the data for the current rendering camera
+				//const CameraElement& cameraElement = m_renderer->GetPipeLine().cameraList[cameraIndex];
+
+				/*AttachFrameBuffer(cameraElement.gBuffer);
+				cameraElement.gBuffer->AttachTexture(cameraElement.outputTexture);*/
+
+				// ===== Post Render Skybox Pass =================
+					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
+
+				// ===== Forward Pass for Opaque Elements ================ 
+					m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, MaterialType::Opaque);
+
+				//m_renderer->DebugPass(cameraElement);
+				}
+			}
 			//	
 			//AttachFrameBuffer(m_editorCameraElement.gBuffer);
 			//m_editorCameraElement.gBuffer->AttachTexture(m_editorCameraElement.outputTexture);
@@ -246,42 +269,24 @@ namespace SaltnPepperEngine
 			//
 			//
 
-			// Multiple Camera Rendering for actual Game View
-			//for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
-			//{
-			//	//if (cameraElement.shouldRenderToTexture) { continue; }
-
-			//	// Store the data for the current rendering camera
-			//	//const CameraElement& cameraElement = m_renderer->GetPipeLine().cameraList[cameraIndex];
-
-			//	/*AttachFrameBuffer(cameraElement.gBuffer);
-			//	cameraElement.gBuffer->AttachTexture(cameraElement.outputTexture);*/
-
-			//	// ===== Post Render Skybox Pass =================
-			//	m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
-
-			//	// ===== Forward Pass for Opaque Elements ================ 
-			//	m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, MaterialType::Opaque);
-
-			//	m_renderer->DebugPass(cameraElement);
-			//}
+			
 
 			//const CameraElement & cameraElement = m_renderer->GetPipeLine().cameraList[cameraIndex];
 
-			m_renderer->AttachDefaultFrameBuffer();
+			//m_renderer->AttachDefaultFrameBuffer();
 
-			if (!texture)
-			{
-				LOG_ERROR("Invalid output camera texture");
-			}
+			//if (!texture)
+			//{
+			//	LOG_ERROR("Invalid output camera texture");
+			//}
 
-			GLDEBUG(glDisable(GL_DEPTH_TEST));
-		   // glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//GLDEBUG(glDisable(GL_DEPTH_TEST));
+		 //  // glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
+			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), texture);
+			//m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), texture);
 
-			m_renderer->ClearRectangleObjectVAO();
+			//m_renderer->ClearRectangleObjectVAO();
 
 			//EndFrame();
 
@@ -296,7 +301,7 @@ namespace SaltnPepperEngine
 				LOG_ERROR("Invalid output camera texture");
 			}
 
-			m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_editorCameraElement.outputTexture);
+			m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_renderer->SecondaryTexture);
 
 			m_renderer->ClearRectangleObjectVAO();
 		}
