@@ -214,6 +214,8 @@ namespace SaltnPepperEngine
 		Camera* GetEditorCamera();
 		Transform* GetEditorCameraTransform();
 
+		const bool GetEditorActive() const;
+
 	};
 }
 

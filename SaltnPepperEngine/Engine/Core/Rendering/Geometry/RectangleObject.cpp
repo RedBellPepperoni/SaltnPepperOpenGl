@@ -53,8 +53,8 @@ namespace SaltnPepperEngine
 
 	}
 
-	const VertexArray& RectangleObject::GetVAO() const
+	SharedPtr<VertexArray>& RectangleObject::GetVAO() 
 	{
-		return *VAO;
+		return VAO;
 	}
 }

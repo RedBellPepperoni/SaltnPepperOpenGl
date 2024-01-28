@@ -238,19 +238,24 @@ namespace SaltnPepperEngine
 
 			//m_window->UpdateImGui();
 
-				
-		
-			m_editor->OnUpdate(m_deltaTime);
-			
-			
-
 			// Render all the vertices in the current Render array
 			RenderObjects();
+		
+			if (InputSystem::GetInstance().GetKeyDown(Key::GraveAccent))
+			{
+				m_editor->ToggleEditor();
+			}
+			
+			if (m_editor->IsEditorActive())
+			{
+				m_editor->OnUpdate(m_deltaTime);
 
-			m_imguiManager->Update(m_deltaTime, GetCurrentScene());
 
-			// Do all the ImGUI Rendering before Swapping the buffers
-			m_imguiManager->OnRender(GetCurrentScene());
+				m_imguiManager->Update(m_deltaTime, GetCurrentScene());
+
+				// Do all the ImGUI Rendering before Swapping the buffers
+				m_imguiManager->OnRender(GetCurrentScene());
+			}
 
 			// Swapping the framebuffers 
 			m_window->SwapBuffers();
@@ -437,6 +442,11 @@ namespace SaltnPepperEngine
 	Transform* Application::GetEditorCameraTransform()
 	{
 		return &m_editor->GetEditorCameraTransform();
+	}
+
+	const bool Application::GetEditorActive() const
+	{
+		return m_editor->IsEditorActive();;
 	}
 
 

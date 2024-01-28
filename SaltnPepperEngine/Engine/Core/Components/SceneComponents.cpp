@@ -83,11 +83,12 @@ namespace SaltnPepperEngine
 
 
 		ModelComponent::ModelComponent()
+			:m_handle(MakeShared<Model>(PrimitiveType::Cube))
 		{
 		}
 
 		ModelComponent::ModelComponent(const std::string& filePath)	
-		{
+		{ 
 			LoadLibraryModel(filePath);
 		}
 

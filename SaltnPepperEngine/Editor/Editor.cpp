@@ -29,7 +29,7 @@ namespace SaltnPepperEngine
 	{
 		RuntimeEditor::RuntimeEditor()
 		{
-
+			m_editorActive = false;
 		}
 
 		RuntimeEditor::~RuntimeEditor()
@@ -499,6 +499,11 @@ namespace SaltnPepperEngine
 		void RuntimeEditor::SetEditorActive(bool active)
 		{
 			m_editorActive = active;
+		}
+
+		bool RuntimeEditor::IsEditorActive()
+		{
+			return m_editorActive;
 		}
 
 		bool& RuntimeEditor::ToggleEditor()

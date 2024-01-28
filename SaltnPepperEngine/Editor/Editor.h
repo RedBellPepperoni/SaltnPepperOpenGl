@@ -65,6 +65,7 @@ namespace SaltnPepperEngine
 			void OnDebugDraw();
 
 			void SetEditorActive(bool active);
+			bool IsEditorActive();
 			bool& ToggleEditor();
 
 			void BeginDockSpace(bool fullScrenePlay);

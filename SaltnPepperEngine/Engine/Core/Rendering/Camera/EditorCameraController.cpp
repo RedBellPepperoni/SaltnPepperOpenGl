@@ -260,19 +260,19 @@ namespace SaltnPepperEngine
 
 	void EditorCameraController::MouseZoom(Transform& transform, float delta)
 	{
-		if (delta == 0.0f)
-			return;
+		//if (delta == 0.0f)
+		//	return;
 
-		m_distance -= delta * ZoomSpeed();
-		const Vector3 forwardDir = transform.GetForwardVector();
-		// transform.SetLocalPosition(m_FocalPoint - forwardDir * m_Distance);
-		if (m_distance < 1.0f)
-		{
-			m_focalPoint += forwardDir * m_distance;
-			m_distance = 1.0f;
-		}
+		//m_distance -= delta * ZoomSpeed();
+		//const Vector3 forwardDir = transform.GetForwardVector();
+		//// transform.SetLocalPosition(m_FocalPoint - forwardDir * m_Distance);
+		//if (m_distance < 1.0f)
+		//{
+		//	m_focalPoint += forwardDir * m_distance;
+		//	m_distance = 1.0f;
+		//}
 
-		m_PositionDelta += delta * ZoomSpeed() * forwardDir;
+		//m_PositionDelta += delta * ZoomSpeed() * forwardDir;
 	}
 
 	Vector3 EditorCameraController::CalculatePosition(Transform& transform) const
@@ -312,7 +312,7 @@ namespace SaltnPepperEngine
 
 	void EditorCameraController::UpdateScroll(Transform& transform, float offset, float dt)
 	{
-		if (m_cameraMode == EditorCameraMode::TWODIM)
+		/*if (m_cameraMode == EditorCameraMode::TWODIM)
 		{
 			if (!m_cameraRef)
 				return;
@@ -363,7 +363,7 @@ namespace SaltnPepperEngine
 
 				transform.SetPosition(pos);
 			}
-		}
+		}*/
 	}
 
 

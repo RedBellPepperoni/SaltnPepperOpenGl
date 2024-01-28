@@ -278,7 +278,7 @@ namespace SaltnPepperEngine
             RectangleObject& rectObject = m_pipeline.rectangularObject;
             shader->Bind();
 
-            rectObject.GetVAO().Bind();
+            rectObject.GetVAO()->Bind();
             
             DrawIndices(DrawType::TRIANGLES, rectObject.IndexCount, 0);
         }
@@ -335,7 +335,7 @@ namespace SaltnPepperEngine
 
         void Renderer::ClearRectangleObjectVAO()
         {
-            m_pipeline.rectangularObject.GetVAO().UnBind();
+            m_pipeline.rectangularObject.GetVAO()->UnBind();
         }
 
 
@@ -745,7 +745,7 @@ namespace SaltnPepperEngine
             shader->SetUniform("tex", boundId);
             shader->SetUniform("lod", lod);
 
-            m_pipeline.rectangularObject.GetVAO().Bind();
+            m_pipeline.rectangularObject.GetVAO()->Bind();
             DrawIndices(DrawType::TRIANGLES,  m_pipeline.rectangularObject.IndexCount, 0);
 
         }

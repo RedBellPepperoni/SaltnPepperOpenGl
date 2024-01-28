@@ -167,6 +167,7 @@
     <ClInclude Include="Editor\ImGuiUtils.h" />
     <ClInclude Include="Engine\Utils\Ray.h" />
     <ClInclude Include="Externals\Imgui\imconfig.h" />
+    <ClInclude Include="Externals\Imgui\ImFileBrowser.h" />
     <ClInclude Include="Externals\Imgui\imgui.h" />
     <ClInclude Include="Externals\Imgui\imgui_impl_glfw.h" />
     <ClInclude Include="Externals\Imgui\imgui_impl_opengl3.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Externals\Imgui\imstb_truetype.h" />
     <ClInclude Include="Editor\ImGuiManager.h" />
     <ClInclude Include="Externals\Imgui\ImGuizmo.h" />
+    <ClInclude Include="FileBrowserWindow.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Engine\Utils\Frustum.h" />
     <ClInclude Include="Editor\Windows\SceneWindow.h" />
@@ -242,6 +244,7 @@
     <ClCompile Include="Externals\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Editor\ImGuiManager.cpp" />
     <ClCompile Include="Externals\Imgui\ImGuizmo.cpp" />
+    <ClCompile Include="FileBrowserWindow.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Engine\Utils\Frustum.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\RectangleObject.cpp" />

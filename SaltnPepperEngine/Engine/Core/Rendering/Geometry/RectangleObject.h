@@ -25,7 +25,7 @@ namespace SaltnPepperEngine
 		// 2 Triangles , each having 3 vertices
 		static constexpr size_t IndexCount = 2 * 3;
 		void Init(float HalfSize);
-		const VertexArray& GetVAO() const;
+		SharedPtr<VertexArray>& GetVAO();
 	};
 
 }

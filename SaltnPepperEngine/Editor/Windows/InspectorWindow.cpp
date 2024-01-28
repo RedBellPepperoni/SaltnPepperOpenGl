@@ -176,7 +176,7 @@ namespace MM
         ImGui::PopStyleVar();
     }
 
-    void TextureWidget(const char* label, Material* material, Texture* tex, bool flipImage, float& usingMapProperty, Vector4& colourProperty, const std::function<void(const std::string&)>& callback, const ImVec2& imageButtonSize = ImVec2(64, 64))
+    void TextureWidget(const char* label, Material* material, Texture* tex, bool flipImage, float& usingMapProperty, Vector4& colourProperty, const ImVec2& imageButtonSize = ImVec2(64, 64))
     {
         
         if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed))
@@ -285,7 +285,7 @@ namespace MM
         }
     }
 
-    void TextureWidget(const char* label,Material* material, Texture* tex, bool flipImage, float& usingMapProperty, float& amount, bool hasAmountValue, const std::function<void(const std::string&)>& callback, const ImVec2& imageButtonSize = ImVec2(64, 64))
+    void TextureWidget(const char* label,Material* material, Texture* tex, bool flipImage, float& usingMapProperty, float& amount, bool hasAmountValue, const ImVec2& imageButtonSize = ImVec2(64, 64))
     {
        
         if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth))
@@ -482,7 +482,7 @@ namespace MM
         std::string shape_current = GetPrimitiveName(primitiveType).c_str();
         if (ImGui::BeginCombo("", shape_current.c_str(), 0)) // The second parameter is the label previewed before opening the combo.
         {
-            for (int n = 0; n < 8; n++)
+            for (int n = 0; n < 5; n++)
             {
                 bool is_selected = (shape_current.c_str() == shapes[n]);
                 if (ImGui::Selectable(shapes[n], shape_current.c_str()))
@@ -637,18 +637,18 @@ namespace MM
                     float normal = 0.0f;
                     MaterialTextures& textures = material->textureMaps;
 
-                    Vector2 textureSize = Vector2(100.0f, 100.0f);
+                    ImVec2 textureSize = ImVec2(100.0f, 100.0f);
 
-                 /*   TextureWidget("Albedo", material.get(), textures.albedoMap.get(), flipImage, material->albedoMapFactor, material->albedoColour, std::bind(&Material::SetAlbedoTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    TextureWidget("Albedo", material.get(), textures.albedoMap.get(), flipImage, material->albedoMapFactor, material->albedoColour, textureSize * 1.0f);
                     ImGui::Separator();
 
-                    TextureWidget("Normal", material.get(), textures.normalMap.get(), flipImage, material->normalMapFactor, normal, false, std::bind(&Material::SetNormalTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    TextureWidget("Normal", material.get(), textures.normalMap.get(), flipImage, material->normalMapFactor, normal, false,  textureSize * 1.0f);
                     ImGui::Separator();
 
-                    TextureWidget("Metallic", material.get(), textures.metallicMap.get(), flipImage, material->metallicMapFactor, material->metallic, true, std::bind(&Material::SetMetallicTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    TextureWidget("Metallic", material.get(), textures.metallicMap.get(), flipImage, material->metallicMapFactor, material->metallic, true,   textureSize * 1.0f);
                     ImGui::Separator();
 
-                    TextureWidget("Roughness", material.get(), textures.roughnessMap.get(), flipImage, material->roughnessMapFactor, material->roughness, true, std::bind(&Material::SetRoughnessTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    TextureWidget("Roughness", material.get(), textures.roughnessMap.get(), flipImage, material->roughnessMapFactor, material->roughness, true,  textureSize * 1.0f);
 
                     if (ImGui::TreeNodeEx("Reflectance", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth))
                     {
@@ -658,10 +658,10 @@ namespace MM
 
 
 
-                    TextureWidget("AO",                     ImGui::Separator();material.get(), textures.aoMap.get(), flipImage, material->aoMapFactor, normal, false, std::bind(&Material::SetAOTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    TextureWidget("AO",material.get(), textures.aoMap.get(), flipImage, material->aoMapFactor, normal, false,  textureSize * 1.0f);
                     ImGui::Separator();
 
-                    TextureWidget("Emissive", material.get(), textures.emissiveMap.get(), flipImage, material->emissiveMapFactor, material->emissive, true, std::bind(&Material::SetEmissiveTexture, material, std::placeholders::_1), textureSize * 1.0f);*/
+                    TextureWidget("Emissive", material.get(), textures.emissiveMap.get(), flipImage, material->emissiveMapFactor, material->emissive, true, textureSize * 1.0f);
 
                     ImGui::Columns(2);
 

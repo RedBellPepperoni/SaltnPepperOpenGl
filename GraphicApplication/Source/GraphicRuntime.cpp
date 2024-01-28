@@ -6,25 +6,25 @@ class GraphicRuntime : public Application
 {
 	void OnInit()
 	{
-        //SharedPtr<Mesh> mesh = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx")->GetMeshes()[0];
-        SharedPtr<Model> model = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx");
+       // //SharedPtr<Mesh> mesh = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx")->GetMeshes()[0];
+       // SharedPtr<Model> model = GetModelLibrary()->LoadModel("Sphere", "Assets\\Models\\Sphere.fbx");
 
-        Entity entity = GetCurrentScene()->CreateEntity("Main Test Entity");
-        Transform& transform = entity.AddComponent<Transform>();
+       // Entity entity = GetCurrentScene()->CreateEntity("Main Test Entity");
+       // Transform& transform = entity.AddComponent<Transform>();
 
-        transform.SetPosition(Vector3(0.0f));
-        transform.SetEularRotation(Vector3(0.0f));
+       // transform.SetPosition(Vector3(0.0f));
+       // transform.SetEularRotation(Vector3(0.0f));
 
-       // entity.AddComponent<MeshComponent>(mesh);
-        entity.AddComponent<ModelComponent>(model);
-        entity.AddComponent<MeshRenderer>();
+       //// entity.AddComponent<MeshComponent>(mesh);
+       // entity.AddComponent<ModelComponent>(model);
+       // entity.AddComponent<MeshRenderer>();
 
 
 
 
 
         Entity dirLightEntity = GetCurrentScene()->CreateEntity("Directional Light");
-        transform = dirLightEntity.AddComponent<Transform>();
+        Transform& transform = dirLightEntity.AddComponent<Transform>();
 
         transform.SetPosition(Vector3(0.0f));
         transform.SetEularRotation(Vector3(10.0f, 20.0f,0.0f));

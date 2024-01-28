@@ -97,41 +97,43 @@ namespace SaltnPepperEngine
 		////ComponentView audioListenerView = m_EntityManager->GetComponentsOfType<AudioListener>();
 
 
-		//Camera* camera = nullptr;
+		Camera* camera = nullptr;
 
-		//if (!cameraview.IsEmpty())
-		//{
-		//	camera = &cameraview[0].GetComponent<Camera>();
-		//}
-
-
-
-
-		if (!cameraControllerView.IsEmpty())
+		if (!cameraview.IsEmpty())
 		{
-			FlyCameraController& controller = cameraControllerView[0].GetComponent<FlyCameraController>();
-			Transform* transform = cameraControllerView[0].TryGetComponent<Transform>();
+			camera = &cameraview[0].GetComponent<Camera>();
+		}
 
-			if (transform)
+
+		if (!Application::GetCurrent().GetEditorActive())
+
+		{
+			if (!cameraControllerView.IsEmpty())
 			{
+				FlyCameraController& controller = cameraControllerView[0].GetComponent<FlyCameraController>();
+				Transform* transform = cameraControllerView[0].TryGetComponent<Transform>();
 
-				//controller.SetCamera(camera);
-				//controller.KeyboardInput(*transform, deltaTime);
-				//controller.MouseInput(*transform, mousePosition, deltaTime);
+				if (transform)
+				{
 
-				Vector3 pos = transform->GetPosition();
-				Vector3 rot = transform->GetEulerRotation();
+					controller.SetCamera(camera);
+					controller.KeyboardInput(*transform, deltaTime);
+					controller.MouseInput(*transform, mousePosition, deltaTime);
 
-				string fps = std::to_string(Application::GetCurrent().GetFPS());
+					Vector3 pos = transform->GetPosition();
+					Vector3 rot = transform->GetEulerRotation();
 
-				std::string position = "Position X : " + std::to_string(pos.x) + " Y : " + std::to_string(pos.y) + " Z : " + std::to_string(pos.z) + "Rotation X : " + std::to_string(rot.x) + " Y : " + std::to_string(rot.y) + " Z : " + std::to_string(rot.z);
+					string fps = std::to_string(Application::GetCurrent().GetFPS());
 
-				Application::GetCurrent().SetWindowTitle(position);
+					std::string position = "Position X : " + std::to_string(pos.x) + " Y : " + std::to_string(pos.y) + " Z : " + std::to_string(pos.z) + "Rotation X : " + std::to_string(rot.x) + " Y : " + std::to_string(rot.y) + " Z : " + std::to_string(rot.z);
+
+					Application::GetCurrent().SetWindowTitle(position);
+
+				}
+
+
 
 			}
-
-
-
 		}
 
 
