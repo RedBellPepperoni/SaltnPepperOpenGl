@@ -211,6 +211,8 @@ namespace SaltnPepperEngine
 
 		// Editor Variables
 
+		RuntimeEditor* GetEditor() { return m_editor.get(); }
+
 		Camera* GetEditorCamera();
 		Transform* GetEditorCameraTransform();
 

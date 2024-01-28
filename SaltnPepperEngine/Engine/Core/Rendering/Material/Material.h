@@ -38,12 +38,6 @@ namespace SaltnPepperEngine
 
             Material()
             {
-                /*textureMaps.albedoMap = MakeShared<Texture>();
-                textureMaps.normalMap = MakeShared<Texture>();
-                textureMaps.metallicMap = MakeShared<Texture>();
-                textureMaps.aoMap = MakeShared<Texture>();
-                textureMaps.roughnessMap = MakeShared<Texture>();
-                textureMaps.emissiveMap = MakeShared<Texture>();*/
                 textureMaps.albedoMap = nullptr;
                 textureMaps.normalMap = nullptr;
                 textureMaps.metallicMap = nullptr;
@@ -52,6 +46,7 @@ namespace SaltnPepperEngine
                 textureMaps.emissiveMap = nullptr;
             }
             ~Material() = default;
+
 
             std::string name = "DefaultMaterial";
 
@@ -78,13 +73,22 @@ namespace SaltnPepperEngine
 
             MaterialTextures textureMaps;
 
-            constexpr static size_t TextureCount = 4;
+            constexpr static size_t TextureCount = 6;
 
+            SharedPtr<Texture> GatherTexture(const std::string& filePath);
+
+        public:
 
             const std::string& GetName() const { return name; }
             const MaterialType GetType() const { return type; }
 
-           // void SetAlbeDoTexture(const )
+
+            void SetAlbedoTexture(const std::string& filePath);
+            void SetNormalTexture(const std::string& filePath);
+            void SetMetallicTexture(const std::string& filePath);
+            void SetAOTexture(const std::string& filePath);
+            void SetRoughnessTexture(const std::string& filePath);
+            void SetEmissiveTexture(const std::string& filePath);
         };
     }
 }

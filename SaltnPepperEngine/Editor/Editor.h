@@ -2,6 +2,7 @@
 #define EDITOR_H
 
 #include "EditorWindow.h"
+#include "Editor/Windows/FileBrowserWindow.h"
 #include "ImGuiUtils.h"
 
 #include "Engine/Core/System/Application/Application.h"
@@ -126,6 +127,7 @@ namespace SaltnPepperEngine
 			EditorWindow* GetTextEditWindow();
 			void RemoveEditorWindow(EditorWindow* window);
 
+			FileBrowserWindow& GetFileBrowser() { return m_fileBrowserWindow; }
 
 			Ray GetScreenRay(uint32_t xPos, uint32_t yPos, Camera* camera, uint32_t width, uint32_t height);
 
@@ -195,6 +197,8 @@ namespace SaltnPepperEngine
 			EditorProperties m_properties;
 
 			std::vector<SharedPtr<EditorWindow>> m_editorWindows;
+
+			FileBrowserWindow m_fileBrowserWindow;
 
 			std::vector<entt::entity> m_selectedEntities;
 			std::vector<entt::entity> m_copiedEntities;

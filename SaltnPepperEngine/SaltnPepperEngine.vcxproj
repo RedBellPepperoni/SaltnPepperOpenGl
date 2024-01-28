@@ -178,7 +178,7 @@
     <ClInclude Include="Externals\Imgui\imstb_truetype.h" />
     <ClInclude Include="Editor\ImGuiManager.h" />
     <ClInclude Include="Externals\Imgui\ImGuizmo.h" />
-    <ClInclude Include="FileBrowserWindow.h" />
+    <ClInclude Include="Editor\Windows\FileBrowserWindow.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Engine\Utils\Frustum.h" />
     <ClInclude Include="Editor\Windows\SceneWindow.h" />
@@ -192,6 +192,7 @@
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Camera\EditorCameraController.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Material\Material.cpp" />
     <ClCompile Include="Engine\Utils\Plane.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.cpp" />
@@ -244,7 +245,7 @@
     <ClCompile Include="Externals\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Editor\ImGuiManager.cpp" />
     <ClCompile Include="Externals\Imgui\ImGuizmo.cpp" />
-    <ClCompile Include="FileBrowserWindow.cpp" />
+    <ClCompile Include="Editor\Windows\FileBrowserWindow.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Engine\Utils\Frustum.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\RectangleObject.cpp" />

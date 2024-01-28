@@ -122,10 +122,13 @@ namespace SaltnPepperEngine
 
 			ImGuiIO& io = ImGui::GetIO();
 
+
 			if (m_editorState == EditorState::Preview)
 			{
 				Application::GetCurrent().GetCurrentScene()->UpdateSceneGraph();
 			}
+
+			m_fileBrowserWindow.OnImgui();
 
 			EndDockSpace();
 

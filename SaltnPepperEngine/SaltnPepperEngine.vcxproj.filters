@@ -294,7 +294,7 @@
     <ClInclude Include="Engine\Core\Rendering\Camera\EditorCameraController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileBrowserWindow.h">
+    <ClInclude Include="Editor\Windows\FileBrowserWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Externals\Imgui\ImFileBrowser.h">
@@ -536,7 +536,10 @@
     <ClCompile Include="Engine\Core\Rendering\Camera\EditorCameraController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileBrowserWindow.cpp">
+    <ClCompile Include="Editor\Windows\FileBrowserWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Rendering\Material\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

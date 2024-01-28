@@ -17,7 +17,7 @@ namespace SaltnPepperEngine
 
 
 			// Refresh the file system
-			m_fileBrowser->SetPwd();
+			//m_fileBrowser->SetPwd();
 		
 		}
 		FileBrowserWindow::~FileBrowserWindow()

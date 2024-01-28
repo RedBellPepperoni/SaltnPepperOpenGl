@@ -380,7 +380,7 @@ namespace SaltnPepperEngine
 		}
 
 
-
+		 
 		SharedPtr<ShaderLibrary>& RenderManager::GetShaderLibrary()
 		{
 			return m_ShaderLibrary;
