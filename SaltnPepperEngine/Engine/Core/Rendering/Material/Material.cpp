@@ -28,7 +28,7 @@ namespace SaltnPepperEngine
                 // We truy to make a new resource
                checktexture = texLibrary->LoadTexture(clampedname,filePath, TextureFormat::RGBA);
 
-                if (checktexture == nullptr)
+                if (checktexture == nullptr)  
                 {
                     LOG_ERROR("Material: Couldn't Create new Texture from filePath : {0}", filePath);
                     return nullptr;

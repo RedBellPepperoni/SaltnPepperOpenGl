@@ -416,7 +416,6 @@ namespace SaltnPepperEngine
 	{
 		m_physicsSystem->SetPaused(shouldstart);
 
-
 	}
 
 	const Vector2Int Application::GetWindowSize()

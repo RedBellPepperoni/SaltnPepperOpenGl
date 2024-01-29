@@ -6,12 +6,24 @@
 // All the Component Includes
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Components/SceneComponents.h"
+#include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 
 #include "Engine/Core/System/Application/Application.h"
+
+#include "Engine/Utils/Serialization/GLMSerialization.h"
+
+#include <entt/entity/snapshot.hpp>
+// Cereal Stuff
+//#include <cereal/types/polymorphic.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
+
+
+
 
 
 namespace SaltnPepperEngine
@@ -24,6 +36,16 @@ namespace SaltnPepperEngine
 
 #define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light, RigidBody3D 
 
+#define ALL_ENTTCOMPONENTS(input) get<Transform>(input). \
+	get<IdComponent>(input).		\
+	get<NameComponent>(input).		\
+	get<ActiveComponent>(input).	\
+	get<Hierarchy>(input).			\
+	get<Camera>(input).				\
+	get<Model>(input).				\
+	get<Light>(input).				\
+	get<ModelComponent>(input)	
+	
 
 	Scene::Scene(const std::string& name)
 	{
@@ -206,7 +228,7 @@ namespace SaltnPepperEngine
 		auto children = entity.GetChildren();
 		std::vector<Entity> copiedChildren;
 
-		for (auto child : children)
+		for (Entity child : children)
 		{
 			Duplicate(child, newEntity);
 		}
@@ -291,15 +313,142 @@ namespace SaltnPepperEngine
 
 
 
-	void Scene::Serialize(const std::string& filename)
+	void Scene::Serialize(const std::string& filename, bool binary)
 	{
+		LOG_INFO("Scene Saved : [{0}]", filename);
+
+		std::string path = filename;
+		path += m_name;
+
+		m_sceneSerializationVersion = SceneSerializarionVersion;
+
+		//if (binary)
+		//{
+		//	path += std::string(".bin");
+		//	std::ofstream file(path, std::ios::binary);
+
+		//	{	
+		//		cereal::BinaryOutputArchive output { file };
+		//		output(*this);
+		//		//entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
+		//	}
+		//	
+		//	file.close();
+
+		//}
+
+		//else
+		//{
+			std::stringstream storage;
+			path += std::string(".json");
+			
+			{
+				cereal::JSONOutputArchive output{ storage };
+				output(*this);
+				entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
+			}
+
+			FileSystem::WriteFileToText(path, storage.str());
+		/*}*/
 	}
-	void Scene::Deserialize(const std::string filename)
+
+	void Scene::Deserialize(const std::string filename, bool binary)
 	{
+		m_EntityManager->Clear();
+		m_SceneGraph->DisableOnConstruct(true, m_EntityManager->GetRegistry());
+
+		std::string path = filename;
+		path += m_name;
+
+		path += std::string(".json");
+
+		if (!FileSystem::Exists(path))
+		{
+			LOG_ERROR("NO Scene found at path : [{0}]", path);
+			return;
+		}
+
+		
+
+		try
+		{
+			
+			std::string data = FileSystem::ReadFileToString(path);
+			std::istringstream istr;
+			istr.str(data);
+			cereal::JSONInputArchive input(istr);
+			input(*this);
+
+			// Load the snapShot
+			if (m_sceneSerializationVersion == 1)
+			{
+				entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
+				//entt::snapshot_loader{ m_EntityManager->GetRegistry() };
+			}
+
+		}
+
+		catch (...)
+		{
+			LOG_ERROR("Failed To load Scene : [{0}]", path);
+		}
+			
+
+		m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
+		
+
+
 	}
 
 	Transform* Scene::GetMainCameraTransform() const
 	{
 		return mainCameraTransform;
 	}
+
+	template <typename T>
+	static void DeserialiseComponentIfExists(Entity entity, cereal::JSONInputArchive& archive)
+	{
+		/*bool hasComponent;
+		archive(hasComponent);
+		if (hasComponent)
+			archive(entity.GetOrAddComponent<T>());*/
+	}
+
+	template <typename... Component>
+	static void DeserialiseEntity(Entity entity, cereal::JSONInputArchive& archive)
+	{
+		//(DeserialiseComponentIfExists<Component>(entity, archive), ...);
+	}
+
+
+	template <typename T>
+	static void SerialiseComponentIfExists(Entity entity, cereal::JSONOutputArchive& archive)
+	{
+		/*bool hasComponent = entity.HasComponent<T>();
+		archive(hasComponent);
+		if (hasComponent)
+			archive(entity.GetComponent<T>());*/
+	}
+
+	template <typename... Component>
+	static void SerialiseEntity(Entity entity, cereal::JSONOutputArchive& archive)
+	{
+		//(SerialiseComponentIfExists<Component>(entity, archive), ...);
+	}
+
+	void SerializeEntityHierarchy(Entity entity, cereal::JSONOutputArchive& archive)
+	{
+		//// Serialize the current entity
+		//SerialiseEntity<ALL_COMPONENTS>(entity, archive);
+
+		//// Serialize the children recursively
+		//std::vector<Entity> children = entity.GetChildren();
+		//archive((int)children.size());
+
+		//for (Entity child : children)
+		//{
+		//	SerializeEntityHierarchy(child, archive);
+		//}
+	}
+
 }

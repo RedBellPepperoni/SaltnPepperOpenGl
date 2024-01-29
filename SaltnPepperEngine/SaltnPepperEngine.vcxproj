@@ -183,6 +183,7 @@
     <ClInclude Include="Engine\Utils\Frustum.h" />
     <ClInclude Include="Editor\Windows\SceneWindow.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\RectangleObject.h" />
+    <ClInclude Include="Engine\Core\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor\Editor.cpp" />
@@ -231,6 +232,8 @@
     <ClCompile Include="Engine\Core\EntitySystem\EntityManager.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Renderer\Renderer.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Renderer\RenderManager.cpp" />
+    <ClCompile Include="Engine\Utils\Serialization\GLMSerialization.h" />
+    <ClCompile Include="Engine\Utils\Serialization\Serialization.h" />
     <ClCompile Include="Externals\glad\src\glad.c" />
     <ClCompile Include="Editor\Windows\HierarchyWindow.cpp" />
     <ClCompile Include="Editor\Windows\InspectorWindow.cpp" />
@@ -265,6 +268,7 @@
     <ClCompile Include="Engine\Core\Rendering\Skybox\SkyboxObject.cpp" />
     <ClCompile Include="Editor\Windows\TextEditWindow.cpp" />
     <ClCompile Include="Editor\Windows\SceneWindow.cpp" />
+    <ClCompile Include="Engine\Core\Scene\SceneManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

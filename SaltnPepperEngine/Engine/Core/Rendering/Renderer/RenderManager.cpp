@@ -186,6 +186,8 @@ namespace SaltnPepperEngine
 
 			//m_renderer->SetSkyboxCubeMap(m_Texture->GetResource("DefaultSkyBox");
 
+			
+
 		}
 
 		void RenderManager::RenderFrame()
@@ -213,13 +215,10 @@ namespace SaltnPepperEngine
 				AttachFrameBuffer(buffer);
 				//buffer->AttachTexture(texture);
 
-
 				buffer->Validate();
 
 
 				m_renderer->Clear();
-
-
 
 				//// ===== Post Render Skybox Pass =================
 				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
@@ -233,17 +232,12 @@ namespace SaltnPepperEngine
 			}
 			else
 			{
+				m_renderer->Clear();
+
 				// Multiple Camera Rendering for actual Game View
 				for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
 				{
-				//if (cameraElement.shouldRenderToTexture) { continue; }
-
-				// Store the data for the current rendering camera
-				//const CameraElement& cameraElement = m_renderer->GetPipeLine().cameraList[cameraIndex];
-
-				/*AttachFrameBuffer(cameraElement.gBuffer);
-				cameraElement.gBuffer->AttachTexture(cameraElement.outputTexture);*/
-
+					
 				// ===== Post Render Skybox Pass =================
 					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
 

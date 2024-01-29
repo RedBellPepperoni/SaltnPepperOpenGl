@@ -523,7 +523,7 @@ namespace SaltnPepperEngine
             // Keeping it forced true for OpenGL
             bool flipImage = true;
 
-            ImGui::Image(texture ? (void*)texture->GetHandle() : nullptr, ImVec2(size.x, size.y), ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
+            ImGui::Image(texture ? reinterpret_cast<ImTextureID>(texture->GetHandle()) : nullptr, ImVec2(size.x, size.y), ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
             ImGui::EndTooltip();
         }
 
@@ -541,7 +541,7 @@ namespace SaltnPepperEngine
 
             // Keeping it forced true for OpenGL
             bool flipImage = true;
-            ImGui::Image(texture ? (void*)texture->GetHandle() : nullptr, ImVec2(size.x, size.y), ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
+            ImGui::Image(texture ? reinterpret_cast<ImTextureID>(texture->GetHandle()) : nullptr, ImVec2(size.x, size.y), ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
             ImGui::TextUnformatted(text);
             ImGui::EndTooltip();
         }
@@ -554,14 +554,14 @@ namespace SaltnPepperEngine
     {
         
         bool flipImage = true;
-        ImGui::Image(texture ? (void*)texture->GetHandle() : nullptr, ImVec2(size.x, size.y), ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
+        ImGui::Image(texture ? reinterpret_cast<ImTextureID>(texture->GetHandle()) : nullptr, ImVec2(size.x, size.y), ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
     }
 
     void ImGuiUtils::Image(CubeMap* texture, const Vector2& size)
     {
         
         bool flipImage = true;
-        ImGui::Image(texture ? (void*)texture->GetHandle() : nullptr, ImVec2(size.x, size.y), ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
+        ImGui::Image(texture ? reinterpret_cast<ImTextureID>(texture->GetHandle()) : nullptr, ImVec2(size.x, size.y), ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
     }
 
    

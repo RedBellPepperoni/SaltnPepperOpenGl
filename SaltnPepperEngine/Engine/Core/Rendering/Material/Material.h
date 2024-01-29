@@ -4,6 +4,9 @@
 #include <string>
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
+#include "Engine/Utils/Serialization/GLMSerialization.h"
+
+
 #include "Engine/Core/Rendering/Textures/Texture.h"
 
 namespace SaltnPepperEngine

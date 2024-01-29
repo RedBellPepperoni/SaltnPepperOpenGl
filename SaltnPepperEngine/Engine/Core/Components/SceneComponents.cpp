@@ -1,7 +1,5 @@
 #include "SceneComponents.h"
-#include "Engine/Core/Rendering/Geometry/Mesh.h"
-#include "Engine/Core/Rendering/Geometry/Model.h"
-#include "Engine/Core/Rendering/Material/Material.h"
+
 #include "Engine/Core/Resources/ResourceManager.h"
 #include "Engine/Core/Rendering/Geometry/Primitives.h"
 #include "Engine/Core/System/Application/Application.h"
@@ -104,9 +102,17 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		void ModelComponent::LoadLibraryModel(const std::string firendlyName)
+		void ModelComponent::LoadLibraryModel(const std::string filePath)
 		{
-			m_handle = Application::GetCurrent().GetModelLibrary()->GetResource(firendlyName);
+			std::string clampedname = FileSystem::GetFileName(filePath);
+
+			m_handle = Application::GetCurrent().GetModelLibrary()->GetResource(clampedname);
+
+
+			if (m_handle == nullptr)
+			{
+				m_handle = Application::GetCurrent().GetModelLibrary()->LoadModel(clampedname, filePath);
+			}
 		}
 
 		void ModelComponent::LoadPrimitive(PrimitiveType type)

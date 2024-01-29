@@ -12,6 +12,10 @@ namespace SaltnPepperEngine
 		//Add a ID Component to give an unique ID to the newly created Entity
 		m_registry.emplace<IdComponent>(newEntity);
 
+		// All entities should start with a transfrom component
+		m_registry.emplace<Transform>(newEntity);
+		m_registry.emplace<ActiveComponent>(newEntity);
+
 
 		return Entity(newEntity, m_scene);
 	}
@@ -21,6 +25,9 @@ namespace SaltnPepperEngine
 	{
 		// Create a new Entity
 		entt::entity newEntity = m_registry.create();
+
+		// All entities should start with a transfrom component
+		m_registry.emplace<Transform>(newEntity);
 
 		//Add a Name Component t oname the entity using the provided name
 		m_registry.emplace<NameComponent>(newEntity, name);
@@ -32,6 +39,9 @@ namespace SaltnPepperEngine
 		//  Active models are included in rendering 
 		// Active Physics object are simulated
 		m_registry.emplace<ActiveComponent>(newEntity);
+
+
+
 
 		return Entity(newEntity, m_scene);
 	}

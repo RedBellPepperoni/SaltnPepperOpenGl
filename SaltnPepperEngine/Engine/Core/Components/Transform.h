@@ -1,6 +1,7 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 #include "Engine/Utils/Maths/MathDefinitions.h"
+#include "cereal/cereal.hpp"
 
 namespace SaltnPepperEngine
 {
@@ -80,7 +81,17 @@ namespace SaltnPepperEngine
 
 			Vector3 GetForwardVector();
 
+			template <typename Archive>
+			void save(Archive& archive) const
+			{
+				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Scale", m_scale));
+			}
 
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Scale", m_scale));
+			}
 
 		};
 	}

@@ -63,6 +63,7 @@ namespace SaltnPepperEngine
 			Vector3 color = Vector3(1.0f);
 			Vector3 position = Vector3(0.0f);
 			Vector3 direction = Vector3(0.0f);
+		
 
 			float intensity = 10.0f;
 			float radius = 0.0f;
@@ -72,6 +73,12 @@ namespace SaltnPepperEngine
 
 
 		};
+
+		template <class Archive>
+		void serialize(Archive& archive, Light& light)
+		{
+			archive(light.position, light.color, light.type, light.innerAngle, light.outerAngle, light.direction, light.intensity, light.radius);
+		}
 
 	}
 }

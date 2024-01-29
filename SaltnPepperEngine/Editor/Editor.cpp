@@ -41,6 +41,8 @@ namespace SaltnPepperEngine
 			// Check on this later
 			//m_editorCamera = MakeShared<Camera>();
 			//m_currentCamera = m_editorCamera.get();
+			//m_editorActive = false;
+
 
 			ImGuizmo::Style& guizmoStyle = ImGuizmo::GetStyle();
 			guizmoStyle.HatchedAxisLineThickness = -1.0f;
@@ -85,6 +87,8 @@ namespace SaltnPepperEngine
 
 			sceneWindow->OnInit();
 			sceneWindow->OnNewScene(Application::GetCurrent().GetCurrentScene());
+
+
 
 		}
 
@@ -384,15 +388,18 @@ namespace SaltnPepperEngine
 							Transform* transform = registry.try_get<Transform>(m_selectedEntities.front());
 							if (transform)
 							{
-								FocusCamera(transform->GetWorldPosition(), 2.0f, 2.0f);
+								// negative distance from the object since the Camera view is inverted
+								FocusCamera(transform->GetWorldPosition(), -2.0f, 2.0f);
 							}
 						}
 					}
 				}
 
+				// Foucs on teh Origin
 				if (InputSystem::GetInstance().GetKeyHeld(Key::O))
 				{
-					FocusCamera(Vector3(0.0f, 0.0f, 0.0f), 2.0f, 2.0f);
+					// negative distance from the object since the Camera view is inverted
+					FocusCamera(Vector3(0.0f, 0.0f, 0.0f), -2.0f, 2.0f);
 				}
 
 				if (m_camerainTransition)

@@ -86,7 +86,10 @@ namespace SaltnPepperEngine
 			if (HasComponent<T>())
 			{
 				LOG_WARN("Trying to add the component more than once");
+				return GetComponent<T>();
 			}
+
+
 
 			return m_scene->GetRegistry().emplace <T>(m_entityHandle, std::forward<Args>(args)...);
 

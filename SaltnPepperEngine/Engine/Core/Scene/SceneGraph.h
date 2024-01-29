@@ -2,6 +2,7 @@
 #define SCENEGRAPH_H
 
 #include <entt/entity/fwd.hpp>
+#include <cereal/cereal.hpp>
 
 namespace SaltnPepperEngine
 {
@@ -45,6 +46,12 @@ namespace SaltnPepperEngine
         entt::entity m_First;
         entt::entity m_Next;
         entt::entity m_Prev;
+
+        template <typename Archive>
+        void serialize(Archive& archive)
+        {
+            archive(cereal::make_nvp("First", m_First), cereal::make_nvp("Next", m_Next), cereal::make_nvp("Previous", m_Prev), cereal::make_nvp("Parent", m_Parent));
+        }
 
        
     };

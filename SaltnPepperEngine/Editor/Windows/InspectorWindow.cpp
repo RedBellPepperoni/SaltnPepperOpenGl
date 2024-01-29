@@ -198,7 +198,8 @@ namespace MM
             bool showTexture = !(hoveringButton && (payload != NULL && payload->IsDataType("AssetFile")));
             if (tex && showTexture)
             {
-                if (ImGui::ImageButton((const char*)(tex), (void*)tex->GetHandle(), imageButtonSize, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f)))
+                //if (ImGui::ImageButton((const char*)(tex), (void*)tex->GetHandle(), imageButtonSize, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f)))
+                if (ImGui::ImageButton((const char*)(tex), reinterpret_cast<ImTextureID>(tex->GetHandle()), imageButtonSize, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f)))
                 {
                     Application::GetCurrent().GetEditor()->GetFileBrowser().Open();
                     Application::GetCurrent().GetEditor()->GetFileBrowser().SetCallback(callback);
@@ -210,7 +211,7 @@ namespace MM
                     ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
                     ImGui::TextUnformatted(tex->GetFilePath().c_str());
                     ImGui::PopTextWrapPos();
-                    ImGui::Image((ImTextureID*)tex->GetHandle(), imageButtonSize * 3.0f, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
+                    ImGui::Image(reinterpret_cast<ImTextureID>(tex->GetHandle()), imageButtonSize * 3.0f, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
                     ImGui::EndTooltip();
                 }
             }
@@ -305,10 +306,10 @@ namespace MM
             bool showTexture = !(hoveringButton && (payload != NULL && payload->IsDataType("AssetFile")));
             if (tex && showTexture)
             {
-                if (ImGui::ImageButton((const char*)(tex), (void*)tex->GetHandle(), imageButtonSize, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f)))
+                if (ImGui::ImageButton((const char*)(tex), reinterpret_cast<ImTextureID>(tex->GetHandle()), imageButtonSize, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f)))
                 {
-                   /* RuntimeEditor::GetEditor()->GetFileBrowserPanel().Open();
-                    RuntimeEditor::GetEditor()->GetFileBrowserPanel().SetCallback(callback);*/
+                    Application::GetCurrent().GetEditor()->GetFileBrowser().Open();
+                    Application::GetCurrent().GetEditor()->GetFileBrowser().SetCallback(callback);
                 }
 
                 if (ImGui::IsItemHovered() && tex)
@@ -318,7 +319,7 @@ namespace MM
                     ImGui::TextUnformatted(tex->GetFilePath().c_str());
                     ImGui::PopTextWrapPos();
 
-                    ImGui::Image((ImTextureID*)tex->GetHandle(), imageButtonSize * 3.0f, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
+                    ImGui::Image(reinterpret_cast<ImTextureID>(tex->GetHandle()), imageButtonSize * 3.0f, ImVec2(0.0f, flipImage ? 1.0f : 0.0f), ImVec2(1.0f, flipImage ? 0.0f : 1.0f));
                     ImGui::EndTooltip();
                 }
             }
@@ -536,7 +537,7 @@ namespace MM
 
         int matIndex = 0;
 
-        auto modelRef = reg.get<ModelComponent>(e).m_handle;
+        SharedPtr<Model> modelRef = reg.get<ModelComponent>(e).m_handle;
         if (!modelRef)
         {
             ImGuiUtils::PopID();
