@@ -10,7 +10,9 @@
 
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Utils/Time/Time.h"
+#include "Engine/Core/Scene/SceneManager.h"
 
+#include "Engine/Utils/Serialization/Serialization.h"
 
 namespace SaltnPepperEngine
 {
@@ -22,7 +24,7 @@ namespace SaltnPepperEngine
 	class AudioLibrary;
 	class GameObjectRegistry;
 	class Scene;
-
+	
 
 	namespace Rendering
 	{
@@ -75,6 +77,7 @@ namespace SaltnPepperEngine
 
 		UniquePtr<RuntimeEditor> m_editor = nullptr;
 
+		UniquePtr<SceneManager> m_sceneManager = nullptr;
 
 		bool m_isRunning = false;
 		bool m_isPaused = false;
@@ -217,6 +220,48 @@ namespace SaltnPepperEngine
 		Transform* GetEditorCameraTransform();
 
 		const bool GetEditorActive() const;
+
+		void AddDefaultScene();
+
+		virtual void Serialise();
+		virtual void Deserialise();
+
+		template <typename Archive>
+		void save(Archive& archive) const
+		{
+			
+			std::string path;
+
+			auto paths = m_sceneManager->GetSceneFilePaths();
+			archive(cereal::make_nvp("Scenes", paths));
+			archive(cereal::make_nvp("SceneIndex", m_sceneManager->GetCurrentSceneIndex()));
+		
+		
+		}
+
+		template <typename Archive>
+		void load(Archive& archive)
+		{
+			int sceneIndex = 0;
+
+			std::string test;
+			std::vector<std::string> sceneFilePaths;
+			archive(cereal::make_nvp("Scenes", sceneFilePaths));
+
+			for (auto& filePath : sceneFilePaths)
+			{
+				m_sceneManager->AddFileToLoadList(filePath);
+			}
+
+			if (sceneFilePaths.size() == sceneIndex)
+			{
+				AddDefaultScene();
+			}
+		
+			archive(cereal::make_nvp("SceneIndex", sceneIndex));
+			m_sceneManager->SwitchScene(sceneIndex);
+		}
+
 
 	};
 }

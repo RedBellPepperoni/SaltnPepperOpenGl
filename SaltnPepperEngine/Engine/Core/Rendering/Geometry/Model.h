@@ -71,7 +71,7 @@ namespace SaltnPepperEngine
             {
                 Load(m_filePath);
                 // TODO: This should load material changes from editor
-                // m_Meshes.back()->SetMaterial(SharedPtr<Material>(material.get()));
+                // m_meshes.back()->SetMaterial(SharedPtr<Material>(material.get()));
                 // material.release();
             }
         }

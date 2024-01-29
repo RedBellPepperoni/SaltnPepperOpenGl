@@ -45,9 +45,12 @@ namespace SaltnPepperEngine
 		//m_audioLibrary = MakeShared<AudioLibrary>();
 
 
-		
+		m_sceneManager = MakeUnique<SceneManager>();
+		m_sceneManager->EnqueueScene<Scene>("New Scene");
+		m_sceneManager->SwitchScene(0);
+		m_sceneManager->ApplySceneSwitch();
 
-		m_currentScene = MakeShared<Scene>("testScene");
+		//m_currentScene = MakeShared<Scene>("testScene");
 
 		m_physicsSystem = MakeUnique<PhysicsEngine>();
 
@@ -149,7 +152,7 @@ namespace SaltnPepperEngine
 
 	Scene* Application::GetCurrentScene() const
 	{
-		return m_currentScene.get();
+		return m_sceneManager->GetCurrentScene();
 	}
 
 	PhysicsEngine* Application::GetPhysicsEngine() const
@@ -446,6 +449,37 @@ namespace SaltnPepperEngine
 	const bool Application::GetEditorActive() const
 	{
 		return m_editor->IsEditorActive();;
+	}
+
+	void Application::AddDefaultScene()
+	{
+		if (m_sceneManager->GetScenes().size() == 0)
+		{
+			m_sceneManager->EnqueueScene<Scene>("Empty Scene");
+			m_sceneManager->SwitchScene(0);
+		}
+	}
+
+	void Application::Serialise()
+	{
+		/*{
+			std::stringstream storage;
+			{
+				 output finishes flushing its contents when it goes out of scope
+				cereal::JSONOutputArchive output{ storage };
+				output(*this);
+			}
+
+			std::string path = FileSystem::GetCurrentPath().u8string();
+
+			std::string fullPath =  path + std::string(".spproj");
+			LOG_INFO("Serialising Application {0}", fullPath);
+			FileSystem::WriteFileToText(fullPath, storage.str());
+		}*/
+	}
+
+	void Application::Deserialise()
+	{
 	}
 
 

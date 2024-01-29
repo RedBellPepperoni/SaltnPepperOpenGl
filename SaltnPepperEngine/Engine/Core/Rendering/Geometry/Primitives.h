@@ -12,7 +12,7 @@ namespace SaltnPepperEngine
         class Material;
 
 
-        enum class PrimitiveType : uint8_t
+        enum class PrimitiveType : int
         {
             None        = 0,
             Plane       = 1,

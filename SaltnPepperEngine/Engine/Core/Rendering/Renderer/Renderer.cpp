@@ -244,7 +244,7 @@ namespace SaltnPepperEngine
 
 
 
-            switch (material->type)
+            switch (material->m_type)
             {
             case MaterialType::Opaque:
 

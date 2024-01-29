@@ -122,9 +122,9 @@ namespace SaltnPepperEngine
 		return 0;
 	}
 
-	void SceneManager::EnqueScene(Scene* scene)
+	/*void SceneManager::EnqueScene(Scene* scene)
 	{
-	}
+	}*/
 
 	const std::vector<std::string>& SceneManager::GetSceneFilePaths()
 	{

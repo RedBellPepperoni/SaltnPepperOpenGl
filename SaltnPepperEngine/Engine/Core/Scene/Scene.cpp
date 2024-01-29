@@ -42,9 +42,9 @@ namespace SaltnPepperEngine
 	get<ActiveComponent>(input).	\
 	get<Hierarchy>(input).			\
 	get<Camera>(input).				\
-	get<Model>(input).				\
 	get<Light>(input).				\
-	get<ModelComponent>(input)	
+	get<ModelComponent>(input).		\
+	get<Model>(input)
 	
 
 	Scene::Scene(const std::string& name)
@@ -315,87 +315,87 @@ namespace SaltnPepperEngine
 
 	void Scene::Serialize(const std::string& filename, bool binary)
 	{
-		LOG_INFO("Scene Saved : [{0}]", filename);
+		//LOG_INFO("Scene Saved : [{0}]", filename);
 
-		std::string path = filename;
-		path += m_name;
+		//std::string path = filename;
+		//path += m_name;
 
-		m_sceneSerializationVersion = SceneSerializarionVersion;
+		//m_sceneSerializationVersion = SceneSerializarionVersion;
 
-		//if (binary)
-		//{
-		//	path += std::string(".bin");
-		//	std::ofstream file(path, std::ios::binary);
+		////if (binary)
+		////{
+		////	path += std::string(".bin");
+		////	std::ofstream file(path, std::ios::binary);
 
-		//	{	
-		//		cereal::BinaryOutputArchive output { file };
-		//		output(*this);
-		//		//entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
-		//	}
+		////	{	
+		////		cereal::BinaryOutputArchive output { file };
+		////		output(*this);
+		////		//entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
+		////	}
+		////	
+		////	file.close();
+
+		////}
+
+		////else
+		////{
+		//	std::stringstream storage;
+		//	path += std::string(".json");
 		//	
-		//	file.close();
+		//	{
+		//		cereal::JSONOutputArchive output{ storage };
+		//		output(*this);
+		//		entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
+		//	}
 
-		//}
-
-		//else
-		//{
-			std::stringstream storage;
-			path += std::string(".json");
-			
-			{
-				cereal::JSONOutputArchive output{ storage };
-				output(*this);
-				entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
-			}
-
-			FileSystem::WriteFileToText(path, storage.str());
-		/*}*/
+		//	FileSystem::WriteFileToText(path, storage.str());
+		///*}*/
 	}
 
 	void Scene::Deserialize(const std::string filename, bool binary)
 	{
-		m_EntityManager->Clear();
-		m_SceneGraph->DisableOnConstruct(true, m_EntityManager->GetRegistry());
+		//m_EntityManager->Clear();
+		//m_SceneGraph->DisableOnConstruct(true, m_EntityManager->GetRegistry());
 
-		std::string path = filename;
-		path += m_name;
+		//std::string path = filename;
+		//path += m_name;
 
-		path += std::string(".json");
+		//path += std::string(".json");
 
-		if (!FileSystem::Exists(path))
-		{
-			LOG_ERROR("NO Scene found at path : [{0}]", path);
-			return;
-		}
+		//if (!FileSystem::Exists(path))
+		//{
+		//	LOG_ERROR("NO Scene found at path : [{0}]", path);
+		//	return;
+		//}
 
-		
+		//
 
-		try
-		{
-			
-			std::string data = FileSystem::ReadFileToString(path);
-			std::istringstream istr;
-			istr.str(data);
-			cereal::JSONInputArchive input(istr);
-			input(*this);
+		//try
+		//{
+		//	
+		//	std::string data = FileSystem::ReadFileToString(path);
+		//	std::istringstream istr;
+		//	istr.str(data);
+		//	cereal::JSONInputArchive input(istr);
+		//	input(*this);
 
-			// Load the snapShot
-			if (m_sceneSerializationVersion == 1)
-			{
-				entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
-				//entt::snapshot_loader{ m_EntityManager->GetRegistry() };
-			}
+		//	// Load the snapShot
+		//	if (m_sceneSerializationVersion == 1)
+		//	{
+		//		entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
+		//		//entt::snapshot_loader{ m_EntityManager->GetRegistry() };
+		//	}
 
-		}
+		//}
 
-		catch (...)
-		{
-			LOG_ERROR("Failed To load Scene : [{0}]", path);
-		}
-			
+		//catch (...)
+		//{
+		//	LOG_ERROR("Failed To load Scene : [{0}]", path);
+		//}
+		//	
 
-		m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
-		
+		//m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
+		//
 
 
 	}

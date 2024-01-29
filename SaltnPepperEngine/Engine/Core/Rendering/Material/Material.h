@@ -1,13 +1,14 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include "Engine/Core/System/Application/Application.h"
 #include <string>
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Utils/Serialization/GLMSerialization.h"
 
-
 #include "Engine/Core/Rendering/Textures/Texture.h"
+#include <cereal/cereal.hpp>
 
 namespace SaltnPepperEngine
 {
@@ -48,6 +49,13 @@ namespace SaltnPepperEngine
                 textureMaps.roughnessMap = nullptr;
                 textureMaps.emissiveMap = nullptr;
             }
+
+            Material(const MaterialTextures& materialtextures)
+                : textureMaps(materialtextures)
+            {
+                
+            }
+
             ~Material() = default;
 
 
@@ -72,7 +80,7 @@ namespace SaltnPepperEngine
             float emissiveMapFactor = 1.0f;
 
 
-            MaterialType type = MaterialType::Opaque;
+            MaterialType m_type = MaterialType::Opaque;
 
             MaterialTextures textureMaps;
 
@@ -83,7 +91,7 @@ namespace SaltnPepperEngine
         public:
 
             const std::string& GetName() const { return name; }
-            const MaterialType GetType() const { return type; }
+            const MaterialType GetType() const { return m_type; }
 
 
             void SetAlbedoTexture(const std::string& filePath);
@@ -92,6 +100,123 @@ namespace SaltnPepperEngine
             void SetAOTexture(const std::string& filePath);
             void SetRoughnessTexture(const std::string& filePath);
             void SetEmissiveTexture(const std::string& filePath);
+        
+        
+            template <typename Archive>
+            void save(Archive& archive) const
+            {
+                MaterialType mattype = m_type;
+                std::string albedoFilePath = textureMaps.albedoMap ? textureMaps.albedoMap->GetFilePath() : "";
+                std::string normalFilePath = textureMaps.normalMap ? textureMaps.normalMap->GetFilePath() : "";
+                std::string metallicFilePath = textureMaps.metallicMap ? textureMaps.metallicMap->GetFilePath() : "";
+                std::string roughnessFilePath = textureMaps.roughnessMap ? textureMaps.roughnessMap->GetFilePath() : "";
+                std::string emissiveFilePath = textureMaps.emissiveMap ? textureMaps.emissiveMap->GetFilePath() : "";
+                std::string aoFilePath = textureMaps.aoMap ? textureMaps.aoMap->GetFilePath() : "";
+
+                
+
+                archive(cereal::make_nvp("Albedo", albedoFilePath),
+                    cereal::make_nvp("Normal", normalFilePath),
+                    cereal::make_nvp("Metallic", metallicFilePath),
+                    cereal::make_nvp("Roughness", roughnessFilePath),
+                    cereal::make_nvp("Ao", aoFilePath),
+                    cereal::make_nvp("Emissive", emissiveFilePath),
+                    cereal::make_nvp("albedoColour", albedoColour),
+                    cereal::make_nvp("roughnessValue", roughness),
+                    cereal::make_nvp("metallicValue", metallic),
+                    cereal::make_nvp("emissiveValue", emissive),
+                    cereal::make_nvp("albedoMapFactor", albedoMapFactor),
+                    cereal::make_nvp("metallicMapFactor", metallicMapFactor),
+                    cereal::make_nvp("roughnessMapFactor", roughnessMapFactor),
+                    cereal::make_nvp("normalMapFactor", normalMapFactor),
+                    cereal::make_nvp("aoMapFactor", aoMapFactor),
+                    cereal::make_nvp("emissiveMapFactor", emissiveMapFactor),
+                    cereal::make_nvp("MaterialType", mattype)
+                );
+               
+
+                archive(cereal::make_nvp("Reflectance", reflectance));
+            }
+
+            template <typename Archive>
+            void load(Archive& archive)
+            {
+                std::string albedoFilePath;
+                std::string normalFilePath;
+                std::string roughnessFilePath;
+                std::string metallicFilePath;
+                std::string emissiveFilePath;
+                std::string aoFilePath;
+                std::string shaderFilePath;
+
+                archive(cereal::make_nvp("Albedo", albedoFilePath),
+                    cereal::make_nvp("Normal", normalFilePath),
+                    cereal::make_nvp("Metallic", metallicFilePath),
+                    cereal::make_nvp("Roughness", roughnessFilePath),
+                    cereal::make_nvp("Ao", aoFilePath),
+                    cereal::make_nvp("Emissive", emissiveFilePath),
+                    cereal::make_nvp("albedoColour", albedoColour),
+                    cereal::make_nvp("roughnessValue", roughness),
+                    cereal::make_nvp("metallicValue", metallic),
+                    cereal::make_nvp("emissiveValue", emissive),
+                    cereal::make_nvp("albedoMapFactor", albedoMapFactor),
+                    cereal::make_nvp("metallicMapFactor", metallicMapFactor),
+                    cereal::make_nvp("roughnessMapFactor", roughnessMapFactor),
+                    cereal::make_nvp("normalMapFactor", normalMapFactor),
+                    cereal::make_nvp("aoMapFactor", aoMapFactor),
+                    cereal::make_nvp("emissiveMapFactor", emissiveMapFactor),
+                    cereal::make_nvp("MaterialType", m_type)
+                );
+                 
+
+             
+                archive(cereal::make_nvp("Reflectance", reflectance));
+
+                std::string fileName;
+
+                // Albedo
+                if (!albedoFilePath.empty())
+                {
+                    fileName = FileSystem::GetFileName(albedoFilePath);
+                    textureMaps.albedoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, albedoFilePath);
+                }
+                // Normal
+                if (!normalFilePath.empty())
+                {
+                    fileName = FileSystem::GetFileName(normalFilePath);
+                    textureMaps.normalMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, normalFilePath);
+                } 
+                // Metallic
+                if (!metallicFilePath.empty())
+                {
+                    fileName = FileSystem::GetFileName(metallicFilePath);
+                    textureMaps.metallicMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, metallicFilePath);
+                }
+                // Roughness
+                if (!roughnessFilePath.empty())
+                {
+                    fileName = FileSystem::GetFileName(roughnessFilePath);
+                    textureMaps.roughnessMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, roughnessFilePath);
+                }
+                // AO
+                if (!aoFilePath.empty())
+                {
+                    fileName = FileSystem::GetFileName(aoFilePath);
+                    textureMaps.aoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, aoFilePath);
+                } 
+                // Emissive
+                if (!emissiveFilePath.empty())
+                {
+                    fileName = FileSystem::GetFileName(emissiveFilePath);
+                    textureMaps.aoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, emissiveFilePath);
+                }
+
+
+              
+            }
+        
+        
+        
         };
     }
 }

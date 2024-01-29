@@ -43,7 +43,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		const std::vector<SharedPtr<Scene>>& GetScernes() const
+		const std::vector<SharedPtr<Scene>>& GetScenes() const
 		{
 			return m_sceneList;
 		}
@@ -78,7 +78,7 @@ namespace SaltnPepperEngine
 		std::vector<std::string> GetSceneNames();
 
 		int EnqueSceneFromFile(const std::string& filePath);
-		void EnqueScene(Scene* scene);
+		//void EnqueScene(Scene* scene);
 
 		const std::vector<std::string>& GetSceneFilePaths();
 		void LoadCurrentList();

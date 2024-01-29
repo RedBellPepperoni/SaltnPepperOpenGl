@@ -627,7 +627,7 @@ namespace MM
 
                     if (ImGuiUtils::Property("Opaque", opaque))
                     {
-                        material->type = opaque ? MaterialType::Opaque : MaterialType::Transparent;
+                        material->m_type = opaque ? MaterialType::Opaque : MaterialType::Transparent;
                     }
 
                    

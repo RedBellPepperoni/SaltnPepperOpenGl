@@ -15,21 +15,6 @@ namespace SaltnPepperEngine
 {
 
 
-	//Forward Declaration
-
-	class Model;
-
-	namespace Rendering
-	{
-		class Mesh;
-		class Material;
-		enum class PrimitiveType : uint8_t;
-		
-	}
-
-	using Rendering::Mesh;
-	using Rendering::Material;
-	using Rendering::PrimitiveType;
 
 	namespace Components
 	{
