@@ -5,10 +5,10 @@
 #include <string>
 
 //// GEt the Entt Registry header
-//DISABLE_PUSH_WARNING
-//DISABLE_WARNING_CONVERSION_TO_SMALLER_TYPE
-//#include <entt/entity/registry.hpp>
-//DISABLE_POP_WARNING
+DISABLE_PUSH_WARNING
+DISABLE_WARNING_CONVERSION_TO_SMALLER_TYPE
+#include <entt/entity/registry.hpp>
+DISABLE_POP_WARNING
 
 
 namespace SaltnPepperEngine
@@ -154,7 +154,11 @@ namespace SaltnPepperEngine
 			m_registry.template on_construct<R>().template connect<&entt::registry::get_or_emplace<T>>();
 		}
 
-		entt::registry& GetRegistry();
+		// Getter for the Registry
+		entt::registry& GetRegistry()
+		{
+			return m_registry;
+		}
 
 		Entity GetEntitybyId(uint64_t id);
 

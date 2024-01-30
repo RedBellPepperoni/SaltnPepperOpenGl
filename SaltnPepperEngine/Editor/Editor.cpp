@@ -905,7 +905,7 @@ namespace SaltnPepperEngine
 
 				if (ImGui::Button("OK", ImVec2(120, 0)))
 				{
-					app.GetSceneManager()->GetCurrentScene()->Serialize( FileSystem::GetCurrentPath().u8string() + "\\Engine\\Scene\\", false);
+					app.GetSceneManager()->GetCurrentScene()->Serialize(FileSystem::GetCurrentPath().u8string() + "\\Engine\\Scene\\", false);
 					
 					ImGui::CloseCurrentPopup();
 				}

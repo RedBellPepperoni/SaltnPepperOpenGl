@@ -144,9 +144,9 @@ namespace SaltnPepperEngine
 		void load(Archive& archive) const
 		{
 			/*archive(cereal::make_nvp("Version", m_sceneSerializationVersion));
-			archive(cereal::make_nvp("Scene Name", m_name));*/
+			archive(cereal::make_nvp("Scene Name", m_name));
 
-			CurrentSceneVersion = m_sceneSerializationVersion;
+			CurrentSceneVersion = m_sceneSerializationVersion;*/
 		}
 
 

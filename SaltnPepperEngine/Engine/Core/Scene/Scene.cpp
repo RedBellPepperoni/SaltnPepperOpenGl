@@ -45,8 +45,6 @@ namespace SaltnPepperEngine
     get<Light>(input).				\
 	get<ModelComponent>(input)	
 	
-	
-
 	Scene::Scene(const std::string& name)
 		:m_name(name)
 	{
@@ -73,20 +71,20 @@ namespace SaltnPepperEngine
 
 	void Scene::Init()
 	{
-		Entity cameraEntity = GetEntityManager()->Create("MainCamera");
-		Camera* camera = &cameraEntity.AddComponent<Camera>();
-		Transform* transform = &cameraEntity.AddComponent<Transform>();
+		//Entity cameraEntity = GetEntityManager()->Create("MainCamera");
+		//Camera* camera = &cameraEntity.AddComponent<Camera>();
+		//Transform* transform = &cameraEntity.AddComponent<Transform>();
 
-		
+		//
 
-		////AudioListener* listener = &cameraEntity.AddComponent<Audio::AudioListener>(transform);
+		//////AudioListener* listener = &cameraEntity.AddComponent<Audio::AudioListener>(transform);
 
 
-		transform->SetPosition(Vector3(2.2f, 0.97f, 0.65f));
-		transform->SetEularRotation(Vector3(-45.0f, 3.6f, 0.0f));
+		//transform->SetPosition(Vector3(2.2f, 0.97f, 0.65f));
+		//transform->SetEularRotation(Vector3(-45.0f, 3.6f, 0.0f));
 
-		CameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
-		controller.SetCamera(camera);
+		//CameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
+		//controller.SetCamera(camera);
 
 		//cameraEntity.AddComponent<DefaultCameraController>(DefaultCameraController::CameraType::Orbital);
 
@@ -361,17 +359,18 @@ namespace SaltnPepperEngine
 			cereal::JSONInputArchive input(istr);
 			input(*this);
 
-			// Load the snapShot
-			if (m_sceneSerializationVersion == 1)
-			{
-				entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);	
-			}
+			entt::registry& reg = m_EntityManager->GetRegistry();
 
-		}
-		catch (...)
-		{
-			LOG_ERROR("Failed To load Scene : [{0}]", path);
-		}
+			m_EntityManager->GetRegistry().clear();
+
+			entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
+
+
+		} 
+		catch (...) 
+		{ 
+			LOG_ERROR("Failed To load Scene : [{0}]", path); 
+		} 
 
 		m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
 

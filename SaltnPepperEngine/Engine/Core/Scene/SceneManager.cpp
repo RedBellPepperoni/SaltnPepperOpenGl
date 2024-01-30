@@ -51,18 +51,17 @@ namespace SaltnPepperEngine
 				index = i;
 				break;
 			}
-
-			if (sceneFound)
-			{
-				SwitchScene(index);
-			}
-			else
-			{
-				LOG_ERROR("SceneManager : No Scene found with teh name :[ {0} ]", sceneName);
-			}
-
-
 		}
+
+		if (sceneFound)
+		{
+			SwitchScene(index);
+		}
+		else
+		{
+			LOG_ERROR("SceneManager : No Scene found with teh name :[ {0} ]", sceneName);
+		}
+
 
 	}
 
@@ -102,14 +101,19 @@ namespace SaltnPepperEngine
 		m_sceneIndex = m_queuedSceneIndex;
 		m_currentScene = m_sceneList[m_queuedSceneIndex].get();
 
+		std::string physicalPath = "\\Engine\\Scene\\";
+		std::string FinalPath = FileSystem::GetCurrentPath().u8string() + physicalPath;
 
 		application.StartPhysics(true);
 
-		// Work on this
+		m_currentScene->Deserialize(FinalPath, false);
+		
+		m_currentScene->Init();
 
-		std::string physicalPath;
 
-		//if()
+		
+
+		m_isSwitchingScenes = false;
 	
 	}
 

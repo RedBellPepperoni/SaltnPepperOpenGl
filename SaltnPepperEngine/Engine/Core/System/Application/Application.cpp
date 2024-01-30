@@ -204,6 +204,8 @@ namespace SaltnPepperEngine
 
 
 
+		
+
 		// Calling Init on the child applications
 		OnInit();
 	}
@@ -224,6 +226,12 @@ namespace SaltnPepperEngine
 
 		while (m_window->isOpen())
 		{
+
+			if (m_sceneManager->GetSwitchingScene())
+			{
+				m_sceneManager->ApplySceneSwitch();
+				continue;
+			}
 
 
 			UpdateDeltaTime(frameEnd, secondEnd, frames);

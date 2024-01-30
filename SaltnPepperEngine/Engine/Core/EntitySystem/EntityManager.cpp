@@ -49,22 +49,21 @@ namespace SaltnPepperEngine
 
 	void EntityManager::Clear()
 	{
-		// Go thriugh all the entities in the Registry
+		 //Go thriugh all the entities in the Registry
 		for (auto [entity] : m_registry.storage<entt::entity>().each())
 		{
 			// Destroy each entity
 			m_registry.destroy(entity);
 		}
 
+		/*m_registry.each([&](auto entity)
+			{ m_registry.destroy(entity); });*/
+
 		// Finally clear the Registry of any dangling reference
 		m_registry.clear();
 	}
 
-	// Getter for the Registry
-	entt::registry& EntityManager::GetRegistry()
-	{
-		return m_registry;
-	}
+	
 
 	// Find a particular entity using its unique identifier
 	Entity EntityManager::GetEntitybyId(uint64_t id)
