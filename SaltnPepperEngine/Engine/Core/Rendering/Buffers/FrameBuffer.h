@@ -34,6 +34,9 @@ namespace SaltnPepperEngine
 
 		class FrameBuffer
 		{
+
+		private:
+
 			enum class AttachmentType : uint8_t
 			{
 				NONE,
@@ -84,7 +87,7 @@ namespace SaltnPepperEngine
 			BindableID GetHandle() const;
 
 
-			void AttachTexture(SharedPtr<Texture>& texture, Attachment attachment)
+			void AttachTexture(const SharedPtr<Texture>& texture, Attachment attachment = Attachment::COLOR_ATTACH_0)
 			{
 				DetachRenderTarget();
 

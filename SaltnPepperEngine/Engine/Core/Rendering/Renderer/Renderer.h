@@ -9,7 +9,9 @@
 #include "Engine/Core/Rendering/Buffers/VertexAttribute.h"
 #include "Engine/Core/Rendering/Skybox/Skybox.h"
 #include "Engine/Core/Rendering/Skybox/SkyboxObject.h"
+#include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
 
+#include "Engine/Core/Rendering/Geometry/RectangleObject.h"
 
 namespace SaltnPepperEngine
 {
@@ -76,6 +78,8 @@ namespace SaltnPepperEngine
 		// Data Structure to define main camera properties
 		struct CameraElement
 		{
+
+			SharedPtr<FrameBuffer> gBuffer;
 
 			Matrix4 viewProjMatrix;
 			Matrix4 staticViewProjectMatrix;
@@ -151,6 +155,8 @@ namespace SaltnPepperEngine
 
 			std::vector<VertexAttribute> vertexLayout;
 
+			RectangleObject rectangularObject;
+
 			// All the Render Elements that need to be drawn
 			std::vector<RenderElement> renderElementList;
 
@@ -181,6 +187,12 @@ namespace SaltnPepperEngine
 			SkyboxObject SkyboxCubeObject;
 			Skybox skybox;
 
+
+
+			SharedPtr<FrameBuffer> postprocessFrameBuffer;
+			SharedPtr<FrameBuffer> depthFrameBuffer;
+			SharedPtr<FrameBuffer> bloomFrameBuffer;
+
 		};
 
 
@@ -196,8 +208,8 @@ namespace SaltnPepperEngine
 
 			PipeLine m_pipeline;
 
+			Vector2Int viewPort;
 			DebugDrawData m_debugDrawData;
-
 
 			SharedPtr<Shader> m_lineShader = nullptr;
 			SharedPtr<Shader> m_pointShader = nullptr;
@@ -205,7 +217,20 @@ namespace SaltnPepperEngine
 			std::vector<LineVertexElement*> m_LineBufferBase;
 			std::vector<PointVertexElement*> m_PointBufferBase;
 
+			
+			
+			
 
+			unsigned int clearMask = 0;
+
+
+		public:
+
+			SharedPtr<FrameBuffer> SecondaryFrameBuffer;
+			SharedPtr<Texture> SecondaryTexture;
+			unsigned int rbo;
+
+		private:
 
 			void DebugPassInternal(const CameraElement& camera, bool depthtest);
 
@@ -231,7 +256,7 @@ namespace SaltnPepperEngine
 			const float GetSkyboxIntensity() const;
 
 			const PipeLine& GetPipeLine() const;
-
+			//PipeLine& GetPipeLine();
 
 			// Draws the provided Elements with the provided shader
 			void ForwardPass(SharedPtr<Shader> shader, const CameraElement& camera, const MaterialType type);
@@ -239,15 +264,31 @@ namespace SaltnPepperEngine
 			void DebugPass(const CameraElement& camera);
 
 			void SetUpCameraElement(Camera& cameraRef, Transform& transform);
+			CameraElement GenerateCameraElement(Camera& cameraRef, Transform& transform);
 
 			// Adds a Render Element to the Queue
 			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform);
 			void ProcessLightElement(Light& light, Transform& transform);
+			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 
 
+			SharedPtr<FrameBuffer>& GetPostProcessFrameBuffer();
+
+
+
+			void RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader);
+
+
+			void Clear();
 			void ClearRenderCache();
 
+			void SetViewport(int x, int y, int width, int height) const;
+			Vector2Int GetViewport();
+			void SetWindowSize(const Vector2Int& size);
 
+
+			void AttachDefaultFrameBuffer();
+			void ClearRectangleObjectVAO();
 
 		};
 

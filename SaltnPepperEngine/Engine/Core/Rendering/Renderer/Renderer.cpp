@@ -70,6 +70,9 @@ namespace SaltnPepperEngine
 
         void Renderer::Init()
         {
+
+            clearMask |= GL_COLOR_BUFFER_BIT;
+
             // Initialize the Debug Renderer
             DebugRenderer::Init();
 
@@ -111,12 +114,12 @@ namespace SaltnPepperEngine
 
             // ============== LOADING TEXTURES =======================
             // Loading default Albedo texture
-            Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultAlbedoTexture", "Engine\\Textures\\DefaultTexture.png", TextureFormat::RGB);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultTexture", "Engine\\Textures\\DefaultTexture.png", TextureFormat::RGB);
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("FieldSkybox", "Engine\\Textures\\fieldRight.png", "Engine\\Textures\\fieldLeft.png", "Engine\\Textures\\fieldTop.png", "Engine\\Textures\\fieldBottom.png", "Engine\\Textures\\fieldFront.png", "Engine\\Textures\\fieldBack.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
 
 
-            m_pipeline.defaultTextureMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultAlbedoTexture");
+            m_pipeline.defaultTextureMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultTexture");
 
             m_pipeline.SkyboxCubeObject.Init();
 
@@ -125,6 +128,34 @@ namespace SaltnPepperEngine
             m_pipeline.skybox.cubeMap = Application::GetCurrent().GetCubeMapLibrary()->GetResource("SpaceSkybox");
             m_pipeline.skybox.SetIntensity(1.20f);
 
+
+            m_pipeline.postprocessFrameBuffer = MakeShared<FrameBuffer>();
+            m_pipeline.depthFrameBuffer = MakeShared<FrameBuffer>();
+            m_pipeline.bloomFrameBuffer = MakeShared<FrameBuffer>();
+
+            m_pipeline.rectangularObject.Init(1.0f);
+
+            SecondaryFrameBuffer = MakeShared<FrameBuffer>();
+            SecondaryTexture = MakeShared<Texture>();
+
+            Vector2Int viewport = Application::GetCurrent().GetWindowSize();
+
+            SecondaryTexture->Load(nullptr, viewport.x, viewport.y, 3, false, TextureFormat::RGB);
+            SecondaryTexture->SetFilePath("RenderTexture");
+            SecondaryTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+
+            SecondaryFrameBuffer->AttachTexture(SecondaryTexture);
+            
+
+            
+            glGenRenderbuffers(1, &rbo);
+            glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, viewport.x, viewport.y); // use a single renderbuffer object for both a depth AND stencil buffer.
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+
+           
+            SecondaryFrameBuffer->Validate();
+            SecondaryFrameBuffer->UnBind();
         }
 
 
@@ -198,8 +229,8 @@ namespace SaltnPepperEngine
             }
 
 
-           // newElement.ModelMatrix = transform.GetMatrix();
-            newElement.ModelMatrix = transform.GetLocalMatrix();
+            newElement.ModelMatrix = transform.GetMatrix();
+            //newElement.ModelMatrix = transform.GetLocalMatrix();
 
             // New!! - For lighting
             newElement.NormalMatrix = transform.GetNormalMatrix();
@@ -213,7 +244,7 @@ namespace SaltnPepperEngine
 
 
 
-            switch (material->type)
+            switch (material->m_type)
             {
             case MaterialType::Opaque:
 
@@ -242,6 +273,23 @@ namespace SaltnPepperEngine
 
 
 
+        void Renderer::RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader)
+        {
+            RectangleObject& rectObject = m_pipeline.rectangularObject;
+            shader->Bind();
+
+            rectObject.GetVAO()->Bind();
+            
+            DrawIndices(DrawType::TRIANGLES, rectObject.IndexCount, 0);
+        }
+
+        void Renderer::Clear()
+        {
+            GLDEBUG(glClearColor(0.5f, 0.1f, 0.1f, 1.0f));
+            //GLDEBUG(glClear(clearMask));
+            GLDEBUG(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+        }
+
         void Renderer::ClearRenderCache()
         {
             m_pipeline.cameraList.clear();
@@ -252,6 +300,42 @@ namespace SaltnPepperEngine
             m_pipeline.lightElementList.clear();
             m_pipeline.textureBindIndex = 0;
 
+        }
+
+        void Renderer::SetViewport(int x, int y, int width, int height) const
+        {
+            
+            GLDEBUG(glViewport(x, y, width, height));
+        }
+
+        Vector2Int Renderer::GetViewport()
+        {
+            return viewPort;
+        }
+
+        void Renderer::SetWindowSize(const Vector2Int& size)
+        {
+            viewPort = size;
+        }
+
+        void Renderer::AttachDefaultFrameBuffer()
+        {
+            // Unbinding any framebuffer will revert thback to the default frame buffer ,(the one at 0)
+             // doing this allows us to render to application window
+            //m_pipeline.postprocessFrameBuffer->UnBind();
+
+            SecondaryFrameBuffer->UnBind();
+
+            SetViewport(0, 0, GetViewport().x, GetViewport().y);
+
+            //GLDEBUG(glClear(GL_COLOR_BUFFER_BIT));
+            Clear();
+
+        }
+
+        void Renderer::ClearRectangleObjectVAO()
+        {
+            m_pipeline.rectangularObject.GetVAO()->UnBind();
         }
 
 
@@ -420,7 +504,7 @@ namespace SaltnPepperEngine
 
 
             // Two Passes one for no depth and other for Depthtested
-            DebugPassInternal(camera, false);
+            DebugPassInternal(camera, false); 
             DebugPassInternal(camera, true);
 
 
@@ -557,8 +641,13 @@ namespace SaltnPepperEngine
         void Renderer::SetUpCameraElement(Camera& cameraRef, Transform& transform)
         {
 
+            CameraElement camElement = GenerateCameraElement(cameraRef, transform);
+            m_pipeline.cameraList.push_back(camElement);
 
+        }
 
+        CameraElement Renderer::GenerateCameraElement(Camera& cameraRef, Transform& transform)
+        {
             // Creating a new  Data only Camera element
             CameraElement camera;
 
@@ -574,11 +663,15 @@ namespace SaltnPepperEngine
                         //Matrix4 view = Math::GetLookAt(camera.viewPosition, camera.viewPosition + cameraRef.GetDirection(), cameraRef.GetUpVector());
 
 
-            //Matrix4 transformMatrix = transform.GetMatrix();
-            Matrix4 transformMatrix = transform.GetLocalMatrix();
+            Matrix4 transformMatrix = transform.GetMatrix();
+            Vector3 Newposition = transformMatrix[3];
 
-            // get the inverse of the Camera trasfrom
-           // Matrix4 view = Math::Inverse(transformMatrix);
+            //LOG_INFO("{0} : {1} : {2}",Newposition.x,Newposition.y,Newposition.z);
+
+            // Matrix4 transformMatrix = transform.GetLocalMatrix();
+
+             // get the inverse of the Camera trasfrom
+            // Matrix4 view = Math::Inverse(transformMatrix);
             Matrix4 view = Math::Inverse(transformMatrix);
 
             // get the inverse of the Camera transform without any position data (only Rotation0
@@ -598,11 +691,9 @@ namespace SaltnPepperEngine
             camera.staticViewProjectMatrix = staticProjView;
             camera.outputTexture = cameraRef.GetRenderTexture();
 
+            camera.gBuffer = cameraRef.GetBuffers()->gBuffer;
 
-            m_pipeline.cameraList.push_back(camera);
-
-
-
+            return camera;
         }
 
 
@@ -611,6 +702,12 @@ namespace SaltnPepperEngine
             return m_pipeline;
         }
 
+      /*  PipeLine& Renderer::GetPipeLine()
+        {
+            return m_pipeline;
+        }*/
+
+       
 
 
 
@@ -636,6 +733,26 @@ namespace SaltnPepperEngine
 
 
 
+        }
+
+        void Renderer::RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod)
+        {
+    
+            texture->Bind();
+            //int boundId = texture->GetBoundId();
+            int boundId = texture->GetHandle();
+            shader->Bind();
+            shader->SetUniform("tex", boundId);
+            shader->SetUniform("lod", lod);
+
+            m_pipeline.rectangularObject.GetVAO()->Bind();
+            DrawIndices(DrawType::TRIANGLES,  m_pipeline.rectangularObject.IndexCount, 0);
+
+        }
+
+        SharedPtr<FrameBuffer>& Renderer::GetPostProcessFrameBuffer()
+        {
+            return m_pipeline.postprocessFrameBuffer;
         }
 	}
 }

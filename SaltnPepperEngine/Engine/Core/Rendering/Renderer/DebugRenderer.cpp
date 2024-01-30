@@ -1,6 +1,6 @@
 #include "DebugRenderer.h"
-#include "Engine/Utils/Bounding/BoundingBox.h"
-#include "Engine/Utils/Bounding/BoundingSphere.h"
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 
 #include "Engine/Utils/Logging/Log.h"
@@ -377,7 +377,7 @@ namespace SaltnPepperEngine
 				float z = Cos(step * i) * radius;
 				float x = Sin(step * i) * radius;
 
-				Vector3 offset = rotation * glm::vec4(x, 0.0f, z, 0.0f);
+				Vector3 offset = rotation * Vector4(x, 0.0f, z, 0.0f);
 				DrawLine(bottomSphereCentre + offset, topSphereCentre + offset, color);
 
 				if (i < 4)
@@ -385,7 +385,7 @@ namespace SaltnPepperEngine
 					float z2 = Cos(step * (i + 4)) * radius;
 					float x2 = Sin(step * (i + 4)) * radius;
 
-					Vector3 offset2 = rotation * glm::vec4(x2, 0.0f, z2, 0.0f);
+					Vector3 offset2 = rotation * Vector4(x2, 0.0f, z2, 0.0f);
 					// Top Hemishpere
 					DebugDrawArc(8, radius, topSphereCentre + offset, topSphereCentre + offset2, rotation, color);
 					// Bottom Hemisphere

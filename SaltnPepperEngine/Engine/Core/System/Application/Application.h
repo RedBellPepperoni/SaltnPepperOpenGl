@@ -6,8 +6,13 @@
 
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/System/Events/Event.h"
+#include "Engine/Core/System/Events/WindowEvent.h"
+
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Utils/Time/Time.h"
+#include "Engine/Core/Scene/SceneManager.h"
+
+#include "Engine/Utils/Serialization/Serialization.h"
 
 namespace SaltnPepperEngine
 {
@@ -19,7 +24,7 @@ namespace SaltnPepperEngine
 	class AudioLibrary;
 	class GameObjectRegistry;
 	class Scene;
-
+	
 
 	namespace Rendering
 	{
@@ -32,24 +37,47 @@ namespace SaltnPepperEngine
 	using Rendering::Window;
 	using Rendering::Camera;
 
-	//namespace EditorGUI
-	//{
-	//	class RuntimeEditor;
-	//}
+	namespace Editor
+	{
+		class RuntimeEditor;
+		class ImGuiManager;
+	}
 
-	//using EditorGUI::RuntimeEditor;
+	using namespace Editor;
 
-	/*namespace Physics
+	namespace Physics
 	{
 		class PhysicsEngine;
 	}
 
-	using Physics::PhysicsEngine;*/
+	using Physics::PhysicsEngine;
 
 
+	namespace Components
+	{
+		class Transform;
+	}
+
+	using Components::Transform;
 
 	class Application
 	{
+	public:
+
+		struct ProjectSettings
+		{
+			std::string m_projectRoot;
+			std::string m_projectName;
+			std::string m_engineResourcePath;
+
+			bool fullscreen = true;
+			bool vSync = false;
+			std::string title;
+			int projectVersion;
+
+		};
+
+
 
 	protected:
 
@@ -61,10 +89,11 @@ namespace SaltnPepperEngine
 
 		UniquePtr<Window> m_window = nullptr;
 
-		/*UniquePtr<PhysicsEngine> m_physicsSystem = nullptr;
+		UniquePtr<PhysicsEngine> m_physicsSystem = nullptr;
 
-		UniquePtr<RuntimeEditor> m_editor = nullptr;*/
+		UniquePtr<RuntimeEditor> m_editor = nullptr;
 
+		UniquePtr<SceneManager> m_sceneManager = nullptr;
 
 		bool m_isRunning = false;
 		bool m_isPaused = false;
@@ -85,7 +114,11 @@ namespace SaltnPepperEngine
 		SharedPtr<AudioLibrary> m_audioLibrary;
 
 		// Pointer to the currently loaded scene
-		SharedPtr<Scene> m_currentScene;
+		Scene* m_currentScene;
+
+		ProjectSettings m_projectSettings;
+
+		UniquePtr<ImGuiManager> m_imguiManager;
 
 		// Default Scale
 		float m_timeScale = 1.0f;
@@ -98,6 +131,8 @@ namespace SaltnPepperEngine
 		// Future case when there can be multiple cameras // 
 					// "-1"  means no rendering cameras were found
 		int m_mainCameraIndex = -1;
+
+		bool m_isProjectLoaded = false;
 
 
 	protected:
@@ -112,7 +147,7 @@ namespace SaltnPepperEngine
 		virtual void OnInit() {};
 		virtual void OnCreate() {};
 		virtual void OnUpdate(float deltaTime) {};
-
+		
 
 		void UpdateDeltaTime(float& lastFrameEnd, float& lastSecondEnd, size_t& fps);
 
@@ -120,6 +155,7 @@ namespace SaltnPepperEngine
 
 	public:
 
+	
 
 
 		// Destructor
@@ -134,7 +170,7 @@ namespace SaltnPepperEngine
 		// Reference Getter for teh current scene
 		Scene* GetCurrentScene() const;
 
-		//PhysicsEngine* GetPhysicsEngine() const;
+		PhysicsEngine* GetPhysicsEngine() const;
 
 		// The start up setup for the apllication
 		void Initialize();
@@ -142,6 +178,7 @@ namespace SaltnPepperEngine
 		// This methods initaitzes the runtime and starts the gameloop
 		void Run();
 
+		void OnImGui();
 
 		// Deals with the Event queue to be processed by the glfw runtime
 		void ProcessEvent(EventBase& event);
@@ -192,8 +229,71 @@ namespace SaltnPepperEngine
 		void StartPhysics(bool shouldstart);
 		const Vector2Int GetWindowSize();
 
+		bool OnWindowClose(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
+
+		// Editor Variables
+
+		RuntimeEditor* GetEditor() { return m_editor.get(); }
+
+		Camera* GetEditorCamera();
+		Transform* GetEditorCameraTransform();
+
+		ImGuiManager* GetImguiManager() { return m_imguiManager.get(); }
+
+		const bool GetEditorActive() const;
+
+		void AddDefaultScene();
+		SceneManager* GetSceneManager() const { return m_sceneManager.get(); }
+		// Can Setup Project Laungin
+		virtual void OnDefaultProject();
+
+		ProjectSettings& GetProjectSettings() { return m_projectSettings; }
+
+		const bool GetProjectLoaded() const { return m_isProjectLoaded; }
+		void SetProjectLoaded(const bool loaded) { m_isProjectLoaded = loaded; }
+
+		void Quit();
 
 
+		virtual void Serialise();
+		virtual void Deserialise();
+
+		template <typename Archive>
+		void save(Archive& archive) const
+		{
+			
+			std::string path;
+
+			std::vector<std::string> paths = m_sceneManager->GetSceneFilePaths();
+			archive(cereal::make_nvp("Scenes", paths));
+			archive(cereal::make_nvp("SceneIndex", m_sceneManager->GetCurrentSceneIndex()));
+		
+		
+		}
+
+		template <typename Archive>
+		void load(Archive& archive)
+		{
+			int sceneIndex = 0;
+
+			std::string test;
+			std::vector<std::string> sceneFilePaths;
+			archive(cereal::make_nvp("Scenes", sceneFilePaths));
+
+			for (auto& filePath : sceneFilePaths)
+			{
+				m_sceneManager->AddFileToLoadList(filePath);
+			}
+
+			if (sceneFilePaths.size() == sceneIndex)
+			{
+				AddDefaultScene();
+			}
+		
+			archive(cereal::make_nvp("SceneIndex", sceneIndex));
+			m_sceneManager->SwitchScene(sceneIndex);
+		}
 
 
 	};

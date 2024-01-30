@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "Engine/Core/Resources/ResourceManager.h"
+#include "Engine/Core/Rendering/Material/Material.h"
 
 
 namespace SaltnPepperEngine
@@ -15,16 +16,17 @@ namespace SaltnPepperEngine
 			, m_IBO(nullptr)
 			, m_meshName("empty")
 		{
+			m_material = MakeShared<Material>();
 		}
 
-		Mesh::Mesh(const Mesh& mesh)
+		/*Mesh::Mesh(const Mesh& mesh)
 			: m_vertices(mesh.m_vertices)
 			, m_indicies(mesh.m_indicies)
 			, m_VBO(mesh.m_VBO)
 			, m_IBO(mesh.m_IBO)
 			, m_meshName(mesh.GetName())
 		{
-		}
+		}*/
 
 		Mesh::Mesh(const std::vector<Vertex>& inVertices, const std::vector<uint32_t>& inIndicies)
 		{
@@ -42,6 +44,7 @@ namespace SaltnPepperEngine
 			// Creating a new vertex buffer with the processed data
 			m_VBO = Factory<VertexBuffer>::Create(sizeof(Vertex) * m_vertexCount, m_vertices.data(), UsageType::STATIC_COPY);
 
+			m_material = MakeShared<Material>();
 		}
 
 		// Default Constructor
@@ -79,6 +82,16 @@ namespace SaltnPepperEngine
 		SharedPtr<IndexBuffer>& Mesh::GetIBO()
 		{
 			return m_IBO;
+		}
+
+		void Mesh::SetMaterial(const SharedPtr<Material>& newMaterial)
+		{
+			m_material = newMaterial;
+		}
+
+		const SharedPtr<Material>& Mesh::GetMaterial() const
+		{
+			return m_material;
 		}
     }
 }

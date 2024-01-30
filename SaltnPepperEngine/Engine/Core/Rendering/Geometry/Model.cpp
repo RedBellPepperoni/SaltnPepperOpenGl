@@ -7,6 +7,22 @@ namespace SaltnPepperEngine
 
     }
 
+   
+
+    Model::Model(PrimitiveType primitive)
+        : m_filePath ("Primitive")
+        , m_primitiveType(primitive)
+    {
+        m_meshes.push_back(GeneratePrimitive(primitive));
+    }
+
+    Model::Model(SharedPtr<Mesh>& mesh, PrimitiveType primitive)
+        :m_filePath("Primitive")
+        ,m_primitiveType(primitive)
+    {
+        m_meshes.push_back(mesh);
+    }
+
     std::vector<SharedPtr<Mesh>>& Model::GetMeshes()
     {
         return m_meshes;
@@ -36,5 +52,18 @@ namespace SaltnPepperEngine
 
 
 
+    }
+    const std::string& Model::GetFilePath() const
+    {
+        return m_filePath;
+    }
+    PrimitiveType Model::GetPrimitiveType()
+    {
+        return m_primitiveType;
+    }
+
+    void Model::SetPrimitiveType(PrimitiveType type)
+    {
+        m_primitiveType = type;
     }
 }

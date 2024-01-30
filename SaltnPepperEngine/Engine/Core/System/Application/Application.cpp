@@ -1,4 +1,4 @@
-#include "Application.h"
+  #include "Application.h"
 #include "Engine/Utils/Logging/Log.h"
 #include "Engine/Utils/Time/Time.h"
 #include "Engine/Core/System/Input/InputSystem.h"
@@ -10,8 +10,12 @@
 #include "Engine/Macros.h"
 #include "Engine/Core/Rendering/Renderer/RenderManager.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Components/Transform.h"
 
-
+#include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+#include "Editor/Editor.h"
+#include "Editor/ImGuiManager.h"
+#include "Engine/Core/EntitySystem/EntityManager.h"
 
 
 namespace SaltnPepperEngine
@@ -29,10 +33,15 @@ namespace SaltnPepperEngine
 		// initializing the Logging
 		Debug::Log::OnInit();
 
+		// Setting the Instance reference of the creatd application
+		m_currentApplication = this;
+
 		// Creating and Initializing the Open GL Window
 		m_window = MakeUnique<Window>();
-
 		m_window->Initialize();
+
+		// Initializing teh Render manager
+		m_renderManager = MakeUnique<RenderManager>();
 
 		// Setting up teh Model and Object Library
 		m_modelLibrary = MakeShared<ModelLibrary>();
@@ -41,27 +50,40 @@ namespace SaltnPepperEngine
 		//m_audioLibrary = MakeShared<AudioLibrary>();
 
 
-		//m_objectRegistry = MakeShared<GameObjectRegistry>();
+		m_physicsSystem = MakeUnique<PhysicsEngine>();
+		m_physicsSystem->Init();
 
-		m_currentScene = MakeShared<Scene>("testScene");
+		m_sceneManager = MakeUnique<SceneManager>();
+		m_sceneManager->EnqueueScene("New Scene");
+		m_sceneManager->SwitchScene(0);
+		m_sceneManager->ApplySceneSwitch();
 
-		//m_physicsSystem = MakeUnique<PhysicsEngine>();
+		m_currentScene = m_sceneManager->GetCurrentScene();
+		m_currentScene->Init();
 
-		// Initializing teh Render manager
-		m_renderManager = MakeUnique<RenderManager>();
+		m_mainCameraIndex = 0;
+
+		
+	
+		m_physicsSystem->UpdateScene(m_currentScene);
+		
 
 
-		//m_editor = MakeUnique<RuntimeEditor>();
+		m_editor = MakeUnique<RuntimeEditor>();
 
 
-		// Setting the Instance reference of the creatd application
-		m_currentApplication = this;
+		
 
 		// Activate the User function
 		OnCreate();
 
 
 
+	}
+
+	void Application::OnImGui()
+	{
+		m_editor->OnImGui();
 	}
 
 	void Application::UpdateDeltaTime(float& lastFrameEnd, float& lastSecondEnd, size_t& fps)
@@ -140,13 +162,13 @@ namespace SaltnPepperEngine
 
 	Scene* Application::GetCurrentScene() const
 	{
-		return m_currentScene.get();
+		return m_sceneManager->GetCurrentScene();
 	}
 
-	/*PhysicsEngine* Application::GetPhysicsEngine() const
+	PhysicsEngine* Application::GetPhysicsEngine() const
 	{
 		return m_physicsSystem.get();
-	}*/
+	}
 
 	void Application::Initialize()
 	{
@@ -156,22 +178,33 @@ namespace SaltnPepperEngine
 		this->m_window->SetEventCallback(BIND_FN(Application::ProcessEvent));
 
 		// Right now only limited to one scene -> change this to a load scene function later
-		m_currentScene->Init();
+		/*m_currentScene->Init();
 
 		m_mainCameraIndex = 0;
 
-		//m_physicsSystem->Init();
-		//m_physicsSystem->UpdateScene(m_currentScene.get());
+		m_physicsSystem->Init();
+		m_physicsSystem->UpdateScene(m_currentScene.get());*/
 
-		//m_physicsSystem->SetPaused(false);
+		m_physicsSystem->SetPaused(false);
 
 		m_renderManager->Init();
 
-		
 
-		//m_editor->Toggle(true);
+		
+		m_editor->OnInit();
+
+		
+		m_imguiManager = MakeUnique<ImGuiManager>(false);
+		m_imguiManager->Init();
+
+
+		//m_editor->ToggleEditor();
 
 		//LuaManager::GetInstance().OnInit();
+
+
+
+		
 
 		// Calling Init on the child applications
 		OnInit();
@@ -194,11 +227,10 @@ namespace SaltnPepperEngine
 		while (m_window->isOpen())
 		{
 
-			if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Escape))
+			if (m_sceneManager->GetSwitchingScene())
 			{
-				m_window->CloseWindow();
-				m_isRunning = false;
-				break;
+				m_sceneManager->ApplySceneSwitch();
+				continue;
 			}
 
 
@@ -216,24 +248,38 @@ namespace SaltnPepperEngine
 
 			// Update window and listen and process window events
 			m_window->UpdateViewPort();
-			m_window->UpdateImGui();
+			m_renderManager->SetWindowSize(m_window->GetSize());
 
-			//m_editor->OnUpdate();
-
+			//m_window->UpdateImGui();
 
 			// Render all the vertices in the current Render array
 			RenderObjects();
+		
+			if (InputSystem::GetInstance().GetKeyDown(Key::GraveAccent))
+			{
+				m_editor->ToggleEditor();
+			}
+			
+			if (m_editor->IsEditorActive())
+			{
+				m_editor->OnUpdate(m_deltaTime);
 
-			m_window->RenderImGui();
+
+				m_imguiManager->Update(m_deltaTime, GetCurrentScene());
+
+				// Do all the ImGUI Rendering before Swapping the buffers
+				m_imguiManager->OnRender(GetCurrentScene());
+			}
+
+			// Swapping the framebuffers 
 			m_window->SwapBuffers();
+			
 
-
-			//m_physicsSystem->Update(m_deltaTime);
-
-			//m_physicsSystem->UpdateECSTransforms();
+			// Do the Physics Update here
+			m_physicsSystem->Update(m_deltaTime);
+			m_physicsSystem->UpdateECSTransforms();
 //
-
-
+			
 
 			OnUpdate(m_deltaTime);
 
@@ -257,6 +303,15 @@ namespace SaltnPepperEngine
 	{
 		EventDispatcher dispatcher(event);
 
+		dispatcher.dispatch<WindowCloseEvent>(BIND_FN(Application::OnWindowClose));
+		dispatcher.dispatch<WindowResizeEvent>(BIND_FN(Application::OnWindowResize));
+
+
+		if (m_imguiManager)
+		{
+			m_imguiManager->OnEvent(event);
+		}
+		
 		// Event already handled
 		if (event.GetHandled()) { return; }
 
@@ -340,6 +395,8 @@ namespace SaltnPepperEngine
 
 
 		m_mainCameraIndex = index;
+
+		LOG_ERROR("SetMainCameraIndex function Turned OFF");
 	}
 
 	void Application::SetCursorPosition(Vector2 position)
@@ -373,12 +430,82 @@ namespace SaltnPepperEngine
 	{
 		//m_physicsSystem->SetPaused(shouldstart);
 
-
 	}
 
 	const Vector2Int Application::GetWindowSize()
 	{
 		return GetAppWindow().GetSize();
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& event)
+	{
+		return false;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& event)
+	{
+		return false;
+	}
+
+	Camera* Application::GetEditorCamera()
+	{
+	    return m_editor->GetCamera(); 
+	}
+
+	Transform* Application::GetEditorCameraTransform()
+	{
+		return &m_editor->GetEditorCameraTransform();
+	}
+
+	const bool Application::GetEditorActive() const
+	{
+		return m_editor->IsEditorActive();;
+	}
+
+	void Application::AddDefaultScene()
+	{
+		if (m_sceneManager->GetScenes().size() == 0)
+		{
+			m_sceneManager->EnqueueScene("Empty Scene");
+			m_sceneManager->SwitchScene(0);
+		}
+	}
+
+	void Application::OnDefaultProject()
+	{
+		m_projectSettings.fullscreen = true;
+		m_projectSettings.m_projectName = "SerializationTest";
+		m_projectSettings.m_engineResourcePath = FileSystem::GetEngineDir().u8string();
+		//m_projectSettings.m_engineResourcePath = "..\\..\\TestProject\\";
+	}
+
+	void Application::Quit()
+	{
+		m_window->CloseWindow();
+		m_isRunning = false;
+		
+	}
+
+	void Application::Serialise()
+	{
+		/*{
+			std::stringstream storage;
+			{
+				 output finishes flushing its contents when it goes out of scope
+				cereal::JSONOutputArchive output{ storage };
+				output(*this);
+			}
+
+			std::string path = FileSystem::GetCurrentPath().u8string();
+
+			std::string fullPath =  path + std::string(".spproj");
+			LOG_INFO("Serialising Application {0}", fullPath);
+			FileSystem::WriteFileToText(fullPath, storage.str());
+		}*/
+	}
+
+	void Application::Deserialise()
+	{
 	}
 
 

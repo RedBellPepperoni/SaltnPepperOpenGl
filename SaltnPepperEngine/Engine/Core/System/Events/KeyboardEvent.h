@@ -59,6 +59,7 @@ namespace SaltnPepperEngine
 
 	class CharTypedEvent : public KeyEvent
 	{
+	public:
 		CharTypedEvent(Input::Key keyCode, char typedCharacter) : KeyEvent(keyCode), character(typedCharacter) {}
 
 		EVENT_TYPE(CharTyped)

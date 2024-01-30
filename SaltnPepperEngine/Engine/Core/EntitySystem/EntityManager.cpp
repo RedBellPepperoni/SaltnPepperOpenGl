@@ -12,6 +12,10 @@ namespace SaltnPepperEngine
 		//Add a ID Component to give an unique ID to the newly created Entity
 		m_registry.emplace<IdComponent>(newEntity);
 
+		// All entities should start with a transfrom component
+		m_registry.emplace<Transform>(newEntity);
+		m_registry.emplace<ActiveComponent>(newEntity);
+
 
 		return Entity(newEntity, m_scene);
 	}
@@ -22,11 +26,22 @@ namespace SaltnPepperEngine
 		// Create a new Entity
 		entt::entity newEntity = m_registry.create();
 
+		// All entities should start with a transfrom component
+		m_registry.emplace<Transform>(newEntity);
+
 		//Add a Name Component t oname the entity using the provided name
 		m_registry.emplace<NameComponent>(newEntity, name);
 
 		//Add a ID Component to give an unique ID to the newly created Entity
 		m_registry.emplace<IdComponent>(newEntity);
+
+		//Add an active component that define if the body is active : 
+		//  Active models are included in rendering 
+		// Active Physics object are simulated
+		m_registry.emplace<ActiveComponent>(newEntity);
+
+
+
 
 		return Entity(newEntity, m_scene);
 	}
@@ -34,22 +49,21 @@ namespace SaltnPepperEngine
 
 	void EntityManager::Clear()
 	{
-		// Go thriugh all the entities in the Registry
+		 //Go thriugh all the entities in the Registry
 		for (auto [entity] : m_registry.storage<entt::entity>().each())
 		{
 			// Destroy each entity
 			m_registry.destroy(entity);
 		}
 
+		/*m_registry.each([&](auto entity)
+			{ m_registry.destroy(entity); });*/
+
 		// Finally clear the Registry of any dangling reference
 		m_registry.clear();
 	}
 
-	// Getter for the Registry
-	entt::registry& EntityManager::GetRegistry()
-	{
-		return m_registry;
-	}
+	
 
 	// Find a particular entity using its unique identifier
 	Entity EntityManager::GetEntitybyId(uint64_t id)

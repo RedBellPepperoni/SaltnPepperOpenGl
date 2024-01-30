@@ -3,15 +3,32 @@
 #include <string>
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
+#include "Engine/Utils/Frustum.h"
+#include  <cereal/cereal.hpp>
 
 namespace SaltnPepperEngine
 {
+    class Ray;
+    
 
     namespace Rendering
     {
 
         class Texture;
+        class FrameBuffer;
 
+        struct CameraBuffers
+        {
+            SharedPtr<FrameBuffer> gBuffer;
+            SharedPtr<Texture> albedoTexture;
+            SharedPtr<Texture> normalTexture;
+            SharedPtr<Texture> materialTexture;
+            SharedPtr<Texture> depthTexture;
+
+            void Init(int width, int height);
+            void Resize(int width, int height);
+
+        };
 
         class Camera
         {
@@ -65,6 +82,24 @@ namespace SaltnPepperEngine
 
             SharedPtr<Texture>& GetRenderTexture();
 
+            Ray GetRay(float xPos, float yPos, Matrix4 viewMatrix, bool flipY);
+            Frustum& GetFrustum(const Matrix4 viewMatrix);
+
+            SharedPtr<CameraBuffers>& GetBuffers();
+
+            template <typename Archive>
+            void save(Archive& archive) const
+            {
+                archive(cereal::make_nvp("OrthoScale", m_orthosize), cereal::make_nvp("Aspect", m_aspectRatio), cereal::make_nvp("FOV", m_fov), cereal::make_nvp("Near", m_near), cereal::make_nvp("Far", m_far));
+            }
+
+            template <typename Archive>
+            void load(Archive& archive)
+            {
+                archive(cereal::make_nvp("OrthoScale", m_orthosize), cereal::make_nvp("Aspect", m_aspectRatio), cereal::make_nvp("FOV", m_fov), cereal::make_nvp("Near", m_near), cereal::make_nvp("Far", m_far));
+                m_shouldUpdateFrustum = true;
+                m_shouldUpdateProjection = true;
+            }
 
         private:
 
@@ -73,12 +108,12 @@ namespace SaltnPepperEngine
             Vector3 m_forwardVector = Vector3(0.0f, 0.0f, 1.0f);
             Vector3 m_direction = Vector3(0.0f, 0.0f, 1.0f);
 
-
+            SharedPtr<CameraBuffers> m_cameraBuffers;
             SharedPtr<Texture> m_renderTexture;
 
             void UpdateProjectionMatrix();
             void InitializeRenderTexture();
-
+           
 
             bool m_shouldUpdateProjection = false;
 
@@ -89,7 +124,8 @@ namespace SaltnPepperEngine
 
             float m_orthosize = 1.0f;
 
-
+            Frustum m_frustum;
+            bool m_shouldUpdateFrustum = true;
             Matrix4 m_projection{ 1.0f };
 
 

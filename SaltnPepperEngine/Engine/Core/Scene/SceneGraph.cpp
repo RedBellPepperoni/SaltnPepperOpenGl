@@ -47,7 +47,7 @@ namespace SaltnPepperEngine
 
         for (auto entity : nonHierarchyView)
         {
-            registry.get<Transform>(entity).SetMatrix(glm::mat4(1.0f));
+            registry.get<Transform>(entity).SetMatrix(Matrix4(1.0f));
         }
 
         auto view = registry.view<Hierarchy>();
@@ -58,6 +58,7 @@ namespace SaltnPepperEngine
             {
                 // Recursively update children
                 UpdateTransform(entity, registry);
+
             }
         }
     }
@@ -83,12 +84,12 @@ namespace SaltnPepperEngine
                     }
                     else
                     {
-                        transform->SetMatrix(glm::mat4(1.0f));
+                        transform->SetMatrix(Matrix4(1.0f));
                     }
                 }
                 else
                 {
-                    transform->SetMatrix(glm::mat4(1.0f));
+                    transform->SetMatrix(Matrix4(1.0f));
                 }
             }
 

@@ -2,6 +2,7 @@
 #define RENDERMANAGER_H
 #include "Engine/Core/Rendering/Renderer/Renderer.h"
 
+
 namespace SaltnPepperEngine
 {
 
@@ -9,8 +10,11 @@ namespace SaltnPepperEngine
 	class MaterialLibrary;
 	class Scene;
 
+
 	namespace Rendering
 	{
+		class FrameBuffer;
+
 		class RenderManager
 		{
 
@@ -42,18 +46,37 @@ namespace SaltnPepperEngine
 
 
 			void ProcessScene(Scene* scene);
+
+			// Start of the render Pipeline
 			void RenderFrame();
+			// End of the pipeline
+			void EndFrame();
+
+
+
+			void AttachFrameBuffer(const SharedPtr<FrameBuffer>& frameBuffer);
+			void AttachFrameBufferNoClear(const SharedPtr<FrameBuffer>& frameBuffer);
+
+			void RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader);
+			void RenderToFrameBuffer(const SharedPtr<FrameBuffer>& frameBuffer, const SharedPtr<Shader>& shader);
+			void RenderToFrameBufferNoClear(const SharedPtr<FrameBuffer>& frameBuffer, const SharedPtr<Shader>& shader);
+
+			void RenderToTexture(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
+			void RenderToTextureNoClear(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
+
+			void SetViewPort(int x, int y, int width, int height);
+			void ProcessImage(const SharedPtr<Texture>& texture, int lod = 0);
+
+			void SetWindowSize(Vector2Int size);
 
 			UniquePtr<Renderer>& GetRenderer();
-
-
 			SharedPtr<ShaderLibrary>& GetShaderLibrary();
-
-
 			SharedPtr<MaterialLibrary>& GetMaterialLibrary();
 
 
+			CameraElement m_editorCameraElement;
 
+			
 
 		};
 

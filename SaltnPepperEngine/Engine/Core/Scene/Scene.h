@@ -4,7 +4,8 @@
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Macros.h"
-
+#include "Engine/Utils/Serialization/Serialization.h"
+#include "cereal/archives/json.hpp"
 
 // GEt the Entt Registry header
 DISABLE_PUSH_WARNING
@@ -41,15 +42,13 @@ namespace SaltnPepperEngine
 
 		// Name of the Scene
 		std::string m_name;
-
+		int m_sceneSerializationVersion = 0;
 		// The Refernce to the Entity Manager wrapper class 
 		UniquePtr<EntityManager> m_EntityManager;
 
 		UniquePtr<SceneGraph> m_SceneGraph;
 
 		SharedPtr<DirectionLight> m_directionLight = nullptr;
-
-
 
 
 		Transform* mainCameraTransform = nullptr;
@@ -62,8 +61,10 @@ namespace SaltnPepperEngine
 
 	public:
 
+		
+
 		// Should make this explicit later on to avoid unnamed scenes
-		Scene(const std::string& name);
+		explicit Scene(const std::string& name);
 
 		// Destructor
 		~Scene();
@@ -119,10 +120,35 @@ namespace SaltnPepperEngine
 
 
 
-		void Serialize(const std::string& filename);
-		void Deserialize(const std::string filename);
+		const int GetSceneVersion() const
+		{
+			return m_sceneSerializationVersion;
+		}
+
+		void Serialize(const std::string& filename, bool binary = false);
+		void Deserialize(const std::string filename,bool binary = false);
 
 		Transform* GetMainCameraTransform() const;
+
+
+
+
+		template<typename Archive>
+		void save(Archive& archive) const
+		{
+			/*archive(cereal::make_nvp("Version", SceneSerializarionVersion));
+			archive(cereal::make_nvp("Scene Name", m_name));*/
+		}
+
+		template<typename Archive>
+		void load(Archive& archive) const
+		{
+			/*archive(cereal::make_nvp("Version", m_sceneSerializationVersion));
+			archive(cereal::make_nvp("Scene Name", m_name));
+
+			CurrentSceneVersion = m_sceneSerializationVersion;*/
+		}
+
 
 	};
 

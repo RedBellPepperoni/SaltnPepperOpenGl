@@ -69,6 +69,10 @@ namespace SaltnPepperEngine
 
 
             Texture();
+            Texture(const Texture&) = delete;
+            Texture(Texture&& texture) noexcept;
+            Texture& operator=(const Texture& texture) = delete;
+            Texture& operator=(Texture&& texture) noexcept;
             ~Texture();
 
 
@@ -112,7 +116,8 @@ namespace SaltnPepperEngine
             uint32_t GetTextureType() const;
 
 
-
+            const std::string& GetFilePath() const;
+            void SetFilePath(const std::string& path);
 
 
         };

@@ -5,10 +5,25 @@
 
 // All the Component Includes
 #include "Engine/Core/Components/Transform.h"
+#include "Engine/Core/Components/SceneComponents.h"
+#include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 
 #include "Engine/Core/System/Application/Application.h"
+#include "Engine/Utils/Serialization/GLMSerialization.h"
+
+#include <entt/entity/snapshot.hpp>
+// Cereal Stuff
+//#include <cereal/types/polymorphic.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
+
+
+
 
 
 namespace SaltnPepperEngine
@@ -16,19 +31,35 @@ namespace SaltnPepperEngine
 	
 	using namespace Rendering;
 	using namespace Components;
+	using namespace Physics;
 
+
+#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light, RigidBody3D 
+
+#define ALL_ENTTCOMPONENTS(input) get<Transform>(input). \
+	get<IdComponent>(input).		\
+	get<NameComponent>(input).		\
+	get<ActiveComponent>(input).	\
+	get<Hierarchy>(input).			\
+	get<Camera>(input).				\
+    get<Light>(input).				\
+	get<ModelComponent>(input)	
+	
 	Scene::Scene(const std::string& name)
+		:m_name(name)
 	{
 		// Setting up a new Entity Manager with the current scene's Reference
 		m_EntityManager = MakeUnique<EntityManager>(this);
-		
+		/*m_EntityManager->AddComponentOnConstructDependency<Camera, Transform>();
+		m_EntityManager->AddComponentOnConstructDependency<ModelComponent, Transform>();
+		m_EntityManager->AddComponentOnConstructDependency<Light, Transform>();*/
+
 
 		m_SceneGraph = MakeUnique<SceneGraph>();
 		m_SceneGraph->Init(GetRegistry());
 
 
-		//m_EntityManager->AddComponentOnConstructDependency<Transform>()
-
+		
 
 	}
 
@@ -40,20 +71,20 @@ namespace SaltnPepperEngine
 
 	void Scene::Init()
 	{
-		Entity cameraEntity = GetEntityManager()->Create("MainCamera");
-		Camera* camera = &cameraEntity.AddComponent<Camera>();
-		Transform* transform = &cameraEntity.AddComponent<Transform>();
+		//Entity cameraEntity = GetEntityManager()->Create("MainCamera");
+		//Camera* camera = &cameraEntity.AddComponent<Camera>();
+		//Transform* transform = &cameraEntity.AddComponent<Transform>();
 
-		
+		//
 
-		////AudioListener* listener = &cameraEntity.AddComponent<Audio::AudioListener>(transform);
+		//////AudioListener* listener = &cameraEntity.AddComponent<Audio::AudioListener>(transform);
 
 
-		transform->SetPosition(Vector3(2.2f, 0.97f, 0.65f));
-		transform->SetEularRotation(Vector3(-45.0f, 3.6f, 0.0f));
+		//transform->SetPosition(Vector3(2.2f, 0.97f, 0.65f));
+		//transform->SetEularRotation(Vector3(-45.0f, 3.6f, 0.0f));
 
-		CameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
-		controller.SetCamera(camera);
+		//CameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
+		//controller.SetCamera(camera);
 
 		//cameraEntity.AddComponent<DefaultCameraController>(DefaultCameraController::CameraType::Orbital);
 
@@ -73,7 +104,7 @@ namespace SaltnPepperEngine
 		//LuaManager::GetInstance().GetState().collect_garbage();
 
 		// Clear other managers if needed
-
+		 
 	}
 	void Scene::Update(float deltaTime)
 	{
@@ -84,7 +115,7 @@ namespace SaltnPepperEngine
 		ComponentView cameraControllerView = m_EntityManager->GetComponentsOfType<FlyCameraController>();
 
 		ComponentView cameraview = m_EntityManager->GetComponentsOfType<Camera>();
-		//ComponentView audioListenerView = m_EntityManager->GetComponentsOfType<AudioListener>();
+		////ComponentView audioListenerView = m_EntityManager->GetComponentsOfType<AudioListener>();
 
 
 		Camera* camera = nullptr;
@@ -95,38 +126,40 @@ namespace SaltnPepperEngine
 		}
 
 
+		if (!Application::GetCurrent().GetEditorActive())
 
-
-		if (!cameraControllerView.IsEmpty())
 		{
-			FlyCameraController& controller = cameraControllerView[0].GetComponent<FlyCameraController>();
-			Transform* transform = cameraControllerView[0].TryGetComponent<Transform>();
-
-			if (transform)
+			if (!cameraControllerView.IsEmpty())
 			{
+				FlyCameraController& controller = cameraControllerView[0].GetComponent<FlyCameraController>();
+				Transform* transform = cameraControllerView[0].TryGetComponent<Transform>();
 
-				controller.SetCamera(camera);
-				controller.KeyboardInput(*transform, deltaTime);
-				controller.MouseInput(*transform, mousePosition, deltaTime);
+				if (transform)
+				{
 
-				Vector3 pos = transform->GetPosition();
-				Vector3 rot = transform->GetEulerRotation();
+					controller.SetCamera(camera);
+					controller.KeyboardInput(*transform, deltaTime);
+					controller.MouseInput(*transform, mousePosition, deltaTime);
 
-				string fps = std::to_string(Application::GetCurrent().GetFPS());
+					Vector3 pos = transform->GetPosition();
+					Vector3 rot = transform->GetEulerRotation();
 
-				std::string position = "Position X : " + std::to_string(pos.x) + " Y : " + std::to_string(pos.y) + " Z : " + std::to_string(pos.z) + "Rotation X : " + std::to_string(rot.x) + " Y : " + std::to_string(rot.y) + " Z : " + std::to_string(rot.z);
+					string fps = std::to_string(Application::GetCurrent().GetFPS());
 
-				Application::GetCurrent().SetWindowTitle(position);
+					std::string position = "Position X : " + std::to_string(pos.x) + " Y : " + std::to_string(pos.y) + " Z : " + std::to_string(pos.z) + "Rotation X : " + std::to_string(rot.x) + " Y : " + std::to_string(rot.y) + " Z : " + std::to_string(rot.z);
+
+					Application::GetCurrent().SetWindowTitle(position);
+
+				}
+
+
 
 			}
-
-
-
 		}
 
 
 		
-	//	UpdateSceneGraph();
+	 	UpdateSceneGraph();
 
 
 	}
@@ -170,11 +203,39 @@ namespace SaltnPepperEngine
 
 	void Scene::Duplicate(Entity entity)
 	{
+		Duplicate(entity, Entity(entt::null, nullptr));
 	}
 
 	void Scene::Duplicate(Entity entity, Entity parent)
 	{
-		
+		m_SceneGraph->DisableOnConstruct(true, m_EntityManager->GetRegistry());
+
+		Entity newEntity = m_EntityManager->Create();
+
+		CopyEntity<ALL_COMPONENTS>(newEntity.GetHandle(), entity.GetHandle(), m_EntityManager->GetRegistry());
+		newEntity.GetComponent<IdComponent>().ID = UniqueId().GetId();
+
+		Hierarchy* hierarchyComponent = newEntity.TryGetComponent<Hierarchy>();
+		if (hierarchyComponent)
+		{
+			hierarchyComponent->m_First = entt::null;
+			hierarchyComponent->m_Parent = entt::null;
+			hierarchyComponent->m_Next = entt::null;
+			hierarchyComponent->m_Prev = entt::null;
+		}
+
+		auto children = entity.GetChildren();
+		std::vector<Entity> copiedChildren;
+
+		for (Entity child : children)
+		{
+			Duplicate(child, newEntity);
+		}
+
+		if (parent)
+			newEntity.SetParent(parent);
+
+		m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
 	}
 
 	Entity Scene::GetEntitybyId(const uint64_t id)
@@ -251,15 +312,119 @@ namespace SaltnPepperEngine
 
 
 
-	void Scene::Serialize(const std::string& filename)
+	void Scene::Serialize(const std::string& filename, bool binary)
 	{
+		LOG_INFO("Scene Saved : [{0}]", filename);
+
+		std::string path = filename;
+		path += m_name;
+
+		m_sceneSerializationVersion = SceneSerializarionVersion;
+
+		std::stringstream storage;
+		path += std::string(".json");
+			
+		{
+			cereal::JSONOutputArchive output{ storage };
+			output(*this);
+			entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
+		}
+
+		FileSystem::WriteFileToText(path, storage.str());
+		
 	}
-	void Scene::Deserialize(const std::string filename)
+
+	void Scene::Deserialize(const std::string filename, bool binary)
 	{
+		m_EntityManager->Clear();
+		m_SceneGraph->DisableOnConstruct(true, m_EntityManager->GetRegistry());
+
+		std::string path = filename;
+		path += m_name;
+
+		path += std::string(".json");
+
+		if (!FileSystem::Exists(path))
+		{
+			LOG_ERROR("NO Scene found at path : [{0}]", path);
+			return;
+		}
+
+		try
+		{
+			
+			std::string data = FileSystem::ReadFileToString(path);
+			std::istringstream istr;
+			istr.str(data);
+			cereal::JSONInputArchive input(istr);
+			input(*this);
+
+			entt::registry& reg = m_EntityManager->GetRegistry();
+
+			m_EntityManager->GetRegistry().clear();
+
+			entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
+
+
+		} 
+		catch (...) 
+		{ 
+			LOG_ERROR("Failed To load Scene : [{0}]", path); 
+		} 
+
+		m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
+
 	}
 
 	Transform* Scene::GetMainCameraTransform() const
 	{
 		return mainCameraTransform;
 	}
+
+	template <typename T>
+	static void DeserialiseComponentIfExists(Entity entity, cereal::JSONInputArchive& archive)
+	{
+		/*bool hasComponent;
+		archive(hasComponent);
+		if (hasComponent)
+			archive(entity.GetOrAddComponent<T>());*/
+	}
+
+	template <typename... Component>
+	static void DeserialiseEntity(Entity entity, cereal::JSONInputArchive& archive)
+	{
+		//(DeserialiseComponentIfExists<Component>(entity, archive), ...);
+	}
+
+
+	template <typename T>
+	static void SerialiseComponentIfExists(Entity entity, cereal::JSONOutputArchive& archive)
+	{
+		/*bool hasComponent = entity.HasComponent<T>();
+		archive(hasComponent);
+		if (hasComponent)
+			archive(entity.GetComponent<T>());*/
+	}
+
+	template <typename... Component>
+	static void SerialiseEntity(Entity entity, cereal::JSONOutputArchive& archive)
+	{
+		//(SerialiseComponentIfExists<Component>(entity, archive), ...);
+	}
+
+	void SerializeEntityHierarchy(Entity entity, cereal::JSONOutputArchive& archive)
+	{
+		//// Serialize the current entity
+		//SerialiseEntity<ALL_COMPONENTS>(entity, archive);
+
+		//// Serialize the children recursively
+		//std::vector<Entity> children = entity.GetChildren();
+		//archive((int)children.size());
+
+		//for (Entity child : children)
+		//{
+		//	SerializeEntityHierarchy(child, archive);
+		//}
+	}
+
 }

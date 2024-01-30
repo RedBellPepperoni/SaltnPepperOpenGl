@@ -46,12 +46,13 @@ namespace SaltnPepperEngine
 		{
 			m_textureRef = texture;
 			m_cubemapRef = nullptr;
-			GLenum mode = OpenGLAttachment[(int)attachment];
+			GLenum mode = OpenGLAttachment[int(attachment)];
 			GLint textureId = texture->GetHandle();
 
 
 			Bind();
 			GLDEBUG(glFramebufferTexture2D(GL_FRAMEBUFFER, mode, texture->GetTextureType(), textureId, 0));
+			//GLDEBUG(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0));
 		}
 
 		void FrameBuffer::OnCubeMapAttach(const SharedPtr<CubeMap>& cubemap, Attachment attachment)
@@ -88,10 +89,16 @@ namespace SaltnPepperEngine
 			{
 				LOG_ERROR("FrameBuffer : framebuffer validation failed");
 			}
+			
 		}
 
 		void FrameBuffer::DetachRenderTarget()
 		{
+			if (m_currentAttachment == AttachmentType::TEXTURE)
+			{
+				m_textureRef.reset();
+			}
+
 			m_currentAttachment = AttachmentType::NONE;
 			m_textureRef = nullptr;
 			m_cubemapRef = nullptr;
@@ -112,7 +119,7 @@ namespace SaltnPepperEngine
 			return m_currentAttachment == AttachmentType::CUBEMAP;
 		}
 
-		void FrameBuffer::UseDrawBuffers(std::vector<Attachment> attachments) const
+		void FrameBuffer::UseDrawBuffers(std::vector<Attachment> attachments) const 
 		{
 			std::vector<GLenum> attachmentTypes(20);
 
