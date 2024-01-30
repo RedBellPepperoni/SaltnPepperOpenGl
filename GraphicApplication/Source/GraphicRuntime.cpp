@@ -6,6 +6,7 @@ class GraphicRuntime : public Application
 {
 	void OnInit()
 	{
+        // Define all the scenes
         m_sceneManager->EnqueSceneFromFile("//Engine//Scene//TestScene.json");
         m_sceneManager->EnqueSceneFromFile("//Engine//Scene//LightScene.json");
 
