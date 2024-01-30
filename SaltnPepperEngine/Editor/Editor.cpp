@@ -145,7 +145,7 @@ namespace SaltnPepperEngine
 
 			EndDockSpace();
 
-			ImGuiDockContext* dc = &ImGui::GetCurrentContext()->DockContext;
+			/*ImGuiDockContext* dc = &ImGui::GetCurrentContext()->DockContext;
 			for (int n = 0; n < dc->Nodes.Data.Size; n++)
 				if (ImGuiDockNode* node = (ImGuiDockNode*)dc->Nodes.Data[n].val_p)
 				{
@@ -166,7 +166,7 @@ namespace SaltnPepperEngine
 								tab.Window->DrawList->AddLine(bb.Min, bb.Max, (!tab_bar_focused) ? ImGui::GetColorU32(ImGuiCol_SliderGrabActive) : ImGui::GetColorU32(ImGuiCol_Text), 2.0f);
 							}
 						}
-				}
+				}*/
 
 		}
 
@@ -695,11 +695,11 @@ namespace SaltnPepperEngine
 			{
 				if (ImGui::BeginMenu("File"))
 				{
-					if (ImGui::MenuItem("Open Project"))
+					/*if (ImGui::MenuItem("Open Project"))
 					{
 						reopenNewProjectPopup = false;
 						openProjectLoadPopup = true;
-					}
+					}*/
 
 					
 
@@ -739,6 +739,7 @@ namespace SaltnPepperEngine
 
 					ImGui::EndMenu();
 				}
+
 				if (ImGui::BeginMenu("Edit"))
 				{
 					
@@ -775,6 +776,8 @@ namespace SaltnPepperEngine
 
 					ImGui::EndMenu();
 				}
+
+
 				if (ImGui::BeginMenu("Panels"))
 				{
 					for (SharedPtr<EditorWindow>& editorwindow : m_editorWindows)
@@ -902,7 +905,7 @@ namespace SaltnPepperEngine
 
 				if (ImGui::Button("OK", ImVec2(120, 0)))
 				{
-					app.GetSceneManager()->GetCurrentScene()->Serialize("Assets\\Scenes\\", false);
+					app.GetSceneManager()->GetCurrentScene()->Serialize( FileSystem::GetCurrentPath().u8string() + "\\Engine\\Scene\\", false);
 					
 					ImGui::CloseCurrentPopup();
 				}
@@ -925,16 +928,16 @@ namespace SaltnPepperEngine
 					reopenNewProjectPopup = true;
 				}
 			}
-			if (openNewScenePopup)
+			/*if (openNewScenePopup)
 				ImGui::OpenPopup("New Scene");
 
 			if ((reopenNewProjectPopup || openProjectLoadPopup) && !m_newProjectPopupOpen)
 			{
 				ImGui::OpenPopup("Open Project");
 				reopenNewProjectPopup = false;
-			}
+			}*/
 
-			if (ImGui::BeginPopupModal("New Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+			/*if (ImGui::BeginPopupModal("New Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 			{
 				if (ImGui::Button("Save Current Scene Changes"))
 				{
@@ -1000,10 +1003,10 @@ namespace SaltnPepperEngine
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::EndPopup();
-			}
+			}*/
 
 			
-			if (openReloadScenePopup)
+			/*if (openReloadScenePopup)
 				ImGui::OpenPopup("Reload Scene");
 
 			if (ImGui::BeginPopupModal("Reload Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
@@ -1025,7 +1028,7 @@ namespace SaltnPepperEngine
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::EndPopup();
-			}
+			}*/
 		}
 
 		void RuntimeEditor::FileOpenCallback(const std::string& filePath)

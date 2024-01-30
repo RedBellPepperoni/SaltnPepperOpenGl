@@ -175,10 +175,7 @@ namespace SaltnPepperEngine
 		{
 			LOG_INFO("ImGui Loaded with version : {0}", IMGUI_VERSION);
 		
-			ImGuiContext* context = ImGui::CreateContext();
-			ImGui::SetCurrentContext(context);
-
-		
+			ImGui::CreateContext();
 
 			Application& app = Application::GetCurrent();
 			ImGuiIO& io = ImGui::GetIO();

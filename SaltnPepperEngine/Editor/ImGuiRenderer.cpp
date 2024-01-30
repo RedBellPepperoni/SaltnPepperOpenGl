@@ -20,17 +20,21 @@ namespace SaltnPepperEngine
 
 		void ImGuiRenderer::Init(GLFWwindow* windowHandle)
 		{		
-			ImGuiContext* context = ImGui::CreateContext();
+			/*ImGuiContext* context = ImGui::CreateContext();
 			ImGui::SetCurrentContext(context);
 
 			ImGuiIO& imguiIO = ImGui::GetIO();
 
 			imguiIO.ConfigFlags |= ImGuiConfigFlags_::ImGuiConfigFlags_DockingEnable;
-			imguiIO.ConfigDockingAlwaysTabBar = true;
+			imguiIO.ConfigDockingAlwaysTabBar = true;*/
+
+
 
 			ImGui_ImplGlfw_InitForOpenGL(windowHandle, true);
 			ImGui_ImplOpenGL3_Init();
 			ImGui::StyleColorsDark();
+
+			//NewFrame();
 
 		}
 
