@@ -33,10 +33,15 @@ namespace SaltnPepperEngine
 		// initializing the Logging
 		Debug::Log::OnInit();
 
+		// Setting the Instance reference of the creatd application
+		m_currentApplication = this;
+
 		// Creating and Initializing the Open GL Window
 		m_window = MakeUnique<Window>();
-
 		m_window->Initialize();
+
+		// Initializing teh Render manager
+		m_renderManager = MakeUnique<RenderManager>();
 
 		// Setting up teh Model and Object Library
 		m_modelLibrary = MakeShared<ModelLibrary>();
@@ -45,24 +50,29 @@ namespace SaltnPepperEngine
 		//m_audioLibrary = MakeShared<AudioLibrary>();
 
 
+		m_physicsSystem = MakeUnique<PhysicsEngine>();
+		m_physicsSystem->Init();
+
 		m_sceneManager = MakeUnique<SceneManager>();
-		m_sceneManager->EnqueueScene<Scene>("New Scene");
+		m_sceneManager->EnqueueScene("New Scene");
 		m_sceneManager->SwitchScene(0);
 		m_sceneManager->ApplySceneSwitch();
 
-		//m_currentScene = MakeShared<Scene>("testScene");
+		m_currentScene = m_sceneManager->GetCurrentScene();
+		m_currentScene->Init();
 
-		m_physicsSystem = MakeUnique<PhysicsEngine>();
+		m_mainCameraIndex = 0;
 
-		// Initializing teh Render manager
-		m_renderManager = MakeUnique<RenderManager>();
+		
+	
+		m_physicsSystem->UpdateScene(m_currentScene);
+		
 
 
 		m_editor = MakeUnique<RuntimeEditor>();
 
 
-		// Setting the Instance reference of the creatd application
-		m_currentApplication = this;
+		
 
 		// Activate the User function
 		OnCreate();
@@ -168,12 +178,12 @@ namespace SaltnPepperEngine
 		this->m_window->SetEventCallback(BIND_FN(Application::ProcessEvent));
 
 		// Right now only limited to one scene -> change this to a load scene function later
-		m_currentScene->Init();
+		/*m_currentScene->Init();
 
 		m_mainCameraIndex = 0;
 
 		m_physicsSystem->Init();
-		m_physicsSystem->UpdateScene(m_currentScene.get());
+		m_physicsSystem->UpdateScene(m_currentScene.get());*/
 
 		m_physicsSystem->SetPaused(false);
 
@@ -417,7 +427,7 @@ namespace SaltnPepperEngine
 
 	void Application::StartPhysics(bool shouldstart)
 	{
-		m_physicsSystem->SetPaused(shouldstart);
+		//m_physicsSystem->SetPaused(shouldstart);
 
 	}
 
@@ -455,7 +465,7 @@ namespace SaltnPepperEngine
 	{
 		if (m_sceneManager->GetScenes().size() == 0)
 		{
-			m_sceneManager->EnqueueScene<Scene>("Empty Scene");
+			m_sceneManager->EnqueueScene("Empty Scene");
 			m_sceneManager->SwitchScene(0);
 		}
 	}

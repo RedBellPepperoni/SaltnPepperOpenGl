@@ -98,7 +98,7 @@ namespace SaltnPepperEngine
 		SharedPtr<AudioLibrary> m_audioLibrary;
 
 		// Pointer to the currently loaded scene
-		SharedPtr<Scene> m_currentScene;
+		Scene* m_currentScene;
 
 
 		UniquePtr<ImGuiManager> m_imguiManager;
@@ -232,7 +232,7 @@ namespace SaltnPepperEngine
 			
 			std::string path;
 
-			auto paths = m_sceneManager->GetSceneFilePaths();
+			std::vector<std::string> paths = m_sceneManager->GetSceneFilePaths();
 			archive(cereal::make_nvp("Scenes", paths));
 			archive(cereal::make_nvp("SceneIndex", m_sceneManager->GetCurrentSceneIndex()));
 		

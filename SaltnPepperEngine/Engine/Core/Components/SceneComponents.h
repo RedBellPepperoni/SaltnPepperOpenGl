@@ -127,28 +127,31 @@ namespace SaltnPepperEngine
 					else
 						newPath = "Primitive";
 
-					// For now this saved material will be overriden by materials in the model file
-					auto material = std::unique_ptr<Material>(m_handle->GetMeshes().front()->GetMaterial().get());
-					archive(cereal::make_nvp("PrimitiveType", m_handle->GetPrimitiveType()), cereal::make_nvp("FilePath", newPath), cereal::make_nvp("Material", material));
-					material.release();
+					
+					//auto material = std::unique_ptr<Material>(m_handle->GetMeshes().front()->GetMaterial().get());
+					//archive(cereal::make_nvp("PrimitiveType", m_handle->GetPrimitiveType()), cereal::make_nvp("FilePath", newPath), cereal::make_nvp("Material", material));
+					//material.release();
+
+					archive(cereal::make_nvp("PrimitiveType", m_handle->GetPrimitiveType()), cereal::make_nvp("FilePath", newPath));
 				}
 			}
 
 			template <typename Archive>
 			void load(Archive& archive)
 			{
-				auto material = std::unique_ptr<Material>();
+				//auto material = std::unique_ptr<Material>();
 
 				std::string filePath;
 				PrimitiveType primitiveType;
 
-				archive(cereal::make_nvp("PrimitiveType", primitiveType), cereal::make_nvp("FilePath", filePath), cereal::make_nvp("Material", material));
+				//archive(cereal::make_nvp("PrimitiveType", primitiveType), cereal::make_nvp("FilePath", filePath), cereal::make_nvp("Material", material));
+				archive(cereal::make_nvp("PrimitiveType", primitiveType), cereal::make_nvp("FilePath", filePath));
 
 				if (primitiveType != PrimitiveType::External)
 				{
 					m_handle = MakeShared<Model>(primitiveType);
-					m_handle->GetMeshes().back()->SetMaterial(SharedPtr<Material>(material.get()));
-					material.release();
+					m_handle->GetMeshes().back()->SetMaterial(MakeShared<Material>());
+					//material.release();
 				}
 				else
 				{

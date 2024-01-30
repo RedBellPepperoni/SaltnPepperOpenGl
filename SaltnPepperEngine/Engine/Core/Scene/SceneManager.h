@@ -8,8 +8,8 @@
 
 namespace SaltnPepperEngine
 {
+	
 	class Scene;
-
 
 	class SceneManager
 	{
@@ -58,16 +58,9 @@ namespace SaltnPepperEngine
 			return m_isSwitchingScenes;
 		}
 
-		
-		template <class T>
-		void EnqueueScene(const std::string& name)
-		{
-			// T* scene = new T(name);
-			m_sceneList.emplace_back(MakeShared<T>(name));
-			LOG_INFO("[SceneManager] - Enqueued scene : {0}", name.c_str());
-		}
-
-		
+	
+		void EnqueueScene(const std::string& name);
+		void EnqueueScene(SharedPtr<Scene>& scene);
 
 
 		void AddFileToLoadList(const std::string& filePath)

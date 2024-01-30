@@ -3,6 +3,7 @@
 
 #include "Engine/Utils/Loading/FileSystem.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
+#include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Utils/Loading/ModelLoader.h"
 #include "Engine/Core/Rendering/Geometry/Primitives.h"
 #include <cereal/cereal.hpp>
@@ -46,17 +47,25 @@ namespace SaltnPepperEngine
             {
                 std::string newPath = m_filePath;
   
-                auto material = std::unique_ptr<Material>(m_meshes.front()->GetMaterial().get());
+                SharedPtr<Material> material = m_meshes.front()->GetMaterial();
+               
+               // std::unique_ptr<Rendering::Material> material = std::unique_ptr<Rendering::Material>(m_meshes.front()->GetMaterial().get());
                 archive(cereal::make_nvp("PrimitiveType", m_primitiveType), cereal::make_nvp("FilePath", newPath), cereal::make_nvp("Material", material));
-                material.release();
+                //material.release();  
+                
+               
+                //archive(cereal::make_nvp("PrimitiveType", m_primitiveType), cereal::make_nvp("FilePath", newPath));
+                
             }
         }
 
         template <typename Archive>
         void load(Archive& archive)
         {
-            auto material = std::unique_ptr<Material>();
+            //
+            SharedPtr<Material> material = MakeShared<Rendering::Material>();
 
+            //std::unique_ptr<Rendering::Material> material = std::unique_ptr<Rendering::Material>();
             archive(cereal::make_nvp("PrimitiveType", m_primitiveType), cereal::make_nvp("FilePath", m_filePath), cereal::make_nvp("Material", material));
 
             m_meshes.clear();
@@ -64,8 +73,8 @@ namespace SaltnPepperEngine
             if (m_primitiveType != PrimitiveType::External)
             {
                 m_meshes.push_back(SharedPtr<Mesh>(GeneratePrimitive(m_primitiveType)));
-                m_meshes.back()->SetMaterial(SharedPtr<Material>(material.get()));
-                material.release();
+                m_meshes.back()->SetMaterial(MakeShared<Material>());
+                //material.release();
             }
             else
             {

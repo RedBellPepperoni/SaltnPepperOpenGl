@@ -113,19 +113,52 @@ namespace SaltnPepperEngine
 	
 	}
 
+	void SceneManager::EnqueueScene(const std::string& name)
+	{
+		// T* scene = new T(name);
+		SharedPtr<Scene> newScene = MakeShared<Scene>(name);
+		m_sceneList.push_back(newScene);
+		LOG_INFO("[SceneManager] - Enqueued scene : {0}", name);
+	}
+
+	void SceneManager::EnqueueScene(SharedPtr<Scene>& scene)
+	{
+		m_sceneList.push_back(scene);
+		LOG_INFO("[SceneManager] - Enqueued scene : {0}", scene->GetName());
+	}
+
 	std::vector<std::string> SceneManager::GetSceneNames()
 	{
-		return std::vector<std::string>();
+		std::vector<std::string> names;
+
+		for (SharedPtr<Scene>& scene : m_sceneList)
+		{
+			names.emplace_back(scene->GetName());
+		}
+
+		return names;
 	}
+
 	int SceneManager::EnqueSceneFromFile(const std::string& filePath)
 	{
-		return 0;
+		for (uint32_t i = 0; i < m_sceneFilePaths.size(); ++i)
+		{
+			if (m_sceneFilePaths[i] == filePath)
+			{
+				return i;
+			}
+		}
+
+		m_sceneFilePaths.emplace_back(filePath);
+
+		std::string name = FileSystem::GetFileName(filePath);
+		SharedPtr<Scene> scene = MakeShared<Scene>(name);
+		EnqueueScene(scene);
+
+		return int(m_sceneList.size()) - 1;
 	}
 
-	/*void SceneManager::EnqueScene(Scene* scene)
-	{
-	}*/
-
+	
 	const std::vector<std::string>& SceneManager::GetSceneFilePaths()
 	{
 		return m_sceneFilePaths;
@@ -133,6 +166,11 @@ namespace SaltnPepperEngine
 
 	void SceneManager::LoadCurrentList()
 	{
+		for (auto& filePath : m_sceneFilePathsToLoad)
+		{
+			EnqueSceneFromFile(filePath);
+		}
 
+		m_sceneFilePathsToLoad.clear();
 	}
 }

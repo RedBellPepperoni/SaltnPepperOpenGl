@@ -8,6 +8,7 @@
 #include "Engine/Utils/Serialization/GLMSerialization.h"
 
 #include "Engine/Core/Rendering/Textures/Texture.h"
+#include "Engine/Core/Resources/ResourceManager.h"
 #include <cereal/cereal.hpp>
 
 namespace SaltnPepperEngine
@@ -56,7 +57,12 @@ namespace SaltnPepperEngine
                 
             }
 
-            ~Material() = default;
+            /*Material(const SharedPtr<Material>& material)
+            {
+
+            }*/
+
+            ~Material() {};
 
 
             std::string name = "DefaultMaterial";
@@ -148,6 +154,7 @@ namespace SaltnPepperEngine
                 std::string emissiveFilePath;
                 std::string aoFilePath;
                 std::string shaderFilePath;
+                MaterialType mattype;
 
                 archive(cereal::make_nvp("Albedo", albedoFilePath),
                     cereal::make_nvp("Normal", normalFilePath),
@@ -165,7 +172,7 @@ namespace SaltnPepperEngine
                     cereal::make_nvp("normalMapFactor", normalMapFactor),
                     cereal::make_nvp("aoMapFactor", aoMapFactor),
                     cereal::make_nvp("emissiveMapFactor", emissiveMapFactor),
-                    cereal::make_nvp("MaterialType", m_type)
+                    cereal::make_nvp("MaterialType", mattype)
                 );
                  
 
@@ -174,41 +181,43 @@ namespace SaltnPepperEngine
 
                 std::string fileName;
 
+                m_type = mattype;
+
                 // Albedo
                 if (!albedoFilePath.empty())
                 {
                     fileName = FileSystem::GetFileName(albedoFilePath);
-                    textureMaps.albedoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, albedoFilePath);
+                    textureMaps.albedoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, albedoFilePath, TextureFormat::RGBA);
                 }
                 // Normal
                 if (!normalFilePath.empty())
                 {
                     fileName = FileSystem::GetFileName(normalFilePath);
-                    textureMaps.normalMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, normalFilePath);
+                    textureMaps.normalMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, normalFilePath, TextureFormat::RGBA);
                 } 
                 // Metallic
                 if (!metallicFilePath.empty())
                 {
                     fileName = FileSystem::GetFileName(metallicFilePath);
-                    textureMaps.metallicMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, metallicFilePath);
+                    textureMaps.metallicMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, metallicFilePath, TextureFormat::RGBA);
                 }
                 // Roughness
                 if (!roughnessFilePath.empty())
                 {
                     fileName = FileSystem::GetFileName(roughnessFilePath);
-                    textureMaps.roughnessMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, roughnessFilePath);
+                    textureMaps.roughnessMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, roughnessFilePath, TextureFormat::RGBA);
                 }
                 // AO
                 if (!aoFilePath.empty())
                 {
                     fileName = FileSystem::GetFileName(aoFilePath);
-                    textureMaps.aoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, aoFilePath);
+                    textureMaps.aoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, aoFilePath, TextureFormat::RGBA);
                 } 
                 // Emissive
                 if (!emissiveFilePath.empty())
                 {
                     fileName = FileSystem::GetFileName(emissiveFilePath);
-                    textureMaps.aoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, emissiveFilePath);
+                    textureMaps.aoMap = Application::GetCurrent().GetTextureLibrary()->LoadTexture(fileName, emissiveFilePath, TextureFormat::RGBA);
                 }
 
 

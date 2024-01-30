@@ -224,6 +224,7 @@ namespace SaltnPepperEngine
 
         void Camera::InitializeRenderTexture()
         {
+
             Vector2Int viewport = Application::GetCurrent().GetWindowSize();
 
             m_renderTexture = Factory<Texture>::Create();

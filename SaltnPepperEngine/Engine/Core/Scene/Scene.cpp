@@ -7,13 +7,13 @@
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Components/SceneComponents.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 
 #include "Engine/Core/System/Application/Application.h"
-
 #include "Engine/Utils/Serialization/GLMSerialization.h"
 
 #include <entt/entity/snapshot.hpp>
@@ -42,12 +42,13 @@ namespace SaltnPepperEngine
 	get<ActiveComponent>(input).	\
 	get<Hierarchy>(input).			\
 	get<Camera>(input).				\
-	get<Light>(input).				\
-	get<ModelComponent>(input).		\
-	get<Model>(input)
+    get<Light>(input).				\
+	get<ModelComponent>(input)	
+	
 	
 
 	Scene::Scene(const std::string& name)
+		:m_name(name)
 	{
 		// Setting up a new Entity Manager with the current scene's Reference
 		m_EntityManager = MakeUnique<EntityManager>(this);
@@ -315,88 +316,64 @@ namespace SaltnPepperEngine
 
 	void Scene::Serialize(const std::string& filename, bool binary)
 	{
-		//LOG_INFO("Scene Saved : [{0}]", filename);
+		LOG_INFO("Scene Saved : [{0}]", filename);
 
-		//std::string path = filename;
-		//path += m_name;
+		std::string path = filename;
+		path += m_name;
 
-		//m_sceneSerializationVersion = SceneSerializarionVersion;
+		m_sceneSerializationVersion = SceneSerializarionVersion;
 
-		////if (binary)
-		////{
-		////	path += std::string(".bin");
-		////	std::ofstream file(path, std::ios::binary);
+		std::stringstream storage;
+		path += std::string(".json");
+			
+		{
+			cereal::JSONOutputArchive output{ storage };
+			output(*this);
+			entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
+		}
 
-		////	{	
-		////		cereal::BinaryOutputArchive output { file };
-		////		output(*this);
-		////		//entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
-		////	}
-		////	
-		////	file.close();
-
-		////}
-
-		////else
-		////{
-		//	std::stringstream storage;
-		//	path += std::string(".json");
-		//	
-		//	{
-		//		cereal::JSONOutputArchive output{ storage };
-		//		output(*this);
-		//		entt::snapshot{ m_EntityManager->GetRegistry() }.get<entt::entity>(output).ALL_ENTTCOMPONENTS(output);
-		//	}
-
-		//	FileSystem::WriteFileToText(path, storage.str());
-		///*}*/
+		FileSystem::WriteFileToText(path, storage.str());
+		
 	}
 
 	void Scene::Deserialize(const std::string filename, bool binary)
 	{
-		//m_EntityManager->Clear();
-		//m_SceneGraph->DisableOnConstruct(true, m_EntityManager->GetRegistry());
+		m_EntityManager->Clear();
+		m_SceneGraph->DisableOnConstruct(true, m_EntityManager->GetRegistry());
 
-		//std::string path = filename;
-		//path += m_name;
+		std::string path = filename;
+		path += m_name;
 
-		//path += std::string(".json");
+		path += std::string(".json");
 
-		//if (!FileSystem::Exists(path))
-		//{
-		//	LOG_ERROR("NO Scene found at path : [{0}]", path);
-		//	return;
-		//}
+		if (!FileSystem::Exists(path))
+		{
+			LOG_ERROR("NO Scene found at path : [{0}]", path);
+			return;
+		}
 
-		//
+		try
+		{
+			
+			std::string data = FileSystem::ReadFileToString(path);
+			std::istringstream istr;
+			istr.str(data);
+			cereal::JSONInputArchive input(istr);
+			input(*this);
 
-		//try
-		//{
-		//	
-		//	std::string data = FileSystem::ReadFileToString(path);
-		//	std::istringstream istr;
-		//	istr.str(data);
-		//	cereal::JSONInputArchive input(istr);
-		//	input(*this);
+			// Load the snapShot
+			if (m_sceneSerializationVersion == 1)
+			{
+				entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);	
+			}
 
-		//	// Load the snapShot
-		//	if (m_sceneSerializationVersion == 1)
-		//	{
-		//		entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
-		//		//entt::snapshot_loader{ m_EntityManager->GetRegistry() };
-		//	}
+		}
+		catch (...)
+		{
+			LOG_ERROR("Failed To load Scene : [{0}]", path);
+		}
 
-		//}
-
-		//catch (...)
-		//{
-		//	LOG_ERROR("Failed To load Scene : [{0}]", path);
-		//}
-		//	
-
-		//m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
-		//
-
+		m_SceneGraph->DisableOnConstruct(false, m_EntityManager->GetRegistry());
 
 	}
 
