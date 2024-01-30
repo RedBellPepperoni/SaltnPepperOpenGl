@@ -139,6 +139,19 @@ namespace SaltnPepperEngine
 		return names;
 	}
 
+	bool SceneManager::ContainsScene(const std::string& filePath)
+	{
+		for (uint32_t i = 0; i < m_sceneFilePaths.size(); ++i)
+		{
+			if (m_sceneFilePaths[i] == filePath)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	int SceneManager::EnqueSceneFromFile(const std::string& filePath)
 	{
 		for (uint32_t i = 0; i < m_sceneFilePaths.size(); ++i)

@@ -70,6 +70,8 @@ namespace SaltnPepperEngine
 
 		std::vector<std::string> GetSceneNames();
 
+		bool ContainsScene(const std::string& filePath);
+
 		int EnqueSceneFromFile(const std::string& filePath);
 		//void EnqueScene(Scene* scene);
 

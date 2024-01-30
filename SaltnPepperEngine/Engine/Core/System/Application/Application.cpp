@@ -225,13 +225,6 @@ namespace SaltnPepperEngine
 		while (m_window->isOpen())
 		{
 
-			if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Escape))
-			{
-				m_window->CloseWindow();
-				m_isRunning = false;
-				break;
-			}
-
 
 			UpdateDeltaTime(frameEnd, secondEnd, frames);
 
@@ -468,6 +461,21 @@ namespace SaltnPepperEngine
 			m_sceneManager->EnqueueScene("Empty Scene");
 			m_sceneManager->SwitchScene(0);
 		}
+	}
+
+	void Application::OnDefaultProject()
+	{
+		m_projectSettings.fullscreen = true;
+		m_projectSettings.m_projectName = "SerializationTest";
+		m_projectSettings.m_engineResourcePath = FileSystem::GetEngineDir().u8string();
+		//m_projectSettings.m_engineResourcePath = "..\\..\\TestProject\\";
+	}
+
+	void Application::Quit()
+	{
+		m_window->CloseWindow();
+		m_isRunning = false;
+		
 	}
 
 	void Application::Serialise()

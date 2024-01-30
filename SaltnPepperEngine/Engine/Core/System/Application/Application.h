@@ -62,6 +62,22 @@ namespace SaltnPepperEngine
 
 	class Application
 	{
+	public:
+
+		struct ProjectSettings
+		{
+			std::string m_projectRoot;
+			std::string m_projectName;
+			std::string m_engineResourcePath;
+
+			bool fullscreen = true;
+			bool vSync = false;
+			std::string title;
+			int projectVersion;
+
+		};
+
+
 
 	protected:
 
@@ -100,6 +116,7 @@ namespace SaltnPepperEngine
 		// Pointer to the currently loaded scene
 		Scene* m_currentScene;
 
+		ProjectSettings m_projectSettings;
 
 		UniquePtr<ImGuiManager> m_imguiManager;
 
@@ -114,6 +131,8 @@ namespace SaltnPepperEngine
 		// Future case when there can be multiple cameras // 
 					// "-1"  means no rendering cameras were found
 		int m_mainCameraIndex = -1;
+
+		bool m_isProjectLoaded = false;
 
 
 	protected:
@@ -136,6 +155,7 @@ namespace SaltnPepperEngine
 
 	public:
 
+	
 
 
 		// Destructor
@@ -219,9 +239,22 @@ namespace SaltnPepperEngine
 		Camera* GetEditorCamera();
 		Transform* GetEditorCameraTransform();
 
+		ImGuiManager* GetImguiManager() { return m_imguiManager.get(); }
+
 		const bool GetEditorActive() const;
 
 		void AddDefaultScene();
+		SceneManager* GetSceneManager() const { return m_sceneManager.get(); }
+		// Can Setup Project Laungin
+		virtual void OnDefaultProject();
+
+		ProjectSettings& GetProjectSettings() { return m_projectSettings; }
+
+		const bool GetProjectLoaded() const { return m_isProjectLoaded; }
+		void SetProjectLoaded(const bool loaded) { m_isProjectLoaded = loaded; }
+
+		void Quit();
+
 
 		virtual void Serialise();
 		virtual void Deserialise();
