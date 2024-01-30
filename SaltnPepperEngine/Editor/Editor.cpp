@@ -7,6 +7,7 @@
 
 #include "Engine/Utils/Ray.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 #include "Engine/Core/Scene/Scene.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
@@ -21,12 +22,20 @@
 #include "Imgui/ImGuizmo.h"
 #include "Engine/Core/EntitySystem/Entity.h"
 
+
+
 namespace SaltnPepperEngine
 {
 	using namespace Physics;
 
 	namespace Editor
 	{
+		static std::string projectLocation = FileSystem::GetCurrentPath().u8string();
+		static bool reopenNewProjectPopup = false;
+		static bool locationPopupOpened = false;
+
+
+
 		RuntimeEditor::RuntimeEditor()
 		{
 			m_editorActive = false;
@@ -110,7 +119,7 @@ namespace SaltnPepperEngine
 		void RuntimeEditor::OnImGui()
 		{
 			// Work on this later
-			//DrawMenuBar();
+			DrawMenuBar();
 
 			BeginDockSpace(m_properties.m_fullscreenLaunch && m_editorState == EditorState::Play);
 
@@ -673,6 +682,353 @@ namespace SaltnPepperEngine
 		}
 
 		void RuntimeEditor::DrawMenuBar()
+		{
+			bool openSaveScenePopup = false;
+			bool openNewScenePopup = false;
+			bool openReloadScenePopup = false;
+			bool openProjectLoadPopup = !Application::GetCurrent().GetProjectLoaded();;
+
+
+			Application& app = Application::GetCurrent();
+
+			if (ImGui::BeginMainMenuBar())
+			{
+				if (ImGui::BeginMenu("File"))
+				{
+					if (ImGui::MenuItem("Open Project"))
+					{
+						reopenNewProjectPopup = false;
+						openProjectLoadPopup = true;
+					}
+
+					
+
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Open File"))
+					{
+						m_fileBrowserWindow.SetCurrentPath(FileSystem::GetCurrentPath().u8string());
+						m_fileBrowserWindow.SetCallback(BIND_FILEBROWSER_FN(RuntimeEditor::FileOpenCallback));
+						m_fileBrowserWindow.Open();
+					}
+
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("New Scene", "CTRL+N"))
+					{
+						openNewScenePopup = true;
+					}
+
+					if (ImGui::MenuItem("Save Scene", "CTRL+S"))
+					{
+						openSaveScenePopup = true;
+					}
+
+					if (ImGui::MenuItem("Reload Scene", "CTRL+R"))
+					{
+						openReloadScenePopup = true;
+					}
+
+		
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Exit"))
+					{
+						app.Quit();
+					}
+
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("Edit"))
+				{
+					
+
+					bool enabled = !m_selectedEntities.empty();
+
+					if (ImGui::MenuItem("Cut", "CTRL+X", false, enabled))
+					{
+						for (auto entity : m_selectedEntities)
+							SetCopiedEntity(entity, true);
+					}
+
+					if (ImGui::MenuItem("Copy", "CTRL+C", false, enabled))
+					{
+						for (auto entity : m_selectedEntities)
+							SetCopiedEntity(entity, false);
+					}
+
+					enabled = !m_copiedEntities.empty();
+
+					if (ImGui::MenuItem("Paste", "CTRL+V", false, enabled))
+					{
+						for (auto entity : m_copiedEntities)
+						{
+							app.GetCurrentScene()->Duplicate({ entity, app.GetCurrentScene() });
+							if (entity != entt::null)
+							{
+								/// if(entity == m_SelectedEntity)
+								///  m_SelectedEntity = entt::null;
+								Entity(entity, app.GetCurrentScene()).Destroy();
+							}
+						}
+					}
+
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("Panels"))
+				{
+					for (SharedPtr<EditorWindow>& editorwindow : m_editorWindows)
+					{
+						if (ImGui::MenuItem(editorwindow->GetName().c_str(), "", &editorwindow->GetActive(), true))
+						{
+							editorwindow->SetActive(true);
+						}
+					}
+
+					ImGui::EndMenu();
+				}
+
+				if (ImGui::BeginMenu("Scenes"))
+				{
+					auto scenes = app.GetSceneManager()->GetSceneNames();
+
+					for (size_t i = 0; i < scenes.size(); i++)
+					{
+						auto name = scenes[i];
+						if (ImGui::MenuItem(name.c_str()))
+						{
+							app.GetSceneManager()->SwitchScene(name);
+						}
+					}
+
+					ImGui::EndMenu();
+				}
+
+				if (ImGui::BeginMenu("Entity"))
+				{
+					auto scene = app.GetSceneManager()->GetCurrentScene();
+
+					if (ImGui::MenuItem("CreateEmpty"))
+					{
+						scene->CreateEntity();
+					}
+
+					if (ImGui::MenuItem("Cube"))
+					{
+						auto entity = scene->CreateEntity("Cube");
+						entity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+					}
+
+					if (ImGui::MenuItem("Sphere"))
+					{
+						auto entity = scene->CreateEntity("Sphere");
+						entity.AddComponent<ModelComponent>(PrimitiveType::Sphere);
+					}
+		
+					if (ImGui::MenuItem("Plane"))
+					{
+						auto entity = scene->CreateEntity("Plane");
+						entity.AddComponent<ModelComponent>(PrimitiveType::Plane);
+					}
+
+					/*if (ImGui::MenuItem("Cylinder"))
+					{
+						auto entity = scene->CreateEntity("Cylinder");
+						entity.AddComponent<ModelComponent>(PrimitiveType::Cylinder);
+					}*/
+
+					/*if (ImGui::MenuItem("Capsule"))
+					{
+						auto entity = scene->CreateEntity("Capsule");
+						entity.AddComponent<ModelComponent>(PrimitiveType::Capsule);
+					}*/
+
+					/*if (ImGui::MenuItem("Terrain"))
+					{
+						auto entity = scene->CreateEntity("Terrain");
+						entity.AddComponent<ModelComponent>(PrimitiveType::Terrain);
+					}*/
+
+					ImGui::EndMenu();
+				}
+
+				
+			
+
+				if (app.GetProjectLoaded())
+				{
+					{
+						ImGuiUtils::ScopedFont boldFont(ImGui::GetIO().Fonts->Fonts[1]);
+						ImGuiUtils::ScopedColour border(ImGuiCol_Border, IM_COL32(40, 40, 40, 255));
+
+						ImGui::SameLine(ImGui::GetCursorPosX() + 40.0f);
+						ImGui::Separator();
+						ImGui::SameLine();
+						ImGui::TextUnformatted(app.GetProjectSettings().m_projectName.c_str());
+
+						std::string  projectname = "Current Project : " + app.GetProjectSettings().m_projectName + ".spproj";
+
+						ImGuiUtils::Tooltip(projectname.c_str());
+						ImGuiUtils::DrawBorder(ImGuiUtils::RectExpanded(ImGuiUtils::GetItemRect(), 24.0f, 68.0f), 1.0f, 3.0f, 0.0f, -60.0f);
+
+						ImGui::SameLine();
+						ImGui::Separator();
+						ImGui::SameLine(ImGui::GetCursorPosX() + 32.0f);
+						ImGui::TextUnformatted(app.GetCurrentScene()->GetName().c_str());
+
+						std::string sceneName = "Current Scene : " + app.GetCurrentScene()->GetName() + ".json";
+
+						ImGuiUtils::Tooltip(sceneName.c_str());
+						ImGuiUtils::DrawBorder(ImGuiUtils::RectExpanded(ImGuiUtils::GetItemRect(), 24.0f, 68.0f), 1.0f, 3.0f, 0.0f, -60.0f);
+					}
+
+
+				}
+
+				
+				ImGui::EndMainMenuBar();
+			}
+
+			if (openSaveScenePopup)
+				ImGui::OpenPopup("Save Scene");
+
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+			if (ImGui::BeginPopupModal("Save Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+			{
+				ImGui::Text("Save Current Scene Changes?\n\n");
+				ImGui::Separator();
+
+				if (ImGui::Button("OK", ImVec2(120, 0)))
+				{
+					app.GetSceneManager()->GetCurrentScene()->Serialize("Assets\\Scenes\\", false);
+					
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::SetItemDefaultFocus();
+				ImGui::SameLine();
+				if (ImGui::Button("Cancel", ImVec2(120, 0)))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+
+			if (locationPopupOpened)
+			{
+				// Cancel clicked on project location popups
+				if (!m_fileBrowserWindow.IsOpen())
+				{
+					m_newProjectPopupOpen = false;
+					locationPopupOpened = false;
+					reopenNewProjectPopup = true;
+				}
+			}
+			if (openNewScenePopup)
+				ImGui::OpenPopup("New Scene");
+
+			if ((reopenNewProjectPopup || openProjectLoadPopup) && !m_newProjectPopupOpen)
+			{
+				ImGui::OpenPopup("Open Project");
+				reopenNewProjectPopup = false;
+			}
+
+			if (ImGui::BeginPopupModal("New Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+			{
+				if (ImGui::Button("Save Current Scene Changes"))
+				{
+					app.GetSceneManager()->GetCurrentScene()->Serialize("Assets\\Scenes\\", false);
+				}
+
+				ImGui::Text("Create New Scene?\n\n");
+				ImGui::Separator();
+
+				static bool defaultSetup = false;
+
+				static std::string newSceneName = "NewScene";
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted("Name : ");
+				ImGui::SameLine();
+				ImGuiUtils::InputText(newSceneName);
+
+				ImGui::Checkbox("Default Setup", &defaultSetup);
+
+				ImGui::Separator();
+
+				if (ImGui::Button("OK", ImVec2(120, 0)))
+				{
+					std::string sceneName = newSceneName;
+					int sameNameCount = 0;
+					auto sceneNames = app.GetSceneManager()->GetSceneNames();
+
+					while (FileSystem::Exists("\\Scenes\\" + sceneName + ".json") || std::find(sceneNames.begin(), sceneNames.end(), sceneName) != sceneNames.end())
+					{
+						sameNameCount++;
+						sceneName = fmt::format(newSceneName + "{0}", sameNameCount);
+					}
+					SharedPtr<Scene> scene = MakeShared<Scene>(sceneName);
+
+					if (defaultSetup)
+					{
+						auto light = scene->CreateEntity("Light");
+						auto lightComp = light.AddComponent<Light>();
+						
+						light.GetTransform().SetPosition(Vector3(0.0f));
+
+						auto camera = scene->CreateEntity("Camera");
+						camera.AddComponent<Camera>();
+						
+						camera.GetTransform().SetPosition(Vector3(0.0f,0.0f,-30.0f));
+						camera.AddComponent<FlyCameraController>();
+
+						auto cube = scene->CreateEntity("Cube");
+						cube.AddComponent<ModelComponent>(PrimitiveType::Cube);
+
+						
+						scene->Serialize("Assets\\Scenes\\");
+					}
+					app.GetSceneManager()->EnqueueScene(scene);
+					app.GetSceneManager()->SwitchScene((int)(app.GetSceneManager()->GetScenes().size()) - 1);
+
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::SetItemDefaultFocus();
+				ImGui::SameLine();
+				if (ImGui::Button("Cancel", ImVec2(120, 0)))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+
+			
+			if (openReloadScenePopup)
+				ImGui::OpenPopup("Reload Scene");
+
+			if (ImGui::BeginPopupModal("Reload Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+			{
+				ImGui::Text("Reload Scene?\n\n");
+				ImGui::Separator();
+
+				if (ImGui::Button("OK", ImVec2(120, 0)))
+				{
+					auto scene = new Scene("New Scene");
+					app.GetSceneManager()->SwitchScene(app.GetSceneManager()->GetCurrentSceneIndex());
+
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::SetItemDefaultFocus();
+				ImGui::SameLine();
+				if (ImGui::Button("Cancel", ImVec2(120, 0)))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+		}
+
+		void RuntimeEditor::FileOpenCallback(const std::string& filePath)
 		{
 		}
 

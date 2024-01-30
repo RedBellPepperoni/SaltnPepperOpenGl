@@ -32,7 +32,7 @@ namespace SaltnPepperEngine
 
 			virtual void Release();
 
-			const bool GetActive() const;
+			bool& GetActive() ;
 			void SetActive(bool active);
 
 			const std::string& GetName() const;

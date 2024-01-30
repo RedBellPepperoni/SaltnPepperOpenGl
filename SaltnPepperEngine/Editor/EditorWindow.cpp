@@ -19,7 +19,7 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		const bool EditorWindow::GetActive() const
+		bool& EditorWindow::GetActive() 
 		{
 			return m_active;
 		}

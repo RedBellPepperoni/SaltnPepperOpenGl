@@ -18,6 +18,10 @@
 
 namespace SaltnPepperEngine
 {
+#define BIND_FILEBROWSER_FN(fn) [this](auto&&... args) -> decltype(auto) { \
+    return this->fn(std::forward<decltype(args)>(args)...);                \
+}
+
 	class Scene;
 	class Event;
 	class WindowResizeEvent;
@@ -76,6 +80,9 @@ namespace SaltnPepperEngine
 
 			//void DrawGrid2D();
 			//void DrawGrid3D();
+
+
+			void FileOpenCallback(const std::string& filePath);
 
 
 			// Editor Display
@@ -225,6 +232,8 @@ namespace SaltnPepperEngine
 			uint32_t m_sceneViewWidth = 0;
 			uint32_t m_sceneViewHeight = 0;
 			bool m_sceneViewSizeUpdated = false;
+
+			bool m_newProjectPopupOpen =false;
 
 		};
 
