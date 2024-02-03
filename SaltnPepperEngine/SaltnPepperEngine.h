@@ -33,6 +33,10 @@
 #include "Engine/Core/Rendering/Textures/Image.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
 
+//============== Camera Controllers ===================
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+#include "Engine/Core/Rendering/Camera/CameraController.h"
+
 // ========= SCENE and ECS STUFF ===================
 #include "Engine/Core/Scene/Scene.h" 
 #include "Engine/Core/Scene/SceneGraph.h"

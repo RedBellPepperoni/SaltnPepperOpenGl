@@ -106,6 +106,7 @@ namespace SaltnPepperEngine
 		// Clear other managers if needed
 		 
 	}
+
 	void Scene::Update(float deltaTime)
 	{
 
@@ -127,7 +128,6 @@ namespace SaltnPepperEngine
 
 
 		if (!Application::GetCurrent().GetEditorActive())
-
 		{
 			if (!cameraControllerView.IsEmpty())
 			{
