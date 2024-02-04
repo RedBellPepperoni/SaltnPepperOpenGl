@@ -14,6 +14,8 @@ class GraphicRuntime : public Application
         GetModelLibrary()->LoadModel("GyroOuter", "Assets\\Models\\Gyro_Outer.fbx");
         GetModelLibrary()->LoadModel("GyroMiddle", "Assets\\Models\\Gyro_Middle.fbx");
         GetModelLibrary()->LoadModel("GyroInner", "Assets\\Models\\Gyro_Inner.fbx");
+        GetModelLibrary()->LoadModel("LegoSpaceman", "Assets\\Models\\LegoSpaceman.fbx");
+        GetModelLibrary()->LoadModel("LegoSkeleton", "Assets\\Models\\LegoSkeleton.fbx");
 
         CreateCamera();
         CreateDirectionalLight();
@@ -35,6 +37,8 @@ class GraphicRuntime : public Application
         CreateAnimatedCubePosition(EasingType::SineEaseIn);
         CreateAnimatedCubePosition(EasingType::SineEaseOut);
         CreateAnimatedCubePosition(EasingType::SineEaseInOut);
+
+        CreateAnimatedCubeEvent();
 	}
 
 	void OnUpdate(float deltaTime)
@@ -42,6 +46,27 @@ class GraphicRuntime : public Application
         if (InputSystem::GetInstance().GetKeyDown(Key::Space))
         {
             startAnimPlayback = !startAnimPlayback;
+        }
+
+        if (InputSystem::GetInstance().GetKeyDown(Key::num1))
+        {
+            animator->SetAnimSpeed(1.0f);
+        }
+        else if (InputSystem::GetInstance().GetKeyDown(Key::num2))
+        {
+            animator->SetAnimSpeed(2.0f);
+        }
+        else if (InputSystem::GetInstance().GetKeyDown(Key::num3))
+        {
+            animator->SetAnimSpeed(3.0f);
+        }
+        else if (InputSystem::GetInstance().GetKeyDown(Key::num4))
+        {
+            animator->SetAnimSpeed(4.0f);
+        }
+        else if (InputSystem::GetInstance().GetKeyDown(Key::num5))
+        {
+            animator->SetAnimSpeed(5.0f);
         }
 
         if (startAnimPlayback)
@@ -58,8 +83,8 @@ class GraphicRuntime : public Application
         Entity cameraEntity = GetCurrentScene()->CreateEntity("Main Camera");
         Transform& transform = cameraEntity.GetComponent<Transform>();
 
-        transform.SetPosition(Vector3(9.5f, 15.6f, 38.3f));
-        transform.SetEularRotation(Vector3(-13.86f, -3.89f, 0.0f));
+        transform.SetPosition(Vector3(10.7f, 2.8f, 45.9f));
+        transform.SetEularRotation(Vector3(-3.31f, -2.89f, 0.0f));
         
         Camera& camera = cameraEntity.AddComponent<Camera>();
         CameraController& cameraController = cameraEntity.AddComponent<FlyCameraController>();
@@ -95,8 +120,7 @@ class GraphicRuntime : public Application
        
         AnimationComponent& animComp = animatedEntity.AddComponent<AnimationComponent>();
    
-        ColorChangeScript& script = animatedEntity.AddComponent<ColorChangeScript>();
-        script.materialRef = material;
+       
 
 
         switch (type)
@@ -143,8 +167,7 @@ class GraphicRuntime : public Application
 
         AnimationComponent& animComp = animatedEntity.AddComponent<AnimationComponent>();
 
-        ColorChangeScript& script = animatedEntity.AddComponent<ColorChangeScript>();
-        script.materialRef = material;
+      
 
 
         switch (type)
@@ -192,8 +215,7 @@ class GraphicRuntime : public Application
 
         AnimationComponent& animComp = animatedEntity.AddComponent<AnimationComponent>();
 
-        ColorChangeScript& script = animatedEntity.AddComponent<ColorChangeScript>();
-        script.materialRef = material;
+      
 
 
         switch (type)
@@ -236,6 +258,55 @@ class GraphicRuntime : public Application
 
 
        
+
+
+        animComp.loop = true;
+
+
+        return animatedEntity;
+    }
+
+
+    Entity CreateAnimatedCubeEvent()
+    {
+        Entity animatedEntity = GetCurrentScene()->CreateEntity("EventCube");
+        Transform& transform = animatedEntity.GetComponent<Transform>();
+
+        transform.SetEularRotation(Vector3(0.0f, 0.0f, 0.0f));
+        transform.SetScale(Vector3(2.0f));
+
+        ModelComponent* modelComp = &animatedEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+        SharedPtr<Model>& model = modelComp->m_handle;
+
+        const SharedPtr<Material>& material = model->GetMeshes()[0]->GetMaterial();
+
+
+        AnimationComponent& animComp = animatedEntity.AddComponent<AnimationComponent>();
+
+        FunctionScript& script = animatedEntity.AddComponent<FunctionScript>();
+        script.modelCompRef = modelComp;
+
+        transform.SetPosition(Vector3(0.0f, -20.0f, 0.0f));
+        
+            
+        animComp.AddPositionKey(Vector3(0.0f, -20.0f, 0.0f),0.0f);
+        animComp.AddPositionKey(Vector3(20.0f, -20.0f, 0.0f),3.0f, EasingType::SineEaseIn);
+        animComp.AddPositionKey(Vector3(0.0f, -20.0f, 0.0f),6.0f, EasingType::SineEaseOut);
+
+        animComp.AddRotationKey(Vector3(0.0f, 0.0f, 0.0f), 0.0f);
+        animComp.AddRotationKey(Vector3(0.0f, 0.0f, 180.0f), 3.0f, EasingType::SineEaseIn);
+        animComp.AddRotationKey(Vector3(0.0f, 00.0f, 0.0f), 6.0f, EasingType::SineEaseOut);
+
+        script.AddSpacemanCallBack(animComp.AddAnimationEvent(0.0f));
+       
+        script.AddEaseInCallBack(animComp.AddAnimationEvent(0.01f));
+        script.AddSkeletonCallBack(animComp.AddAnimationEvent(2.0f));
+        
+        script.AddEaseOutCallBack(animComp.AddAnimationEvent(3.0f));
+        script.AddSpacemanCallBack(animComp.AddAnimationEvent(4.0f));
+        
+       
+      
 
 
         animComp.loop = true;

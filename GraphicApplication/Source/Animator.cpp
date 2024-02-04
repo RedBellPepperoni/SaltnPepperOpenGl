@@ -259,6 +259,16 @@ void Animator::ProcessAnimationEvents(AnimationComponent& animComp, Transform& t
 		keyframeEndIndex++;
 	}
 
+	EventKey& functionEvent = animComp.eventKeyList[keyframeEndIndex-1];
+
+	if (functionEvent.fired)
+	{
+		return;
+	}
+
+	functionEvent.animeventCallback();
+	functionEvent.fired = true;
+
 	
 }
 
@@ -274,7 +284,7 @@ void Animator::ProcessAnimations(AnimationComponent& animComp, Transform& transf
 	ProcessScaleAnimation(animComp, transform);
 
 	// ======= Process and Update the Animation Events ============
-	//ProcessAnimationEvents(animComp, transform);
+	ProcessAnimationEvents(animComp, transform);
 
 }
 
@@ -296,7 +306,7 @@ void Animator::Update(const float deltaTime)
 
 
 		// Update the time 
-		animComponent.time += deltaTime;
+		animComponent.time += deltaTime * animSpeed;
 
 		
 
@@ -306,6 +316,12 @@ void Animator::Update(const float deltaTime)
 			if (animComponent.loop)
 			{
 				animComponent.time = 0.0f;
+
+				// Reset all AnimEvents
+				for (EventKey& key : animComponent.eventKeyList)
+				{
+					key.fired = false;
+				}
 			}
 
 			else
@@ -326,4 +342,14 @@ void Animator::Update(const float deltaTime)
 void Animator::SetPlayback(bool reverse)
 {
 	reversePlayback = reverse;
+}
+
+void Animator::SetAnimSpeed(float Speed)
+{
+	if (Speed == 0.0f)
+	{
+		return;
+	}
+
+	animSpeed = Speed;
 }

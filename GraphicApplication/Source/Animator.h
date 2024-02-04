@@ -42,11 +42,15 @@ public:
 	void Update(const float deltaTime);
 
 	void SetPlayback(bool reverse = false);
+	void SetAnimSpeed(float Speed);
 
 private:
 
 	EntityManager* manager = nullptr;
 	bool reversePlayback = false;
+
+	float animSpeed = 1.0f;
+
 
 };
 

@@ -99,6 +99,17 @@ struct EventKey
 	float time;
 	std::function<void()> animeventCallback;
 	bool fired;
+
+	// Helper Functions for sorting Key frames
+	bool operator > (const EventKey& key) const
+	{
+		return (time > key.time);
+	}
+
+	bool operator < (const EventKey& key) const
+	{
+		return (time < key.time);
+	}
 };
 
 
@@ -177,20 +188,37 @@ struct AnimationComponent
 	}
 
 
-	template< class F, class... Args >
-	void AddAnimationEvent(float newTime, F&& f, Args&&... args)
+	
+	//void AddAnimationEvent(float newTime, std::function<void()> function)
+	//{
+	//	EventKey& key = eventKeyList.emplace_back();
+	//	key.animeventCallback = function;
+	//	key.time = newTime;
+
+	//	if (key.time > totalAnimTime)
+	//	{
+	//		totalAnimTime = key.time;
+	//	}
+
+	//	// Sort in ascentding order
+	//	std::sort(positionKeyFrameList.begin(), positionKeyFrameList.end(), std::less<KeyFrame>());
+	//}
+
+
+	EventKey& AddAnimationEvent(float newTime)
 	{
-		//EventKey& key = eventKeyList.emplace_back();
-		//key.animeventCallback = std::bind(f, args);
-		//key.time = newTime;
+		EventKey& key = eventKeyList.emplace_back();
+		key.time = newTime;
 
-		//if (key.time > totalAnimTime)
-		//{
-		//	totalAnimTime = key.time;
-		//}
+		if (key.time > totalAnimTime)
+		{
+			totalAnimTime = key.time;
+		}
 
-		//// Sort in ascentding order
-		//std::sort(positionKeyFrameList.begin(), positionKeyFrameList.end(), std::less<KeyFrame>());
+		// Sort in ascentding order
+		std::sort(eventKeyList.begin(), eventKeyList.end(), std::less<EventKey>());
+
+		return key;
 	}
 
 
