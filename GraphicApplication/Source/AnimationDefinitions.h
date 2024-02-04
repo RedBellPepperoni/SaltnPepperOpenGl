@@ -189,25 +189,10 @@ struct AnimationComponent
 
 
 	
-	//void AddAnimationEvent(float newTime, std::function<void()> function)
-	//{
-	//	EventKey& key = eventKeyList.emplace_back();
-	//	key.animeventCallback = function;
-	//	key.time = newTime;
-
-	//	if (key.time > totalAnimTime)
-	//	{
-	//		totalAnimTime = key.time;
-	//	}
-
-	//	// Sort in ascentding order
-	//	std::sort(positionKeyFrameList.begin(), positionKeyFrameList.end(), std::less<KeyFrame>());
-	//}
-
-
-	EventKey& AddAnimationEvent(float newTime)
+	void AddAnimationEvent(float newTime, std::function<void()> function)
 	{
 		EventKey& key = eventKeyList.emplace_back();
+		key.animeventCallback = function;
 		key.time = newTime;
 
 		if (key.time > totalAnimTime)
@@ -217,9 +202,24 @@ struct AnimationComponent
 
 		// Sort in ascentding order
 		std::sort(eventKeyList.begin(), eventKeyList.end(), std::less<EventKey>());
-
-		return key;
 	}
+
+
+	//EventKey& AddAnimationEvent(float newTime)
+	//{
+	//	EventKey& key = eventKeyList.emplace_back();
+	//	key.time = newTime;
+
+	//	if (key.time > totalAnimTime)
+	//	{
+	//		totalAnimTime = key.time;
+	//	}
+
+	//	// Sort in ascentding order
+	//	std::sort(eventKeyList.begin(), eventKeyList.end(), std::less<EventKey>());
+
+	//	return key;
+	//}
 
 
 

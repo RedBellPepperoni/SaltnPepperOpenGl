@@ -18,11 +18,10 @@ enum class AnimColor
 
 struct FunctionScript
 {
-	SharedPtr<Material> materialRef;
 	ModelComponent* modelCompRef = nullptr;
 	
 
-	void AddSpacemanCallBack(EventKey& callback)
+	/*void AddSpacemanCallBack(EventKey& callback)
 	{
 		callback.animeventCallback = std::bind(&FunctionScript::ChangeModelMan, this);
 	}
@@ -40,15 +39,16 @@ struct FunctionScript
 	void AddEaseOutCallBack(EventKey& callback)
 	{
 		callback.animeventCallback = std::bind(&FunctionScript::ChangeColorYellow, this);
-	}
+	}*/
 
 	void ChangeModelMan()
 	{
-		
-		modelCompRef->LoadLibraryModel("LegoSpaceman");
-		
 		Vector4 oldRefColor = Vector4(1.0f);
+		SharedPtr<Material> materialRef = modelCompRef->m_handle->GetMeshes()[0]->GetMaterial();
 		oldRefColor = materialRef ? materialRef->albedoColour : oldRefColor;
+
+		modelCompRef->LoadLibraryModel("LegoSpaceman");
+
 
 		materialRef = modelCompRef->m_handle->GetMeshes()[0]->GetMaterial();
 		materialRef->albedoColour = oldRefColor;
@@ -56,10 +56,12 @@ struct FunctionScript
 
 	void ChangeModelSkeleton()
 	{
+		Vector4 oldRefColor = Vector4(1.0f);
+		SharedPtr<Material> materialRef = modelCompRef->m_handle->GetMeshes()[0]->GetMaterial();
+		oldRefColor = materialRef ? materialRef->albedoColour : oldRefColor;
+
 		modelCompRef->LoadLibraryModel("LegoSkeleton");
 
-		Vector4 oldRefColor = Vector4(1.0f);
-		oldRefColor = materialRef ? materialRef->albedoColour : oldRefColor;
 
 		materialRef = modelCompRef->m_handle->GetMeshes()[0]->GetMaterial();
 		materialRef->albedoColour = oldRefColor;
@@ -67,6 +69,7 @@ struct FunctionScript
 
 	void ChangeColorWhite()
 	{
+		SharedPtr<Material> materialRef = modelCompRef->m_handle->GetMeshes()[0]->GetMaterial();
 		if (materialRef)
 		{
 			materialRef->albedoColour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -75,6 +78,7 @@ struct FunctionScript
 
 	void ChangeColorRed()
 	{
+		SharedPtr<Material> materialRef = modelCompRef->m_handle->GetMeshes()[0]->GetMaterial();
 		if (materialRef)
 		{
 			materialRef->albedoColour = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -83,6 +87,7 @@ struct FunctionScript
 
 	void ChangeColorYellow()
 	{
+		SharedPtr<Material> materialRef = modelCompRef->m_handle->GetMeshes()[0]->GetMaterial();
 		if (materialRef)
 		{
 			materialRef->albedoColour = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
@@ -91,6 +96,7 @@ struct FunctionScript
 
 	void ChangeColorGreen()
 	{
+		SharedPtr<Material> materialRef = modelCompRef->m_handle->GetMeshes()[0]->GetMaterial();
 		if (materialRef)
 		{
 			materialRef->albedoColour = Vector4(0.0f, 0.0f, 1.0f, 1.0f);

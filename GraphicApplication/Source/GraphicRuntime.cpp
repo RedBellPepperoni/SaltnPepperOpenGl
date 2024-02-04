@@ -297,15 +297,24 @@ class GraphicRuntime : public Application
         animComp.AddRotationKey(Vector3(0.0f, 0.0f, 180.0f), 3.0f, EasingType::SineEaseIn);
         animComp.AddRotationKey(Vector3(0.0f, 00.0f, 0.0f), 6.0f, EasingType::SineEaseOut);
 
-        script.AddSpacemanCallBack(animComp.AddAnimationEvent(0.0f));
+      /*  script.AddSpacemanCallBack(animComp.AddAnimationEvent(0.0f));
        
         script.AddEaseInCallBack(animComp.AddAnimationEvent(0.01f));
         script.AddSkeletonCallBack(animComp.AddAnimationEvent(2.0f));
         
         script.AddEaseOutCallBack(animComp.AddAnimationEvent(3.0f));
-        script.AddSpacemanCallBack(animComp.AddAnimationEvent(4.0f));
+        script.AddSpacemanCallBack(animComp.AddAnimationEvent(4.0f));*/
+
+        animComp.AddAnimationEvent(0.0f, std::bind(&FunctionScript::ChangeModelMan, script));
+        animComp.AddAnimationEvent(2.0f, std::bind(&FunctionScript::ChangeModelSkeleton, script));
+        animComp.AddAnimationEvent(4.0f, std::bind(&FunctionScript::ChangeModelMan, script));
+
+
+        animComp.AddAnimationEvent(0.1f, std::bind(&FunctionScript::ChangeColorRed, script));
+        animComp.AddAnimationEvent(3.0f, std::bind(&FunctionScript::ChangeColorYellow, script));
         
        
+
       
 
 
