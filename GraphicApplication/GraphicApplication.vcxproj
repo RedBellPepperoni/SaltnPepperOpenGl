@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Animator.h" />
     <ClInclude Include="Source\AnimationDefinitions.h" />
+    <ClInclude Include="Source\ColorChangeScript.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

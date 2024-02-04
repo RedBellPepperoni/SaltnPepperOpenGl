@@ -84,14 +84,182 @@ void Animator::ProcessPositionAnimation(AnimationComponent& animComp, Transform&
 
 void Animator::ProcessRotationAnimation(AnimationComponent& animComp, Transform& transform)
 {
+	size_t rotationListSize = animComp.rotationKeyFrameList.size();
+
+	// early check to see if there are any positions at all
+	if (rotationListSize < 1)
+	{
+		// No position keyframe data
+		return;
+	}
+
+
+
+	// Edge case where thers only one keyframe
+	if (rotationListSize == 1)
+	{
+
+		Vector3 rotation = animComp.rotationKeyFrameList[0].keyData;
+		transform.SetEularRotation(rotation);
+
+		return;
+	}
+
+
+	size_t keyframeEndIndex = 0;
+
+	for (const KeyFrame& rotationKey : animComp.rotationKeyFrameList)
+	{
+		if (rotationKey.time > animComp.time)
+		{
+			break;
+		}
+
+		keyframeEndIndex++;
+	}
+
+	size_t keyframeStartIndex = keyframeEndIndex - 1;
+
+	if (keyframeEndIndex >= rotationListSize)
+	{
+		transform.SetEularRotation(animComp.rotationKeyFrameList[keyframeStartIndex].keyData);
+		return;
+	}
+
+	KeyFrame& startRotKey = animComp.rotationKeyFrameList[keyframeStartIndex];
+	KeyFrame& endRotKey = animComp.rotationKeyFrameList[keyframeEndIndex];
+
+
+	float percent = (animComp.time - startRotKey.time) / (endRotKey.time - startRotKey.time);
+	float result = 0.0f;
+
+	switch (endRotKey.easeType)
+	{
+	case EasingType::Linear: result = percent;
+		break;
+	case EasingType::SineEaseIn: result = glm::sineEaseIn(percent);
+		break;
+	case EasingType::SineEaseOut: result = glm::sineEaseOut(percent);
+		break;
+	case EasingType::SineEaseInOut: result = glm::sineEaseInOut(percent);
+		break;
+	default: result = percent;
+		break;
+	}
+
+	Quaternion startQuat = Quaternion(Vector3(startRotKey.keyData.x * DEGtoRAD, startRotKey.keyData.y * DEGtoRAD, startRotKey.keyData.z * DEGtoRAD));
+	Quaternion endQuat = Quaternion(Vector3(endRotKey.keyData.x * DEGtoRAD, endRotKey.keyData.y * DEGtoRAD, endRotKey.keyData.z * DEGtoRAD));
+
+	transform.SetRotation(glm::slerp(startQuat, endQuat, result));
+
 }
 
 void Animator::ProcessScaleAnimation(AnimationComponent& animComp, Transform& transform)
 {
+
+	size_t scaleListSize = animComp.scaleKeyFrameList.size();
+
+	// early check to see if there are any positions at all
+	if (scaleListSize < 1)
+	{
+		// No position keyframe data
+		return;
+	}
+
+
+
+	// Edge case where thers only one keyframe
+	if (scaleListSize == 1)
+	{
+
+		Vector3 position = animComp.scaleKeyFrameList[0].keyData;
+		transform.SetScale(position);
+
+		return;
+	}
+
+
+	size_t keyframeEndIndex = 0;
+
+	for (const KeyFrame& positionKey : animComp.scaleKeyFrameList)
+	{
+		if (positionKey.time > animComp.time)
+		{
+			break;
+		}
+
+		keyframeEndIndex++;
+	}
+
+	size_t keyframeStartIndex = keyframeEndIndex - 1;
+
+	if (keyframeEndIndex >= scaleListSize)
+	{
+		transform.SetScale(animComp.scaleKeyFrameList[keyframeStartIndex].keyData);
+		return;
+	}
+
+	KeyFrame startScaleKey = animComp.scaleKeyFrameList[keyframeStartIndex];
+	KeyFrame endScaleKey = animComp.scaleKeyFrameList[keyframeEndIndex];
+
+
+	float percent = (animComp.time - startScaleKey.time) / (endScaleKey.time - startScaleKey.time);
+	float result = 0.0f;
+
+	switch (endScaleKey.easeType)
+	{
+	case EasingType::Linear: result = percent;
+		break;
+	case EasingType::SineEaseIn: result = glm::sineEaseIn(percent);
+		break;
+	case EasingType::SineEaseOut: result = glm::sineEaseOut(percent);
+		break;
+	case EasingType::SineEaseInOut: result = glm::sineEaseInOut(percent);
+		break;
+	default: result = percent;
+		break;
+	}
+
+	Vector3 delta = endScaleKey.keyData - startScaleKey.keyData;
+	transform.SetScale(startScaleKey.keyData + delta * result);
 }
 
 void Animator::ProcessAnimationEvents(AnimationComponent& animComp, Transform& transform)
 {
+	size_t eventListSize = animComp.eventKeyList.size();
+
+	// early check to see if there are any positions at all
+	if (eventListSize < 1)
+	{
+		// No position keyframe data
+		return;
+	}
+
+
+
+	// Edge case where thers only one keyframe
+	if (eventListSize == 1)
+	{
+
+		animComp.eventKeyList[0].animeventCallback();
+		
+		return;
+	}
+
+
+	size_t keyframeEndIndex = 0;
+
+	for (const EventKey& eventKey : animComp.eventKeyList)
+	{
+		if (eventKey.time > animComp.time)
+		{
+			break;
+		}
+
+		keyframeEndIndex++;
+	}
+
+	
 }
 
 void Animator::ProcessAnimations(AnimationComponent& animComp, Transform& transform)
@@ -100,10 +268,14 @@ void Animator::ProcessAnimations(AnimationComponent& animComp, Transform& transf
 	ProcessPositionAnimation(animComp, transform);
 
 	// ======= Process and Update the Rotaion Animations ============
+	ProcessRotationAnimation(animComp, transform);
 	
 	// ======= Process and Update the Scale Animations ============
+	ProcessScaleAnimation(animComp, transform);
 
 	// ======= Process and Update the Animation Events ============
+	//ProcessAnimationEvents(animComp, transform);
+
 }
 
 void Animator::Update(const float deltaTime)
@@ -126,7 +298,7 @@ void Animator::Update(const float deltaTime)
 		// Update the time 
 		animComponent.time += deltaTime;
 
-		LOG_ERROR("TIme : {0}", animComponent.time);
+		
 
 		if (animComponent.time >= animComponent.totalAnimTime)
 		{
@@ -149,4 +321,9 @@ void Animator::Update(const float deltaTime)
 
 
 	}
+}
+
+void Animator::SetPlayback(bool reverse)
+{
+	reversePlayback = reverse;
 }

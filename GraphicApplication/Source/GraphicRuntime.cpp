@@ -1,5 +1,6 @@
 #include "SaltnPepperEngine.h"
 #include "Animator.h"
+#include "ColorChangeScript.h"
 
 
 class GraphicRuntime : public Application
@@ -7,21 +8,38 @@ class GraphicRuntime : public Application
 	void OnInit()
 	{
         // Define all the scenes
-        m_sceneManager->EnqueSceneFromFile("//Engine//Scene//TestScene.json");
-        m_sceneManager->EnqueSceneFromFile("//Engine//Scene//LightScene.json");
+        m_sceneManager->EnqueSceneFromFile("\\Engine\\Scene\\TestScene.json");
+        m_sceneManager->EnqueSceneFromFile("\\Engine\\Scene\\LightScene.json");
+
+        GetModelLibrary()->LoadModel("GyroOuter", "Assets\\Models\\Gyro_Outer.fbx");
+        GetModelLibrary()->LoadModel("GyroMiddle", "Assets\\Models\\Gyro_Middle.fbx");
+        GetModelLibrary()->LoadModel("GyroInner", "Assets\\Models\\Gyro_Inner.fbx");
 
         CreateCamera();
-
+        CreateDirectionalLight();
 
         // Creating a new aniamtor/ animation manager
         animator = MakeShared<Animator>(GetCurrentScene()->GetEntityManager());
 
-        CreateAnimatedEntity();
+        CreateAnimatedCubeRotation(EasingType::Linear);
+        CreateAnimatedCubeRotation(EasingType::SineEaseIn);
+        CreateAnimatedCubeRotation(EasingType::SineEaseOut);
+        CreateAnimatedCubeRotation(EasingType::SineEaseInOut);
+
+        CreateAnimatedCubeScale(EasingType::Linear);
+        CreateAnimatedCubeScale(EasingType::SineEaseIn);
+        CreateAnimatedCubeScale(EasingType::SineEaseOut);
+        CreateAnimatedCubeScale(EasingType::SineEaseInOut);
+
+        CreateAnimatedCubePosition(EasingType::Linear);
+        CreateAnimatedCubePosition(EasingType::SineEaseIn);
+        CreateAnimatedCubePosition(EasingType::SineEaseOut);
+        CreateAnimatedCubePosition(EasingType::SineEaseInOut);
 	}
 
 	void OnUpdate(float deltaTime)
 	{
-        if (InputSystem::GetInstance().GetKeyDown(Key::G))
+        if (InputSystem::GetInstance().GetKeyDown(Key::Space))
         {
             startAnimPlayback = !startAnimPlayback;
         }
@@ -40,8 +58,8 @@ class GraphicRuntime : public Application
         Entity cameraEntity = GetCurrentScene()->CreateEntity("Main Camera");
         Transform& transform = cameraEntity.GetComponent<Transform>();
 
-        transform.SetPosition(Vector3(0.0f, 0.0f, -20.0f));
-        transform.SetEularRotation(Vector3(0.0f, 0.0f, 0.0f));
+        transform.SetPosition(Vector3(9.5f, 15.6f, 38.3f));
+        transform.SetEularRotation(Vector3(-13.86f, -3.89f, 0.0f));
         
         Camera& camera = cameraEntity.AddComponent<Camera>();
         CameraController& cameraController = cameraEntity.AddComponent<FlyCameraController>();
@@ -50,23 +68,185 @@ class GraphicRuntime : public Application
         cameraController.SetCamera(&camera);
     }
 
-    void CreateAnimatedEntity()
+    void CreateDirectionalLight()
     {
-        Entity animatedEntity = GetCurrentScene()->CreateEntity("Animated");
-        Transform& transform = animatedEntity.GetComponent<Transform>();
+        Entity dirlightEntity = GetCurrentScene()->CreateEntity("Main Camera");
+        Transform& transform = dirlightEntity.GetComponent<Transform>();
 
         transform.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
-        transform.SetEularRotation(Vector3(0.0f, 0.0f, 0.0f));
+        transform.SetEularRotation(Vector3(-10.0f, 30.0f, 0.0f));
 
-        animatedEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
-        
+        Light& light = dirlightEntity.AddComponent<Light>();
+        light.intensity = 1.0f;
+        light.type = LightType::DirectionLight;
+    }
+
+    Entity CreateAnimatedCubeRotation(EasingType type)
+    {
+        Entity animatedEntity = GetCurrentScene()->CreateEntity("RotationCube");
+        Transform& transform = animatedEntity.GetComponent<Transform>();
+
+        transform.SetEularRotation(Vector3(0.0f, 0.0f, 0.0f));
+        transform.SetScale(Vector3(2.0f));
+
+        SharedPtr<Model>& model = animatedEntity.AddComponent<ModelComponent>(PrimitiveType::Cube).m_handle;
+        const SharedPtr<Material>& material = model->GetMeshes()[0]->GetMaterial();
+
+       
+        AnimationComponent& animComp = animatedEntity.AddComponent<AnimationComponent>();
+   
+        ColorChangeScript& script = animatedEntity.AddComponent<ColorChangeScript>();
+        script.materialRef = material;
+
+
+        switch (type)
+        {
+        case EasingType::Linear:  transform.SetPosition(Vector3(-10.0f, 0.0f, 0.0f));
+            material->albedoColour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+            break;
+        case EasingType::SineEaseIn:  transform.SetPosition(Vector3(-10.0f, 10.0f, 0.0f));
+            material->albedoColour = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+            break;
+        case EasingType::SineEaseOut:  transform.SetPosition(Vector3(-10.0f, 20.0f, 0.0f));
+            material->albedoColour = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
+            break;
+        case EasingType::SineEaseInOut:  transform.SetPosition(Vector3(-10.0f, -10.0f, 0.0f));
+            material->albedoColour = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+            break;
+        default:
+            break;
+        }
+
+
+        animComp.AddRotationKey(Vector3(0.0f), 0.0f);
+        animComp.AddRotationKey(Vector3(0.0f,90.0f,0.0f), 3.0f,type);
+        animComp.AddRotationKey(Vector3(0.0f,0.0f,90.0f), 6.0f, type);
+
+
+        animComp.loop = true;
+
+
+        return animatedEntity;
+    }
+
+    Entity CreateAnimatedCubeScale(EasingType type)
+    {
+        Entity animatedEntity = GetCurrentScene()->CreateEntity("ScaleCube");
+        Transform& transform = animatedEntity.GetComponent<Transform>();
+
+        transform.SetEularRotation(Vector3(0.0f, 0.0f, 0.0f));
+        transform.SetScale(Vector3(2.0f));
+
+        SharedPtr<Model>& model = animatedEntity.AddComponent<ModelComponent>(PrimitiveType::Cube).m_handle;
+        const SharedPtr<Material>& material = model->GetMeshes()[0]->GetMaterial();
+
 
         AnimationComponent& animComp = animatedEntity.AddComponent<AnimationComponent>();
-        animComp.AddPositionKey(Vector3(10.0f,5.0f,0.0f), 2.0f);
-        animComp.AddPositionKey(Vector3(0.0f,0.0f,0.0f), 0.0f);
-        animComp.AddPositionKey(Vector3(-10.0f,-5.0f,0.0f), 4.0f);
+
+        ColorChangeScript& script = animatedEntity.AddComponent<ColorChangeScript>();
+        script.materialRef = material;
 
 
+        switch (type)
+        {
+        case EasingType::Linear:  transform.SetPosition(Vector3(10.0f, 0.0f, 0.0f));
+            material->albedoColour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+            break;
+        case EasingType::SineEaseIn:  transform.SetPosition(Vector3(10.0f, 10.0f, 0.0f));
+            material->albedoColour = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+            break;
+        case EasingType::SineEaseOut:  transform.SetPosition(Vector3(10.0f, 20.0f, 0.0f));
+            material->albedoColour = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
+            break;
+        case EasingType::SineEaseInOut:  transform.SetPosition(Vector3(10.0f, -10.0f, 0.0f));
+            material->albedoColour = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+            break;
+        default:
+            break;
+        }
+
+
+        animComp.AddScaleKey(Vector3(2.0f), 0.0f);
+        animComp.AddScaleKey(Vector3(4.0), 3.0f, type);
+        animComp.AddScaleKey(Vector3(2.0), 6.0f, type);
+
+
+        animComp.loop = true;
+
+
+        return animatedEntity;
+    }
+
+
+    Entity CreateAnimatedCubePosition(EasingType type)
+    {
+        Entity animatedEntity = GetCurrentScene()->CreateEntity("PositionCube");
+        Transform& transform = animatedEntity.GetComponent<Transform>();
+
+        transform.SetEularRotation(Vector3(0.0f, 0.0f, 0.0f));
+        transform.SetScale(Vector3(2.0f));
+
+        SharedPtr<Model>& model = animatedEntity.AddComponent<ModelComponent>(PrimitiveType::Cube).m_handle;
+        const SharedPtr<Material>& material = model->GetMeshes()[0]->GetMaterial();
+
+
+        AnimationComponent& animComp = animatedEntity.AddComponent<AnimationComponent>();
+
+        ColorChangeScript& script = animatedEntity.AddComponent<ColorChangeScript>();
+        script.materialRef = material;
+
+
+        switch (type)
+        {
+        case EasingType::Linear:  
+            transform.SetPosition(Vector3(20.0f, 0.0f, 0.0f));
+
+            animComp.AddPositionKey(Vector3(20.0f, 0.0f, 0.0f), 0.0f);
+            animComp.AddPositionKey(Vector3(30.0f, 0.0f, 0.0f), 3.0f, type);
+            animComp.AddPositionKey(Vector3(20.0f, 0.0f, 0.0f), 6.0f, type);
+
+            material->albedoColour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
+
+            break;
+        case EasingType::SineEaseIn:  transform.SetPosition(Vector3(20.0f, 10.0f, 0.0f));
+            material->albedoColour = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
+            animComp.AddPositionKey(Vector3(20.0f, 10.0f, 0.0f), 0.0f);
+            animComp.AddPositionKey(Vector3(30.0f, 10.0f, 0.0f), 3.0f, type);
+            animComp.AddPositionKey(Vector3(20.0f, 10.0f, 0.0f), 6.0f, type);
+            break;
+        case EasingType::SineEaseOut:  transform.SetPosition(Vector3(20.0f, 20.0f, 0.0f));
+            material->albedoColour = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
+            animComp.AddPositionKey(Vector3(20.0f, 20.0f, 0.0f), 0.0f);
+            animComp.AddPositionKey(Vector3(30.0f, 20.0f, 0.0f), 3.0f, type);
+            animComp.AddPositionKey(Vector3(20.0f, 20.0f, 0.0f), 6.0f, type);
+
+
+            break;
+        case EasingType::SineEaseInOut:  transform.SetPosition(Vector3(20.0f, -10.0f, 0.0f));
+            material->albedoColour = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+            animComp.AddPositionKey(Vector3(20.0f, -10.0f, 0.0f), 0.0f);
+            animComp.AddPositionKey(Vector3(30.0f, -10.0f, 0.0f), 3.0f, type);
+            animComp.AddPositionKey(Vector3(20.0f, -10.0f, 0.0f), 6.0f, type);
+            break;
+        default:
+            break;
+        }
+
+
+       
+
+
+        animComp.loop = true;
+
+
+        return animatedEntity;
+    }
+
+
+    void ChangeColor()
+    {
 
     }
 

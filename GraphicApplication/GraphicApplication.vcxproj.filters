@@ -32,5 +32,8 @@
     <ClInclude Include="Source\Animator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ColorChangeScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -232,6 +232,7 @@ namespace SaltnPepperEngine
 			}
 			else
 			{
+				m_renderer->AttachDefaultFrameBuffer();
 				m_renderer->Clear();
 
 				// Multiple Camera Rendering for actual Game View
@@ -246,6 +247,8 @@ namespace SaltnPepperEngine
 
 				//m_renderer->DebugPass(cameraElement);
 				}
+
+				
 			}
 			//	
 			//AttachFrameBuffer(m_editorCameraElement.gBuffer);

@@ -20,9 +20,6 @@ class Animator
 private: 
 
 
-	
-
-
 	void ProcessPositionAnimation(AnimationComponent& animComp, Transform& transform);
 	void ProcessRotationAnimation(AnimationComponent& animComp, Transform& transform);
 	void ProcessScaleAnimation(AnimationComponent& animComp, Transform& transform);
@@ -44,10 +41,12 @@ public:
 	void Init(EntityManager* enttmanager);
 	void Update(const float deltaTime);
 
+	void SetPlayback(bool reverse = false);
+
 private:
 
 	EntityManager* manager = nullptr;
-	
+	bool reversePlayback = false;
 
 };
 

@@ -98,6 +98,7 @@ struct EventKey
 {
 	float time;
 	std::function<void()> animeventCallback;
+	bool fired;
 };
 
 
@@ -179,17 +180,17 @@ struct AnimationComponent
 	template< class F, class... Args >
 	void AddAnimationEvent(float newTime, F&& f, Args&&... args)
 	{
-		EventKey& key = eventKeyList.emplace_back();
-		key.animeventCallback = std::bind(f, args);
-		key.time = newTime;
+		//EventKey& key = eventKeyList.emplace_back();
+		//key.animeventCallback = std::bind(f, args);
+		//key.time = newTime;
 
-		if (key.time > totalAnimTime)
-		{
-			totalAnimTime = key.time;
-		}
+		//if (key.time > totalAnimTime)
+		//{
+		//	totalAnimTime = key.time;
+		//}
 
-		// Sort in ascentding order
-		std::sort(positionKeyFrameList.begin(), positionKeyFrameList.end(), std::less<KeyFrame>());
+		//// Sort in ascentding order
+		//std::sort(positionKeyFrameList.begin(), positionKeyFrameList.end(), std::less<KeyFrame>());
 	}
 
 
