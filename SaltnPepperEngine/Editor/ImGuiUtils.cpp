@@ -89,7 +89,7 @@ namespace SaltnPepperEngine
         }
         else
         {
-            if (ImGuiUtils::InputText(value))
+            if (ImGuiUtils::InputText(value, name))
             {
                 updated = true;
             }
@@ -1042,14 +1042,14 @@ namespace SaltnPepperEngine
         }
     }
 
-    bool ImGuiUtils::InputText(std::string& currentText)
+    bool ImGuiUtils::InputText(std::string& currentText, const char* ID)
     {
         ImGuiUtils::ScopedStyle frameBorder(ImGuiStyleVar_FrameBorderSize, 0.0f);
         ImGuiUtils::ScopedColour frameColour(ImGuiCol_FrameBg, IM_COL32(0, 0, 0, 0));
         char buffer[256];
         memset(buffer, 0, 256);
         memcpy(buffer, currentText.c_str(), currentText.length());
-        ImGui::PushID(currentText.c_str());
+        ImGui::PushID(ID);
         bool updated = ImGui::InputText("##SceneName", buffer, 256);
 
         ImGuiUtils::DrawItemActivityOutline(2.0f, false);

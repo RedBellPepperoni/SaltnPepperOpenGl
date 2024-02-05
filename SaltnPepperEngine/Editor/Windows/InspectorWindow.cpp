@@ -780,7 +780,7 @@ namespace SaltnPepperEngine
                 ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::GetFontSize() * 4.0f);
                 {
                     ImGuiUtils::ScopedFont boldFont(ImGui::GetIO().Fonts->Fonts[1]);
-                    if (ImGuiUtils::InputText(name))
+                    if (ImGuiUtils::InputText(name, "##InspectorNameChange"))
                     {
                         registry.get_or_emplace<NameComponent>(selected).name = name;
                     }
