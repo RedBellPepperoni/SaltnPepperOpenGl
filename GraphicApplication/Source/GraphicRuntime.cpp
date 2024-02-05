@@ -10,6 +10,11 @@ class GraphicRuntime : public Application
         m_sceneManager->EnqueSceneFromFile("//Engine//Scene//TestScene.json");
         m_sceneManager->EnqueSceneFromFile("//Engine//Scene//LightScene.json");
 
+        m_sceneManager->NextScene();
+
+
+        //m_sceneManager->SwitchScene("TestScene");
+
 	}
 
 

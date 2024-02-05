@@ -279,7 +279,7 @@ namespace SaltnPepperEngine
 			void RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader);
 
 
-			void Clear();
+			void Clear(bool clearDepth = false);
 			void ClearRenderCache();
 
 			void SetViewport(int x, int y, int width, int height) const;

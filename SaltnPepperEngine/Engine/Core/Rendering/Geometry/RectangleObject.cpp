@@ -5,12 +5,26 @@
 namespace SaltnPepperEngine
 {
     
+    struct RenderQuadVertex
+    {
+        RenderQuadVertex(Vector2 newPos, Vector2 newTexCoords)
+            : position(newPos)
+            , textureCoord(newTexCoords)
+        {
+
+        }
+
+        Vector2 position;
+        Vector2 textureCoord;
+
+        static const size_t size = 2 + 2;
+    };
 
 
     void RectangleObject::Init(float HalfSize)
 	{
 
-        std::array vertecies =
+        std::array vertices =
         {
             Vector4(-HalfSize, -HalfSize, 0.5f, 1.0f),
             Vector4(HalfSize, -HalfSize, 0.5f, 1.0f),
@@ -18,16 +32,37 @@ namespace SaltnPepperEngine
             Vector4(HalfSize,  HalfSize, 0.5f, 1.0f),
         };
 
+
+       
+
+        //std::vector<RenderQuadVertex> vertices
+        //{
+        //    RenderQuadVertex(Vector2(-1.0f, 1.0f), Vector2(0.0f, 1.0f)),
+        //    RenderQuadVertex(Vector2(-1.0f, -1.0f), Vector2(0.0f, 0.0f)),
+        //    RenderQuadVertex(Vector2(1.0f, -1.0f), Vector2(1.0f, 0.0f)),
+
+        //    RenderQuadVertex(Vector2(-1.0f, 1.0f), Vector2(0.0f, 1.0f)),
+        //    RenderQuadVertex(Vector2(1.0f, -1.0f), Vector2(1.0f, 0.0f)),
+        //    RenderQuadVertex(Vector2(1.0f, 1.0f), Vector2(1.0f, 1.0f)),
+
+        //};
+
+
+       
+
         std::array indicies = {
             0u, 1u, 2u,
-            2u, 1u, 3u,
-        };
+            1u, 3u, 2u
+        };  
+        
+        
+
 
         VBO = MakeShared<VertexBuffer>(
 
             
-            vertecies.size() * (sizeof(Vector4) / sizeof(float)),
-            (float*)vertecies.data(),
+            vertices.size() * 4 * sizeof(float),
+            vertices.data(),
             UsageType::STATIC_DRAW
         );
 
@@ -38,7 +73,8 @@ namespace SaltnPepperEngine
         );
 
         std::vector vertexLayout = {
-            VertexAttribute::Attribute<Vector4>()
+            VertexAttribute::Attribute<Vector2>(),
+            VertexAttribute::Attribute<Vector2>()
         };
 
         VAO = MakeShared<VertexArray>();
@@ -50,6 +86,7 @@ namespace SaltnPepperEngine
         
         IBO->Bind();
         VAO->UnBind();
+        IBO->UnBind();
 
 	}
 

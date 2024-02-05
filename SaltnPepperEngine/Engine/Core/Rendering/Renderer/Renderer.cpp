@@ -283,11 +283,17 @@ namespace SaltnPepperEngine
             DrawIndices(DrawType::TRIANGLES, rectObject.IndexCount, 0);
         }
 
-        void Renderer::Clear()
+        void Renderer::Clear(bool clearDepth)
         {
             GLDEBUG(glClearColor(0.5f, 0.1f, 0.1f, 1.0f));
-            //GLDEBUG(glClear(clearMask));
-            GLDEBUG(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+            if (clearDepth)
+            {
+                GLDEBUG(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+            }
+            else
+            {
+                GLDEBUG(glClear(GL_COLOR_BUFFER_BIT));
+            }
         }
 
         void Renderer::ClearRenderCache()
@@ -671,7 +677,7 @@ namespace SaltnPepperEngine
             // Matrix4 transformMatrix = transform.GetLocalMatrix();
 
              // get the inverse of the Camera trasfrom
-            // Matrix4 view = Math::Inverse(transformMatrix);
+            // Matrix4 view = (transformMatrix);
             Matrix4 view = Math::Inverse(transformMatrix);
 
             // get the inverse of the Camera transform without any position data (only Rotation0
@@ -738,15 +744,15 @@ namespace SaltnPepperEngine
         void Renderer::RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod)
         {
     
-            texture->Bind();
-            //int boundId = texture->GetBoundId();
-            int boundId = texture->GetHandle();
+            texture->Bind(0);
+            int boundId = texture->GetBoundId();
             shader->Bind();
             shader->SetUniform("tex", boundId);
             shader->SetUniform("lod", lod);
 
             m_pipeline.rectangularObject.GetVAO()->Bind();
             DrawIndices(DrawType::TRIANGLES,  m_pipeline.rectangularObject.IndexCount, 0);
+            //DrawVertices(DrawType::TRIANGLES, 0, 6);
 
         }
 
