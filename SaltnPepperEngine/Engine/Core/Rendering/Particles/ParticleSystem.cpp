@@ -43,98 +43,147 @@ namespace SaltnPepperEngine
 
 		size_t ParticleSystem::GetParticleAllocationOffset() const
 		{
-			return size_t();
+			return m_particleAllocationOffset;
 		}
 		size_t ParticleSystem::GetParticleAllocationCount() const
 		{
-			return size_t();
+			return m_particleAllocationCount;
 		}
+
 		size_t ParticleSystem::GetMaxCount() const
 		{
-			return size_t();
+			return m_maxParticleCount;
 		}
+
 		void ParticleSystem::SetMaxCount(size_t count)
 		{
+			m_maxParticleCount = count;
+			Invalidate();
 		}
+
 		void ParticleSystem::SetLifetime(float lifetime)
 		{
+			m_particleLifetime = Max(lifetime,0.0f);
+			Invalidate();
+
 		}
+
 		float ParticleSystem::GetLifetime() const
 		{
-			return 0.0f;
+			return m_particleLifetime;
 		}
+
 		float ParticleSystem::GetMinSize() const
 		{
-			return 0.0f;
+			return m_particleMinSize;
 		}
+
 		void ParticleSystem::SetMinSize(float size)
 		{
+			m_particleMinSize = Clamp(size,0.0f,GetMaxSize());
+			Invalidate();
 		}
+
 		float ParticleSystem::GetMaxSize() const
 		{
-			return 0.0f;
+			return m_particleMaxSize;
 		}
+
 		void ParticleSystem::SetMaxSize(float size)
 		{
+			m_particleMaxSize = Max(size, 0.0f);
+			SetMinSize(GetMinSize());
+			
 		}
+
 		float ParticleSystem::GetSpeed() const
 		{
-			return 0.0f;
+			return m_particleSpeed;
 		}
+
 		void ParticleSystem::SetSpeed(float speed)
 		{
+			m_particleSpeed = speed;
+			Invalidate();
 		}
+
 		float ParticleSystem::GetAngularSpeed() const
 		{
-			return 0.0f;
+			return m_particleAngularSpeed;
 		}
+
 		void ParticleSystem::SetAngularSpeed(float speed)
 		{
+			m_particleAngularSpeed = speed;
+			Invalidate();
 		}
+
 		float ParticleSystem::GetMinSpawnDistance() const
 		{
-			return 0.0f;
+			return m_minSpawnDistance;
 		}
+
 		void ParticleSystem::SetMinSpawnDistance(float distance)
 		{
+			m_minSpawnDistance = Clamp(distance, 0.0f, GetMaxSpawnDistance());
+			Invalidate();
 		}
+
 		float ParticleSystem::GetMaxSpawnDistance() const
 		{
-			return 0.0f;
+			return m_maxSpawnDistance;
 		}
+
 		void ParticleSystem::SetMaxSpawnDistance(float distance)
 		{
+			m_maxSpawnDistance = Max(distance, 0.0f);
+			SetMinSpawnDistance(GetMinSpawnDistance());
+
 		}
+
 		float ParticleSystem::GetMaxInitialTimeAlive() const
 		{
-			return 0.0f;
+			return m_maxInitialTimeAlive;
 		}
+
 		void ParticleSystem::SetMaxInitialTimeAlive(float timeAlive)
 		{
+			m_maxInitialTimeAlive = Max(timeAlive, 0.0f);
+			Invalidate();
 		}
+
 		bool ParticleSystem::IsRelative() const
 		{
-			return false;
+			return m_isRelative;
 		}
+
 		void ParticleSystem::SetRelative(bool relative)
 		{
+			m_isRelative = relative;
+			Invalidate();
 		}
+
 		float ParticleSystem::GetFading() const
 		{
-			return 0.0f;
+			return m_isfading;
 		}
+
 		void ParticleSystem::SetFading(float fading)
 		{
-
+			m_isfading = Max(fading, 0.0f);
 		}
 
 		ParticleSystem::EmitterShape ParticleSystem::GetShape() const
 		{
-			return EmitterShape();
+			return m_shape;
 		}
+
 		void ParticleSystem::SetShape(EmitterShape shape)
 		{
+			m_shape = shape;
+			Invalidate();
 		}
+
 		SharedPtr<ShaderStorageBuffer>& ParticleSystem::GetSSBO()
 		{
 			return m_SSBO;
