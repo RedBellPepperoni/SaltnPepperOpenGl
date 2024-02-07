@@ -262,15 +262,15 @@ namespace SaltnPepperEngine
 			for (Particle& particle : particleList)
 			{
 				Vector3 shapeBasedRandom = Matrix3(particleMatrix) * GetRandomVector3(GetShape());
-				float linearSpeed = this->GetSpeed() == 0.0f ? 0.0001f : this->GetSpeed();
+				float linearSpeed = GetSpeed() == 0.0f ? 0.0001f : GetSpeed();
 
 				particle.AngularParams = Matrix3(particleMatrix) * Vector3(0.0f, 1.0f, 0.0f) * m_particleAngularSpeed;
 
-				particle.SpawnDistance = Random32::Range.GetRandom(this->GetMinSpawnDistance(), this->GetMaxSpawnDistance());
+				particle.SpawnDistance = Random32::Range.GetRandom(GetMinSpawnDistance(), GetMaxSpawnDistance());
 				particle.Position = particle.SpawnDistance * shapeBasedRandom + Vector3(particleMatrix[3]);
 				particle.Velocity = linearSpeed * shapeBasedRandom;
-				particle.Lifetime = Random32::Range.GetRandom(0.0f,1.0f) * this->GetMaxInitialTimeAlive();
-				particle.Size = Random32::Range.GetRandom(this->GetMinSize(), this->GetMaxSize());
+				particle.Lifetime = Random32::Range.GetRandom(0.0f,1.0f) * GetMaxInitialTimeAlive();
+				particle.Size = Random32::Range.GetRandom(GetMinSize(), GetMaxSize());
 			
 			}
 		}

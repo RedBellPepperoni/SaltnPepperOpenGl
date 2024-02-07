@@ -526,7 +526,7 @@ namespace SaltnPepperEngine
         {
             m_pipeline.textureBindIndex = 0;
 
-            uint32_t shaderId = shader->GetProgramId();
+            uint32_t shaderId = shader->GetNativeHandle();
 
 
             SharedPtr<Mesh>& mesh = m_pipeline.MeshList[element.meshIndex];

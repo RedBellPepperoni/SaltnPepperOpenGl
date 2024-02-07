@@ -270,21 +270,21 @@ namespace SaltnPepperEngine
         void CameraBuffers::Resize(int width, int height)
         {
 
-            this->albedoTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
-            this->albedoTexture->SetFilePath("camera albedo");
-            this->albedoTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            albedoTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
+            albedoTexture->SetFilePath("camera albedo");
+            albedoTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
-            this->normalTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA16);
-            this->normalTexture->SetFilePath("camera normal");
-            this->normalTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            normalTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA16);
+            normalTexture->SetFilePath("camera normal");
+            normalTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
-            this->materialTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
-            this->materialTexture->SetFilePath("camera material");
-            this->materialTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            materialTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
+            materialTexture->SetFilePath("camera material");
+            materialTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
-            this->depthTexture->LoadDepth(width, height, TextureFormat::DEPTH32F);
-            this->depthTexture->SetFilePath("camera depth");
-            this->depthTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            depthTexture->LoadDepth(width, height, TextureFormat::DEPTH32F);
+            depthTexture->SetFilePath("camera depth");
+            depthTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
         }
     }

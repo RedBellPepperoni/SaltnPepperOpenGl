@@ -1,6 +1,3 @@
-// VCustom  Basic Vertex Shader
-#version 450 
-
 
 struct VertexData
 {

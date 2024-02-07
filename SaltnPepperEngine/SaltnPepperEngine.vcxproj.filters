@@ -123,7 +123,7 @@
     <ClInclude Include="Engine\Core\Rendering\Material\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h">
+    <ClInclude Include="Engine\Core\Rendering\Shader\Shader_Old.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\Components\Transform.h">
@@ -318,6 +318,15 @@
     <ClInclude Include="Engine\Core\Rendering\Shader\ComputeShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Rendering\Shader\BaseShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Rendering\Shader\ShaderPreprocessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SaltnPepperEngine.h">
@@ -401,7 +410,7 @@
     <ClCompile Include="Engine\Core\Rendering\Geometry\Primitives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Rendering\Shader\Shader.cpp">
+    <ClCompile Include="Engine\Core\Rendering\Shader\Shader_Old.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Components\Transform.cpp">
@@ -582,6 +591,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Rendering\Shader\ComputeShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Rendering\Shader\BaseShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Rendering\Shader\ShaderPreprocessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Rendering\Shader\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

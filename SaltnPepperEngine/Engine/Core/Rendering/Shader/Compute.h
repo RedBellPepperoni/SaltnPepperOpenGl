@@ -3,7 +3,7 @@
 
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
-#include "Engine/Core/Rendering/Shader/ComputeShader.h";
+#include "Engine/Core/Rendering/Shader/ComputeShader.h"
 
 namespace SaltnPepperEngine
 {

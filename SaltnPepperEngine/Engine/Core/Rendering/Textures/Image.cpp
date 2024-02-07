@@ -150,7 +150,7 @@ namespace SaltnPepperEngine
 		{
 			if (m_isFloatingPoint)
 			{
-				this->SetPixelByte(x, y,
+				SetPixelByte(x, y,
 					(uint8_t)Clamp(r * 255.0f, 0.0f, 255.0f),
 					(uint8_t)Clamp(g * 255.0f, 0.0f, 255.0f),
 					(uint8_t)Clamp(b * 255.0f, 0.0f, 255.0f),
@@ -196,7 +196,7 @@ namespace SaltnPepperEngine
 			std::array<uint8_t, 4> rgba{ 0, 0, 0, 255 };
 			if (m_isFloatingPoint)
 			{
-				auto pixel = this->GetPixelFloat(x, y);
+				auto pixel = GetPixelFloat(x, y);
 				rgba[0] = (uint8_t)Clamp(pixel[0] * 255.0f, 0.0f, 255.0f);
 				rgba[1] = (uint8_t)Clamp(pixel[1] * 255.0f, 0.0f, 255.0f);
 				rgba[2] = (uint8_t)Clamp(pixel[2] * 255.0f, 0.0f, 255.0f);
@@ -242,7 +242,7 @@ namespace SaltnPepperEngine
 
 			if (!m_isFloatingPoint)
 			{
-				auto pixel = this->GetPixelByte(x, y);
+				auto pixel = GetPixelByte(x, y);
 				rgba[0] = (float)pixel[0] / 255.0f;
 				rgba[1] = (float)pixel[1] / 255.0f;
 				rgba[2] = (float)pixel[2] / 255.0f;

@@ -175,7 +175,7 @@ namespace SaltnPepperEngine
 
 
 
-		this->m_window->SetEventCallback(BIND_FN(Application::ProcessEvent));
+		m_window->SetEventCallback(BIND_FN(Application::ProcessEvent));
 
 		// Right now only limited to one scene -> change this to a load scene function later
 		/*m_currentScene->Init();

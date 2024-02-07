@@ -112,7 +112,7 @@ namespace SaltnPepperEngine
 	// and a little bit from Arcane Engine
 	// https://github.com/Ershany/Arcane-Engine/blob/master/Arcane/src/Arcane/Core/Events/Event.h
 
-#define BIND_FN(fn) [this](auto&&... args) -> decltype(auto) {  return this->fn(forward<decltype(args)>(args)...); }
+#define BIND_FN(fn) [this](auto&&... args) -> decltype(auto) {  return fn(forward<decltype(args)>(args)...); }
 
 
 #define BIND_GLOBAL_FN(fn) [](auto&&... args) -> decltype(auto) { return fn(forward<decltype(args)>(args)...); }
