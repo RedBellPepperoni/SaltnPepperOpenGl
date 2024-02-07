@@ -62,14 +62,28 @@ namespace SaltnPepperEngine
 
 		struct LightElement
 		{
+			// The Shader Uniform name
 			std::string uniformName;
+
+			// Color of the Light 
 			Vector3 color;
+
+			// POsition of the transform component
 			Vector3 position;
+
+			// Incase of directional/spot light, the forwward vector
 			Vector3 direction;
 
+			// How bright the light is
 			float intensity;
+
+			// Incase of Point light , the light effective radius
 			float radius;
+
+			// the actual type of light
 			LightType type;
+
+			// Spot light inner and outer angles
 			float innerAngle;
 			float outerAngle;
 		};
@@ -78,20 +92,41 @@ namespace SaltnPepperEngine
 		// Data Structure to define main camera properties
 		struct CameraElement
 		{
-
+			// The frame buffer of the particluar camera
 			SharedPtr<FrameBuffer> gBuffer;
 
+			// the premultiplied View ProjectionMatrix
 			Matrix4 viewProjMatrix;
+
+			// Static view proj matric for the Skybox rendering
 			Matrix4 staticViewProjectMatrix;
 
+			// the position of the camera
 			Vector3 viewPosition;
+
+			// The final render Texture
 			SharedPtr<Texture> outputTexture;
 
-
+			// Defines if the camera should render at all
 			bool shouldRenderToTexture;
+
+			// Camera Details
 			float aspectRatio;
 			bool isOrtho;
 		};
+
+
+		struct ParticleElement
+		{
+			size_t particleBufferOffset;
+			Matrix4 transform;
+			float particleLifetime;
+			float fading;
+			size_t invocationCount;
+			size_t materialIndex;
+			bool isRelative;
+		};
+
 
 		// ================ DEBUG RENDERING ELEMENTS
 
@@ -255,8 +290,8 @@ namespace SaltnPepperEngine
 			void SetSkyboxIntensity(float intensity);
 			const float GetSkyboxIntensity() const;
 
-			const PipeLine& GetPipeLine() const;
-			//PipeLine& GetPipeLine();
+			//const PipeLine& GetPipeLine() const;
+			PipeLine& GetPipeLine();
 
 			// Draws the provided Elements with the provided shader
 			void ForwardPass(SharedPtr<Shader> shader, const CameraElement& camera, const MaterialType type);
@@ -271,6 +306,11 @@ namespace SaltnPepperEngine
 			void ProcessLightElement(Light& light, Transform& transform);
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 
+
+			// Particle Stuff
+			void ComputeParticles(const std::vector<ParticleElement>& particleList, SharedPtr<Shader>& computeShader);
+			void SortParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList);
+			void DrawParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList, SharedPtr<Shader> shader);
 
 			SharedPtr<FrameBuffer>& GetPostProcessFrameBuffer();
 

@@ -172,67 +172,7 @@ namespace SaltnPepperEngine
 				return;
 			}
 
-			//m_renderer->AttachDefaultFrameBuffer();
-
-			// Second Render Pass for Editor
-			 //Make a bool here to not render scene view when the editor is turned off
-
-			//if (Application::GetCurrent().GetEditorActive())
-			//{
-			//	Camera* editorCameraRef = Application::GetCurrent().GetEditorCamera();
-			//	
-			//	SharedPtr<FrameBuffer>& buffer = m_renderer->SecondaryFrameBuffer;
-			//	SharedPtr<Texture>& texture = m_renderer->SecondaryTexture;
-			//	AttachFrameBuffer(buffer);
-			//	//buffer->AttachTexture(texture);
-
-			//	buffer->Validate();
-
-
-			//	m_renderer->Clear();
-
-			//	m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_renderer->GetPipeLine().defaultTextureMap);
-
-			//	m_renderer->ClearRectangleObjectVAO();
-
-			//	//// ===== Post Render Skybox Pass =================
-			//	m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
-
-			//	//// ===== Forward Pass for Opaque Elements ================ 
-			//	m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, MaterialType::Opaque);
-			//	m_renderer->DebugPass(m_editorCameraElement);
-			//	
-			//
-
-			//	
-			//	m_renderer->AttachDefaultFrameBuffer();
-			//	//EndFrame();
-			//}
-			//else
-			//{
-			//	m_renderer->AttachDefaultFrameBuffer();
-			//	m_renderer->Clear();
-
-			//	// Multiple Camera Rendering for actual Game View
-			//	for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
-			//	{
-			//		
-			//	// ===== Post Render Skybox Pass =================
-			//		m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
-
-			//	// ===== Forward Pass for Opaque Elements ================ 
-			//		m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, MaterialType::Opaque);
-
-			//	//m_renderer->DebugPass(cameraElement);
-
-			//	}
-
-			//	m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_renderer->SecondaryTexture);
-
-			//	m_renderer->ClearRectangleObjectVAO();
-
-
-			//}	
+			
 
 			SharedPtr<FrameBuffer>& buffer = m_renderer->SecondaryFrameBuffer;
 			SharedPtr<Texture>& texture = m_renderer->SecondaryTexture;

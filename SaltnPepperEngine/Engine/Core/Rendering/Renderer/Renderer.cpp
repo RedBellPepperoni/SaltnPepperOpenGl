@@ -703,15 +703,15 @@ namespace SaltnPepperEngine
         }
 
 
-        const PipeLine& Renderer::GetPipeLine() const
-        {
-            return m_pipeline;
-        }
-
-      /*  PipeLine& Renderer::GetPipeLine()
+       /* const PipeLine& Renderer::GetPipeLine() const
         {
             return m_pipeline;
         }*/
+
+        PipeLine& Renderer::GetPipeLine()
+        {
+            return m_pipeline;
+        }
 
        
 
@@ -754,6 +754,27 @@ namespace SaltnPepperEngine
             DrawIndices(DrawType::TRIANGLES,  m_pipeline.rectangularObject.IndexCount, 0);
             //DrawVertices(DrawType::TRIANGLES, 0, 6);
 
+        }
+
+        void Renderer::ComputeParticles(const std::vector<ParticleElement>& particleList, SharedPtr<Shader>& computeShader)
+        {
+            if (particleList.empty())
+            {
+                return;
+            }
+
+            computeShader->Bind();
+            computeShader->SetUniform("deltaTime", Min(Time::DeltaTime(), 1.0f / 60.0f));
+
+            
+        }
+
+        void Renderer::SortParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList)
+        {
+        }
+
+        void Renderer::DrawParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList, SharedPtr<Shader> shader)
+        {
         }
 
         SharedPtr<FrameBuffer>& Renderer::GetPostProcessFrameBuffer()

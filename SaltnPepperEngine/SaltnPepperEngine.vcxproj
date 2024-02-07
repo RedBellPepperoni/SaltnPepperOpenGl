@@ -88,6 +88,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Rendering\Shader\Compute.h" />
+    <ClInclude Include="Engine\Core\Rendering\Shader\ComputeShader.h" />
     <ClInclude Include="ContentBrowserWindow.h" />
     <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
@@ -189,6 +191,8 @@
     <ClInclude Include="Engine\Core\Rendering\Buffers\ShaderStorageBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Rendering\Shader\Compute.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Shader\ComputeShader.cpp" />
     <ClCompile Include="ContentBrowserWindow.cpp" />
     <ClCompile Include="Editor\Editor.cpp" />
     <ClCompile Include="Editor\EditorWindow.cpp" />

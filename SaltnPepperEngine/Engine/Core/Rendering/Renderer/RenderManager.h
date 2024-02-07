@@ -69,6 +69,9 @@ namespace SaltnPepperEngine
 
 			void SetWindowSize(Vector2Int size);
 
+			// Particle Stuff
+			
+
 			UniquePtr<Renderer>& GetRenderer();
 			SharedPtr<ShaderLibrary>& GetShaderLibrary();
 			SharedPtr<MaterialLibrary>& GetMaterialLibrary();
