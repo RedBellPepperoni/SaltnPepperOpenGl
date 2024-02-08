@@ -5,6 +5,7 @@
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Material/Material.h"
+#include "Engine/Core/Rendering/Camera/CameraController.h"
 #include "Engine/Utils/UniqueId/UniqueId.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Logging/Log.h"
@@ -196,6 +197,86 @@ namespace SaltnPepperEngine
 
 			std::string Path;
 			
+		};
+
+		struct CameraControllerComponent
+		{
+			enum class ControllerType : uint8_t
+			{
+				FLYCAM,
+				THIRDPERSON,
+				FIRSTPERSON,
+				CUSTOM
+			};
+
+
+			CameraControllerComponent();
+			CameraControllerComponent(ControllerType type);
+		
+
+			void SetControllerType(ControllerType type);
+
+			SharedPtr<CameraController>& GetController();
+			const ControllerType& GetControllerType();
+
+			static std::string CameraControllerTypeToString(ControllerType type)
+			{
+				switch (type)
+				{
+				case ControllerType::FLYCAM: return "Fly";
+					break;
+				case ControllerType::THIRDPERSON: return "ThirdPerson";
+					break;
+				case ControllerType::FIRSTPERSON: return "FirstPerson";
+					break;
+				case ControllerType::CUSTOM: return "Custom";
+					break;
+				}
+				
+				return "Custom";
+			}
+
+			static ControllerType StringToControllerType(const std::string& type)
+			{
+				if(type == "Fly")
+				{
+					return ControllerType::FLYCAM; 
+				}
+				else if (type == "ThirdPerson")
+				{
+					return ControllerType::THIRDPERSON;
+				}
+				else if (type == "FirstPerson")
+				{
+					return ControllerType::FIRSTPERSON;
+				}
+
+
+				LOG_ERROR("Unsupported Camera controller {0}", type);
+				return ControllerType::CUSTOM;
+			}
+
+			template <typename Archive>
+			void save(Archive& archive) const
+			{
+				archive(cereal::make_nvp("ControllerType", m_type));
+			}
+
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				ControllerType controllertype;
+				archive(cereal::make_nvp("ControllerType", controllertype));
+				SetControllerType(controllertype);
+			}
+
+		
+		private:
+
+			ControllerType m_type = ControllerType::CUSTOM;
+			SharedPtr<CameraController> m_controllerRef;
+
+
 		};
 
 

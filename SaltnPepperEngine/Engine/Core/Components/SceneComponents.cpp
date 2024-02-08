@@ -3,6 +3,7 @@
 #include "Engine/Core/Resources/ResourceManager.h"
 #include "Engine/Core/Rendering/Geometry/Primitives.h"
 #include "Engine/Core/System/Application/Application.h"
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 
 namespace SaltnPepperEngine
 {
@@ -118,6 +119,45 @@ namespace SaltnPepperEngine
 		void ModelComponent::LoadPrimitive(PrimitiveType type)
 		{
 			//m_handle = Factory<Model>::Create(type);
+		}
+
+		CameraControllerComponent::CameraControllerComponent()
+			: m_type(ControllerType::CUSTOM)
+		{
+		}
+
+		CameraControllerComponent::CameraControllerComponent(ControllerType type)
+		{
+			SetControllerType(type);
+		}
+
+		void CameraControllerComponent::SetControllerType(ControllerType type)
+		{
+			m_type = type;
+
+			switch (type)
+			{
+			case ControllerType::FLYCAM: m_controllerRef = MakeShared<FlyCameraController>(); 
+				break;
+			case ControllerType::THIRDPERSON:
+				break;
+			case ControllerType::FIRSTPERSON:
+				break;
+			case ControllerType::CUSTOM:
+				break;
+			default:
+				break;
+			}
+		}
+
+		SharedPtr<CameraController>& CameraControllerComponent::GetController()
+		{
+			return m_controllerRef;
+		}
+
+		const CameraControllerComponent::ControllerType& CameraControllerComponent::GetControllerType()
+		{
+			return m_type;
 		}
 
 	}

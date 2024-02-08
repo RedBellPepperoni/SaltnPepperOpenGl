@@ -71,23 +71,6 @@ namespace SaltnPepperEngine
 
 	void Scene::Init()
 	{
-		//Entity cameraEntity = GetEntityManager()->Create("MainCamera");
-		//Camera* camera = &cameraEntity.AddComponent<Camera>();
-		//Transform* transform = &cameraEntity.AddComponent<Transform>();
-
-		//
-
-		//////AudioListener* listener = &cameraEntity.AddComponent<Audio::AudioListener>(transform);
-
-
-		//transform->SetPosition(Vector3(2.2f, 0.97f, 0.65f));
-		//transform->SetEularRotation(Vector3(-45.0f, 3.6f, 0.0f));
-
-		//CameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
-		//controller.SetCamera(camera);
-
-		//cameraEntity.AddComponent<DefaultCameraController>(DefaultCameraController::CameraType::Orbital);
-
 
 		//LuaManager::GetInstance().OnInit(this);
 
@@ -127,7 +110,6 @@ namespace SaltnPepperEngine
 
 
 		if (!Application::GetCurrent().GetEditorActive())
-
 		{
 			if (!cameraControllerView.IsEmpty())
 			{
