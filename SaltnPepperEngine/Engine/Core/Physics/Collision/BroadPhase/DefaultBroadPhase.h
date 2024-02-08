@@ -21,7 +21,7 @@ namespace SaltnPepperEngine
 			virtual ~DefaultBroadPhase();
 
 
-			void FindCollisionPairs(RigidBody3D** bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs) override;
+			void FindCollisionPairs(SharedPtr<RigidBody3D>* bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs) override;
 
 			void DebugDraw() override;
 

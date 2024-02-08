@@ -4,6 +4,7 @@
 #include "Engine/Core/Rendering/Geometry/Primitives.h"
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+#include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 
 namespace SaltnPepperEngine
 {
@@ -160,6 +161,31 @@ namespace SaltnPepperEngine
 			return m_type;
 		}
 
-	}
+		RigidBodyComponent::RigidBodyComponent()
+		{
+		}
+
+		RigidBodyComponent::RigidBodyComponent(const RigidBodyComponent& other)
+		{
+		}
+
+		RigidBodyComponent::RigidBodyComponent(const RigidBodyProperties& properties)
+		{
+		}
+
+		RigidBodyComponent::~RigidBodyComponent()
+		{
+		}
+
+		void RigidBodyComponent::OnImgui()
+		{
+		}
+
+		SharedPtr<RigidBody3D>& RigidBodyComponent::GetRigidBody()
+		{
+			return m_rigidBody;
+		}
+
+}
 }
 

@@ -67,7 +67,10 @@ namespace SaltnPepperEngine
 			void UpdateRigidBodyCache();
 
 
-			RigidBody3D* CreateRigidBody(Entity& entity, PhysicsProperties properties);
+			//RigidBody3D* CreateRigidBody(Entity& entity, PhysicsProperties properties);
+
+			SharedPtr<RigidBody3D>& CreateRigidBody(const PhysicsProperties properties);
+			void DeleteRigidBody(SharedPtr<RigidBody3D>& body );
 
 			void DebugDraw();
 
@@ -82,7 +85,7 @@ namespace SaltnPepperEngine
 
 			void UpdateAllBodies();
 
-			void UpdateRigidBody(RigidBody3D* body) const;
+			void UpdateRigidBody(SharedPtr<RigidBody3D>& body) const;
 
 			void SolveManifolds();
 
@@ -95,9 +98,8 @@ namespace SaltnPepperEngine
 			uint32_t m_positionIterations = 1;
 			uint32_t m_velocityIterations = 50;
 
-
-			std::vector<RigidBody3D*> m_rigidBodies{};
-			std::vector<Transform*> m_transforms{};
+			// The Storage for Rigidbody pointers for faster calculations
+			std::vector<SharedPtr<RigidBody3D>> m_rigidBodies{};
 
 			std::vector<CollisionPair> m_broadPhasePairs;
 

@@ -22,7 +22,7 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		void OctreeBroadPhase::FindCollisionPairs(RigidBody3D** bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs)
+		void OctreeBroadPhase::FindCollisionPairs(SharedPtr<RigidBody3D>* bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs)
 		{
 			m_currentPoolIndex = 0;
 			m_leafCount = 0;
@@ -35,7 +35,7 @@ namespace SaltnPepperEngine
 
 			for (uint32_t index = 0; index < count; index++)
 			{
-				RigidBody3D* physicsBody = bodies[index];
+				SharedPtr<RigidBody3D>& physicsBody = bodies[index];
 
 				if (physicsBody && physicsBody->GetCollider())
 				{
@@ -127,7 +127,7 @@ namespace SaltnPepperEngine
 				// Add objects inside node
 				for (uint32_t i = 0; i < node.PhysicsObjectCount; i++)
 				{
-					RigidBody3D* physicsObject = node.PhysicsObjects[i];
+					SharedPtr<RigidBody3D> physicsObject = node.PhysicsObjects[i];
 
 					if (!physicsObject)
 						continue;

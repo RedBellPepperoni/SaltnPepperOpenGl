@@ -1,5 +1,5 @@
 #include "DefaultBroadPhase.h"
-
+#include "Engine/Core/Memory/MemoryDefinitions.h"
 namespace SaltnPepperEngine
 {
 	namespace Physics
@@ -17,7 +17,7 @@ namespace SaltnPepperEngine
       
 
 
-		void DefaultBroadPhase::FindCollisionPairs(RigidBody3D** bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs)
+		void DefaultBroadPhase::FindCollisionPairs(SharedPtr<RigidBody3D>* bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs)
 		{
 
 

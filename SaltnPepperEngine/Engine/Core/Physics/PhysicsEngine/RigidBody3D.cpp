@@ -1,5 +1,8 @@
 #include "RigidBody3D.h"
 #include "Engine/Core/Physics/Collision/Colliders/Collider.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
 #include "Engine/Utils/Logging/Log.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
@@ -178,11 +181,11 @@ namespace SaltnPepperEngine
 			m_transformDirty = true;
 			m_isStationary = false;
 		}
-		bool RigidBody3D::OnCollisionEvent(RigidBody3D* bodyFirst, const Vector3& contactPoint)
+		bool RigidBody3D::OnCollisionEvent(RigidBody3D* bodyFirst, RigidBody3D* bodySecond)
 		{
 			// Work on this
 
-			const bool handleCollision = (m_OnCollisionCallback) ? m_OnCollisionCallback(bodyFirst, contactPoint) : true;
+			const bool handleCollision = (m_OnCollisionCallback) ? m_OnCollisionCallback(bodyFirst, bodySecond) : true;
 
 			if (handleCollision)
 			{
@@ -195,10 +198,15 @@ namespace SaltnPepperEngine
 
 		void RigidBody3D::OnCollisionManifoldCallback(RigidBody3D* bodyFirst, RigidBody3D* bodySecond, Manifold* manifold)
 		{
-			// Send a callback for each manifold
-			for (ManifoldCollisionCallback callback : m_onCollisionManifoldCallbacks)
+			//// Send a callback for each manifold
+			//for (ManifoldCollisionCallback callback : m_onCollisionManifoldCallbacks)
+			//{
+			//	callback(bodyFirst, bodySecond, manifold);
+			//}
+
+			for (auto it = m_onCollisionManifoldCallbacks.begin(); it != m_onCollisionManifoldCallbacks.end(); ++it)
 			{
-				callback(bodyFirst, bodySecond, manifold);
+				it->operator()(bodyFirst, bodySecond, manifold);
 			}
 
 		}
@@ -213,13 +221,25 @@ namespace SaltnPepperEngine
 		
 		void RigidBody3D::SetCollider(ColliderType type)
 		{
+			switch (type)
+			{
+			case Physics::BOX: SetCollider(MakeShared<BoxCollider>());
+				break;
+			case Physics::SPHERE:SetCollider(MakeShared<SphereCollider>());
+				break;
+			case Physics::CAPSULE:SetCollider(MakeShared<CapsuleCollider>());
+				break;
+			default: LOG_ERROR("Unsupported Collider");
+				break;
+			}
 		}
 
 
-		SharedPtr<Collider> RigidBody3D::GetCollider()
+		SharedPtr<Collider>& RigidBody3D::GetCollider()
 		{
 			return m_collider;
 		}
+
 		uint64_t RigidBody3D::GetUniqueId() const
 		{
 			return m_Id.GetId();

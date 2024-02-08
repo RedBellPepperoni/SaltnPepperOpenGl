@@ -8,6 +8,7 @@
 #include "Engine/Core/Physics/Collision/NarrowPhase/Manifold.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 #include <functional>
+#include <cereal/cereal.hpp>
 
 namespace SaltnPepperEngine
 {
@@ -18,6 +19,8 @@ namespace SaltnPepperEngine
 		class Collider;
 		enum ColliderType : uint8_t;
 		class RigidBody3D;
+		class PhysicsEngine;
+		class Manifold;
 
 		//typedef  PhysicsCollisionCallback;
 
@@ -67,7 +70,7 @@ namespace SaltnPepperEngine
 
 		
 		// Callback for Trigger Checks
-		typedef std::function<bool(RigidBody3D* ,Vector3)> PhysicsCollisionCallback;
+		typedef std::function<bool(RigidBody3D* this_obj, RigidBody3D* colliding_obj)> PhysicsCollisionCallback;
 
 		// Callback for Colision response check
 		typedef std::function<void(RigidBody3D*, RigidBody3D*, Manifold*)> ManifoldCollisionCallback;
@@ -87,7 +90,6 @@ namespace SaltnPepperEngine
 			const Vector3& GetForce() const;
 
 			const Quaternion& GetRotation() const;
-
 			const Matrix4& GetTransform() const;
 
 			const BoundingBox GetAABB();
@@ -104,15 +106,15 @@ namespace SaltnPepperEngine
 			void SetForce(const Vector3& newForce);
 			void SetRotation(const Quaternion& newRot);
 			
-			//void SetOnCollisionCallback(PhysicsCollisionCallback& callback) { m_OnCollisionCallback = callback; }
-			bool OnCollisionEvent(RigidBody3D* bodyFirst, const Vector3& contactPoint);
+			void SetOnCollisionCallback(PhysicsCollisionCallback& callback) { m_OnCollisionCallback = callback; }
+			bool OnCollisionEvent(RigidBody3D* bodyFirst, RigidBody3D* bodySecond);
 
 			void OnCollisionManifoldCallback(RigidBody3D* bodyFirst, RigidBody3D* bodySecond, Manifold* manifold);
 
 
 			void SetCollider(const SharedPtr<Collider>& collider);
 			void SetCollider(ColliderType type);
-			SharedPtr<Collider> GetCollider();
+			SharedPtr<Collider>& GetCollider();
 
 			uint64_t GetUniqueId() const;
 
@@ -141,7 +143,34 @@ namespace SaltnPepperEngine
 			const float GetStaionaryThresholdSquared() const;
 
 
+
 			void DebugDraw(uint64_t flags);
+
+
+			/*template <typename Archive>
+			void save(Archive& archive) const
+			{
+				auto shape = std::unique_ptr<Collider>(m_collider.get());
+
+				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("Mass", 1.0f / m_invMass),  cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity), cereal::make_nvp("Collider", shape), cereal::make_nvp("Trigger", isTrigger));
+				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
+				shape.release();
+			}
+
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				auto shape = std::unique_ptr<Collider>(m_collider.get());
+
+				archive(cereal::make_nvp(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("Mass", 1.0f / m_invMass), cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity), cereal::make_nvp("Collider", shape), cereal::make_nvp("Trigger", isTrigger));
+
+				m_CollisionShape = SharedPtr<Collider>(shape.get());
+
+				CollisionShapeUpdated();
+				shape.release();
+
+				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
+			}*/
 
 		protected:
 
@@ -216,7 +245,6 @@ namespace SaltnPepperEngine
 			bool m_AABBDirty = true;
 
 			CollisionTag m_tag;
-
 
 			bool isColliding = false;
 		};

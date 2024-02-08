@@ -1,6 +1,6 @@
 #include "PhysicsEngine.h"
 #include "Engine/Core/Scene/Scene.h"
-//#include "Engine/Core/Components/RigidBodyComponent.h"
+#include "Engine/Core/Components/SceneComponents.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Physics/Collision/Broadphase/OctreeBroadPhase.h"
@@ -12,7 +12,7 @@
 
 namespace SaltnPepperEngine
 {
-	//using Components::RigidBodyComponent;
+	using Components::RigidBodyComponent;
 	using Components::Transform;
 
 	namespace Physics
@@ -57,26 +57,19 @@ namespace SaltnPepperEngine
 
 		void PhysicsEngine::Update(const float deltatime)
 		{
-			//m_rigidBodies.clear();
-
 			// Dont update if paused
 			if (m_paused)
 			{
 				return;
 			}
-			
-			
 
 			if (m_rigidBodies.empty())
 			{
-				// nothing to Update
 				return;
 			}
 
-			
-
-
 			m_debugStats.rigidBodyCount = (uint32_t)m_rigidBodies.size();
+			
 			
 			m_timeStepCounter += deltatime;
 
@@ -110,27 +103,9 @@ namespace SaltnPepperEngine
 				return;
 			}
 
+		    entt::registry& registry = m_scene->GetRegistry();
 
-			if(m_transforms.empty() || m_rigidBodies.empty())
-			{
-				return;
-			}
-
-
-			// Optimised this step by a lot
-			for (int index = 0; index < m_transforms.size(); index ++)
-			{
-				RigidBody3D* body = m_rigidBodies[index];
-
-				if (!body->GetIsStatic())
-				{
-					m_transforms[index]->SetPosition(body->GetPosition());
-
-					m_transforms[index]->SetRotation(body->GetRotation());
-
-				}
-
-			}
+			auto group = registry.group<RigidBodyComponent>(entt::get<Transform>);
 		
 
 		}
@@ -161,57 +136,78 @@ namespace SaltnPepperEngine
 			return m_physicsTimeStep;
 		}
 
+		// Too Expensive -> DO not Use
 		// Call this when you create or Delete a rigidbody
 		void PhysicsEngine::UpdateRigidBodyCache()
 		{
 
 			//m_rigidBodies.clear();
 
-			if (!m_scene)
-			{
-				return;
-			}
+			//if (!m_scene)
+			//{
+			//	return;
+			//}
 
-			ComponentView<RigidBody3D> rigidBodyView = m_scene->GetEntityManager()->GetComponentsOfType<RigidBody3D>();
+			//ComponentView<RigidBody3D> rigidBodyView = m_scene->GetEntityManager()->GetComponentsOfType<RigidBody3D>();
 
 
-			for (Entity rigidbodyEntity : rigidBodyView)
-			{			
+			//for (Entity rigidbodyEntity : rigidBodyView)
+			//{			
 
-				RigidBody3D* rigidBody = &rigidbodyEntity.GetComponent<RigidBody3D>();
-				Transform* transform = &rigidbodyEntity.GetComponent<Transform>();
+			//	RigidBody3D* rigidBody = &rigidbodyEntity.GetComponent<RigidBody3D>();
+			//	Transform* transform = &rigidbodyEntity.GetComponent<Transform>();
 
-				// get all the rigidBodies
-				m_rigidBodies.push_back(rigidBody);
-				m_transforms.push_back(transform);
+			//	// get all the rigidBodies
+			//	/*m_rigidBodies.push_back(rigidBody);
+			//	m_transforms.push_back(transform);*/
 
-			}
+
+
+			//}
 
 			
 
 		}
 
-		RigidBody3D* PhysicsEngine::CreateRigidBody(Entity& entity, PhysicsProperties properties)
+		//RigidBody3D* PhysicsEngine::CreateRigidBody(Entity& entity, PhysicsProperties properties)
+		//{
+
+		//	RigidBody3D* body = &entity.AddComponent<RigidBody3D>(properties);
+		//	Transform* transform = &entity.GetComponent<Transform>();
+
+		//	body->SetPosition(properties.position);
+
+		//	transform->SetPosition(properties.position);
+		//	transform->SetRotation(properties.rotation);
+		//	transform->SetScale(Vector3(1.0f));
+
+		//	/*if (!m_rigidBodies.empty())
+		//	{
+		//		m_rigidBodies.clear();
+		//		m_transforms.clear();
+		//	}*/
+
+
+		//	m_rigidBodyList.emplace(body, transform);
+
+
+		//	//UpdateRigidBodyCache();
+
+		//	return body;
+		//}
+
+		SharedPtr<RigidBody3D>& PhysicsEngine::CreateRigidBody(const PhysicsProperties properties)
 		{
-
-			RigidBody3D* body = &entity.AddComponent<RigidBody3D>(properties);
-			Transform* transform = &entity.AddComponent<Transform>();
-
-			body->SetPosition(properties.position);
-
-			transform->SetPosition(properties.position);
-			transform->SetRotation(properties.rotation);
-			transform->SetScale(Vector3(1.0f));
-
-			if (!m_rigidBodies.empty())
-			{
-				m_rigidBodies.clear();
-				m_transforms.clear();
-			}
-
-			UpdateRigidBodyCache();
-
+			// Create a new Rigidbody pointer and add it to the List
+			SharedPtr<RigidBody3D> body = MakeShared<RigidBody3D>(properties);
+			m_rigidBodies.push_back(body);
 			return body;
+		}
+
+		void PhysicsEngine::DeleteRigidBody(SharedPtr<RigidBody3D>& body)
+		{
+			//Compares the pointers and removes the element from the vector
+			m_rigidBodies.erase(std::remove(m_rigidBodies.begin(), m_rigidBodies.end(), body), m_rigidBodies.end());
 		}
 
 
@@ -275,8 +271,7 @@ namespace SaltnPepperEngine
 			}
 
 			
-			m_rigidBodies;
-
+			
 			// get the potential Collison pairs
 			m_broadPhaseDetection->FindCollisionPairs(m_rigidBodies.data(), (uint32_t)m_rigidBodies.size(), m_broadPhasePairs);
 
@@ -297,8 +292,8 @@ namespace SaltnPepperEngine
 
 			for (CollisionPair& pair : m_broadPhasePairs)
 			{
-				Collider* colliderOne = pair.firstBody->GetCollider().get();
-				Collider* colliderTwo = pair.secondBody->GetCollider().get();
+				SharedPtr<Collider>& colliderOne = pair.firstBody->GetCollider();
+				SharedPtr<Collider>& colliderTwo = pair.secondBody->GetCollider();
 
 
 				if (colliderOne && colliderTwo)
@@ -310,25 +305,25 @@ namespace SaltnPepperEngine
 					pair.secondBody->isColliding = false;
 
 
-					if (NarrowPhase::GetInstance().DetectCollision(pair.firstBody, pair.secondBody, colliderOne, colliderTwo, &coldata))
+					if (NarrowPhase::GetInstance().DetectCollision(pair.firstBody, pair.secondBody, colliderOne.get(), colliderTwo.get(), &coldata))
 					{
-						const bool callfirst = pair.firstBody->OnCollisionEvent(pair.secondBody, coldata.pointOnPlane);
-						const bool callSecond = pair.secondBody->OnCollisionEvent(pair.firstBody, coldata.pointOnPlane);
+						const bool callfirst = pair.firstBody->OnCollisionEvent(pair.secondBody, pair.secondBody);
+						const bool callSecond = pair.secondBody->OnCollisionEvent(pair.firstBody, pair.secondBody);
 
-						pair.firstBody->isColliding = true;
-						pair.secondBody->isColliding = true;
+						//pair.firstBody->isColliding = true;
+						//pair.secondBody->isColliding = true;
 
 
 
 						// Only Have collision Responce if none of the bodys have a response event
-						/*if (callfirst && callSecond)
+						if (callfirst && callSecond)
 						{
 
 							m_manifoldLock.lock();
 							Manifold& manifold = m_manifoldList.emplace_back();
 							manifold.Initilize(pair.firstBody, pair.secondBody);
 
-							if (NarrowPhase::GetInstance().BuildCollisionManifold(pair.firstBody, pair.secondBody, colliderOne, colliderTwo, coldata, &manifold))
+							if (NarrowPhase::GetInstance().BuildCollisionManifold(pair.firstBody, pair.secondBody, colliderOne.get(), colliderTwo.get(), coldata, &manifold))
 							{
 								pair.firstBody->OnCollisionManifoldCallback(pair.firstBody, pair.secondBody, &manifold);
 								pair.secondBody->OnCollisionManifoldCallback(pair.firstBody, pair.secondBody, &manifold);
@@ -346,7 +341,7 @@ namespace SaltnPepperEngine
 
 							m_manifoldLock.unlock();
 
-						}*/
+						}
 
 
 						
@@ -372,7 +367,7 @@ namespace SaltnPepperEngine
 			m_debugStats.rigidBodyCount = 0;
 
 
-			for (RigidBody3D* body : m_rigidBodies)
+			for (SharedPtr<RigidBody3D>& body : m_rigidBodies)
 			{
 				UpdateRigidBody(body);
 
@@ -388,7 +383,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		void PhysicsEngine::UpdateRigidBody(RigidBody3D* body) const
+		void PhysicsEngine::UpdateRigidBody(SharedPtr<RigidBody3D>& body) const
 		{
 			
 

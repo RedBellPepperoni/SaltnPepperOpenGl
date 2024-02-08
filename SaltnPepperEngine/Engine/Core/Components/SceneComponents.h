@@ -6,6 +6,7 @@
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
+
 #include "Engine/Utils/UniqueId/UniqueId.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Logging/Log.h"
@@ -15,7 +16,14 @@
 namespace SaltnPepperEngine
 {
 
+	namespace Physics
+	{
+		struct RigidBodyProperties;
+		class RigidBody3D;
+	}
 
+	using Physics::RigidBody3D;
+	using Physics::RigidBodyProperties;
 
 	namespace Components
 	{
@@ -280,7 +288,37 @@ namespace SaltnPepperEngine
 		};
 
 
+		class RigidBodyComponent
+		{
+		public:
+			RigidBodyComponent();
+			RigidBodyComponent(const RigidBodyComponent& other);
+			RigidBodyComponent(const RigidBodyProperties& properties);
+			~RigidBodyComponent();
 
+			void OnImgui();
+
+			SharedPtr<RigidBody3D>& GetRigidBody();
+
+
+		/*	template <typename Archive>
+			void save(Archive& archive) const
+			{
+				archive(*(m_rigidBody)); 
+			}
+
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				m_rigidBody = MakeShared<RigidBody3D>();
+				archive(*(m_rigidBody));
+			}*/
+
+		private:
+
+			SharedPtr<RigidBody3D> m_rigidBody;
+			
+		};
 	}
 
 }
