@@ -40,7 +40,19 @@ namespace SaltnPepperEngine
 
 			float GetSize() const override;
 
+			template <typename Archive>
+			void save(Archive& archive) const
+			{
+				archive(m_radius);
+			}
 
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				archive(m_radius);
+				m_transform = Scale(Matrix4(1.0), Vector3(m_radius * 2.0f));
+				m_type = ColliderType::SPHERE;
+			}
 
 		protected:
 

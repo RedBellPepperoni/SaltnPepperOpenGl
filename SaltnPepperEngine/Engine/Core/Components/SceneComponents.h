@@ -301,7 +301,7 @@ namespace SaltnPepperEngine
 			SharedPtr<RigidBody3D>& GetRigidBody();
 
 
-		/*	template <typename Archive>
+			template <typename Archive>
 			void save(Archive& archive) const
 			{
 				archive(*(m_rigidBody)); 
@@ -312,7 +312,7 @@ namespace SaltnPepperEngine
 			{
 				m_rigidBody = MakeShared<RigidBody3D>();
 				archive(*(m_rigidBody));
-			}*/
+			}
 
 		private:
 

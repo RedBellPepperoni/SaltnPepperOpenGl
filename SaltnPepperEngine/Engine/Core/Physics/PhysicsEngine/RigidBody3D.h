@@ -147,7 +147,7 @@ namespace SaltnPepperEngine
 			void DebugDraw(uint64_t flags);
 
 
-			/*template <typename Archive>
+			template <typename Archive>
 			void save(Archive& archive) const
 			{
 				auto shape = std::unique_ptr<Collider>(m_collider.get());
@@ -162,15 +162,15 @@ namespace SaltnPepperEngine
 			{
 				auto shape = std::unique_ptr<Collider>(m_collider.get());
 
-				archive(cereal::make_nvp(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("Mass", 1.0f / m_invMass), cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity), cereal::make_nvp("Collider", shape), cereal::make_nvp("Trigger", isTrigger));
+				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("Mass", 1.0f / m_invMass), cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity), cereal::make_nvp("Collider", shape), cereal::make_nvp("Trigger", isTrigger));
 
-				m_CollisionShape = SharedPtr<Collider>(shape.get());
+				m_collider = SharedPtr<Collider>(shape.get());
 
-				CollisionShapeUpdated();
+				ColliderUpdated();
 				shape.release();
 
 				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
-			}*/
+			}
 
 		protected:
 

@@ -131,6 +131,22 @@ namespace SaltnPepperEngine
 			}
 
 
+			template <typename Archive>
+			void save(Archive& archive) const
+			{
+				archive(m_HalfDimensions);
+			}
+
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				archive(m_HalfDimensions);
+
+				m_transform = glm::scale(glm::mat4(1.0), m_HalfDimensions);
+				m_type = ColliderType::MESH;
+			}
+
+
 		protected:
 			Vector3 m_HalfDimensions;
 			BoundingBox m_BoundingBox;

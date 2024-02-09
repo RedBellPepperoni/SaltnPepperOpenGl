@@ -3,6 +3,7 @@
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/Physics/Collision/Colliders/ConvexHull.h"
 
+
 namespace SaltnPepperEngine
 {
 	namespace Physics
@@ -75,6 +76,28 @@ namespace SaltnPepperEngine
             {
                 return m_CuboidHalfDimensions.x;
             }
+
+
+            template <typename Archive>
+            void save(Archive& archive) const
+            {
+                archive(m_CuboidHalfDimensions);
+            }
+
+            template <typename Archive>
+            void load(Archive& archive)
+            {
+                archive(m_CuboidHalfDimensions);
+
+                m_transform = Scale(Matrix4(1.0), m_CuboidHalfDimensions);
+                m_type = ColliderType::BOX;
+
+                if (m_CubeHull->GetNumVertices() == 0)
+                {
+                    ConstructCubeHull();
+                }
+            }
+
 
         protected:
             // Constructs the static cube hull

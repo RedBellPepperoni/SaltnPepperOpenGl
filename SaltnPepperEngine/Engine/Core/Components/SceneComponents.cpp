@@ -6,6 +6,7 @@
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 
+
 namespace SaltnPepperEngine
 {
 	namespace Components
@@ -163,6 +164,7 @@ namespace SaltnPepperEngine
 
 		RigidBodyComponent::RigidBodyComponent()
 		{
+			//m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->
 		}
 
 		RigidBodyComponent::RigidBodyComponent(const RigidBodyComponent& other)
