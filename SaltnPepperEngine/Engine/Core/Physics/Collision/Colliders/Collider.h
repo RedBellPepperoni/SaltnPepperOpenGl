@@ -85,13 +85,13 @@ namespace SaltnPepperEngine
 			template <class Archive>
 			void load(Archive& archive)
 			{
-				LOG_TRACE("Loading abstract CollisionShape");
+				LOG_ERROR("Loading abstract CollisionShape");
 			}
 
 			template <class Archive>
 			void save(Archive& archive) const
 			{
-				LOG_TRACE("Serialising abstract CollisionShape");
+				LOG_ERROR("Serialising abstract CollisionShape");
 			}
 
 

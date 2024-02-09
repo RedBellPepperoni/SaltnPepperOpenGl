@@ -13,17 +13,19 @@
 #include <cereal/cereal.hpp>
 
 
+
+
 namespace SaltnPepperEngine
 {
 
 	namespace Physics
 	{
-		struct RigidBodyProperties;
+		struct PhysicsProperties;
 		class RigidBody3D;
 	}
 
 	using Physics::RigidBody3D;
-	using Physics::RigidBodyProperties;
+	using Physics::PhysicsProperties;
 
 	namespace Components
 	{
@@ -293,18 +295,19 @@ namespace SaltnPepperEngine
 		public:
 			RigidBodyComponent();
 			RigidBodyComponent(const RigidBodyComponent& other);
-			RigidBodyComponent(const RigidBodyProperties& properties);
+			RigidBodyComponent(const PhysicsProperties& properties);
 			~RigidBodyComponent();
 
 			void OnImgui();
 
-			SharedPtr<RigidBody3D>& GetRigidBody();
+			SharedPtr<RigidBody3D> GetRigidBody();
 
 
 			template <typename Archive>
 			void save(Archive& archive) const
 			{
 				archive(*(m_rigidBody)); 
+				//archive(cereal::make_nvp("Body",m_rigidBody));
 			}
 
 			template <typename Archive>
@@ -312,11 +315,13 @@ namespace SaltnPepperEngine
 			{
 				m_rigidBody = MakeShared<RigidBody3D>();
 				archive(*(m_rigidBody));
+				//archive(cereal::make_nvp("Body", m_rigidBody));
 			}
 
 		private:
 
-			SharedPtr<RigidBody3D> m_rigidBody;
+			SharedPtr<RigidBody3D> m_rigidBody = nullptr;
+			bool m_ownBody = false;
 			
 		};
 	}

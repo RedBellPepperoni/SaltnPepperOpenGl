@@ -5,10 +5,13 @@
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
+#include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
 
 
 namespace SaltnPepperEngine
 {
+	//using namespace Physics;
+
 	namespace Components
 	{
 
@@ -164,16 +167,26 @@ namespace SaltnPepperEngine
 
 		RigidBodyComponent::RigidBodyComponent()
 		{
-			//m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->
+			/*PhysicsProperties properties;
+			properties.position = Vector3(0.0f);
+			properties.rotation = Quaternion();
+			properties.mass = 10.f;
+			properties.elasticity = */
+
+			m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->CreateRigidBody();
 		}
 
 		RigidBodyComponent::RigidBodyComponent(const RigidBodyComponent& other)
 		{
+			m_rigidBody = other.m_rigidBody;
+			m_ownBody = other.m_ownBody;
 		}
 
-		RigidBodyComponent::RigidBodyComponent(const RigidBodyProperties& properties)
+		RigidBodyComponent::RigidBodyComponent(const PhysicsProperties& properties)
 		{
+			m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->CreateRigidBody(properties);
 		}
+
 
 		RigidBodyComponent::~RigidBodyComponent()
 		{
@@ -183,7 +196,7 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		SharedPtr<RigidBody3D>& RigidBodyComponent::GetRigidBody()
+		SharedPtr<RigidBody3D> RigidBodyComponent::GetRigidBody()
 		{
 			return m_rigidBody;
 		}

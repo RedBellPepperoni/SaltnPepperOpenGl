@@ -65,7 +65,7 @@ namespace SaltnPepperEngine
 
 		
 	
-		m_physicsSystem->UpdateScene(m_currentScene);
+		//m_physicsSystem->UpdateScene(m_currentScene);
 		
 
 
@@ -177,15 +177,10 @@ namespace SaltnPepperEngine
 
 		m_window->SetEventCallback(BIND_FN(Application::ProcessEvent));
 
-		// Right now only limited to one scene -> change this to a load scene function later
-		/*m_currentScene->Init();
+		
 
-		m_mainCameraIndex = 0;
-
-		m_physicsSystem->Init();
-		m_physicsSystem->UpdateScene(m_currentScene.get());*/
-
-		m_physicsSystem->SetPaused(false);
+		//m_physicsSystem->SetPaused(false);
+		//bool testPause = m_physicsSystem->GetIsPaused();
 
 		m_renderManager->Init();
 
@@ -269,6 +264,8 @@ namespace SaltnPepperEngine
 
 				// Do all the ImGUI Rendering before Swapping the buffers
 				m_imguiManager->OnRender(GetCurrentScene());
+
+				m_physicsSystem->DebugDraw();
 			}
 
 			// Swapping the framebuffers 
@@ -277,7 +274,7 @@ namespace SaltnPepperEngine
 
 			// Do the Physics Update here
 			m_physicsSystem->Update(m_deltaTime);
-			m_physicsSystem->UpdateECSTransforms();
+			m_physicsSystem->UpdateECSTransforms(m_sceneManager->GetCurrentScene());
 //
 			
 
@@ -290,7 +287,12 @@ namespace SaltnPepperEngine
 				//m_editor->Toggle(m_editorVisible);
 			}
 
-
+			if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::G))
+			{
+				bool testPause = m_physicsSystem->GetIsPaused();
+				m_physicsSystem->SetPaused(!testPause);
+				
+			}
 
 
 

@@ -27,6 +27,7 @@
 namespace SaltnPepperEngine
 {
 	using namespace Physics;
+	using namespace Components;
 
 	namespace Editor
 	{
@@ -225,11 +226,11 @@ namespace SaltnPepperEngine
 							{
 								transform->SetLocalMatrix(model);
 
-								RigidBody3D* rigidBody3DComponent = registry.try_get<RigidBody3D>(m_SelectedEntity);
-								if (rigidBody3DComponent)
+								RigidBodyComponent* rigidBodyComponent = registry.try_get<RigidBodyComponent>(m_SelectedEntity);
+								if (rigidBodyComponent)
 								{
-									rigidBody3DComponent->SetPosition(model[3]);
-									rigidBody3DComponent->SetRotation(GetRotationFromMatrix(model));
+									rigidBodyComponent->GetRigidBody()->SetPosition(model[3]);
+									rigidBodyComponent->GetRigidBody()->SetRotation(GetRotationFromMatrix(model));
 								}		
 								
 							}

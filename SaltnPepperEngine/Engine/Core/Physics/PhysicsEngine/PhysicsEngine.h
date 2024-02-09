@@ -51,9 +51,9 @@ namespace SaltnPepperEngine
 
 			void Init();
 			void Update(const float deltatime);
-			void UpdateScene(Scene* scene);
+			//void UpdateScene(Scene* scene);
 
-			void UpdateECSTransforms();
+			void UpdateECSTransforms(Scene* scene);
 
 
 			const bool GetIsPaused() const;
@@ -69,8 +69,8 @@ namespace SaltnPepperEngine
 
 			//RigidBody3D* CreateRigidBody(Entity& entity, PhysicsProperties properties);
 
-			SharedPtr<RigidBody3D>& CreateRigidBody(const PhysicsProperties properties);
-			void DeleteRigidBody(SharedPtr<RigidBody3D>& body );
+			SharedPtr<RigidBody3D> CreateRigidBody(const PhysicsProperties properties = PhysicsProperties());
+			void DeleteRigidBody(SharedPtr<RigidBody3D> body );
 
 			void DebugDraw();
 
@@ -123,7 +123,7 @@ namespace SaltnPepperEngine
 			VelocityIntegrationType m_velocityIntegrationType;
 
 
-			Scene* m_scene = nullptr;
+			//Scene* m_scene = nullptr;
 
 		};
 	}

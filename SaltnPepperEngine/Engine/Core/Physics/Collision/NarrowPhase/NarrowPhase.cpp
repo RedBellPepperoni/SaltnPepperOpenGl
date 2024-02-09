@@ -61,13 +61,13 @@ namespace SaltnPepperEngine
 
 			// If one of the object is a sphere and the other is either a box or mesh collider
 			//else if ((typeOne & ColliderType::SPHERE && (typeTwo & ColliderType::MESH || typeTwo & ColliderType::BOX)) || (typeTwo & ColliderType::SPHERE && (typeOne & ColliderType::MESH || typeOne & ColliderType::BOX)))
-			if ((typeOne == ColliderType::SPHERE && (typeTwo == ColliderType::MESH || typeTwo == ColliderType::BOX)))
+			//if ((typeOne & ColliderType::SPHERE && (typeTwo & ColliderType::MESH || typeTwo &ColliderType::BOX)))
+			if ((typeOne & ColliderType::SPHERE) && (typeTwo &ColliderType::BOX) || (typeTwo & ColliderType::SPHERE) && (typeOne & ColliderType::BOX))
 			{
-	
 				return DetectSpherePolygonCollision(bodyOne, bodyTwo, colliderOne, colliderTwo, outData);
 			}
 
-			if ((typeOne & ColliderType::CAPSULE && (typeTwo & ColliderType::BOX)))
+			if ((typeOne & ColliderType::CAPSULE && (typeTwo & ColliderType::BOX)) || (typeOne & ColliderType::BOX && (typeTwo & ColliderType::CAPSULE)))
 			{
 				return DetectCapsulePolygonCollision(bodyOne, bodyTwo, colliderOne, colliderTwo, outData);
 			}
@@ -543,7 +543,7 @@ namespace SaltnPepperEngine
 			RigidBody3D* complexObj;
 			RigidBody3D* sphereObj;
 
-			if (bodyOne->GetCollider()->GetType() == ColliderType::SPHERE)
+			if (bodyOne->GetCollider()->GetType() & ColliderType::SPHERE)
 			{
 				sphereObj = bodyOne;
 				complexShape = colliderTwo;
@@ -612,14 +612,14 @@ namespace SaltnPepperEngine
 				capsuleObj = bodyOne;
 				complexCollider = colliderTwo;
 				complexObj = bodyTwo;
-				capsuleCollider = (CapsuleCollider*)colliderOne;
+				capsuleCollider = static_cast<CapsuleCollider*>(colliderOne);
 			}
 			else
 			{
 				capsuleObj = bodyTwo;
 				complexCollider = colliderOne;
 				complexObj = bodyOne;
-				capsuleCollider = (CapsuleCollider*)colliderTwo;
+				capsuleCollider = static_cast<CapsuleCollider*>(colliderTwo);
 			}
 
 			CollisionData cur_colData;

@@ -7,6 +7,7 @@
 #include "Engine/Utils/UniqueId/UniqueId.h"
 #include "Engine/Core/Physics/Collision/NarrowPhase/Manifold.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
+#include "Engine/Core/Physics/Collision/Colliders/Collider.h"
 #include <functional>
 #include <cereal/cereal.hpp>
 
@@ -16,7 +17,7 @@ namespace SaltnPepperEngine
 	namespace Physics
 	{
 
-		class Collider;
+		//class Collider;
 		enum ColliderType : uint8_t;
 		class RigidBody3D;
 		class PhysicsEngine;
@@ -47,7 +48,7 @@ namespace SaltnPepperEngine
 
 			float mass = 10.0f;
 
-			bool stationary = false;
+			bool stationary = true;
 
 			// Stic collider are easier to query
 			bool isStatic = false;
@@ -82,7 +83,7 @@ namespace SaltnPepperEngine
 
 		public:
 
-			RigidBody3D(const PhysicsProperties& properties = PhysicsProperties());
+			RigidBody3D(const PhysicsProperties& properties = PhysicsProperties{});
 			~RigidBody3D();
 
 			const Vector3& GetPosition() const;
@@ -112,9 +113,9 @@ namespace SaltnPepperEngine
 			void OnCollisionManifoldCallback(RigidBody3D* bodyFirst, RigidBody3D* bodySecond, Manifold* manifold);
 
 
-			void SetCollider(const SharedPtr<Collider>& collider);
+			void SetCollider( SharedPtr<Collider> collider);
 			void SetCollider(ColliderType type);
-			SharedPtr<Collider>& GetCollider();
+			SharedPtr<Collider> GetCollider();
 
 			uint64_t GetUniqueId() const;
 
@@ -142,17 +143,21 @@ namespace SaltnPepperEngine
 			void SetStationaryThreshold(float value);
 			const float GetStaionaryThresholdSquared() const;
 
-
+			float GetInverseMass() const;
+			void SetInverseMass(float mass);
 
 			void DebugDraw(uint64_t flags);
 
+			//PhysicsProperties properties
 
 			template <typename Archive>
 			void save(Archive& archive) const
 			{
-				auto shape = std::unique_ptr<Collider>(m_collider.get());
+				auto shape = UniquePtr<Collider>(m_collider.get());
 
-				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("Mass", 1.0f / m_invMass),  cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity), cereal::make_nvp("Collider", shape), cereal::make_nvp("Trigger", isTrigger));
+				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("InvMass", m_invMass),  cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity),  cereal::make_nvp("Trigger", isTrigger));
+				archive(cereal::make_nvp("Collider", shape));
+
 				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
 				shape.release();
 			}
@@ -160,13 +165,13 @@ namespace SaltnPepperEngine
 			template <typename Archive>
 			void load(Archive& archive)
 			{
-				auto shape = std::unique_ptr<Collider>(m_collider.get());
+				auto shape = UniquePtr<Collider>(m_collider.get());
 
-				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("Mass", 1.0f / m_invMass), cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity), cereal::make_nvp("Collider", shape), cereal::make_nvp("Trigger", isTrigger));
+				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("InvMass",  m_invMass), cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity),  cereal::make_nvp("Trigger", isTrigger));
+				archive(cereal::make_nvp("Collider", shape));
+				m_collider = MakeShared<Collider>(shape.get());
 
-				m_collider = SharedPtr<Collider>(shape.get());
-
-				ColliderUpdated();
+			    ColliderUpdated();
 				shape.release();
 
 				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
@@ -180,6 +185,7 @@ namespace SaltnPepperEngine
 			UniqueId m_Id;
 
 			// Changing to public for easier access
+		
 
 		public:
 

@@ -1,5 +1,5 @@
 #include "RigidBody3D.h"
-#include "Engine/Core/Physics/Collision/Colliders/Collider.h"
+
 #include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
 #include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
 #include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
@@ -33,7 +33,10 @@ namespace SaltnPepperEngine
 			{
 				SetCollider(properties.collider);
 			}
-
+			/*else
+			{
+				SetCollider(ColliderType::SPHERE);
+			}*/
 
 			m_Id = UniqueId();
 
@@ -199,19 +202,19 @@ namespace SaltnPepperEngine
 		void RigidBody3D::OnCollisionManifoldCallback(RigidBody3D* bodyFirst, RigidBody3D* bodySecond, Manifold* manifold)
 		{
 			//// Send a callback for each manifold
-			//for (ManifoldCollisionCallback callback : m_onCollisionManifoldCallbacks)
-			//{
-			//	callback(bodyFirst, bodySecond, manifold);
-			//}
+			for (ManifoldCollisionCallback callback : m_onCollisionManifoldCallbacks)
+			{
+				callback(bodyFirst, bodySecond, manifold);
+			}
 
-			for (auto it = m_onCollisionManifoldCallbacks.begin(); it != m_onCollisionManifoldCallbacks.end(); ++it)
+			/*for (auto it = m_onCollisionManifoldCallbacks.begin(); it != m_onCollisionManifoldCallbacks.end(); ++it)
 			{
 				it->operator()(bodyFirst, bodySecond, manifold);
-			}
+			}*/
 
 		}
 
-		void RigidBody3D::SetCollider(const SharedPtr<Collider>& collider)
+		void RigidBody3D::SetCollider(SharedPtr<Collider> collider)
 		{
 			m_collider = collider;
 			ColliderUpdated();
@@ -235,7 +238,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		SharedPtr<Collider>& RigidBody3D::GetCollider()
+		SharedPtr<Collider> RigidBody3D::GetCollider()
 		{
 			return m_collider;
 		}
@@ -338,6 +341,16 @@ namespace SaltnPepperEngine
 		const float RigidBody3D::GetStaionaryThresholdSquared() const
 		{
 			return m_StationaryVelocityThresholdSquared;
+		}
+
+		float RigidBody3D::GetInverseMass() const
+		{
+			return m_invMass;
+		}
+
+		void RigidBody3D::SetInverseMass(float mass)
+		{
+			m_invMass = mass;
 		}
 
 		void RigidBody3D::DebugDraw(uint64_t flags)

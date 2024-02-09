@@ -47,7 +47,7 @@ namespace SaltnPepperEngine
 		{
 			m_timeStepCounter = 0.0f;
 			//m_gravity = Vector3(0.0f, -9.81f, 0.0f);
-			m_gravity = Vector3(0.0f, 0.0f, 0.0f);
+			m_gravity = Vector3(0.0f, -9.81f, 0.0f);
 			m_paused = true;
 			m_dampingFactor = 0.978f;
 			//m_broadPhaseDetection = MakeShared<DefaultBroadPhase>();
@@ -89,23 +89,37 @@ namespace SaltnPepperEngine
 
 		}
 
-		void PhysicsEngine::UpdateScene(Scene* scene)
+		/*void PhysicsEngine::UpdateScene(Scene* scene)
 		{
 			m_scene = scene;
-		}
+		}*/
 
-		void PhysicsEngine::UpdateECSTransforms()
+		void PhysicsEngine::UpdateECSTransforms(Scene* scene)
 		{
 
-			if (!m_scene)
+			if (!scene || m_paused)
 			{
 				// No scene , so why update anything
 				return;
 			}
 
-		    entt::registry& registry = m_scene->GetRegistry();
+		    entt::registry& registry = scene->GetRegistry();
 
+			// get a view of all entites having transform and Rigidbody components
 			auto group = registry.group<RigidBodyComponent>(entt::get<Transform>);
+
+			for (entt::entity entity : group)
+			{
+				// Get the Rigidbodycomponent reference and the Transform Reference from the group view
+				const auto& [rigidbody, transform] = group.get<RigidBodyComponent, Transform>(entity);
+
+				// Only Update entities that arent static or already stationary
+				if(!rigidbody.GetRigidBody()->GetIsStatic() && !rigidbody.GetRigidBody()->GetIsStationary())
+				{ 
+					transform.SetPosition(rigidbody.GetRigidBody()->GetPosition());
+					transform.SetRotation(rigidbody.GetRigidBody()->GetRotation());
+				}
+			}
 		
 
 		}
@@ -196,7 +210,7 @@ namespace SaltnPepperEngine
 		//	return body;
 		//}
 
-		SharedPtr<RigidBody3D>& PhysicsEngine::CreateRigidBody(const PhysicsProperties properties)
+		SharedPtr<RigidBody3D> PhysicsEngine::CreateRigidBody(const PhysicsProperties properties)
 		{
 			// Create a new Rigidbody pointer and add it to the List
 			SharedPtr<RigidBody3D> body = MakeShared<RigidBody3D>(properties);
@@ -204,7 +218,7 @@ namespace SaltnPepperEngine
 			return body;
 		}
 
-		void PhysicsEngine::DeleteRigidBody(SharedPtr<RigidBody3D>& body)
+		void PhysicsEngine::DeleteRigidBody(SharedPtr<RigidBody3D> body)
 		{
 			//Compares the pointers and removes the element from the vector
 			m_rigidBodies.erase(std::remove(m_rigidBodies.begin(), m_rigidBodies.end(), body), m_rigidBodies.end());
@@ -213,25 +227,19 @@ namespace SaltnPepperEngine
 
 		void PhysicsEngine::DebugDraw()
 		{
-			if (m_paused)
+		
+
+			for (SharedPtr<RigidBody3D>& body : m_rigidBodies)
 			{
-				return;
+				//body->DebugDraw(0);
+
+				SharedPtr<Collider> collider = body->GetCollider();
+
+				if (collider)
+				{
+					collider->DebugDraw(body.get());
+				}
 			}
-
-			//m_broadPhaseDetection->DebugDraw();
-			//
-
-			//for (RigidBody3D* body : m_rigidBodies)
-			//{
-			//	//body->DebugDraw(0);
-
-			//	SharedPtr<Collider> collider = body->GetCollider();
-
-			//	if (collider)
-			//	{
-			//		collider->DebugDraw(body);
-			//	}
-			//}
 
 		}
 
@@ -292,8 +300,8 @@ namespace SaltnPepperEngine
 
 			for (CollisionPair& pair : m_broadPhasePairs)
 			{
-				SharedPtr<Collider>& colliderOne = pair.firstBody->GetCollider();
-				SharedPtr<Collider>& colliderTwo = pair.secondBody->GetCollider();
+				SharedPtr<Collider> colliderOne = pair.firstBody->GetCollider();
+				SharedPtr<Collider> colliderTwo = pair.secondBody->GetCollider();
 
 
 				if (colliderOne && colliderTwo)
