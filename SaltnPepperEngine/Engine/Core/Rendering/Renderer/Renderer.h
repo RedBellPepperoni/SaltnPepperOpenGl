@@ -10,6 +10,7 @@
 #include "Engine/Core/Rendering/Skybox/Skybox.h"
 #include "Engine/Core/Rendering/Skybox/SkyboxObject.h"
 #include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
+#include "Engine/Core/Rendering/Buffers/ShaderStorageBuffer.h"
 
 #include "Engine/Core/Rendering/Geometry/RectangleObject.h"
 
@@ -38,6 +39,7 @@ namespace SaltnPepperEngine
 		class Camera;
 		class Texture;
 		struct Light;
+		class ComputeShader;
 
 		enum class LightType : uint8_t;
 		enum class MaterialType;
@@ -118,13 +120,14 @@ namespace SaltnPepperEngine
 
 		struct ParticleElement
 		{
-			size_t particleBufferOffset;
+			
 			Matrix4 transform;
 			float particleLifetime;
 			float fading;
 			size_t invocationCount;
 			size_t materialIndex;
 			bool isRelative;
+			SharedPtr<ShaderStorageBuffer> SSBO;
 		};
 
 
@@ -290,6 +293,8 @@ namespace SaltnPepperEngine
 			void SetSkyboxIntensity(float intensity);
 			const float GetSkyboxIntensity() const;
 
+			void BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId);
+			void BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader);
 			//const PipeLine& GetPipeLine() const;
 			PipeLine& GetPipeLine();
 
@@ -308,7 +313,7 @@ namespace SaltnPepperEngine
 
 
 			// Particle Stuff
-			void ComputeParticles(const std::vector<ParticleElement>& particleList, SharedPtr<Shader>& computeShader);
+			void ComputeParticles(std::vector<ParticleElement>& particleList, SharedPtr<ComputeShader>& computeShader);
 			void SortParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList);
 			void DrawParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList, SharedPtr<Shader> shader);
 

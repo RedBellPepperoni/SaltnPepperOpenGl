@@ -7,6 +7,8 @@
 #include "Engine/Core/Rendering/Textures/Texture.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Shader/Shader.h"
+
+#include "Engine/Core/Rendering/Shader/Compute.h"
 #include "Engine/Core/Rendering/Buffers/VertexArray.h"
 #include "Engine/Core/Rendering/RenderDefinitions.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
@@ -175,6 +177,28 @@ namespace SaltnPepperEngine
         const float Renderer::GetSkyboxIntensity() const
         {
             return m_pipeline.skybox.GetIntensity();
+        }
+
+        void Renderer::BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId)
+        {
+            m_pipeline.skybox.cubeMap->Bind(textureBindId++);
+            shader->SetUniform("skybox", m_pipeline.skybox.cubeMap->getBoundId());
+            shader->SetUniform("Rotation", Matrix3(1.0f));
+
+
+            // get the intensity from the pipeline
+            float skyluminance = m_pipeline.skybox.GetIntensity();
+
+            skyluminance = skyluminance < 0.0f ? Skybox::Defaultintensity : skyluminance;
+
+            shader->SetUniform("luminance", skyluminance);
+
+        }
+
+        void Renderer::BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader)
+        {
+            shader->SetUniform("viewProj", camera.viewProjMatrix);
+            shader->SetUniform("cameraView", camera.viewPosition);
         }
 
 
@@ -362,8 +386,10 @@ namespace SaltnPepperEngine
 
 
             // Setting teh View Projection Matrix from the camera
-            shader->SetUniform("viewProj", camera.viewProjMatrix);
+            /*shader->SetUniform("viewProj", camera.viewProjMatrix);
+            shader->SetUniform("cameraView", camera.viewPosition);*/
 
+            BindCameraInformation(camera, shader);
 
             SetLightUniform(shader);
 
@@ -549,11 +575,6 @@ namespace SaltnPepperEngine
             shader->SetUniform("model", element.ModelMatrix);
 
             shader->SetUniform("normalMat", element.NormalMatrix);
-
-            shader->SetUniform("cameraView", camera.viewPosition);
-
-
-
 
 
             //Always Bind the Buffer Array before adding Attributes 
@@ -756,7 +777,7 @@ namespace SaltnPepperEngine
 
         }
 
-        void Renderer::ComputeParticles(const std::vector<ParticleElement>& particleList, SharedPtr<Shader>& computeShader)
+        void Renderer::ComputeParticles(std::vector<ParticleElement>& particleList, SharedPtr<ComputeShader>& computeShader)
         {
             if (particleList.empty())
             {
@@ -764,17 +785,55 @@ namespace SaltnPepperEngine
             }
 
             computeShader->Bind();
-            computeShader->SetUniform("deltaTime", Min(Time::DeltaTime(), 1.0f / 60.0f));
+            computeShader->SetUniform("dt", Min(Time::DeltaTime(), 1.0f / 60.0f));
 
+            for (ParticleElement& particleSystem : particleList)
+            {
+                particleSystem.SSBO->BindBase(0);
+
+                //computeShader->SetUniform("bufferOffset", (int)particleSystem.ParticleBufferOffset);
+                computeShader->SetUniform("lifetime", particleSystem.particleLifetime);
+                computeShader->SetUniform("spawnpoint", particleSystem.isRelative ? Vector3(0.0f) : Vector3(particleSystem.transform[3]));
+            
+                Compute::Dispatch(computeShader, particleSystem.invocationCount, 1, 1);
+            }
             
         }
 
         void Renderer::SortParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList)
         {
+            std::sort(particleList.begin(), particleList.end(),
+                [&camera](const ParticleElement& p1, const ParticleElement& p2)
+                {
+                    auto dist1 = camera.viewPosition - Vector3(p1.transform[3]);
+                    auto dist2 = camera.viewPosition - Vector3(p2.transform[3]);
+                    return Dot(dist1, dist1) > Dot(dist2, dist2);
+                });
         }
 
         void Renderer::DrawParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList, SharedPtr<Shader> shader)
         {
+            if (particleList.empty()){ return;}
+            
+            // Sort the particles
+            SortParticles(camera,particleList);
+
+            shader->Bind();
+            shader->IgnoreNonExistingUniform("viewportSize");
+            shader->IgnoreNonExistingUniform("depthTex");
+            shader->IgnoreNonExistingUniform("light");
+            shader->IgnoreNonExistingUniform("light");
+            shader->IgnoreNonExistingUniform("fading");
+            shader->IgnoreNonExistingUniform("lifetime");
+            shader->IgnoreNonExistingUniform("skybox");
+            shader->IgnoreNonExistingUniform("irradiance");
+            shader->IgnoreNonExistingUniform("skyboxRotation");
+            shader->IgnoreNonExistingUniform("intensity");
+
+
+            Vector2 viewportSize = Vector2((float)camera.outputTexture->GetWidth(), (float)camera.outputTexture->GetHeight());
+
+           
         }
 
         SharedPtr<FrameBuffer>& Renderer::GetPostProcessFrameBuffer()

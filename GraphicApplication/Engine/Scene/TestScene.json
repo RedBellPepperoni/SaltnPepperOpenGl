@@ -11,9 +11,9 @@
     "value9": 1048576,
     "value10": {
         "Position": {
-            "value0": 1.4675360918045045,
+            "value0": -0.16537511348724366,
             "value1": 0.0,
-            "value2": 0.0
+            "value2": 2.467482566833496
         },
         "Rotation": {
             "value0": 0.0,
@@ -30,9 +30,9 @@
     "value11": 3,
     "value12": {
         "Position": {
-            "value0": 0.0,
+            "value0": -5.050986295884741e-10,
             "value1": 0.0,
-            "value2": 0.0
+            "value2": -0.13558638095855714
         },
         "Rotation": {
             "value0": 0.0,
@@ -138,42 +138,10 @@
         "value6": 1.0,
         "value7": 10.0
     },
-    "value43": 1,
-    "value44": 3,
-    "value45": {
-        "value0": {
-            "Position": {
-                "value0": 0.0,
-                "value1": 0.0,
-                "value2": 0.0
-            },
-            "Rotation": {
-                "value0": 0.0,
-                "value1": 0.0,
-                "value2": 1.0,
-                "value3": 0.0
-            },
-            "Velocity": {
-                "value0": 0.0,
-                "value1": 0.0,
-                "value2": 0.0
-            },
-            "Force": {
-                "value0": 0.0,
-                "value1": 0.0,
-                "value2": 0.0
-            },
-            "InvMass": 0.10000000149011612,
-            "Static": false,
-            "Friction": 0.8999999761581421,
-            "Elasticity": 0.5,
-            "Trigger": false,
-            "UniqueId": 13195212126411066517
-        }
-    },
-    "value46": 1,
-    "value47": 3,
-    "value48": {
+    "value43": 0,
+    "value44": 1,
+    "value45": 3,
+    "value46": {
         "PrimitiveType": 3,
         "FilePath": "Primitive"
     }
