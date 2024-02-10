@@ -191,7 +191,7 @@ namespace SaltnPepperEngine
 
 		Vector3 GetRandomVector3(ParticleSystem::EmitterShape shape)
 		{
-			Vector3 result;
+			Vector3 result = Vector3{0.0f};
 			switch (shape)
 			{
 			case ParticleSystem::EmitterShape::SPHERE:
