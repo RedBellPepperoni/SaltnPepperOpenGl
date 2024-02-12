@@ -430,7 +430,7 @@ namespace SaltnPepperEngine
 
 	void Application::StartPhysics(bool shouldstart)
 	{
-		//m_physicsSystem->SetPaused(shouldstart);
+		m_physicsSystem->SetPaused(!shouldstart);
 
 	}
 

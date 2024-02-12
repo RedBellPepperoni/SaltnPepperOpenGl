@@ -174,7 +174,7 @@ vec3 CalculateLighting(Material material)
                 float spec = pow(max(dot(material.View, reflectDir), 0.0), 32);
 
                 // combine results
-                vec3 ambient  = light.intensity  * material.Albedo.rgb * 0.12;
+                vec3 ambient  = light.intensity  * material.Albedo.rgb * 0.3;
                 vec3 diffuse  = light.color  * diff * material.Albedo.rgb * light.intensity;
                 vec3 specular = vec3(spec)* material.Albedo.rgb * material.Metallic * 2.0;
                 //vec3 lightContrib = (ambient + diffuse + specular * 0.01);

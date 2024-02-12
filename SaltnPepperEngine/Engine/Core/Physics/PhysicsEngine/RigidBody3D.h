@@ -42,9 +42,9 @@ namespace SaltnPepperEngine
 			// World Transform stuff
 			Vector3 position = Vector3(0.0f);
 			Vector3 velocity = Vector3(0.0f);
-			Vector3 force = Vector3(0.0f);
+			Vector3 force = Vector3{ 0.0f };
 			
-			Quaternion rotation = Quaternion(0.0f,0.0,0.0f,1.0f);
+			Quaternion rotation = Quaternion(Vector3(0.0f));
 
 			float mass = 10.0f;
 
@@ -153,26 +153,26 @@ namespace SaltnPepperEngine
 			template <typename Archive>
 			void save(Archive& archive) const
 			{
-				auto shape = UniquePtr<Collider>(m_collider.get());
+				//auto shape = UniquePtr<Collider>(m_collider.get());
 
 				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("InvMass", m_invMass),  cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity),  cereal::make_nvp("Trigger", isTrigger));
-				archive(cereal::make_nvp("Collider", shape));
+				//archive(cereal::make_nvp("Collider", shape));
 
 				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
-				shape.release();
+				//shape.release();
 			}
 
 			template <typename Archive>
 			void load(Archive& archive)
 			{
-				auto shape = UniquePtr<Collider>(m_collider.get());
+				//auto shape = UniquePtr<Collider>(m_collider.get());
 
 				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("InvMass",  m_invMass), cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity),  cereal::make_nvp("Trigger", isTrigger));
-				archive(cereal::make_nvp("Collider", shape));
-				m_collider = MakeShared<Collider>(shape.get());
+				//archive(cereal::make_nvp("Collider", shape));
+				//m_collider = MakeShared<Collider>(shape.get());
 
-			    ColliderUpdated();
-				shape.release();
+			   // ColliderUpdated();
+				//shape.release();
 
 				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
 			}

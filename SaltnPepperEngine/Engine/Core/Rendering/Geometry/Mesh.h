@@ -68,7 +68,7 @@ namespace SaltnPepperEngine
 			SharedPtr<IndexBuffer>& GetIBO();
 
 			void SetMaterial(const SharedPtr<Material>& newMaterial);
-			const SharedPtr<Material>& GetMaterial() const;
+			SharedPtr<Material>& GetMaterial();
  
 
 

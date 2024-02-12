@@ -89,7 +89,7 @@ namespace SaltnPepperEngine
 			m_material = newMaterial;
 		}
 
-		const SharedPtr<Material>& Mesh::GetMaterial() const
+		SharedPtr<Material>& Mesh::GetMaterial() 
 		{
 			return m_material;
 		}
