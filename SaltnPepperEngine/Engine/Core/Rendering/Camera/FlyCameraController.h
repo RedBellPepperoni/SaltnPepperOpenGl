@@ -18,7 +18,7 @@ namespace SaltnPepperEngine
 
 		void UpdateCameraView(Components::Transform& transform, float delta);
 
-
+		
 
 	private:
 

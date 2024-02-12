@@ -183,6 +183,7 @@
     <ClInclude Include="Editor\ImGuiManager.h" />
     <ClInclude Include="Externals\Imgui\ImGuizmo.h" />
     <ClInclude Include="Editor\Windows\FileBrowserWindow.h" />
+    <ClInclude Include="FirstPersonCameraController.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Engine\Utils\Frustum.h" />
     <ClInclude Include="Editor\Windows\SceneWindow.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="Editor\ImGuiManager.cpp" />
     <ClCompile Include="Externals\Imgui\ImGuizmo.cpp" />
     <ClCompile Include="Editor\Windows\FileBrowserWindow.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Camera\FirstPersonCameraController.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Engine\Utils\Frustum.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\RectangleObject.cpp" />

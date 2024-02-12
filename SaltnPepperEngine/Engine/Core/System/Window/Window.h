@@ -46,7 +46,7 @@ namespace SaltnPepperEngine
 
 
 			WindowProperties m_properties;
-
+			bool m_windowFoucs = true;
 
 
 			// ============================ EVENT WRAPPERS  ==========================
@@ -107,6 +107,8 @@ namespace SaltnPepperEngine
 
 			const bool GetVsync() const { return m_properties.hasVSync; }
 			const bool GetFullScreen() const { return m_properties.isFullscreen; }
+			const bool HasFocus() const { return m_windowFoucs; }
+			void SetFocus(const bool focus) { m_windowFoucs = focus; }
 
 			void SetVsync(bool isVsync);
 
