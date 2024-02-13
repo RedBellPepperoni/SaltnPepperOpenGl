@@ -94,20 +94,21 @@ Entity CreateParentedEntity(Vector3 Position = Vector3{ 0.0f }, Vector3 Rotation
 }
 
 
-Entity CreatePlayerCharacter(Entity mainCamera)
+Entity CreatePlayerCharacter(Entity mainCamera, Vector3 Position = Vector3(0.0f,3.0f,0.0f))
 {
 	Entity playerbaseEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerBase");
 	Hierarchy& hierarchyComp = playerbaseEntity.AddComponent<Hierarchy>();
 	Transform* transform = &playerbaseEntity.GetComponent<Transform>();
 	PlayerCharacter& player = playerbaseEntity.AddComponent<PlayerCharacter>();
-	transform->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	transform->SetPosition(Position);
 
 
 	PhysicsProperties properties;
 	properties.collider = MakeShared<SphereCollider>(1.0f);
 	properties.mass = 20.0f;
 	properties.friction = 0.8f;
-	properties.position = Vector3(0.0f);
+	properties.position = Position;
+	properties.elasticity = 0.1f;
 	RigidBody3D* bodyRef = playerbaseEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
 	bodyRef->SetVelocity(Vector3(5.0f, 0.0f, 0.0f));
 
@@ -158,6 +159,16 @@ Entity CreateBaseFloor()
 	ModelComponent& modelComp = floorEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
 	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
 	
+	PhysicsProperties properties;
+	properties.collider = MakeShared<BoxCollider>(Vector3(50.0f,0.5f,50.0f));
+	properties.mass = 2000.0f;
+	properties.friction = 0.8f;
+	properties.stationary = true;
+	properties.isStatic = true;
+	properties.position = Vector3(0.0f);
+	RigidBody3D* bodyRef = floorEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
+	bodyRef->SetVelocity(Vector3(5.0f, 0.0f, 0.0f));
+
 	//mat->albedoColour = Vector4(0.0f, 1.0f, 0.2f, 1.0f);
 	mat->SetAlbedoTexture("snow");
 	return floorEntity;

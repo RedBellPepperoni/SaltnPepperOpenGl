@@ -46,10 +46,10 @@ namespace SaltnPepperEngine
 		void PhysicsEngine::Init()
 		{
 			m_timeStepCounter = 0.0f;
-			//m_gravity = Vector3(0.0f, -9.81f, 0.0f);
-			m_gravity = Vector3(0.0f, 0.0f, 0.0f);
+			m_gravity = Vector3(0.0f, -9.81f, 0.0f);
+			//m_gravity = Vector3(0.0f, 0.0f, 0.0f);
 			m_paused = true;
-			m_dampingFactor = 0.978f;
+			m_dampingFactor = 0.955f;
 			//m_broadPhaseDetection = MakeShared<DefaultBroadPhase>();
 			m_broadPhaseDetection = MakeShared<OctreeBroadPhase>(5,5,MakeShared<DefaultBroadPhase>());
 			

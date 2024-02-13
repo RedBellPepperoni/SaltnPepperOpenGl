@@ -29,6 +29,8 @@ namespace SaltnPepperEngine
 		}
 		const Vector3 Transform::GetEulerRotation() const
 		{
+			
+
 			Vector3 DegreeRotation = GetEularAnglesDegrees(m_rotation);
 
 			return DegreeRotation;

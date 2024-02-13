@@ -35,7 +35,6 @@ namespace SaltnPepperEngine
 			Quaternion rotation = transform.GetRotation();
 
 			
-
 			Quaternion Pitch = glm::angleAxis(-m_rotationalVelocity.y, Vector3(1.0f, 0.0f, 0.0f));
 			Quaternion Yaw = glm::angleAxis(-m_rotationalVelocity.x, Vector3(0.0f, 1.0f, 0.0f));
 
@@ -43,9 +42,13 @@ namespace SaltnPepperEngine
 			rotation = Yaw * rotation;
 			rotation = rotation * Pitch;
 
+
+
 			transform.SetRotation(rotation);
 
 			m_previousCursorPosition = mousePosition;
+
+
 
 
 

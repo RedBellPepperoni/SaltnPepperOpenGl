@@ -367,6 +367,7 @@ namespace SaltnPepperEngine
                                 else
                                 {
                                     registry.emplace<Hierarchy>(entity, node);
+
                                 }
                                 m_hadDroppedEntity = node;
                             }

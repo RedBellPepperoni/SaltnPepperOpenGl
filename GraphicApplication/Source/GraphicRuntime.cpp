@@ -11,6 +11,7 @@ class GraphicRuntime : public Application
         LoadAllModels();
         LoadAllTextures();
 
+        GetPhysicsEngine()->SetGravity(Vector3(0.0f, -20.0f, 0.0f));
         StartPhysics(true);
 
         Entity mainCamera = CreateMainCamera();

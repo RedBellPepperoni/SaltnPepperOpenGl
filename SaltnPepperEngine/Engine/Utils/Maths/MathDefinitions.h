@@ -24,6 +24,7 @@ namespace SaltnPepperEngine
 		static const float DEGtoRAD = PI / 180.0f;
 		static const float DEGtoRAD_2 = PI / 360.0f;
 		static const float RADtoDEG = 1.0f / DEGtoRAD;
+		static const float RADtoDEG_2 = 1.0f / DEGtoRAD_2;
 
 
         // Renaming glm variables into more Usable format
@@ -254,7 +255,7 @@ namespace SaltnPepperEngine
         // Converts a Quaternion into a readable vector3 format
         inline Vector3 GetEularAnglesRadians(const Quaternion& quat)
         {
-            return glm::eulerAngles(quat);
+            return glm::eulerAngles(quat);           
         }
 
         // Converts a Quaternion into a readable vector3 format
@@ -263,6 +264,7 @@ namespace SaltnPepperEngine
             Vector3 radianRotation = GetEularAnglesRadians(quat);
 
             Vector3 DegreeRotaiton = Vector3(radianRotation.x * RADtoDEG, radianRotation.y * RADtoDEG, radianRotation.z * RADtoDEG);
+           
 
             return DegreeRotaiton;
         }

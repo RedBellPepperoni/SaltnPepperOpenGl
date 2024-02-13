@@ -40,7 +40,7 @@ namespace SaltnPepperEngine
 		float ForceXAxis = 0.0f;
 		float ForceZAxis = 0.0f;
 
-
+		float ForceYAxis = 0.0f;
 
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::A))
@@ -71,25 +71,46 @@ namespace SaltnPepperEngine
 			ForceZAxis = -1.0f;
 		}
 
+		if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Space))
+		{
+			ForceYAxis = 20.0f;
+		}
+		else
+		{
+			ForceYAxis = 0.0f;
+		}
 
 		
 		Vector3 finalDirection = ((ForceZAxis * cameratransform.GetForwardVector()) +(ForceXAxis * cameratransform.GetRightVector()));
-
 		finalDirection.y = 0.0f;
+		
 
+	
+		if(ForceYAxis > 1.0f)
+		{
+			Vector3 velocity = m_rigidBodyRef->GetVelocity();
+			velocity.y += ForceYAxis;
+			m_rigidBodyRef->SetVelocity(velocity);
+		}
 		//LOG_WARN("{0} {1}", cameratransform.GetForwardVector().x, cameratransform.GetForwardVector().z);
 
-		if (LengthSquared(finalDirection) < 0.1)
+		if (LengthSquared(finalDirection) < 0.1 )
 		{
-			m_rigidBodyRef->SetForce(Vector3(0.0f));
-			m_rigidBodyRef->SetVelocity(m_rigidBodyRef->GetVelocity() * 0.98f);
-			return;
+			
+				m_rigidBodyRef->SetForce(Vector3(0.0f));
+				//m_rigidBodyRef->SetVelocity(m_rigidBodyRef->GetVelocity() * 0.98f);
+				return;
+			
+
 		}
 
-		m_rigidBodyRef->SetForce(Normalize(finalDirection) * 80.0f * m_moveSpeed);
+		Vector3 targetDirection = Normalize(finalDirection);
+		
+		finalDirection = targetDirection * 160.0f * m_moveSpeed;
+		m_rigidBodyRef->SetForce(finalDirection);
 
 		float rotationStep = 5.1f * deltaTime;
-		Vector3 targetDirection = Normalize(finalDirection);
+		
 		Vector3 forwardDirection = Normalize(m_lookTransfrom->GetForwardVector());
 		float angle = glm::angle(targetDirection, forwardDirection);
 
