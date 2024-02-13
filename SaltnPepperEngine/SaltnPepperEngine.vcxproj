@@ -183,7 +183,7 @@
     <ClInclude Include="Editor\ImGuiManager.h" />
     <ClInclude Include="Externals\Imgui\ImGuizmo.h" />
     <ClInclude Include="Editor\Windows\FileBrowserWindow.h" />
-    <ClInclude Include="FirstPersonCameraController.h" />
+    <ClInclude Include="Engine\Core\Rendering\Camera\FirstPersonCameraController.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Engine\Utils\Frustum.h" />
     <ClInclude Include="Editor\Windows\SceneWindow.h" />

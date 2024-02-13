@@ -1,5 +1,6 @@
 #ifndef FIRSTPERSONCAMERACONTROLLER_H
 #define FIRSTPERSONCAMERACONTROLLER_H
+
 #include "CameraController.h"
 
 namespace SaltnPepperEngine

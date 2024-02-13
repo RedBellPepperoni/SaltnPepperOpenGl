@@ -3,7 +3,7 @@
 
 #include "SaltnPepperEngine.h"
 #include "PlayerCharacter.h"
-#include "ThirdPersonCameraController.h"
+
 
 
 struct PlayerLook
@@ -59,8 +59,10 @@ Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vec
 	// Cache the transform Reference
 	Transform& transform = cameraEntity.GetComponent<Transform>();
 
-	ThirdPersonCameraController& controller = cameraEntity.AddComponent<ThirdPersonCameraController>();
+	// Add the Camera Controller
+	FirstPersonCameraController& controller = cameraEntity.AddComponent<FirstPersonCameraController>();
 
+	// Set the camera Reference
 	controller.SetCamera(&camera);
 
 	// Set the tranasform Values
@@ -109,24 +111,26 @@ Entity CreatePlayerCharacter(Entity mainCamera)
 	RigidBody3D* bodyRef = playerbaseEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
 	bodyRef->SetVelocity(Vector3(5.0f, 0.0f, 0.0f));
 
-	Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerModel");
+	Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerCamera");
 	childEntity.AddComponent<PlayerLook>();
 	Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
 	Transform* childTransform = &childEntity.GetComponent<Transform>();
 	childTransform->SetRotation(Vector3(0.0f, 0.0f, 0.0f));
 
-	ModelComponent& modelComp = childEntity.AddComponent<ModelComponent>("PlayerKnight");
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	//ModelComponent& modelComp = childEntity.AddComponent<ModelComponent>("PlayerKnight");
+	//SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
 
-	mat->SetAlbedoTexture("player.png");
+	//mat->SetAlbedoTexture("player.png");
 
 	mainCamera.AddComponent<Hierarchy>();
 	childEntity.SetParent(playerbaseEntity);
 	mainCamera.SetParent(playerbaseEntity);
 
 	Transform* cameraTransform = &mainCamera.GetComponent<Transform>();
-	cameraTransform->SetPosition(Vector3(0.0f, 4.0f, 6.0f));
+	cameraTransform->SetPosition(Vector3(0.0f, 3.0f, 0.0f));
 	player.Init(bodyRef, childTransform, cameraTransform);
+
+
 
 	return playerbaseEntity;
 }

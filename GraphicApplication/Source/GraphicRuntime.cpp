@@ -15,8 +15,8 @@ class GraphicRuntime : public Application
 
         Entity mainCamera = CreateMainCamera();
         CreateDirectionalLight();
-       // CreateParentedEntity();
-       // CreateBaseFloor();
+        CreatePlayerCharacter(mainCamera);
+        CreateBaseFloor();
 
 
       
@@ -30,7 +30,7 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
-       /* ComponentView PlayerView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerCharacter>();
+        ComponentView PlayerView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerCharacter>();
 
         Entity player = PlayerView[0];
         Transform* playerTransform = &player.GetComponent<Transform>();
@@ -47,16 +47,16 @@ class GraphicRuntime : public Application
             return;
         }
 
-        ComponentView TPSCameraView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ThirdPersonCameraController>();
+        ComponentView TPSCameraView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<FirstPersonCameraController>();
 
         Entity controller = TPSCameraView[0];
         Transform& transform = controller.GetComponent<Transform>();
-        ThirdPersonCameraController& TPScontroller = controller.GetComponent<ThirdPersonCameraController>();
+        FirstPersonCameraController& FPScontroller = controller.GetComponent<FirstPersonCameraController>();
 
         Vector2 mousePosition = Input::InputSystem::GetInstance().GetMousePosition();
 
-        TPScontroller.MouseInput(transform,mousePosition,deltaTime);
-        playerCharacter.ProcessKeyboardInput(transform,deltaTime);*/
+        FPScontroller.MouseInput(transform,mousePosition,deltaTime);
+        playerCharacter.ProcessKeyboardInput(transform,deltaTime);
 	}
 
 private:

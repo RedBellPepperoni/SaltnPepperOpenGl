@@ -68,7 +68,7 @@ namespace SaltnPepperEngine
 
 		Vector2 m_projectionOffset{ 0.0f };
 		Vector2 m_previousCursorPosition{ 0.0f };
-		float m_sensitivity = 0.001f;
+		float m_sensitivity = 0.00001f;
 
 		float m_linearDampening = 0.000001f;
 		float m_rotationalDampening = 0.00005f;

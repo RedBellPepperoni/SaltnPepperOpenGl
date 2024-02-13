@@ -50,20 +50,12 @@ namespace SaltnPepperEngine
 
         }
 
-        inline void Window::WindowFocusCallback(GLFWwindow* window, int focus)
+        inline void Window::WindowFocusCallback(GLFWwindow* window, int focused)
         {
             Window& handle = *static_cast<Window*>((glfwGetWindowUserPointer(window)));
 
-            if (focus)
-            {
-                WindowFocusEvent event;
-                handle.CallEvent(event);
-            }
-            else
-            {
-                WindowLostFocusEvent event;
-                handle.CallEvent(event);
-            }
+            handle.SetFocus((bool)focused);
+           
         }
 
         inline void Window::WindowKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -264,7 +256,7 @@ namespace SaltnPepperEngine
 
             //glfwSetWindowCloseCallback(windowHandle, WindowCloseCallback);
 
-           // glfwSetWindowFocusCallback(windowHandle, WindowFocusCallback);
+            glfwSetWindowFocusCallback(windowHandle, WindowFocusCallback);
 
             glfwSetKeyCallback(windowHandle, WindowKeyCallback);
 

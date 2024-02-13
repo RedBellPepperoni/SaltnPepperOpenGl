@@ -55,7 +55,7 @@ namespace SaltnPepperEngine
 
 			static inline void WindowCloseCallback(GLFWwindow* window);
 
-			static inline void WindowFocusCallback(GLFWwindow* window, int focus);
+			static inline void WindowFocusCallback(GLFWwindow* window, int focused);
 
 			static inline void WindowKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
@@ -107,7 +107,7 @@ namespace SaltnPepperEngine
 
 			const bool GetVsync() const { return m_properties.hasVSync; }
 			const bool GetFullScreen() const { return m_properties.isFullscreen; }
-			const bool HasFocus() const { return m_windowFoucs; }
+			const bool GetFocus() const { return m_windowFoucs; }
 			void SetFocus(const bool focus) { m_windowFoucs = focus; }
 
 			void SetVsync(bool isVsync);

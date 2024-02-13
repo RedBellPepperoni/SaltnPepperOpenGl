@@ -327,7 +327,7 @@
     <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FirstPersonCameraController.h">
+    <ClInclude Include="Engine\Core\Rendering\Camera\FirstPersonCameraController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,6 @@
 #ifndef FLYCAMERACONTROLLER_H
 #define FLYCAMERACONTROLLER_H
+
 #include "CameraController.h"
 
 namespace SaltnPepperEngine
@@ -10,7 +11,7 @@ namespace SaltnPepperEngine
 	public:
 
 		FlyCameraController();
-		~FlyCameraController();
+		virtual ~FlyCameraController() override;
 
 		virtual void MouseInput(Components::Transform& transform, Vector2 mousePosition, float deltaTime) override;
 
