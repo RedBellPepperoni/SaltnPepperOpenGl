@@ -21,7 +21,10 @@
     <ClCompile Include="Source\PlayerCharacter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ThirdPersonCameraController.cpp">
+    <ClCompile Include="Source\AnimationDefinitions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Animator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +35,10 @@
     <ClInclude Include="Source\PlayerCharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ThirdPersonCameraController.h">
+    <ClInclude Include="Source\Animator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AnimationDefinitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

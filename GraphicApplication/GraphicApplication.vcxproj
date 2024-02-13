@@ -141,9 +141,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AnimationDefinitions.cpp" />
+    <ClCompile Include="Source\Animator.cpp" />
     <ClCompile Include="Source\PlayerCharacter.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
-    <ClCompile Include="Source\ThirdPersonCameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaltnPepperEngine\SaltnPepperEngine.vcxproj">
@@ -151,9 +152,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AnimationDefinitions.h" />
+    <ClInclude Include="Source\Animator.h" />
     <ClInclude Include="Source\PlayerCharacter.h" />
     <ClInclude Include="Source\EntitySetup.h" />
-    <ClInclude Include="Source\ThirdPersonCameraController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

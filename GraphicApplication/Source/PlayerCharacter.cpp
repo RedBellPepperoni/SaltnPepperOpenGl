@@ -17,11 +17,15 @@ namespace SaltnPepperEngine
 
 	}
 
-	void PlayerCharacter::Init(RigidBody3D* RigidBodyRef, Transform* lookTransformRef, Transform* cameraTransformRef)
+	void PlayerCharacter::Init(RigidBody3D* RigidBodyRef, Transform* cameraTransformRef)
 	{
 		m_rigidBodyRef = RigidBodyRef;
-		m_lookTransfrom = lookTransformRef;
 		m_cameraRef = cameraTransformRef;
+
+		/*m_leftHand = leftHand;
+		m_rightHand = rightHand;*/
+
+
 	}
 
 	void PlayerCharacter::Update(float deltaTime)
@@ -115,7 +119,7 @@ namespace SaltnPepperEngine
 		finalDirection = targetDirection * 160.0f * m_moveSpeed * sprintMultiplier;
 		m_rigidBodyRef->SetForce(finalDirection);
 
-		float rotationStep = 5.1f * deltaTime;
+	/*	float rotationStep = 5.1f * deltaTime;
 		
 		Vector3 forwardDirection = Normalize(m_lookTransfrom->GetForwardVector());
 		float angle = glm::angle(targetDirection, forwardDirection);
@@ -135,8 +139,15 @@ namespace SaltnPepperEngine
 
 		Quaternion rotation = GetQuaternion(Rotate(m_lookTransfrom->GetLocalMatrix(), rotationStep, rotationAxis));
 		
-		m_lookTransfrom->SetRotation(rotation);
+		m_lookTransfrom->SetRotation(rotation);*/
 		
+	}
+
+
+	void PlayerCharacter::AnimateHands()
+	{
+
+
 	}
 	void PlayerCharacter::ProcessMouseInput()
 	{

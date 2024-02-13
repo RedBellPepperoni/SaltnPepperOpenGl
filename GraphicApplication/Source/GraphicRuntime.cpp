@@ -11,18 +11,25 @@ class GraphicRuntime : public Application
         LoadAllModels();
         LoadAllTextures();
 
-        GetPhysicsEngine()->SetGravity(Vector3(0.0f, -20.0f, 0.0f));
-        StartPhysics(true);
+       
 
         Entity mainCamera = CreateMainCamera();
         CreateDirectionalLight();
-        CreatePlayerCharacter(mainCamera);
+        Entity leftHand = CreateHand(true);
+        Entity rightHand = CreateHand(false);
+        CreatePlayerCharacter(mainCamera, leftHand, rightHand);
         CreateBaseFloor();
 
 
       
-        CreatePlatform(Vector3(3.0f, 2.0f, 3.0f), Vector3(5.0f, 4.0f, 5.0f));
-        CreatePlatform(Vector3(10.0f, 4.0f, 5.0f), Vector3(5.0f, 8.0f, 5.0f));
+        CreatePlatform(Vector3(10.0f, 2.0f, 15.0f), Vector3(5.0f, 2.0f, 5.0f));
+        CreatePlatform(Vector3(20.0f, 4.0f, 15.0f), Vector3(5.0f, 2.0f, 5.0f));
+        CreatePlatform(Vector3(35.0f, 5.0f, 15.0f), Vector3(5.0f, 2.0f, 5.0f));
+        CreatePlatform(Vector3(10.0f, 7.0f, 5.0f), Vector3(5.0f, 2.0f, 5.0f));
+        //CreatePlatform(Vector3(10.0f, 4.0f, 5.0f), Vector3(5.0f, 2.0f, 5.0f));
+
+        GetPhysicsEngine()->SetGravity(Vector3(0.0f, -27.0f, 0.0f));
+        StartPhysics(true);
 
 	}
 

@@ -3,8 +3,10 @@
 
 #include "SaltnPepperEngine.h"
 #include "PlayerCharacter.h"
+#include "AnimationDefinitions.h"
 
 
+static int platformId = 0;
 
 struct PlayerLook
 {
@@ -25,11 +27,9 @@ void LoadAllModels()
 {
 	SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
 
-	modelLib->LoadModel("PlayerKnight","Assets\\Models\\PlayerKnight.fbx");
-	modelLib->LoadModel("Goblin","Assets\\Models\\Goblin.fbx");
 	modelLib->LoadModel("Cat","Assets\\Models\\Cat.fbx");
-	modelLib->LoadModel("Spider","Assets\\Models\\Spider.fbx");
-	modelLib->LoadModel("Deer","Assets\\Models\\Deer.fbx");
+	modelLib->LoadModel("HandLeft","Assets\\Models\\Hand_Left.fbx");
+	modelLib->LoadModel("HandRight","Assets\\Models\\Hand_Right.fbx");
 	modelLib->LoadModel("Sheep","Assets\\Models\\Sheep.fbx");
 
 }
@@ -38,13 +38,10 @@ void LoadAllTextures()
 {
 	SharedPtr<TextureLibrary>& textureLib = Application::GetCurrent().GetTextureLibrary();
 
-	textureLib->LoadTexture("player", "Assets\\Textures\\player.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("goblin", "Assets\\Textures\\goblin.png", TextureFormat::RGBA);
+
 	textureLib->LoadTexture("cat", "Assets\\Textures\\cat.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("grass", "Assets\\Textures\\grass2.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("spider", "Assets\\Textures\\spider.jpg", TextureFormat::RGBA);
-	textureLib->LoadTexture("deer", "Assets\\Textures\\deer.jpeg", TextureFormat::RGBA);
 	textureLib->LoadTexture("sheep", "Assets\\Textures\\sheep.png", TextureFormat::RGBA);
 }
 
@@ -94,7 +91,7 @@ Entity CreateParentedEntity(Vector3 Position = Vector3{ 0.0f }, Vector3 Rotation
 }
 
 
-Entity CreatePlayerCharacter(Entity mainCamera, Vector3 Position = Vector3(0.0f,3.0f,0.0f))
+Entity CreatePlayerCharacter(Entity mainCamera, Entity leftHand, Entity rightHand, Vector3 Position = Vector3(0.0f,3.0f,0.0f))
 {
 	Entity playerbaseEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerBase");
 	Hierarchy& hierarchyComp = playerbaseEntity.AddComponent<Hierarchy>();
@@ -124,12 +121,20 @@ Entity CreatePlayerCharacter(Entity mainCamera, Vector3 Position = Vector3(0.0f,
 	//mat->SetAlbedoTexture("player.png");
 
 	mainCamera.AddComponent<Hierarchy>();
+	leftHand.AddComponent<Hierarchy>();
+	rightHand.AddComponent<Hierarchy>();
+
+
 	childEntity.SetParent(playerbaseEntity);
 	mainCamera.SetParent(playerbaseEntity);
 
+	leftHand.SetParent(mainCamera);
+	rightHand.SetParent(mainCamera);
+
 	Transform* cameraTransform = &mainCamera.GetComponent<Transform>();
+	Transform* leftHandTransform = &leftHand.GetComponent<Transform>();
 	cameraTransform->SetPosition(Vector3(0.0f, 3.0f, 0.0f));
-	player.Init(bodyRef, childTransform, cameraTransform);
+	player.Init(bodyRef, cameraTransform);
 
 
 
@@ -175,16 +180,38 @@ Entity CreateBaseFloor()
 }
 
 
-Entity CreatePlatform(Vector3 position, Vector3 size)
+Entity CreateHand(bool Left)
 {
-	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Floor");
+	std::string name = Left ? "Left" : "Right";
+
+	Entity handEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Hand_" + name );
+	Transform& transform = handEntity.GetComponent<Transform>();
+	
+	Vector3 position = Left ? Vector3(-0.7f, -0.5f, 0.0f) : Vector3(0.7f, -0.5f, 0.0f);
+
+	transform.SetPosition(position);
+
+	ModelComponent& modelComp = handEntity.AddComponent<ModelComponent>(Left? "HandLeft" : "HandRight");
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->albedoColour = Vector4(0.59f, 0.44f, 0.33f, 1.0f);
+
+
+	
+
+
+	return handEntity;
+}
+
+void CreatePlatform(Vector3 position, Vector3 size)
+{
+	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Platform_" + std::to_string(platformId));
 	Transform& transform = floorEntity.GetComponent<Transform>();
 
 	Vector3 halfSize = Vector3(size.x / 2, size.y / 2, size.z / 2);
 
 	transform.SetScale(size);
 	transform.SetPosition(position);
-	transform.SetRotation(Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
+	//transform.SetRotation(Quaternion(Vector3(0.0f)));
 
 	ModelComponent& modelComp = floorEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
 	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
@@ -196,13 +223,17 @@ Entity CreatePlatform(Vector3 position, Vector3 size)
 	properties.stationary = true;
 	properties.isStatic = true;
 	properties.position = position;
-	properties.rotation = transform.GetRotation();
-	RigidBody3D* bodyRef = floorEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
-	
+
+	//RigidBody3D* bodyRef = floorEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
+	floorEntity.AddComponent<RigidBodyComponent>(properties);
+	/*bodyRef->SetPosition(position);
+	bodyRef->SetRotation(Quaternion(Vector3(0.0f)));*/
 
 	//mat->albedoColour = Vector4(0.0f, 1.0f, 0.2f, 1.0f);
 	mat->SetAlbedoTexture("grass");
-	return floorEntity;
+
+	platformId++;
+	//return floorEntity;
 }
 
 
