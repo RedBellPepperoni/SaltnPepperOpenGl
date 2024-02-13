@@ -43,6 +43,8 @@ namespace SaltnPepperEngine
 		Transform* m_cameraRef = nullptr;
 		int m_health = 100;
 		float m_moveSpeed = 2.0f;
+		float m_jumpSpeed = 25.0f;
+		float m_SprintMultiplier = 2.0f;
 	};
 
 

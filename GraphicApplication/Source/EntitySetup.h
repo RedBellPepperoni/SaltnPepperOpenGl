@@ -41,7 +41,7 @@ void LoadAllTextures()
 	textureLib->LoadTexture("player", "Assets\\Textures\\player.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("goblin", "Assets\\Textures\\goblin.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("cat", "Assets\\Textures\\cat.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("grass", "Assets\\Textures\\grass.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("grass", "Assets\\Textures\\grass2.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("spider", "Assets\\Textures\\spider.jpg", TextureFormat::RGBA);
 	textureLib->LoadTexture("deer", "Assets\\Textures\\deer.jpeg", TextureFormat::RGBA);
@@ -174,6 +174,36 @@ Entity CreateBaseFloor()
 	return floorEntity;
 }
 
+
+Entity CreatePlatform(Vector3 position, Vector3 size)
+{
+	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Floor");
+	Transform& transform = floorEntity.GetComponent<Transform>();
+
+	Vector3 halfSize = Vector3(size.x / 2, size.y / 2, size.z / 2);
+
+	transform.SetScale(size);
+	transform.SetPosition(position);
+	transform.SetRotation(Quaternion(0.0f, 0.0f, 0.0f, 1.0f));
+
+	ModelComponent& modelComp = floorEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+
+	PhysicsProperties properties;
+	properties.collider = MakeShared<BoxCollider>(halfSize);
+	properties.mass = 2000.0f;
+	properties.friction = 0.8f;
+	properties.stationary = true;
+	properties.isStatic = true;
+	properties.position = position;
+	properties.rotation = transform.GetRotation();
+	RigidBody3D* bodyRef = floorEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
+	
+
+	//mat->albedoColour = Vector4(0.0f, 1.0f, 0.2f, 1.0f);
+	mat->SetAlbedoTexture("grass");
+	return floorEntity;
+}
 
 
 #endif //  EntitySetup

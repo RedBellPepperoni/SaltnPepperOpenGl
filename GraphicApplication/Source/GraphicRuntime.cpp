@@ -21,7 +21,8 @@ class GraphicRuntime : public Application
 
 
       
-
+        CreatePlatform(Vector3(3.0f, 2.0f, 3.0f), Vector3(5.0f, 4.0f, 5.0f));
+        CreatePlatform(Vector3(10.0f, 4.0f, 5.0f), Vector3(5.0f, 8.0f, 5.0f));
 
 	}
 

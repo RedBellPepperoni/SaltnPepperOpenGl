@@ -39,9 +39,9 @@ namespace SaltnPepperEngine
 
 		float ForceXAxis = 0.0f;
 		float ForceZAxis = 0.0f;
-
+		float sprintMultiplier = 1.0f;
 		float ForceYAxis = 0.0f;
-
+		
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::A))
 		{
@@ -80,6 +80,12 @@ namespace SaltnPepperEngine
 			ForceYAxis = 0.0f;
 		}
 
+		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::LeftShift))
+		{
+			sprintMultiplier = m_SprintMultiplier;
+		}
+	
+
 		
 		Vector3 finalDirection = ((ForceZAxis * cameratransform.GetForwardVector()) +(ForceXAxis * cameratransform.GetRightVector()));
 		finalDirection.y = 0.0f;
@@ -106,7 +112,7 @@ namespace SaltnPepperEngine
 
 		Vector3 targetDirection = Normalize(finalDirection);
 		
-		finalDirection = targetDirection * 160.0f * m_moveSpeed;
+		finalDirection = targetDirection * 160.0f * m_moveSpeed * sprintMultiplier;
 		m_rigidBodyRef->SetForce(finalDirection);
 
 		float rotationStep = 5.1f * deltaTime;
