@@ -144,6 +144,8 @@
     <ClCompile Include="Source\Animator.cpp" />
     <ClCompile Include="Source\PlayerCharacter.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
+    <ClCompile Include="Source\SceneLoading\SceneLoader.cpp" />
+    <ClCompile Include="Source\SceneLoading\SceneParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaltnPepperEngine\SaltnPepperEngine.vcxproj">
@@ -155,6 +157,8 @@
     <ClInclude Include="Source\Animator.h" />
     <ClInclude Include="Source\PlayerCharacter.h" />
     <ClInclude Include="Source\EntitySetup.h" />
+    <ClInclude Include="Source\SceneLoading\SceneLoader.h" />
+    <ClInclude Include="Source\SceneLoading\SceneParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

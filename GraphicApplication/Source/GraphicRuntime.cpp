@@ -1,35 +1,51 @@
+#pragma once
 #include "SaltnPepperEngine.h"
-#include "EntitySetup.h"
+//#include "EntitySetup.h"
 #include "Animator.h"
 #include "AnimationDefinitions.h"
-
+#include "SceneLoading/SceneLoader.h"
+#include "SceneLoading/SceneParser.h"
 
 
 class GraphicRuntime : public Application
 {
 	void OnInit()
 	{
- 
-        LoadAllModels();
-        LoadAllTextures();
+        parser = MakeShared<SceneParser>();
+        loader = MakeShared<SceneLoader>();
 
-       
 
-        Entity mainCamera = CreateMainCamera();
-        CreateDirectionalLight();
-        Entity leftHand = CreateHand(true);
-        Entity rightHand = CreateHand(false);
-        CreatePlayerCharacter(mainCamera, leftHand, rightHand);
-        CreateBaseFloor();
+        parser->ParseScene("Engine\\Scene\\DeadEnergy.json");
+        
+        std::map<std::string, std::string> modelmap = parser->GetModelList();
+
+        std::map<std::string, std::string> texturMap = parser->GetTextureList();
+
+        // Retrives the parsed object data
+        std::vector<ObjectData> objectmap = parser->GetObjectList();
+
+        // Load all the models from the model data list
+        for (auto const& data : modelmap)
+        {
+            loader->LoadModel(data.first, data.second);
+        }
+
+        for (auto const& texture : texturMap)
+        {
+            loader->LoadTexture(texture.first, texture.second);
+        }
+
+        // Create objects according to the scene data
+        for (ObjectData object : objectmap)
+        {
+            loader->SpawnObject(object);
+        }
+
+
 
         animator = MakeShared<Animator>();
         animator->Init(GetCurrentScene()->GetEntityManager());
-      
-        CreatePlatform(Vector3(10.0f, 2.0f, 15.0f), Vector3(5.0f, 2.0f, 5.0f));
-        CreatePlatform(Vector3(20.0f, 4.0f, 15.0f), Vector3(5.0f, 2.0f, 5.0f));
-        CreatePlatform(Vector3(35.0f, 5.0f, 15.0f), Vector3(5.0f, 2.0f, 5.0f));
-        CreatePlatform(Vector3(10.0f, 7.0f, 5.0f), Vector3(5.0f, 2.0f, 5.0f));
-        //CreatePlatform(Vector3(10.0f, 4.0f, 5.0f), Vector3(5.0f, 2.0f, 5.0f));
+
 
         GetPhysicsEngine()->SetGravity(Vector3(0.0f, -27.0f, 0.0f));
         StartPhysics(true);
@@ -49,9 +65,6 @@ class GraphicRuntime : public Application
         PlayerCharacter& playerCharacter = player.GetComponent<PlayerCharacter>();
         playerCharacter.Update(deltaTime);
 
-        ComponentView PlayerLookView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerLook>();
-
-        Transform* lookTransform = &PlayerLookView[0].GetComponent<Transform>();
 
         animator->Update(deltaTime);
 
@@ -76,6 +89,9 @@ class GraphicRuntime : public Application
 private:
 
     SharedPtr<Animator> animator = nullptr;
+
+    SharedPtr<SceneParser> parser = nullptr;
+    SharedPtr<SceneLoader> loader = nullptr;
 
 };
 

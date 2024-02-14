@@ -1,0 +1,115 @@
+{
+    "Scene":  "SceneDungeon",
+    "Models": [
+  
+      {
+        "Name": "Cat",
+        "Path": "Assets\\Models\\Cat.fbx"
+      },
+  
+      {
+        "Name": "HandLeft",
+        "Path": "Assets\\Models\\Hand_Left.fbx"
+      },
+      {
+        "Name": "HandRight",
+        "Path": "Assets\\Models\\Hand_Right.fbx"
+      },
+      {
+        "Name": "Sheep",
+        "Path": "Assets\\Models\\Sheep.fbx"
+      }
+  
+    ],
+  
+    "Textures": [
+  
+  
+      
+      {
+        "Name": "cat",
+        "Path": "Assets\\Textures\\cat.png"
+      },
+      {
+        "Name": "grass",
+        "Path": "Assets\\Textures\\grass2.png"
+      },
+      {
+        "Name": "snow",
+        "Path": "Assets\\Textures\\snow.png"
+      },
+      {
+        "Name": "sheep",
+        "Path": "Assets\\Textures\\sheep.png"
+      }
+  
+    
+    ],
+  
+  
+    "Objects" :[
+  
+      {
+        "ObjectType": "Player",
+        "Mesh": "Map",
+        "Position": [0.0, 5.0, 0.0 ],
+        "Rotation": [0.0,0.0,0.0],
+        "Scale": [ 1.0, 1.00, 1.00 ]
+  
+      }, 
+
+      {
+        "ObjectType": "Platform",
+        "Mesh": "Cube",
+        "Position": [0.0, -0.5, 0.0 ],
+        "Rotation": [0.0,0.0,0.0],
+        "Scale": [ 100.0, 1.00, 100.0 ],
+        "Albedo" : "snow"
+      },
+
+      {
+        "ObjectType": "Platform",
+        "Mesh": "Cube",
+        "Position": [10.0, 2.0, 15.0 ],
+        "Rotation": [0.0,0.0,0.0],
+        "Scale": [ 5.0, 2.0, 5.0 ],
+        "Albedo" : "grass"
+      },
+      {
+        "ObjectType": "Platform",
+        "Mesh": "Cube",
+        "Position": [20.0, 4.0, 15.0 ],
+        "Rotation": [0.0,0.0,0.0],
+        "Scale": [ 5.0, 2.0, 5.00 ],
+        "Albedo" : "grass"
+      },
+
+      {
+        "ObjectType": "Platform",
+        "Mesh": "Cube",
+        "Position": [35.0, 5.0, 15.0 ],
+        "Rotation": [0.0,0.0,0.0],
+        "Scale": [ 5.0, 2.0, 5.00 ],
+        "Albedo" : "grass"
+      },
+      {
+        "ObjectType": "Platform",
+        "Mesh": "Cube",
+        "Position": [10.0, 7.0, 5.0 ],
+        "Rotation": [0.0,0.0,0.0],
+        "Scale": [ 5.0, 2.0, 5.00 ],
+        "Albedo" : "grass"
+      },
+
+      {
+        "ObjectType": "DirectionalLight",
+        "Mesh": "Cube",
+        "Position": [20.0, 4.0, 15.0 ],
+        "Rotation": [-36.0,0.0,0.0],
+        "Scale": [ 1.0, 1.0, 1.00 ],
+        "Albedo" : "snow"
+      }
+
+
+    ]
+}

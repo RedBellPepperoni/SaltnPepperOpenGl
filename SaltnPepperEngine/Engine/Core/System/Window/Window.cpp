@@ -266,8 +266,8 @@ namespace SaltnPepperEngine
 
             glfwSetCursorPosCallback(windowHandle, WindowCursorCallback);
 
-
-            SetVsync(m_properties.hasVSync);
+            SetVsync(false);
+           // SetVsync(m_properties.hasVSync);
 
             InitializeImGui();
 

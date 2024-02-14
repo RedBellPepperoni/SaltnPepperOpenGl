@@ -1,4 +1,3 @@
-#version 450 
 
 struct VertexData
 {
