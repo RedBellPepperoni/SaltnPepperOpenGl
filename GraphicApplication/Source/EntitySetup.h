@@ -132,9 +132,13 @@ Entity CreatePlayerCharacter(Entity mainCamera, Entity leftHand, Entity rightHan
 	rightHand.SetParent(mainCamera);
 
 	Transform* cameraTransform = &mainCamera.GetComponent<Transform>();
-	Transform* leftHandTransform = &leftHand.GetComponent<Transform>();
+	AnimationComponent* leftHandAnimator = &leftHand.GetComponent<AnimationComponent>();
+	AnimationComponent* rightHandAnimator = &rightHand.GetComponent<AnimationComponent>();
+
+
 	cameraTransform->SetPosition(Vector3(0.0f, 3.0f, 0.0f));
 	player.Init(bodyRef, cameraTransform);
+	player.SetAnimators(leftHandAnimator, rightHandAnimator);
 
 
 
@@ -196,7 +200,29 @@ Entity CreateHand(bool Left)
 	mat->albedoColour = Vector4(0.59f, 0.44f, 0.33f, 1.0f);
 
 
+	AnimationComponent& animComp = handEntity.AddComponent<AnimationComponent>();
+
+	SharedPtr<Animation>& idleAnim = animComp.AddAnimation("Idle");
+
+	idleAnim->AddRotationKey(Vector3(0.0f, 0.0f, 0.0f), 0.0f, EasingType::Linear);
+	idleAnim->AddRotationKey(Vector3(-5.0f, 0.0f, 0.0f), 1.0f, EasingType::Linear);
+	idleAnim->AddRotationKey(Vector3(0.0f, 0.0f, 0.0f), 2.0f, EasingType::Linear);
+	idleAnim->loop = true;
+
+	SharedPtr<Animation>& walkAnim = animComp.AddAnimation("Walk");
+
+	walkAnim->AddRotationKey(Vector3(0.0f, 0.0f, 0.0f), 0.0f, EasingType::Linear);
+	walkAnim->AddRotationKey(Vector3(Left? -20.0f : 20.0f, 0.0f, 0.0f), 0.3f, EasingType::Linear);
+	walkAnim->AddRotationKey(Vector3(0.0f, 0.0f, 0.0f), .6f, EasingType::Linear);
+	walkAnim->AddRotationKey(Vector3(Left? 20.0f : -20.0f , 0.0f, 0.0f), 0.9f, EasingType::Linear);
+	walkAnim->AddRotationKey(Vector3(0.0f, 0.0f, 0.0f), 1.2f, EasingType::Linear);
+	walkAnim->loop = true;
+
+	/*SharedPtr<Animation>& jumpAnim = animComp.AddAnimation("Jump");
+	jumpAnim->AddRotationKey(Vector3(-5.0f, Left? 14.0f:-14.0f, 0.0f), 0.0f, EasingType::Linear);
+	jumpAnim->loop = true;*/
 	
+
 
 
 	return handEntity;

@@ -4,6 +4,7 @@
 
 #include <Engine/Utils/Maths/MathDefinitions.h>
 
+struct AnimationComponent;
 
 namespace SaltnPepperEngine
 {
@@ -21,6 +22,8 @@ namespace SaltnPepperEngine
 	using namespace Components;
 
 
+	
+
 	enum class PlayerState : uint8_t
 	{
 		IDLE,
@@ -36,6 +39,7 @@ namespace SaltnPepperEngine
 		~PlayerCharacter();
 
 		void Init(RigidBody3D* RigidBodyRef, Transform* cameraTransformRef);
+		void SetAnimators(AnimationComponent* left, AnimationComponent* right);
 		void Update(float deltaTime);
 		void ProcessKeyboardInput(Transform& cameratransform, float deltaTime);
 
@@ -53,10 +57,12 @@ namespace SaltnPepperEngine
 		float m_moveSpeed = 2.0f;
 		float m_jumpSpeed = 25.0f;
 		float m_SprintMultiplier = 2.0f;
-		Transform* m_leftHand = nullptr;
-		Transform* m_rightHand = nullptr;
+
 		PlayerState m_currentState = PlayerState::IDLE;
 
+		AnimationComponent* leftHandAnimator = nullptr;
+		AnimationComponent* rightHandAnimator = nullptr;
+		bool canJump = false;
 		
 	};
 

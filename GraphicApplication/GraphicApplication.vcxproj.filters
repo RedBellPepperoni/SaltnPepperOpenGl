@@ -21,9 +21,6 @@
     <ClCompile Include="Source\PlayerCharacter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\AnimationDefinitions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Animator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -20,11 +20,11 @@ class Animator
 private: 
 
 
-	void ProcessPositionAnimation(AnimationComponent& animComp, Transform& transform);
-	void ProcessRotationAnimation(AnimationComponent& animComp, Transform& transform);
-	void ProcessScaleAnimation(AnimationComponent& animComp, Transform& transform);
-	void ProcessAnimationEvents(AnimationComponent& animComp, Transform& transform);
-	void ProcessAnimations(AnimationComponent& animComp, Transform& transform);
+	void ProcessPositionAnimation(Animation& animComp, Transform& transform);
+	void ProcessRotationAnimation(Animation& animComp, Transform& transform);
+	void ProcessScaleAnimation(Animation& animComp, Transform& transform);
+	void ProcessAnimationEvents(Animation& animComp, Transform& transform);
+	void ProcessAnimations(Animation& animComp, Transform& transform);
 	
 
 

@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Engine/Utils/Maths/MathDefinitions.h"
+#include "Engine/Core/Memory/MemoryDefinitions.h"
 #include <vector>
 #include <string>
 #include <functional>
 #include <algorithm>
 
 using namespace SaltnPepperEngine::Math;
+using namespace SaltnPepperEngine;
 
 enum class EasingType : uint8_t
 {
@@ -215,21 +217,61 @@ struct Animation
 struct AnimationComponent
 {
 
-	std::unordered_map<std::string, Animation> animations;
+	std::unordered_map<std::string, SharedPtr<Animation>> animations;
+
+	std::string currentAnim = "";
 
 	// Will overwite if the name matches anything stored previously
-	Animation& AddAnimation(std::string name)
+	SharedPtr<Animation>& AddAnimation(const std::string& name)
 	{
-		Animation animation;
-
-		animations.emplace(name, animation);
+		// Create a new Animation at the given Key
+		
+		animations.emplace(name, MakeShared<Animation>());
 
 		return animations.find(name)->second;
 	}
 
-	void RemoveAnimation(std::string name)
+	void RemoveAnimation(const std::string& name)
 	{
 		animations.erase(name);
+	}
+
+	SharedPtr<Animation> GetAnimationByName(const std::string& name)
+	{
+		auto itr = animations.find(name);
+
+		if (itr == animations.end())
+		{
+			currentAnim = "";
+			LOG_WARN("Animation [{0}] not found", name);
+			return nullptr;
+		}
+
+		return itr->second;
+	}
+
+	//May need to have a actuall nullcheck here incase it doesnt exist
+	SharedPtr<Animation> GetCurrentAnimation()
+	{
+		if (currentAnim == "") { return nullptr; }
+		
+		return animations.find(currentAnim)->second;
+	}
+	
+	void PlayAnimation(const std::string& name)
+	{
+	
+		auto itr = animations.find(name);
+
+		if (itr  == animations.end())
+		{
+			currentAnim = "";
+			LOG_WARN("Animation [{0}] not found", name);
+			return;
+		}
+
+		currentAnim = name;
+
 	}
 };
 

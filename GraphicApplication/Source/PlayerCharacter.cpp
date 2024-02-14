@@ -3,6 +3,7 @@
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/System/Input/InputSystem.h"
 #include "Engine/Core/System/Application/Application.h"
+#include "AnimationDefinitions.h"
 
 namespace SaltnPepperEngine
 {
@@ -28,9 +29,29 @@ namespace SaltnPepperEngine
 
 	}
 
+	void PlayerCharacter::SetAnimators(AnimationComponent* left, AnimationComponent* right)
+	{
+		leftHandAnimator = left;
+		rightHandAnimator = right;
+	}
+
 	void PlayerCharacter::Update(float deltaTime)
 	{
-		//ProcessKeyboardInput();
+		//float velocityDown = m_rigidBodyRef->GetVelocity().y;
+
+
+		//if (velocityDown >= -0.68 && velocityDown <= 0.68)
+		//{
+		//	canJump = true;
+		//	//LOG_INFO("Grounded {0}", velocityDown);
+		//}
+		//else 
+		//{
+		//	canJump = false;
+		//	//LOG_WARN("Jumping {0}" ,velocityDown);
+		//}
+
+		
 	}
 
 	void PlayerCharacter::ProcessKeyboardInput(Transform& cameratransform, float deltaTime)
@@ -78,6 +99,7 @@ namespace SaltnPepperEngine
 		if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Space))
 		{
 			ForceYAxis = 20.0f;
+
 		}
 		else
 		{
@@ -107,11 +129,20 @@ namespace SaltnPepperEngine
 		if (LengthSquared(finalDirection) < 0.1 )
 		{
 			
-				m_rigidBodyRef->SetForce(Vector3(0.0f));
-				//m_rigidBodyRef->SetVelocity(m_rigidBodyRef->GetVelocity() * 0.98f);
-				return;
-			
-
+				
+			m_rigidBodyRef->SetForce(Vector3(0.0f));
+				
+			if (leftHandAnimator)
+			{
+				
+				leftHandAnimator->PlayAnimation("Idle");
+			}
+			if (rightHandAnimator)
+			{
+				
+				rightHandAnimator->PlayAnimation("Idle");
+			}
+			return;
 		}
 
 		Vector3 targetDirection = Normalize(finalDirection);
@@ -119,27 +150,18 @@ namespace SaltnPepperEngine
 		finalDirection = targetDirection * 160.0f * m_moveSpeed * sprintMultiplier;
 		m_rigidBodyRef->SetForce(finalDirection);
 
-	/*	float rotationStep = 5.1f * deltaTime;
-		
-		Vector3 forwardDirection = Normalize(m_lookTransfrom->GetForwardVector());
-		float angle = glm::angle(targetDirection, forwardDirection);
 
-		if (angle < rotationStep) { return; }
 
-		Vector3 rotationAxis = Cross(forwardDirection, targetDirection);
-
-		if (rotationAxis.y > 0.01f)
+		if (leftHandAnimator)
 		{
-			rotationAxis = Vector3(0.0f, 1.0f, 0.0f);
+			
+			leftHandAnimator->PlayAnimation("Walk");
 		}
-		else
+		if (rightHandAnimator)
 		{
-			rotationAxis = Vector3(0.0f, -1.0f, 0.0f);
+			
+			rightHandAnimator->PlayAnimation("Walk");
 		}
-
-		Quaternion rotation = GetQuaternion(Rotate(m_lookTransfrom->GetLocalMatrix(), rotationStep, rotationAxis));
-		
-		m_lookTransfrom->SetRotation(rotation);*/
 		
 	}
 

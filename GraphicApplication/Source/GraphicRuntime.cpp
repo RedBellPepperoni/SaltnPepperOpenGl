@@ -1,5 +1,7 @@
 #include "SaltnPepperEngine.h"
 #include "EntitySetup.h"
+#include "Animator.h"
+#include "AnimationDefinitions.h"
 
 
 
@@ -20,7 +22,8 @@ class GraphicRuntime : public Application
         CreatePlayerCharacter(mainCamera, leftHand, rightHand);
         CreateBaseFloor();
 
-
+        animator = MakeShared<Animator>();
+        animator->Init(GetCurrentScene()->GetEntityManager());
       
         CreatePlatform(Vector3(10.0f, 2.0f, 15.0f), Vector3(5.0f, 2.0f, 5.0f));
         CreatePlatform(Vector3(20.0f, 4.0f, 15.0f), Vector3(5.0f, 2.0f, 5.0f));
@@ -50,7 +53,9 @@ class GraphicRuntime : public Application
 
         Transform* lookTransform = &PlayerLookView[0].GetComponent<Transform>();
 
-       
+        animator->Update(deltaTime);
+
+
         if (Application::GetCurrent().GetEditorActive())
         {
             return;
@@ -70,7 +75,7 @@ class GraphicRuntime : public Application
 
 private:
 
-   
+    SharedPtr<Animator> animator = nullptr;
 
 };
 

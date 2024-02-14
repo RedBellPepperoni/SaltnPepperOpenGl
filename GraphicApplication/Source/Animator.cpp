@@ -12,8 +12,9 @@ void Animator::Init(EntityManager* enttmanager)
 	manager = enttmanager;
 }
 
-void Animator::ProcessPositionAnimation(AnimationComponent& animComp, Transform& transform)
+void Animator::ProcessPositionAnimation(Animation& animComp, Transform& transform)
 {
+	
 	size_t positionListSize = animComp.positionKeyFrameList.size();
 
 	// early check to see if there are any positions at all
@@ -79,10 +80,11 @@ void Animator::ProcessPositionAnimation(AnimationComponent& animComp, Transform&
 
 	Vector3 delta = endPosKey.keyData - startPosKey.keyData;
 	transform.SetPosition(startPosKey.keyData + delta * result);
+	
 
 }
 
-void Animator::ProcessRotationAnimation(AnimationComponent& animComp, Transform& transform)
+void Animator::ProcessRotationAnimation(Animation& animComp, Transform& transform)
 {
 	size_t rotationListSize = animComp.rotationKeyFrameList.size();
 
@@ -154,7 +156,7 @@ void Animator::ProcessRotationAnimation(AnimationComponent& animComp, Transform&
 
 }
 
-void Animator::ProcessScaleAnimation(AnimationComponent& animComp, Transform& transform)
+void Animator::ProcessScaleAnimation(Animation& animComp, Transform& transform)
 {
 
 	size_t scaleListSize = animComp.scaleKeyFrameList.size();
@@ -224,7 +226,7 @@ void Animator::ProcessScaleAnimation(AnimationComponent& animComp, Transform& tr
 	transform.SetScale(startScaleKey.keyData + delta * result);
 }
 
-void Animator::ProcessAnimationEvents(AnimationComponent& animComp, Transform& transform)
+void Animator::ProcessAnimationEvents(Animation& animComp, Transform& transform)
 {
 	size_t eventListSize = animComp.eventKeyList.size();
 
@@ -272,7 +274,7 @@ void Animator::ProcessAnimationEvents(AnimationComponent& animComp, Transform& t
 	
 }
 
-void Animator::ProcessAnimations(AnimationComponent& animComp, Transform& transform)
+void Animator::ProcessAnimations(Animation& animComp, Transform& transform)
 {
 	// ======= Process and Update the Position Animations ============
 	ProcessPositionAnimation(animComp, transform);
@@ -302,40 +304,38 @@ void Animator::Update(const float deltaTime)
 		Transform& transform = animationEntity.GetComponent<Transform>();
 		AnimationComponent& animComponent = animationEntity.GetComponent<AnimationComponent>();
 
+		//Try to get ithe current playing animation
+		SharedPtr<Animation> animation = animComponent.GetCurrentAnimation();
+
+		// No animation Found;
+		if (!animation) { continue; }
 
 
+		animation->time += deltaTime * animSpeed;
 
-		// Update the time 
-		animComponent.time += deltaTime * animSpeed;
-
-		
-
-		if (animComponent.time >= animComponent.totalAnimTime)
+		if (animation->time > animation->totalAnimTime)
 		{
-			// If the animation is set to loop, reset the time
-			if (animComponent.loop)
-			{
-				animComponent.time = 0.0f;
-
-				// Reset all AnimEvents
-				for (EventKey& key : animComponent.eventKeyList)
-				{
-					key.fired = false;
-				}
-			}
-
-			else
+		// If the animation is set to loop, reset the time
+			if (!animation->loop)
 			{
 				continue;
 			}
 
+			animation->time = 0.0f;
+
+			// Reset all AnimEvents
+			for (EventKey& key : animation->eventKeyList)
+			{
+				key.fired = false;
+			}
+
 		}
 
-		
-		ProcessAnimations(animComponent,transform);
+
+		ProcessAnimations(*animation , transform);
 
 
-
+	
 	}
 }
 
