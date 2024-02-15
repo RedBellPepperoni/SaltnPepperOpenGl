@@ -1,6 +1,6 @@
-# AI Navigation Project (AI behavior)
+# Game Integration Project (Sprint 1)
 
-This projects deals with the Differnt AI bagent behaviours
+This projects deals with the basic setup for the game "Dead Energy"
 
 
 # Building Notes : 
@@ -16,8 +16,8 @@ You can find these files in the [Dlls] folder at the root of the solution direct
 
 [W] [A] [S] [D] to move Player
 
-[RightClick] + [MousePan] to look around
-
+[MousePan] to look around
+[Space] to jump
 
 # Editor Controls
 Press [`] Key to toggle the Editor Mode 
@@ -28,18 +28,4 @@ Selecting the Entity from the inspector and pressing [F] will focus the editor c
 
 # General Notes: 
 
-There are 5 AI agents each displaying a differnt behaviour
-
-1) Goblin : [Seek] The goblin will continously move towards the player's position
-2) Sheep  : [Flee] The Sheep will move away from the player when player is in range
-3) Spider : [Pursue] The Spider will move towards where the player is heading, and will try to corner the player [try to get in fron tof the player ]
-4) Deer   : [Evade] The Deer will flee from the player's curent heading direction [when in range]
-4) Cat    : [Approach] The Cat will try to go near the player until a set distance then will stop. if the player closes the distance, the cat will move away 
-
-The Spawning can be handing using the  [CreateEnemyAI()] function in the [GraphicsApplication/Source/GraphicRuntime.cpp]
-
-The [CreateEnemyAI()] takes 3 Parameters :
-1) AI::BehaviorState : this defines the behaviour of the Created Enemy
-2) EnemyModel : this defines what model is going to beapplied for the enemy
-3) SpawnPosition : this defines where the AI agent will spawn in the world# SaltnPepper
- Refactored Engine from the First Semester of GDP-1 in Fanshawe
+The basic physics System has been implemented along with Barebones platforming logic
