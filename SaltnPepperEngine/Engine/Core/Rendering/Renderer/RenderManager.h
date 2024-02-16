@@ -65,7 +65,7 @@ namespace SaltnPepperEngine
 			void RenderToTextureNoClear(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
 
 
-		
+			void CopyTexture(SharedPtr<Texture> inputTexture, SharedPtr<Texture> outputTexture);
 
 			void SetViewPort(int x, int y, int width, int height);
 			void ProcessImage(const SharedPtr<Texture>& texture, int lod = 0);

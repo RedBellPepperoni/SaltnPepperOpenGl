@@ -178,6 +178,11 @@ namespace SaltnPepperEngine
 
 			if (Application::GetCurrent().GetEditorActive())
 			{
+				AttachFrameBuffer(m_editorCameraElement.gBuffer);
+
+				GLDEBUG(glEnable(GL_DEPTH_TEST));
+				m_renderer->Clear(true);
+
 				//// ===== Post Render Skybox Pass =================
 				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
 
@@ -203,6 +208,9 @@ namespace SaltnPepperEngine
 
 					AttachFrameBuffer(cameraElement.gBuffer);
 
+					GLDEBUG(glEnable(GL_DEPTH_TEST));
+					m_renderer->Clear(true);
+
 					// ===== Post Render Skybox Pass =================
 					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
 
@@ -211,6 +219,10 @@ namespace SaltnPepperEngine
 				
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();
+
+					//ProcessImage()
+
+					//CopyTexture(cameraElement.albedoTexture,cameraElement.outputTexture);
 				
 				}
 
@@ -242,10 +254,11 @@ namespace SaltnPepperEngine
 
 				glDisable(GL_DEPTH_TEST);
 				m_renderer->Clear();
-				m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), mainCamera.outputTexture);
-				//m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_renderer->SecondaryTexture);
+				ProcessImage(mainCamera.outputTexture);
 
+			
 			}
+			
 			m_renderer->ClearRectangleObjectVAO();
 		}
 
@@ -302,6 +315,13 @@ namespace SaltnPepperEngine
 			RenderToFrameBufferNoClear(m_renderer->GetPostProcessFrameBuffer(), shader);
 		}
 
+		void RenderManager::CopyTexture(SharedPtr<Texture> inputTexture, SharedPtr<Texture> outputTexture)
+		{
+			m_renderer->GetPostProcessFrameBuffer()->AttachTexture(outputTexture);
+			AttachFrameBuffer(m_renderer->GetPostProcessFrameBuffer());
+			ProcessImage(inputTexture);
+		}
+
 		void RenderManager::SetViewPort(int x, int y, int width, int height)
 		{
 			m_renderer->SetViewport(x, y, width, height);
@@ -310,7 +330,7 @@ namespace SaltnPepperEngine
 		void RenderManager::ProcessImage(const SharedPtr<Texture>& texture, int lod)
 		{
 			SharedPtr<Shader> screenRectShader = m_ShaderLibrary->GetResource("ScreenShader");
-
+			m_renderer->RenderScreenQuad(screenRectShader,texture);
 		}
 
 		void RenderManager::SetWindowSize(Vector2Int size)

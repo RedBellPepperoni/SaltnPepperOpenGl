@@ -28,6 +28,8 @@ namespace SaltnPepperEngine
             void Init(int width, int height);
             void Resize(int width, int height);
 
+            unsigned int rbo;
+
         };
 
         class Camera

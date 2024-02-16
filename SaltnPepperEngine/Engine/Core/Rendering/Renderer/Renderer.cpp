@@ -352,7 +352,7 @@ namespace SaltnPepperEngine
         {
             // Unbinding any framebuffer will revert thback to the default frame buffer ,(the one at 0)
              // doing this allows us to render to application window
-            m_pipeline.depthFrameBuffer->UnBind();
+            m_pipeline.postprocessFrameBuffer->UnBind();
 
             SetViewport(0, 0, GetViewport().x, GetViewport().y);
             Clear();

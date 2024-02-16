@@ -174,7 +174,8 @@ namespace SaltnPepperEngine
 
         SharedPtr<Texture> Camera::GetRenderTexture()
         {
-            return m_renderTexture;
+            //return m_renderTexture;
+            return m_cameraBuffers->albedoTexture;
         }
 
         Ray Camera::GetRay(float xPos, float yPos, Matrix4 viewMatrix, bool flipY)
@@ -256,12 +257,14 @@ namespace SaltnPepperEngine
             gBuffer->AttachTextureExtra(materialTexture, Attachment::COLOR_ATTACH_2);
             gBuffer->AttachTextureExtra(depthTexture, Attachment::DEPTH_ATTACH);
 
+         
             std::vector attachments = {
                  Attachment::COLOR_ATTACH_0,
                  Attachment::COLOR_ATTACH_1,
                  Attachment::COLOR_ATTACH_2,
             };
 
+            
             gBuffer->UseDrawBuffers(attachments);
             gBuffer->Validate();
 
