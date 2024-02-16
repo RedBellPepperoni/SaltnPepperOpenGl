@@ -97,6 +97,16 @@ namespace SaltnPepperEngine
 			// The frame buffer of the particluar camera
 			SharedPtr<FrameBuffer> gBuffer;
 
+			// Rendering Textures
+			SharedPtr<Texture> albedoTexture;
+			SharedPtr<Texture> normalTexture;
+			SharedPtr<Texture> materialTexture;
+			SharedPtr<Texture> depthTexture;
+
+			// Buffer Textures
+			SharedPtr<Texture> swapTextureOne;
+			SharedPtr<Texture> swapTextureTwo;
+
 			// the premultiplied View ProjectionMatrix
 			Matrix4 viewProjMatrix;
 
@@ -264,9 +274,9 @@ namespace SaltnPepperEngine
 
 		public:
 
-			SharedPtr<FrameBuffer> SecondaryFrameBuffer;
-			SharedPtr<Texture> SecondaryTexture;
-			unsigned int rbo;
+			/*SharedPtr<FrameBuffer> SecondaryFrameBuffer;
+			SharedPtr<Texture> SecondaryTexture;*/
+			//unsigned int rbo;
 
 		private:
 
@@ -299,7 +309,12 @@ namespace SaltnPepperEngine
 			PipeLine& GetPipeLine();
 
 			// Draws the provided Elements with the provided shader
-			void ForwardPass(SharedPtr<Shader> shader, const CameraElement& camera, const MaterialType type);
+
+
+			void ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList);
+
+
+
 			void SkyBoxPass(SharedPtr<Shader> shader, const CameraElement& camera);
 			void DebugPass(const CameraElement& camera);
 

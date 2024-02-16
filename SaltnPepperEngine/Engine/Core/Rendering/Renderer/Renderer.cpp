@@ -137,27 +137,27 @@ namespace SaltnPepperEngine
 
             m_pipeline.rectangularObject.Init(1.0f);
 
-            SecondaryFrameBuffer = MakeShared<FrameBuffer>();
-            SecondaryTexture = MakeShared<Texture>();
+            //SecondaryFrameBuffer = MakeShared<FrameBuffer>();
+            //SecondaryTexture = MakeShared<Texture>();
 
-            Vector2Int viewport = Application::GetCurrent().GetWindowSize();
+            //Vector2Int viewport = Application::GetCurrent().GetWindowSize();
 
-            SecondaryTexture->Load(nullptr, viewport.x, viewport.y, 3, false, TextureFormat::RGB);
-            SecondaryTexture->SetFilePath("RenderTexture");
-            SecondaryTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            //SecondaryTexture->Load(nullptr, viewport.x, viewport.y, 3, false, TextureFormat::RGB);
+            //SecondaryTexture->SetFilePath("RenderTexture");
+            //SecondaryTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
-            SecondaryFrameBuffer->AttachTexture(SecondaryTexture);
-            
+            //SecondaryFrameBuffer->AttachTexture(SecondaryTexture);
+            //
 
-            
-            glGenRenderbuffers(1, &rbo);
-            glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, viewport.x, viewport.y); // use a single renderbuffer object for both a depth AND stencil buffer.
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+            //
+            //glGenRenderbuffers(1, &rbo);
+            //glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+            //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, viewport.x, viewport.y); // use a single renderbuffer object for both a depth AND stencil buffer.
+            //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
 
            
-            SecondaryFrameBuffer->Validate();
-            SecondaryFrameBuffer->UnBind();
+            //SecondaryFrameBuffer->Validate();
+            //SecondaryFrameBuffer->UnBind();
         }
 
 
@@ -352,13 +352,9 @@ namespace SaltnPepperEngine
         {
             // Unbinding any framebuffer will revert thback to the default frame buffer ,(the one at 0)
              // doing this allows us to render to application window
-            //m_pipeline.postprocessFrameBuffer->UnBind();
-
-            SecondaryFrameBuffer->UnBind();
+            m_pipeline.depthFrameBuffer->UnBind();
 
             SetViewport(0, 0, GetViewport().x, GetViewport().y);
-
-            //GLDEBUG(glClear(GL_COLOR_BUFFER_BIT));
             Clear();
 
         }
@@ -372,50 +368,26 @@ namespace SaltnPepperEngine
 
 
 
-        void Renderer::ForwardPass(SharedPtr<Shader> shader, const CameraElement& camera, const MaterialType type)
+        void Renderer::ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList)
         {
 
-            if (shader == nullptr)
-            {
-                LOG_CRITICAL("FORWARD PASS : Material type :[{0}] : Shader not loaded", (int)type);
-            }
+            if (shader == nullptr) { LOG_CRITICAL("Object PASS :  Shader not loaded"); }
 
-
+            // Nothing to draw
+            if (elementList.empty()) { return; }
+        
             // ============Set Shader Unifroms here ==================
             shader->Bind();
-
-
-            // Setting teh View Projection Matrix from the camera
-            /*shader->SetUniform("viewProj", camera.viewProjMatrix);
-            shader->SetUniform("cameraView", camera.viewPosition);*/
 
             BindCameraInformation(camera, shader);
 
             SetLightUniform(shader);
 
-
-            std::vector<size_t> elementList;
-
-            switch (type)
-            {
-            case MaterialType::Opaque: elementList = m_pipeline.opaqueElementList;
-
-                break;
-            default:
-                break;
-            }
-
-
-            if (elementList.empty())
-            {
-                //LOG_ERROR("No Eleemnts to Draw");
-                return;
-            }
-
+           
             for (int index = 0; index < elementList.size(); index++)
             {
                 // get the Elements by index from the Render Element List
-                RenderElement elementToDraw = m_pipeline.renderElementList[elementList[index]];
+                RenderElement& elementToDraw = m_pipeline.renderElementList[elementList[index]];
 
                 // Send the Data to Draw that element
                 DrawElement(camera, shader, elementToDraw);
@@ -713,12 +685,18 @@ namespace SaltnPepperEngine
             //calculate the view projection of the static view (no positional data)
             Matrix4 staticProjView = proj * (staticView);
 
-            // Store the values
+            // Store the camera values
             camera.viewProjMatrix = projView;
             camera.staticViewProjectMatrix = staticProjView;
+
             camera.outputTexture = cameraRef.GetRenderTexture();
 
             camera.gBuffer = cameraRef.GetBuffers()->gBuffer;
+            camera.albedoTexture = cameraRef.GetBuffers()->albedoTexture;
+            camera.normalTexture = cameraRef.GetBuffers()->normalTexture;
+            camera.materialTexture = cameraRef.GetBuffers()->materialTexture;
+            camera.depthTexture = cameraRef.GetBuffers()->depthTexture;
+
 
             return camera;
         }

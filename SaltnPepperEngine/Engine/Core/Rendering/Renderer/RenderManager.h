@@ -64,6 +64,9 @@ namespace SaltnPepperEngine
 			void RenderToTexture(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
 			void RenderToTextureNoClear(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
 
+
+		
+
 			void SetViewPort(int x, int y, int width, int height);
 			void ProcessImage(const SharedPtr<Texture>& texture, int lod = 0);
 
@@ -79,7 +82,7 @@ namespace SaltnPepperEngine
 
 			CameraElement m_editorCameraElement;
 
-			
+			int mainCameraIndex = -1;
 
 		};
 

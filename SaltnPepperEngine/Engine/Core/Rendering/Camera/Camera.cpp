@@ -172,7 +172,7 @@ namespace SaltnPepperEngine
         }
 
 
-        SharedPtr<Texture>& Camera::GetRenderTexture()
+        SharedPtr<Texture> Camera::GetRenderTexture()
         {
             return m_renderTexture;
         }

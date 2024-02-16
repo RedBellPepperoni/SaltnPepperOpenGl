@@ -96,6 +96,7 @@ namespace SaltnPepperEngine
 			if (cosAngle * YawSign > 0.99f)
 				m_PitchDelta = 0.f;
 
+			
 			// damping for smooth camera
 			m_YawDelta *= pow(m_linearDampening, delta);
 			m_PitchDelta *= pow(m_linearDampening, delta);

@@ -164,25 +164,15 @@ namespace SaltnPepperEngine
 		void RenderManager::RenderFrame()
 		{
 			
-			int cameraIndex = Application::GetCurrent().GetMainCameraIndex();
+			mainCameraIndex = Application::GetCurrent().GetMainCameraIndex();
 
-			if (cameraIndex < 0)
+			if (mainCameraIndex < 0)
 			{
 				LOG_WARN("No Rendering Cameras");
 				return;
 			}
 
 			
-
-			SharedPtr<FrameBuffer>& buffer = m_renderer->SecondaryFrameBuffer;
-			SharedPtr<Texture>& texture = m_renderer->SecondaryTexture;
-			AttachFrameBuffer(buffer);
-			buffer->Validate();
-
-			GLDEBUG(glEnable(GL_DEPTH_TEST));
-			m_renderer->Clear(true);
-
-
 			
 
 
@@ -191,8 +181,15 @@ namespace SaltnPepperEngine
 				//// ===== Post Render Skybox Pass =================
 				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
 
-				//// ===== Forward Pass for Opaque Elements ================ 
-				m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, MaterialType::Opaque);
+				//// ===== Object Pass for Opaque Elements ================ 
+				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
+
+				//// ===== Object Pass for Masked Elements ================ 
+				//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("MaskedShader"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
+
+
+				m_editorCameraElement.depthTexture->GenerateMipMaps();
+
 				m_renderer->DebugPass(m_editorCameraElement);
 
 				m_renderer->AttachDefaultFrameBuffer();
@@ -204,11 +201,17 @@ namespace SaltnPepperEngine
 				for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
 				{
 
+					AttachFrameBuffer(cameraElement.gBuffer);
+
 					// ===== Post Render Skybox Pass =================
 					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
 
 					// ===== Forward Pass for Opaque Elements ================ 
-					m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, MaterialType::Opaque);
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
+				
+					// Generate Depth mipmaps
+					cameraElement.depthTexture->GenerateMipMaps();
+				
 				}
 
 				EndFrame();
@@ -227,17 +230,22 @@ namespace SaltnPepperEngine
 		{
 			m_renderer->AttachDefaultFrameBuffer();
 
-			if (!m_editorCameraElement.outputTexture)
-			{
-				LOG_ERROR("Invalid output camera texture");
+			if (mainCameraIndex < m_renderer->GetPipeLine().cameraList.size()) {
+
+				CameraElement& mainCamera = m_renderer->GetPipeLine().cameraList[mainCameraIndex];
+
+				if (!mainCamera.outputTexture)
+				{
+					LOG_ERROR("Invalid output camera texture");
+				}
+
+
+				glDisable(GL_DEPTH_TEST);
+				m_renderer->Clear();
+				m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), mainCamera.outputTexture);
+				//m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_renderer->SecondaryTexture);
+
 			}
-
-			glDisable(GL_DEPTH_TEST);
-			m_renderer->Clear();
-			//m_renderer->SecondaryTexture->Bind();
-			//m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_renderer->SecondaryTexture);
-			m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_renderer->SecondaryTexture);
-
 			m_renderer->ClearRectangleObjectVAO();
 		}
 
@@ -260,6 +268,7 @@ namespace SaltnPepperEngine
 			SetViewPort(0, 0, width, height);
 			
 		}
+
 
 		
 

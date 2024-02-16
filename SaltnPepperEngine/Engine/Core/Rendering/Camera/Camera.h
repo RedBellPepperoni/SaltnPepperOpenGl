@@ -80,7 +80,7 @@ namespace SaltnPepperEngine
             const Vector3& GetRightVector() const;
             const Vector3& GetForwardVector() const;
 
-            SharedPtr<Texture>& GetRenderTexture();
+            SharedPtr<Texture> GetRenderTexture();
 
             Ray GetRay(float xPos, float yPos, Matrix4 viewMatrix, bool flipY);
             Frustum& GetFrustum(const Matrix4 viewMatrix);

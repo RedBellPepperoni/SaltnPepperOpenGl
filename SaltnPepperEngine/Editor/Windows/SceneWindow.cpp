@@ -105,7 +105,8 @@ namespace SaltnPepperEngine
 
 			//ImGuiUtils::Image(m_GameViewTexture.get(), glm::vec2(sceneViewSize.x, sceneViewSize.y));
 
-			Texture* texture = Application::GetCurrent().GetRenderManager()->GetRenderer()->SecondaryTexture.get();
+			//Texture* texture = Application::GetCurrent().GetRenderManager()->GetRenderer()->SecondaryTexture.get();
+			Texture* texture = Application::GetCurrent().GetEditorCamera()->GetRenderTexture().get();
 			ImGuiUtils::Image(texture, glm::vec2(sceneViewSize.x, sceneViewSize.y));
 
 			ImVec2 windowSize = ImGui::GetWindowSize();
