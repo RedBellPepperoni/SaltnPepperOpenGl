@@ -42,32 +42,32 @@ namespace SaltnPepperEngine
 
         void Material::SetAlbedoTexture(const std::string& filePath)
         {
-            textureMaps.albedoMap = GatherTexture(filePath);
+            albedoMap = GatherTexture(filePath);
         }
 
         void Material::SetNormalTexture(const std::string& filePath)
         {
-            textureMaps.normalMap = GatherTexture(filePath);
+            normalMap = GatherTexture(filePath);
         }
 
         void Material::SetMetallicTexture(const std::string& filePath)
         {
-            textureMaps.metallicMap = GatherTexture(filePath);
+            metallicMap = GatherTexture(filePath);
         }
 
         void Material::SetAOTexture(const std::string& filePath)
         {
-            textureMaps.aoMap = GatherTexture(filePath);
+            aoMap = GatherTexture(filePath);
         }
 
         void Material::SetRoughnessTexture(const std::string& filePath)
         {
-            textureMaps.roughnessMap = GatherTexture(filePath);
+            roughnessMap = GatherTexture(filePath);
         }
 
         void Material::SetEmissiveTexture(const std::string& filePath)
         {
-            textureMaps.emissiveMap = GatherTexture(filePath);
+            emissiveMap = GatherTexture(filePath);
         }
     }
 }

@@ -230,7 +230,10 @@ namespace SaltnPepperEngine
 
 			int textureBindIndex = 0;
 
-			SharedPtr<Texture> defaultTextureMap;
+			SharedPtr<Texture> defaultGreyTexture;
+			SharedPtr<Texture> defaultWhiteTexture;
+			SharedPtr<Texture> defaultNormalTexture;
+			SharedPtr<Texture> defaultBlackTexture;
 
 			SkyboxObject SkyboxCubeObject;
 			Skybox skybox;
@@ -322,7 +325,7 @@ namespace SaltnPepperEngine
 			CameraElement GenerateCameraElement(Camera& cameraRef, Transform& transform);
 
 			// Adds a Render Element to the Queue
-			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform);
+			void ProcessRenderElement(SharedPtr<Mesh> mesh, SharedPtr<Material> material, Transform& transform);
 			void ProcessLightElement(Light& light, Transform& transform);
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 

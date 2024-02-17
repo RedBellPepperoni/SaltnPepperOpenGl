@@ -174,8 +174,8 @@ namespace SaltnPepperEngine
 
         SharedPtr<Texture> Camera::GetRenderTexture()
         {
-            //return m_renderTexture;
-            return m_cameraBuffers->albedoTexture;
+            return m_renderTexture;
+           // return m_cameraBuffers->out;
         }
 
         Ray Camera::GetRay(float xPos, float yPos, Matrix4 viewMatrix, bool flipY)

@@ -24,7 +24,7 @@ namespace SaltnPepperEngine
 				if (!msg.empty())
 				{
 					msg.pop_back(); // extra \n character
-					LOG_ERROR("ShaderError : ", msg);
+					LOG_ERROR("ShaderError : " + msg);
 				}
 				return true;
 			}
@@ -46,7 +46,7 @@ namespace SaltnPepperEngine
 				if (!msg.empty())
 				{
 					msg.pop_back(); // extra \n character
-					LOG_ERROR("OpenGL::ErrorHandler", msg);
+					LOG_ERROR("OpenGL::ErrorHandler" + msg);
 				}
 				return true;
 			}

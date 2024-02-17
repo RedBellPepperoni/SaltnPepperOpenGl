@@ -33,11 +33,12 @@ namespace SaltnPepperEngine
 			// Loading the Default Shader 
 			// Add other Defaultr Shaders below <----
 
-			CHECKNULL(GetShaderLibrary()->LoadShader("ObjectForward", FileSystem::GetShaderDir().string() + "\\Forward\\spaceshipVert.glsl", FileSystem::GetShaderDir().string() + "\\Forward\\spaceshipFrag.glsl"));
-			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxForward", FileSystem::GetShaderDir().string() + "\\Forward\\skyboxVert.glsl", FileSystem::GetShaderDir().string() + "\\Forward\\skyboxFrag.glsl"));
-			CHECKNULL(GetShaderLibrary()->LoadShader("DebugLineShader", FileSystem::GetShaderDir().string() + "\\Common\\DebugLineVert.glsl", FileSystem::GetShaderDir().string() + "\\Common\\DebugLineFrag.glsl"));
-			CHECKNULL(GetShaderLibrary()->LoadShader("DebugPointShader", FileSystem::GetShaderDir().string() + "\\Common\\DebugPointVert.glsl", FileSystem::GetShaderDir().string() + "\\Common\\DebugPointFrag.glsl"));
-			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShader", FileSystem::GetShaderDir().string() + "\\Common\\renderBufferVert.glsl", FileSystem::GetShaderDir().string() + "\\Common\\renderBufferFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("ObjectForward", FileSystem::GetShaderDir().string() + "Forward\\spaceshipVert.glsl", FileSystem::GetShaderDir().string() + "Forward\\spaceshipFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueDeferred", FileSystem::GetShaderDir().string() + "Deferred\\Def_Vertex.glsl", FileSystem::GetShaderDir().string() + "Deferred\\Def_Opaque_Fragment.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxForward", FileSystem::GetShaderDir().string() + "Forward\\skyboxVert.glsl", FileSystem::GetShaderDir().string() + "Forward\\skyboxFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("DebugLineShader", FileSystem::GetShaderDir().string() + "Common\\DebugLineVert.glsl", FileSystem::GetShaderDir().string() + "Common\\DebugLineFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("DebugPointShader", FileSystem::GetShaderDir().string() + "Common\\DebugPointVert.glsl", FileSystem::GetShaderDir().string() + "Common\\DebugPointFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShader", FileSystem::GetShaderDir().string() + "Common\\renderBufferVert.glsl", FileSystem::GetShaderDir().string() + "Common\\renderBufferFrag.glsl"));
 			
 		}
 
@@ -89,7 +90,7 @@ namespace SaltnPepperEngine
 				ModelComponent& modelComp = modelObject.GetComponent<ModelComponent>();
 				Transform& transform = modelObject.GetComponent<Transform>();
 
-				const std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
+				std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
 
 				for (SharedPtr<Mesh> mesh : meshes)
 				{
@@ -98,7 +99,7 @@ namespace SaltnPepperEngine
 					// Check for frustum Optimization later
 					// Might need to add bound boxes to each mesh for this
 				
-					const SharedPtr<Material>& material = mesh->GetMaterial();
+					SharedPtr<Material> material = mesh->GetMaterial();
 				    
 					m_renderer->ProcessRenderElement(mesh, material, transform);
 
@@ -183,11 +184,23 @@ namespace SaltnPepperEngine
 				GLDEBUG(glEnable(GL_DEPTH_TEST));
 				m_renderer->Clear(true);
 
+				////// ===== Post Render Skybox Pass =================
+				//m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), m_editorCameraElement);
+
+				////// ===== Object Pass for Opaque Elements ================ 
+				//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ObjectForward"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
+
+				//// ======== Debug Vetices Pass ===================
+				//m_renderer->DebugPass(m_editorCameraElement);
+
 				//// ===== Post Render Skybox Pass =================
 				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), m_editorCameraElement);
 
 				//// ===== Object Pass for Opaque Elements ================ 
-				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ObjectForward"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
+				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueDeferred"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
+
+				// ======== Debug Vetices Pass ===================
+				m_renderer->DebugPass(m_editorCameraElement);
 
 				//// ===== Object Pass for Masked Elements ================ 
 				//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("MaskedShader"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
@@ -195,7 +208,7 @@ namespace SaltnPepperEngine
 
 				m_editorCameraElement.depthTexture->GenerateMipMaps();
 
-				m_renderer->DebugPass(m_editorCameraElement);
+				CopyTexture(m_editorCameraElement.albedoTexture, m_editorCameraElement.outputTexture);
 
 				m_renderer->AttachDefaultFrameBuffer();
 			}
@@ -215,14 +228,17 @@ namespace SaltnPepperEngine
 					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), cameraElement);
 
 					// ===== Forward Pass for Opaque Elements ================ 
-					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ObjectForward"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
+					//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ObjectForward"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
+					
+					// ====== Deferred Pass for Opaque Eleemnts ============
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueDeferred"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
 				
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();
 
 					//ProcessImage()
 
-					//CopyTexture(cameraElement.albedoTexture,cameraElement.outputTexture);
+					CopyTexture(cameraElement.albedoTexture,cameraElement.outputTexture);
 				
 				}
 

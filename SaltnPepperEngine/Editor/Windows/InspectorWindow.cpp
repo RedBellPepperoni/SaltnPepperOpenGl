@@ -641,20 +641,20 @@ namespace MM
 
                     Vector4 colour = Vector4();
                     float normal = 0.0f;
-                    MaterialTextures& textures = material->textureMaps;
+                    //MaterialTextures& textures = material->textureMaps;
 
                     ImVec2 textureSize = ImVec2(100.0f, 100.0f);
 
-                    TextureWidget("Albedo", material.get(), textures.albedoMap.get(), flipImage, material->albedoMapFactor, material->albedoColour, std::bind(&Material::SetAlbedoTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    TextureWidget("Albedo", material.get(), material->albedoMap.get(), flipImage, material->albedoMapFactor, material->albedoColour, std::bind(&Material::SetAlbedoTexture, material, std::placeholders::_1), textureSize * 1.0f);
                     ImGui::Separator();
 
-                    TextureWidget("Normal", material.get(), textures.normalMap.get(), flipImage, material->normalMapFactor, normal, false, std::bind(&Material::SetNormalTexture, material, std::placeholders::_1),  textureSize * 1.0f);
+                    TextureWidget("Normal", material.get(), material->normalMap.get(), flipImage, material->normalMapFactor, normal, false, std::bind(&Material::SetNormalTexture, material, std::placeholders::_1),  textureSize * 1.0f);
                     ImGui::Separator();
 
-                    TextureWidget("Metallic", material.get(), textures.metallicMap.get(), flipImage, material->metallicMapFactor, material->metallic, true, std::bind(&Material::SetMetallicTexture, material, std::placeholders::_1),textureSize * 1.0f);
+                    TextureWidget("Metallic", material.get(), material->metallicMap.get(), flipImage, material->metallicMapFactor, material->metallic, true, std::bind(&Material::SetMetallicTexture, material, std::placeholders::_1),textureSize * 1.0f);
                     ImGui::Separator();
 
-                    TextureWidget("Roughness", material.get(), textures.roughnessMap.get(), flipImage, material->roughnessMapFactor, material->roughness, true, std::bind(&Material::SetRoughnessTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    TextureWidget("Roughness", material.get(), material->roughnessMap.get(), flipImage, material->roughnessMapFactor, material->roughness, true, std::bind(&Material::SetRoughnessTexture, material, std::placeholders::_1), textureSize * 1.0f);
 
                     if (ImGui::TreeNodeEx("Reflectance", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanFullWidth))
                     {
@@ -664,10 +664,10 @@ namespace MM
 
 
 
-                    TextureWidget("AO",material.get(), textures.aoMap.get(), flipImage, material->aoMapFactor, normal, false, std::bind(&Material::SetAOTexture, material, std::placeholders::_1), textureSize * 1.0f);
+                    TextureWidget("AO",material.get(), material->aoMap.get(), flipImage, material->aoMapFactor, normal, false, std::bind(&Material::SetAOTexture, material, std::placeholders::_1), textureSize * 1.0f);
                     ImGui::Separator();
 
-                    TextureWidget("Emissive", material.get(), textures.emissiveMap.get(), flipImage, material->emissiveMapFactor, material->emissive, true, std::bind(&Material::SetEmissiveTexture, material, std::placeholders::_1),textureSize * 1.0f);
+                    TextureWidget("Emissive", material.get(), material->emissiveMap.get(), flipImage, material->emissiveMapFactor, material->emissiveMultiplier, true, std::bind(&Material::SetEmissiveTexture, material, std::placeholders::_1),textureSize * 1.0f);
 
                     ImGui::Columns(2);
 

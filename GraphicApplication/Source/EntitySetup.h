@@ -117,7 +117,7 @@ Entity CreatePlayerCharacter(Entity mainCamera)
 	childTransform->SetRotation(Vector3(0.0f, 0.0f, 0.0f));
 
 	ModelComponent& modelComp = childEntity.AddComponent<ModelComponent>("PlayerKnight");
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	SharedPtr<Material> mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
 
 	mat->SetAlbedoTexture("player.png");
 
@@ -153,7 +153,7 @@ Entity CreateBaseFloor()
 	transform.SetPosition(Vector3(0.0f, -0.5f, 0.0f));
 
 	ModelComponent& modelComp = floorEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	SharedPtr<Material> mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
 	
 	//mat->albedoColour = Vector4(0.0f, 1.0f, 0.2f, 1.0f);
 	mat->SetAlbedoTexture("snow");

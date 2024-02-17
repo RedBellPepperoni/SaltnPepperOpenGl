@@ -116,12 +116,19 @@ namespace SaltnPepperEngine
 
             // ============== LOADING TEXTURES =======================
             // Loading default Albedo texture
-            Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultTexture", "Engine\\Textures\\DefaultTexture.png", TextureFormat::RGB);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("GreyTexture", "Engine\\Textures\\GreyTexture.png", TextureFormat::RGB);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("WhiteTexture", "Engine\\Textures\\WhiteTexture.png", TextureFormat::RGB);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("BlackTexture", "Engine\\Textures\\BlackTexture.png", TextureFormat::RGB);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("NormalTexture", "Engine\\Textures\\NormalTexture.png", TextureFormat::RGB);
+           
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("FieldSkybox", "Engine\\Textures\\fieldRight.png", "Engine\\Textures\\fieldLeft.png", "Engine\\Textures\\fieldTop.png", "Engine\\Textures\\fieldBottom.png", "Engine\\Textures\\fieldFront.png", "Engine\\Textures\\fieldBack.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
 
 
-            m_pipeline.defaultTextureMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultTexture");
+            m_pipeline.defaultGreyTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("GreyTexture");
+            m_pipeline.defaultBlackTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("BlackTexture");
+            m_pipeline.defaultWhiteTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("WhiteTexture");
+            m_pipeline.defaultNormalTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("NormalTexture");
 
             m_pipeline.SkyboxCubeObject.Init();
 
@@ -219,7 +226,7 @@ namespace SaltnPepperEngine
             m_pipeline.skybox.cubeMap = cubemap;
         }
 
-        void Renderer::ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform)
+        void Renderer::ProcessRenderElement( SharedPtr<Mesh> mesh, SharedPtr<Material> material, Transform& transform)
         {
             if (material->albedoColour.a <= 0.0f)
             {
@@ -243,12 +250,26 @@ namespace SaltnPepperEngine
             {
                 newElement.materialIndex = m_pipeline.MaterialList.size();
 
-                // For now just checking for albedo
-                if (material->textureMaps.albedoMap == nullptr)
-                {
-                    material->textureMaps.albedoMap = m_pipeline.defaultTextureMap;
-                }
+                //Checking Texture Validity
+                if (material->albedoMap == nullptr) 
+                { material->albedoMap = m_pipeline.defaultGreyTexture;}
 
+                if (material->normalMap == nullptr) 
+                { material->normalMap = m_pipeline.defaultNormalTexture; }
+
+                if (material->metallicMap == nullptr) 
+                { material->metallicMap = m_pipeline.defaultWhiteTexture; }
+
+                if (material->roughnessMap == nullptr) 
+                { material->roughnessMap = m_pipeline.defaultWhiteTexture; }
+
+                if (material->aoMap == nullptr) 
+                { material->aoMap = m_pipeline.defaultWhiteTexture; }
+
+                if (material->emissiveMap == nullptr) 
+                { material->emissiveMap = m_pipeline.defaultBlackTexture; }
+              
+         
                 m_pipeline.MaterialList.push_back(material);
             }
 
@@ -381,7 +402,7 @@ namespace SaltnPepperEngine
 
             BindCameraInformation(camera, shader);
 
-            SetLightUniform(shader);
+           // SetLightUniform(shader);
 
            
             for (int index = 0; index < elementList.size(); index++)
@@ -532,11 +553,40 @@ namespace SaltnPepperEngine
 
             if (mat != nullptr)
             {
-                mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
-                shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
-                //shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedomapFactor);
-                shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
+                // ======== Albedo Map Bindings ==============
+                mat->albedoMap->Bind(m_pipeline.textureBindIndex++);
+                shader->SetUniform("mapAlbedo", mat->albedoMap->GetBoundId());
+                shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedoMapFactor);
+                shader->SetUniform("materialProperties.Color", mat->albedoColour);
+
+                // ======= Metallic Map Bindings ===============
+                mat->metallicMap->Bind(m_pipeline.textureBindIndex++); 
+                shader->SetUniform("mapMetallic", mat->metallicMap->GetBoundId()); 
+                shader->SetUniform("materialProperties.MetallicMapFactor", mat->metallicMapFactor);
                 shader->SetUniform("materialProperties.Metallic", mat->metallic);
+
+                // ======= Normal Map Bindings ===============
+                mat->normalMap->Bind(m_pipeline.textureBindIndex++); 
+                shader->SetUniform("mapMetallic", mat->metallicMap->GetBoundId()); 
+                shader->SetUniform("materialProperties.NormalMapFactor", mat->metallicMapFactor);
+
+
+                // ======== Roughness Map Bindings ============
+                mat->roughnessMap->Bind(m_pipeline.textureBindIndex++);
+                shader->SetUniform("mapRoughness", mat->roughnessMap->GetBoundId());
+                shader->SetUniform("materialProperties.RoughnessMapFactor", mat->roughnessMapFactor);
+                shader->SetUniform("materialProperties.Roughness", mat->roughness);
+
+                // ======== Ambient Occlusion Map Bindings ============
+                mat->aoMap->Bind(m_pipeline.textureBindIndex++);
+                shader->SetUniform("mapAO", mat->aoMap->GetBoundId());
+                shader->SetUniform("materialProperties.AOMapFactor", mat->aoMapFactor);
+
+                // ======== Emissive Map Bindings ==============
+                mat->emissiveMap->Bind(m_pipeline.textureBindIndex++);
+                shader->SetUniform("mapEmissive", mat->emissiveMap->GetBoundId());
+                shader->SetUniform("materialProperties.EmissiveMapFactor", mat->emissiveMapFactor);
+                shader->SetUniform("materialProperties.Emissive", mat->emissiveColor);
 
             }
 

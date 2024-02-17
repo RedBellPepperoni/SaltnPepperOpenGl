@@ -17,6 +17,7 @@ namespace SaltnPepperEngine
 			, m_meshName("empty")
 		{
 			m_material = MakeShared<Material>();
+			//m_material->ClearAllMaps();
 		}
 
 		/*Mesh::Mesh(const Mesh& mesh)
@@ -45,6 +46,8 @@ namespace SaltnPepperEngine
 			m_VBO = Factory<VertexBuffer>::Create(sizeof(Vertex) * m_vertexCount, m_vertices.data(), UsageType::STATIC_COPY);
 
 			m_material = MakeShared<Material>();
+			//m_material->ClearAllMaps();
+
 		}
 
 		// Default Constructor
