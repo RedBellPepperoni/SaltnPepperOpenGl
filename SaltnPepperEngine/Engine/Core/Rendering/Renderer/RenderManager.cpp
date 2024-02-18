@@ -219,23 +219,27 @@ namespace SaltnPepperEngine
 					GLDEBUG(glEnable(GL_DEPTH_TEST));
 					m_renderer->Clear(true);
 
-
 					
+				
 					// ====== Deferred Pass for Opaque Eleemnts ============
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueDeferred"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
 
-
-					SharedPtr<Shader> iblShader = m_ShaderLibrary->GetResource("IBLDeferred");
-
-					// ======= Light Pass =====================
-					//m_renderer->ImagedBasedLightPass(iblShader,cameraElement,cameraElement.postProcessTexture);
-					//RenderToTexture(cameraElement.postProcessTexture,iblShader);
-
-					// ===== Post Render Skybox Pass =================
-					//m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), cameraElement);
-				
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();
+
+					// ===== Post Render Skybox Pass =================
+				    //m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), cameraElement);
+
+
+					//SharedPtr<Shader> iblShader = m_ShaderLibrary->GetResource("IBLDeferred");
+
+					// ======= Light Pass =====================
+					/*m_renderer->ImagedBasedLightPass(iblShader,cameraElement,cameraElement.postProcessTexture);
+					RenderToTexture(cameraElement.postProcessTexture,iblShader);*/
+
+					
+				
+					
 
 					//ProcessImage()
 
@@ -323,7 +327,7 @@ namespace SaltnPepperEngine
 		{
 			//Bind Texture to use for the frameBuffer
 			m_renderer->GetPostProcessFrameBuffer()->AttachTexture(texture, attachment);
-			RenderToFrameBuffer(m_renderer->GetPostProcessFrameBuffer(), shader);
+			RenderToFrameBuffer(m_renderer->GetPipeLine().postprocessFrameBuffer, shader);
 		}
 
 		void RenderManager::RenderToTextureNoClear(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment)

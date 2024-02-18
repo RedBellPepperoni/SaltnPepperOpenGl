@@ -240,6 +240,7 @@ namespace SaltnPepperEngine
 			SharedPtr<Texture> defaultWhiteTexture;
 			SharedPtr<Texture> defaultNormalTexture;
 			SharedPtr<Texture> defaultBlackTexture;
+			SharedPtr<Texture> brdfLUTTexture;
 
 			SkyboxObject SkyboxCubeObject;
 			Skybox skybox;

@@ -120,7 +120,9 @@ namespace SaltnPepperEngine
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("WhiteTexture", "Engine\\Textures\\WhiteTexture.png", TextureFormat::RGB);
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("BlackTexture", "Engine\\Textures\\BlackTexture.png", TextureFormat::RGB);
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("NormalTexture", "Engine\\Textures\\NormalTexture.png", TextureFormat::RGB);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("BrdfLutTexture", "Engine\\Textures\\brdflut.png", TextureFormat::RGB);
            
+
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("FieldSkybox", "Engine\\Textures\\fieldRight.png", "Engine\\Textures\\fieldLeft.png", "Engine\\Textures\\fieldTop.png", "Engine\\Textures\\fieldBottom.png", "Engine\\Textures\\fieldFront.png", "Engine\\Textures\\fieldBack.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
 
@@ -129,6 +131,8 @@ namespace SaltnPepperEngine
             m_pipeline.defaultBlackTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("BlackTexture");
             m_pipeline.defaultWhiteTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("WhiteTexture");
             m_pipeline.defaultNormalTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("NormalTexture");
+            m_pipeline.brdfLUTTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("BrdfLutTexture");
+
 
             m_pipeline.SkyboxCubeObject.Init();
 
@@ -189,23 +193,25 @@ namespace SaltnPepperEngine
         void Renderer::BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId)
         {
             m_pipeline.skybox.cubeMap->Bind(textureBindId++);
-            shader->SetUniform("skybox", m_pipeline.skybox.cubeMap->getBoundId());
-            shader->SetUniform("Rotation", Matrix3(1.0f));
-
+            m_pipeline.brdfLUTTexture->Bind(textureBindId++);
+            shader->SetUniform("environment.skybox", m_pipeline.skybox.cubeMap->getBoundId());
+            shader->SetUniform("environment.irradiance", m_pipeline.skybox.cubeMap->getBoundId());
+            shader->SetUniform("environment.skyboxRotaion", Matrix3(1.0f));
+            shader->SetUniform("encironment.envBRDFLUT", m_pipeline.brdfLUTTexture->GetBoundId());
 
             // get the intensity from the pipeline
             float skyluminance = m_pipeline.skybox.GetIntensity();
 
             skyluminance = skyluminance < 0.0f ? Skybox::Defaultintensity : skyluminance;
 
-            shader->SetUniform("luminance", skyluminance);
+            shader->SetUniform("environment.intensity", skyluminance);
 
         }
 
         void Renderer::BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader)
         {
-            shader->SetUniform("camera.viewProj", camera.viewProjMatrix);
-            shader->SetUniform("camera.invViewProj", camera.invViewProjMatrix);
+            shader->SetUniform("camera.viewProjMatrix", camera.viewProjMatrix);
+            shader->SetUniform("camera.invViewProjMatrix", camera.invViewProjMatrix);
             shader->SetUniform("camera.position", camera.viewPosition);
         }
 
@@ -340,6 +346,7 @@ namespace SaltnPepperEngine
             rectObject.GetVAO()->Bind();
             
             DrawIndices(DrawType::TRIANGLES, rectObject.IndexCount, 0);
+            //rectObject.GetVAO()->UnBind();
         }
 
         void Renderer::Clear(bool clearDepth)
@@ -435,7 +442,7 @@ namespace SaltnPepperEngine
         void Renderer::ImagedBasedLightPass(SharedPtr<Shader> shader, const CameraElement& camera, SharedPtr<Texture> outputTexture)
         {
             shader->Bind();
-            shader->IgnoreNonExistingUniform("camera.viewProj");
+            shader->IgnoreNonExistingUniform("camera.viewProjMatrix");
             int textureId = 0;
 
             BindCameraBuffers(camera,shader,textureId);

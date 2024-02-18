@@ -47,8 +47,8 @@ uniform sampler2D mapNormal;
 struct Camera
 {
     vec3 position;
-    mat4 viewProj;
-    mat4 invViewProj;
+    mat4 viewProjMatrix;
+    mat4 invViewProjMatrix;
 };
 
 uniform Camera camera;
