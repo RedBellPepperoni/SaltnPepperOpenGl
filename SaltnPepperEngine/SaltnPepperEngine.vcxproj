@@ -103,6 +103,7 @@
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\EditorCameraController.h" />
+    <ClInclude Include="Engine\Core\Rendering\Textures\ColoredTextures.h" />
     <ClInclude Include="Engine\Utils\Plane.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\BroadPhase.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.h" />

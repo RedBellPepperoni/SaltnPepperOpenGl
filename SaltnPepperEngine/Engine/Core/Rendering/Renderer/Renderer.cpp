@@ -5,6 +5,7 @@
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
+#include "Engine/Core/Rendering/Textures/ColoredTextures.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Shader/Shader.h"
 
@@ -127,10 +128,15 @@ namespace SaltnPepperEngine
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
 
 
-            m_pipeline.defaultGreyTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("GreyTexture");
-            m_pipeline.defaultBlackTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("BlackTexture");
-            m_pipeline.defaultWhiteTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("WhiteTexture");
-            m_pipeline.defaultNormalTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("NormalTexture");
+            //m_pipeline.defaultGreyTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("GreyTexture");
+            //m_pipeline.defaultBlackTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("BlackTexture");
+            //m_pipeline.defaultWhiteTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("WhiteTexture");
+            //m_pipeline.defaultNormalTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("NormalTexture");
+            //m_pipeline.brdfLUTTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("BrdfLutTexture");
+            m_pipeline.defaultGreyTexture = ColoredTexture::MakeTexture(ColoredTexture::GREY);
+            m_pipeline.defaultBlackTexture = ColoredTexture::MakeTexture(ColoredTexture::BLACK);
+            m_pipeline.defaultWhiteTexture = ColoredTexture::MakeTexture(ColoredTexture::WHITE);
+            m_pipeline.defaultNormalTexture = ColoredTexture::MakeTexture(ColoredTexture::FLAT_NORMAL);
             m_pipeline.brdfLUTTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("BrdfLutTexture");
 
 
@@ -334,6 +340,44 @@ namespace SaltnPepperEngine
 
         }
 
+        void Renderer::ProcessLightElement(DirectionalLight& light)
+        {
+            DirectionalLightElement& dirLight = m_pipeline.directionalLight;
+
+            if (dirLight.ProjectionMatrices.size() != DirectionalLight::TextureCount) { LOG_ERROR("DirectionalLight : Projection Matrices do not match Textrue count"); }
+
+            if (dirLight.BiasedProjectionMatrices.size() != DirectionalLight::TextureCount) { LOG_ERROR("DirectionalLight : Projection Bias Matrices do not match Textrue count"); }
+
+            dirLight.AmbientIntensity = light.GetAmbientIntensity();
+            dirLight.Intensity = light.GetIntensity();
+            dirLight.Color = light.GetColor();
+            dirLight.Direction = Normalize(light.Direction);
+
+            constexpr auto ProjectionBiasMatrix = [](size_t projectionIndex)
+                {
+                    float scale = 1.0f / DirectionalLight::TextureCount;
+                    float offset = projectionIndex * scale;
+
+                    Matrix4 Result(
+                        0.5f * scale, 0.0f, 0.0f, 0.0f,
+                        0.0f, 0.5f, 0.0f, 0.0f,
+                        0.0f, 0.0f, 0.5f, 0.0f,
+                        0.5f * scale + offset, 0.5f, 0.5f, 1.0f
+                    );
+                    return Result;
+                };
+
+            dirLight.ShadowMap = light.DepthMap;
+
+            for (size_t i = 0; i < dirLight.ProjectionMatrices.size(); i++)
+            {
+                dirLight.ProjectionMatrices[i] = light.GetMatrix(i);
+                dirLight.BiasedProjectionMatrices[i] = ProjectionBiasMatrix(i) * dirLight.ProjectionMatrices[i];
+            }
+
+
+        }
+
 
 
 
@@ -369,7 +413,7 @@ namespace SaltnPepperEngine
             m_pipeline.MeshList.clear();
             m_pipeline.opaqueElementList.clear();
             m_pipeline.renderElementList.clear();
-            m_pipeline.lightElementList.clear();
+            //m_pipeline.lightElementList.clear();
             m_pipeline.textureBindIndex = 0;
 
         }
@@ -451,8 +495,26 @@ namespace SaltnPepperEngine
 
         }
 
-        void Renderer::DirectionalLightPass(const CameraElement& camera, SharedPtr<Texture> outputTexture)
+        void Renderer::DirectionalLightPass(SharedPtr<Shader> shader, const CameraElement& camera, SharedPtr<Texture> outputTexture)
         {
+
+            shader->Bind();
+
+            shader->IgnoreNonExistingUniform("camera.viewProjMatrix");
+            shader->IgnoreNonExistingUniform("camera.position");
+            shader->IgnoreNonExistingUniform("albedoMap");
+            shader->IgnoreNonExistingUniform("materialMap");
+
+            int textureId = 0;
+            BindCameraBuffers(camera,shader, textureId);
+            BindCameraInformation(camera, shader);
+
+            //SubmitDirectionalLightInformation(shader, textureId);
+
+
+
+
+           // this->RenderToTextureNoClear(output, shader);
         }
 
         void Renderer::SkyBoxPass(SharedPtr<Shader> shader, const CameraElement& camera)
@@ -666,7 +728,7 @@ namespace SaltnPepperEngine
         void Renderer::SetLightUniform(SharedPtr<Shader>& shader)
         {
 
-            shader->SetUniform("uboLights.lightCount", (int)m_pipeline.lightElementList.size());
+            //shader->SetUniform("uboLights.lightCount", (int)m_pipeline.lightElementList.size());
 
 
            /* for (LightElement element : m_pipeline.lightElementList)
@@ -718,6 +780,33 @@ namespace SaltnPepperEngine
 
 
 
+        }
+
+        void Renderer::SubmitDirectionalLightData(SharedPtr<Shader> shader, int& textureId)
+        {
+            const DirectionalLightElement& dirLight = m_pipeline.directionalLight;
+           
+
+            Vector4 colorPacked = Vector4(dirLight.Color * dirLight.Intensity, dirLight.AmbientIntensity);
+            dirLight.ShadowMap->Bind(textureId++);
+            shader->SetUniform("light.color", colorPacked); 
+            shader->SetUniform("light.direction", dirLight.Direction); 
+            shader->SetUniform("lightDepthMaps", dirLight.ShadowMap->GetBoundId()); 
+
+            for (size_t j = 0; j < dirLight.BiasedProjectionMatrices.size(); j++)
+            {
+                std::string uniformname = "lights.transform[" + to_string(j) + "]";
+                shader->SetUniform(uniformname,dirLight.BiasedProjectionMatrices[j]);
+            }
+         
+               
+           
+
+           /* m_pipeline.defaultShadowMap->Bind(textureId);
+            for (size_t i = lightCount; i < MaxDirLightCount; i++)
+            {
+                shader->SetUniform(MxFormat("lightDepthMaps[{}]", i), this->Pipeline.Environment.DefaultShadowMap->GetBoundId());
+            }*/
         }
 
 
@@ -834,6 +923,7 @@ namespace SaltnPepperEngine
             m_pipeline.rectangularObject.GetVAO()->Bind();
             DrawIndices(DrawType::TRIANGLES,  m_pipeline.rectangularObject.IndexCount, 0);
             //DrawVertices(DrawType::TRIANGLES, 0, 6);
+            ClearRectangleObjectVAO();
 
         }
 

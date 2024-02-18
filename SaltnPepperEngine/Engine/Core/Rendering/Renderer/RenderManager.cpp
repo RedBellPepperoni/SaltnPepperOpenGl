@@ -122,6 +122,7 @@ namespace SaltnPepperEngine
 
 			UpdateDirectionalCascade(scene);
 
+			
 
 			/*ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<BaseLight>();
 
@@ -152,6 +153,8 @@ namespace SaltnPepperEngine
 			{
 				return;
 			}
+
+			dirlight->Direction = Normalize(dirTransform.GetForwardVector());
 			
 
 			//dirTransform.SetPosition(cameraTransform->GetPosition());
@@ -162,6 +165,9 @@ namespace SaltnPepperEngine
 			Matrix4 viewMatrix = Inverse(cameraTransform->GetMatrix());
 
 			dirlight->UpdateLightCascades(aspectRatio,fov,viewMatrix);
+
+
+			m_renderer->ProcessLightElement(*dirlight);
 
 		}
 
@@ -224,13 +230,13 @@ namespace SaltnPepperEngine
 
 
 				//// ===== Post Render Skybox Pass =================
-				//m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), m_editorCameraElement);
+				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), m_editorCameraElement);
 
 				//// ===== Object Pass for Opaque Elements ================ 
 				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueDeferred"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
 
 				// ======== Debug Vetices Pass ===================
-				m_renderer->DebugPass(m_editorCameraElement);
+				//m_renderer->DebugPass(m_editorCameraElement);
 
 				//// ===== Object Pass for Masked Elements ================ 
 				//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("MaskedShader"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
@@ -316,7 +322,7 @@ namespace SaltnPepperEngine
 			
 			}
 			
-			m_renderer->ClearRectangleObjectVAO();
+			//m_renderer->ClearRectangleObjectVAO();
 		}
 
 		void RenderManager::AttachFrameBuffer(SharedPtr<FrameBuffer>& frameBuffer)

@@ -336,6 +336,9 @@
     <ClInclude Include="Engine\Core\Rendering\Lights\LightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Rendering\Textures\ColoredTextures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SaltnPepperEngine.h">

@@ -11,7 +11,7 @@
 #include "Engine/Core/Rendering/Skybox/SkyboxObject.h"
 #include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
 #include "Engine/Core/Rendering/Buffers/ShaderStorageBuffer.h"
-
+#include "Engine/Core/Rendering/Lights/DirectionalLight.h"
 #include "Engine/Core/Rendering/Geometry/RectangleObject.h"
 
 namespace SaltnPepperEngine
@@ -62,32 +62,43 @@ namespace SaltnPepperEngine
 			Matrix4 NormalMatrix;
 		};
 
-		struct LightElement
+		//struct LightElement
+		//{
+		//	// The Shader Uniform name
+		//	std::string uniformName;
+
+		//	// Color of the Light 
+		//	Vector3 color;
+
+		//	// POsition of the transform component
+		//	Vector3 position;
+
+		//	// Incase of directional/spot light, the forwward vector
+		//	Vector3 direction;
+
+		//	// How bright the light is
+		//	float intensity;
+
+		//	// Incase of Point light , the light effective radius
+		//	float radius;
+
+		//	// the actual type of light
+		//	LightType type;
+
+		//	// Spot light inner and outer angles
+		//	float innerAngle;
+		//	float outerAngle;
+		//};
+
+		struct DirectionalLightElement
 		{
-			// The Shader Uniform name
-			std::string uniformName;
-
-			// Color of the Light 
-			Vector3 color;
-
-			// POsition of the transform component
-			Vector3 position;
-
-			// Incase of directional/spot light, the forwward vector
-			Vector3 direction;
-
-			// How bright the light is
-			float intensity;
-
-			// Incase of Point light , the light effective radius
-			float radius;
-
-			// the actual type of light
-			LightType type;
-
-			// Spot light inner and outer angles
-			float innerAngle;
-			float outerAngle;
+			SharedPtr<Texture> ShadowMap;
+			std::array<Matrix4, 3> ProjectionMatrices;
+			std::array<Matrix4, 3> BiasedProjectionMatrices;
+			Vector3 Direction;
+			float AmbientIntensity;
+			Vector3 Color;
+			float Intensity;
 		};
 
 
@@ -214,7 +225,10 @@ namespace SaltnPepperEngine
 			// All the Render Elements that need to be drawn
 			std::vector<RenderElement> renderElementList;
 
-			std::vector<LightElement> lightElementList;
+			//std::vector<LightElement> lightElementList;
+
+			DirectionalLightElement directionalLight;
+			
 
 			// All the Material for the current loaded Render Elements
 			std::vector<SharedPtr<Material>> MaterialList;
@@ -241,6 +255,9 @@ namespace SaltnPepperEngine
 			SharedPtr<Texture> defaultNormalTexture;
 			SharedPtr<Texture> defaultBlackTexture;
 			SharedPtr<Texture> brdfLUTTexture;
+
+			SharedPtr<Texture> defaultShadowMap;
+
 
 			SkyboxObject SkyboxCubeObject;
 			Skybox skybox;
@@ -302,6 +319,8 @@ namespace SaltnPepperEngine
 
 			void SetLightUniform(SharedPtr<Shader>& shader);
 
+			// Submits the Data to the Directional Light Shader
+			void SubmitDirectionalLightData(SharedPtr<Shader> shader, int& textureId);
 
 		public:
 
@@ -323,7 +342,7 @@ namespace SaltnPepperEngine
 
 			void ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList);
 			void ImagedBasedLightPass(SharedPtr<Shader> shader ,const CameraElement& camera, SharedPtr<Texture> outputTexture);
-			void DirectionalLightPass(const CameraElement& camera, SharedPtr<Texture> outputTexture);
+			void DirectionalLightPass(SharedPtr<Shader> shader, const CameraElement& camera, SharedPtr<Texture> outputTexture);
 			void SkyBoxPass(SharedPtr<Shader> shader, const CameraElement& camera);
 			void DebugPass(const CameraElement& camera);
 
@@ -332,7 +351,9 @@ namespace SaltnPepperEngine
 
 			// Adds a Render Element to the Queue
 			void ProcessRenderElement(SharedPtr<Mesh> mesh, SharedPtr<Material> material, Transform& transform);
-			//void ProcessLightElement(Light& light, Transform& transform);
+			void ProcessLightElement(DirectionalLight& light);
+		/*	void ProcessLightElement(SpotLight& light, Transform& transform);
+			void ProcessLightElement(PointLight& light, Transform& transform);*/
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 
 
