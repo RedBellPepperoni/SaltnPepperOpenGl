@@ -34,7 +34,6 @@ namespace SaltnPepperEngine
             void Init(int width, int height);
             void Resize(int width, int height);
 
-            unsigned int rbo;
 
         };
 
@@ -44,11 +43,15 @@ namespace SaltnPepperEngine
 
         public:
 
+            static int MAXCameras;
+
             Camera();
             Camera(const std::string name);
             Camera(float FOV, float Near, float Far, float Aspect);
             Camera(float Aspect, float Near, float Far);
             ~Camera() = default;
+
+            
 
             // Temporary defining the Transforms here until I switch to ECS
             //Transform m_transform;
@@ -58,6 +61,7 @@ namespace SaltnPepperEngine
 
             const Matrix4& GetProjectionMatrix();
 
+            const int GetCameraIndex() const { return CameraIndex; };
 
             const float GetZoom() const;
             void SetZoom(float zoom);
@@ -147,6 +151,8 @@ namespace SaltnPepperEngine
 
             bool m_orthographic = false;
 
+
+            int CameraIndex = -1;
 
         };
     }

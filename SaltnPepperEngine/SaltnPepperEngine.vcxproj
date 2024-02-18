@@ -88,6 +88,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Rendering\Lights\DirectionalLight.h" />
+    <ClInclude Include="Engine\Core\Rendering\Lights\BaseLight.h" />
+    <ClInclude Include="Engine\Core\Rendering\Lights\LightComponent.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\BaseShader.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\Compute.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\ComputeShader.h" />
@@ -117,7 +120,7 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsEngine\RungeKuttaIntegration.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\CameraController.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\FlyCameraController.h" />
-    <ClInclude Include="Engine\Core\Rendering\Lights\Light.h" />
+    <ClInclude Include="Engine\Core\Rendering\Lights\Deprecated_Light.h" />
     <ClInclude Include="Engine\Core\Rendering\Renderer\DebugRenderer.h" />
     <ClInclude Include="Engine\Core\Components\SceneComponents.h" />
     <ClInclude Include="Engine\Core\Rendering\Textures\CubeMap.h" />
@@ -194,6 +197,9 @@
     <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Rendering\Lights\DirectionalLight.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Lights\Deprecated_Light.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Lights\LightComponent.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Shader\BaseShader.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Shader\Compute.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Shader\ComputeShader.cpp" />

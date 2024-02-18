@@ -18,7 +18,13 @@ namespace SaltnPepperEngine
 	class EntityManager;
 	class Entity;
 	class CameraController;
-	class DirectionLight;
+
+	namespace Rendering 
+
+	{	
+		class Camera;
+		class DirectionalLight;
+	}
 	class SceneGraph;
 
 	namespace Components
@@ -32,6 +38,8 @@ namespace SaltnPepperEngine
 	}*/
 
 	using Components::Transform;
+	using Rendering::DirectionalLight;
+	using Rendering::Camera;
 	//using Audio::AudioListener;
 
 
@@ -48,7 +56,7 @@ namespace SaltnPepperEngine
 
 		UniquePtr<SceneGraph> m_SceneGraph;
 
-		SharedPtr<DirectionLight> m_directionLight = nullptr;
+		//SharedPtr<DirectionalLight> m_directionLight = nullptr;
 
 
 		Transform* mainCameraTransform = nullptr;
@@ -113,8 +121,12 @@ namespace SaltnPepperEngine
 		void DestroyAllGameObjects();
 
 		void SetMainCamera(CameraController* controller, Transform* transform);
-
 		void SetMainCameraPosition(const Vector3 position);
+
+		Camera* GetMainCamera();
+		Transform* GetMainCameraTransform();
+		
+
 
 		void UpdateSceneGraph();
 
@@ -128,9 +140,7 @@ namespace SaltnPepperEngine
 		void Serialize(const std::string& filename, bool binary = false);
 		void Deserialize(const std::string filename,bool binary = false);
 
-		Transform* GetMainCameraTransform() const;
-
-
+		
 
 
 		template<typename Archive>

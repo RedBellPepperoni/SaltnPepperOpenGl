@@ -38,7 +38,7 @@ namespace SaltnPepperEngine
 		class Shader;
 		class Camera;
 		class Texture;
-		struct Light;
+		class BaseLight;
 		class ComputeShader;
 
 		enum class LightType : uint8_t;
@@ -332,7 +332,7 @@ namespace SaltnPepperEngine
 
 			// Adds a Render Element to the Queue
 			void ProcessRenderElement(SharedPtr<Mesh> mesh, SharedPtr<Material> material, Transform& transform);
-			void ProcessLightElement(Light& light, Transform& transform);
+			//void ProcessLightElement(Light& light, Transform& transform);
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 
 

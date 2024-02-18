@@ -19,7 +19,9 @@
 
 
 #include "Engine/Core/Rendering/Camera/Camera.h"
-#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Rendering/Lights/BaseLight.h"
+#include "Engine/Core/Rendering/Lights/LightComponent.h"
+#include "Engine/Core/Rendering/Lights/DirectionalLight.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
 #include "Engine/Core/Rendering/Geometry/Primitives.h"
 
@@ -120,65 +122,65 @@ namespace MM
 
 
     template <>
-    void ComponentEditorWidget<Light>(entt::registry& reg, entt::registry::entity_type e)
+    void ComponentEditorWidget<LightComponent>(entt::registry& reg, entt::registry::entity_type e)
     {
 
-        Light& light = reg.get<Light>(e);
+        //Light& light = reg.get<Light>(e);
 
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
-        ImGui::Columns(2);
-        ImGui::Separator();
+        //ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+        //ImGui::Columns(2);
+        //ImGui::Separator();
 
-        if (light.type != LightType::DirectionLight)
-        {
-            ImGuiUtils::Property("Position", light.position);
-        }
+        //if (light.type != LightType::DirectionLight)
+        //{
+        //    ImGuiUtils::Property("Position", light.position);
+        //}
 
-        if (light.type != LightType::PointLight)
-            ImGuiUtils::Property("Direction", light.direction);
+        //if (light.type != LightType::PointLight)
+        //    ImGuiUtils::Property("Direction", light.direction);
 
-        if (light.type != LightType::DirectionLight)
-            ImGuiUtils::Property("Radius", light.radius, 0.0f, 100.0f);
+        //if (light.type != LightType::DirectionLight)
+        //    ImGuiUtils::Property("Radius", light.radius, 0.0f, 100.0f);
 
-        Vector4 color = Vector4(light.color, 1.0f);
+        //Vector4 color = Vector4(light.color, 1.0f);
 
-        ImGuiUtils::Property("Color", color, true, ImGuiUtils::PropertyFlag::ColourProperty);
+        //ImGuiUtils::Property("Color", color, true, ImGuiUtils::PropertyFlag::ColourProperty);
 
-        light.color = Vector3(color);
+        //light.color = Vector3(color);
 
-        ImGuiUtils::Property("Intensity", light.intensity, 0.0f, 10.0f);
+        //ImGuiUtils::Property("Intensity", light.intensity, 0.0f, 10.0f);
 
-        if (light.type == LightType::SpotLight)
-            ImGuiUtils::Property("Angle", light.innerAngle, -1.0f, 1.0f);
+        //if (light.type == LightType::SpotLight)
+        //    ImGuiUtils::Property("Angle", light.innerAngle, -1.0f, 1.0f);
 
-        ImGui::AlignTextToFramePadding();
-        ImGui::TextUnformatted("Light Type");
-        ImGui::NextColumn();
-        ImGui::PushItemWidth(-1);
+        //ImGui::AlignTextToFramePadding();
+        //ImGui::TextUnformatted("Light Type");
+        //ImGui::NextColumn();
+        //ImGui::PushItemWidth(-1);
 
-        const char* types[] = { "Directional", "Spot", "Point" };
-        std::string light_current = Light::GetStringfromType(LightType(int(light.type)));
-        if (ImGui::BeginCombo("", light_current.c_str(), 0)) // The second parameter is the label previewed before opening the combo.
-        {
-            for (int n = 0; n < 3; n++)
-            {
-                bool is_selected = (light_current.c_str() == types[n]);
-                if (ImGui::Selectable(types[n], light_current.c_str()))
-                {
-                    light.type = Light::GetTypeFromString(types[n]);
-                }
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
+        //const char* types[] = { "Directional", "Spot", "Point" };
+        //std::string light_current = Light::GetStringfromType(LightType(int(light.type)));
+        //if (ImGui::BeginCombo("", light_current.c_str(), 0)) // The second parameter is the label previewed before opening the combo.
+        //{
+        //    for (int n = 0; n < 3; n++)
+        //    {
+        //        bool is_selected = (light_current.c_str() == types[n]);
+        //        if (ImGui::Selectable(types[n], light_current.c_str()))
+        //        {
+        //            light.type = Light::GetTypeFromString(types[n]);
+        //        }
+        //        if (is_selected)
+        //            ImGui::SetItemDefaultFocus();
+        //    }
+        //    ImGui::EndCombo();
+        //}
 
-        ImGui::PopItemWidth();
-        ImGui::NextColumn();
+        //ImGui::PopItemWidth();
+        //ImGui::NextColumn();
 
-        ImGui::Columns(1);
-        ImGui::Separator();
-        ImGui::PopStyleVar();
+        //ImGui::Columns(1);
+        //ImGui::Separator();
+        //ImGui::PopStyleVar();
     }
 
     void TextureWidget(const char* label, Material* material, Texture* tex, bool flipImage, float& usingMapProperty, Vector4& colourProperty, const std::function<void(const std::string&)>& callback, const ImVec2& imageButtonSize = ImVec2(64, 64))
@@ -1063,7 +1065,7 @@ namespace SaltnPepperEngine
             ICON_COMPONENT(ModelComponent, "ModelComponent");
             ICON_COMPONENT(Camera, "Camera");
             ICON_COMPONENT(RigidBodyComponent, "RigidBody");
-            ICON_COMPONENT(Light, "Light");   
+            ICON_COMPONENT(LightComponent, "Light");
         }
 
 		void InspectorWindow::OnUpdate()

@@ -9,6 +9,7 @@ namespace SaltnPepperEngine
 {
     namespace Rendering
     {
+       int Camera::MAXCameras = 0;
 
         Camera::Camera()
             : m_aspectRatio(16.0f / 10.0f)
@@ -248,6 +249,9 @@ namespace SaltnPepperEngine
 
             m_cameraBuffers = MakeShared<CameraBuffers>();
             m_cameraBuffers->Init(viewport.x, viewport.y);
+
+            CameraIndex = Camera::MAXCameras;
+            Camera::MAXCameras ++;
 
         }
 

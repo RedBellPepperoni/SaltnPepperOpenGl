@@ -11,7 +11,10 @@
 #include "Engine/Core/Components/SceneComponents.h"
 
 #include "Engine/Core/Rendering/Material/Material.h"
-#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Rendering/Lights/BaseLight.h"
+#include "Engine/Core/Rendering/Lights/DirectionalLight.h"
+#include "Engine/Core/Rendering/Lights/LightComponent.h"
+
 #include "Engine/Core/Rendering/Textures/CubeMap.h"
 
 #include "Engine/Core/Rendering/RenderDefinitions.h"
@@ -109,22 +112,56 @@ namespace SaltnPepperEngine
 				
 				
 
-
 				
-				// Sending the mesh data for processing
+				
+				
 				
 			}
 
-			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();
+			// Process Directional Light Cascades Here
+
+			UpdateDirectionalCascade(scene);
+
+
+			/*ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<BaseLight>();
 
 			for (Entity lightObject : lightView)
 			{
 				Light& lightComponent = lightObject.GetComponent<Light>(); 
 				Transform* transform = &lightObject.GetComponent<Transform>(); 
 				m_renderer->ProcessLightElement(lightComponent, *transform);
+			}*/
+
+
+
+		}
+
+		void RenderManager::UpdateDirectionalCascade(Scene* scene)
+		{
+			ComponentView directionalLightView = scene->GetEntityManager()->GetComponentsOfType<LightComponent>();
+
+			Transform& dirTransform = directionalLightView[0].GetComponent<Transform>();
+			LightComponent& lightComp = directionalLightView[0].GetComponent<LightComponent>();
+
+
+			DirectionalLight* dirlight = static_cast<DirectionalLight*>(lightComp.GetLight().get());
+
+			Camera* camera = scene->GetMainCamera();
+			Transform* cameraTransform = scene->GetMainCameraTransform();
+			if (camera == nullptr)
+			{
+				return;
 			}
+			
+
+			//dirTransform.SetPosition(cameraTransform->GetPosition());
 
 
+			float aspectRatio = camera->GetAspectRatio();
+			float fov = camera->GetFOV();
+			Matrix4 viewMatrix = Inverse(cameraTransform->GetMatrix());
+
+			dirlight->UpdateLightCascades(aspectRatio,fov,viewMatrix);
 
 		}
 

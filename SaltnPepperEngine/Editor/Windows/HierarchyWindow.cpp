@@ -4,7 +4,9 @@
 #include "Engine/Core/System/Input/InputSystem.h"
 #include "Editor/Editor.h"
 #include "Editor/MDIcons.h"
-#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Rendering/Lights/BaseLight.h"
+#include "Engine/Core/Rendering/Lights/DirectionalLight.h"
+#include "Engine/Core/Rendering/Lights/LightComponent.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 
@@ -126,13 +128,13 @@ namespace SaltnPepperEngine
                         icon = iconMap[typeid(RigidBody3D).hash_code()];
                     }
                 }
-                else if (registry.all_of<Light>(node))
+               /* else if (registry.all_of<Light>(node))
                 {
                     if (iconMap.find(typeid(Light).hash_code()) != iconMap.end())
                     {
                         icon = iconMap[typeid(Light).hash_code()];
                     }
-                }
+                }*/
                
              
                 // Convert Vector4 color to ImVec4
@@ -535,12 +537,12 @@ namespace SaltnPepperEngine
                             scene->CreateEntity();
                         }
 
-                        if (ImGui::Selectable("Add Light"))
+                       /* if (ImGui::Selectable("Add Light"))
                         {
                             Entity entity = scene->CreateEntity("Light");
                             entity.AddComponent<Light>();
                             entity.GetOrAddComponent<Transform>();
-                        }
+                        }*/
 
                         if (ImGui::Selectable("Add Rigid Body"))
                         {

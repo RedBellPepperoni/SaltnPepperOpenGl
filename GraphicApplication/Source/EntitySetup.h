@@ -7,6 +7,7 @@
 #include "AIStuff/AIBaseAgent.h"
 #include "AIStuff/AIManager.h"
 
+
 struct PlayerLook
 {
 	std::string name = "Hello";
@@ -55,14 +56,14 @@ Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vec
 	Entity cameraEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CameraEntity");
 		
 		// Add a Camera component to the entitty
-	Camera& camera = cameraEntity.AddComponent<Camera>();
+	Camera* camera = &cameraEntity.AddComponent<Camera>();
 
 	// Cache the transform Reference
 	Transform& transform = cameraEntity.GetComponent<Transform>();
 
 	ThirdPersonCameraController& controller = cameraEntity.AddComponent<ThirdPersonCameraController>();
 
-	controller.SetCamera(&camera);
+	controller.SetCamera(camera);
 
 	// Set the tranasform Values
 	transform.SetPosition(Position);
@@ -137,9 +138,14 @@ Entity CreateDirectionalLight()
 	Entity dirLightEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Directional Light");
 	Transform& transform = dirLightEntity.GetComponent<Transform>();
 	transform.SetEularRotation(Vector3(-36.0f, 0.0f, 0.0f));
-	Light& light = dirLightEntity.AddComponent<Light>();
-	light.type = LightType::DirectionLight;
-	light.intensity = 1.2f;
+	LightComponent& lightComp = dirLightEntity.AddComponent<LightComponent>(LightType::DIRECTIONAL);
+	
+	DirectionalLight* light = reinterpret_cast<DirectionalLight*>(lightComp.GetLight().get());
+	light->SetIntensity(0.9f);
+	light->Direction = transform.GetForwardVector();
+
+	LOG_ERROR("Direction : {0} : {1} : {2}", light->Direction.x, light->Direction.y, light->Direction.z);
+	
 
 	return dirLightEntity;
 }

@@ -16,7 +16,7 @@ namespace SaltnPepperEngine
 	{
 		class Renderer;
 		class RenderManager;
-        struct Light;
+        class BaseLight;
 
         struct DebugLineData
         {
@@ -146,7 +146,7 @@ namespace SaltnPepperEngine
 
             static void DebugDraw(const BoundingSphere& sphere, const Vector4& color);
 
-            static void DebugDraw(const Light& light, const Quaternion& rotation, const Vector4& color);
+            static void DebugDraw(const BaseLight& light, const Quaternion& rotation, const Vector4& color);
 
             //static void DebugDraw()
 

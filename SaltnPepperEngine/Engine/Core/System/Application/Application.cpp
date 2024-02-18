@@ -234,6 +234,7 @@ namespace SaltnPepperEngine
 			m_currentScene->Update(m_deltaTime);
 
 
+
 			Input::InputSystem::GetInstance().ResetKeyPressed();
 
 
@@ -244,6 +245,8 @@ namespace SaltnPepperEngine
 			// Update window and listen and process window events
 			m_window->UpdateViewPort();
 			m_renderManager->SetWindowSize(m_window->GetSize());
+
+			OnUpdate(m_deltaTime);
 
 			//m_window->UpdateImGui();
 
@@ -278,7 +281,7 @@ namespace SaltnPepperEngine
 //
 			
 
-			OnUpdate(m_deltaTime);
+			
 
 
 			if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::GraveAccent))

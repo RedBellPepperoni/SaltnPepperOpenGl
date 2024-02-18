@@ -1,8 +1,10 @@
-#ifndef  LIGHT_H
-#define  LIGHT_H
+#ifndef  DEPRECATED_LIGHT_H
+#define  DEPRECATED_LIGHT_H
 
 #include <string>
 #include "Engine/Utils/Maths/MathDefinitions.h"
+#include "Engine/Core/Memory/MemoryDefinitions.h"
+#include "Engine/Core/Rendering/Textures/Texture.h"
 #include "Engine/Utils/Logging/Log.h"
 
 namespace SaltnPepperEngine
@@ -67,10 +69,19 @@ namespace SaltnPepperEngine
 
 			float intensity = 10.0f;
 			float radius = 0.0f;
-			LightType type = LightType::PointLight;
+			LightType type = LightType::DirectionLight;
 			float innerAngle = 0.0f;
 			float outerAngle = 0.0f;
 
+			SharedPtr<Texture> depthMap;
+
+			constexpr static size_t TextureCount = 3;
+			std::array<float, TextureCount> Projections = { 5.0f, 25.0f, 250.0f };
+
+		private:
+			std::array<Matrix4, TextureCount> matrices;
+
+			Matrix4 ComputeCascadeMatrix(size_t cascadeIndex, float aspectRatio, float fov, const Matrix4& viewMatrix) const;
 
 		};
 
@@ -85,4 +96,4 @@ namespace SaltnPepperEngine
 
 
 
-#endif // ! LIGHT_H
+#endif // ! DEPECRATED_LIGHT_H

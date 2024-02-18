@@ -68,6 +68,8 @@ class GraphicRuntime : public Application
         Entity controller = TPSCameraView[0];
         Transform& transform = controller.GetComponent<Transform>();
         ThirdPersonCameraController& TPScontroller = controller.GetComponent<ThirdPersonCameraController>();
+      
+        GetCurrentScene()->SetMainCamera(&TPScontroller,&transform);
 
         Vector2 mousePosition = Input::InputSystem::GetInstance().GetMousePosition();
 

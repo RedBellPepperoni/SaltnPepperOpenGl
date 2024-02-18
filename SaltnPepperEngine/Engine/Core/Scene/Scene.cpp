@@ -9,7 +9,9 @@
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
-#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Rendering/Lights/BaseLight.h"
+#include "Engine/Core/Rendering/Lights/DirectionalLight.h"
+#include "Engine/Core/Rendering/Lights/LightComponent.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 #include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
 #include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
@@ -49,7 +51,7 @@ namespace SaltnPepperEngine
 	using namespace Physics;
 
 
-#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light, RigidBodyComponent 
+#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, LightComponent, RigidBodyComponent 
 
 #define ALL_ENTTCOMPONENTS(input) get<Transform>(input). \
 	get<IdComponent>(input).		\
@@ -57,9 +59,9 @@ namespace SaltnPepperEngine
 	get<ActiveComponent>(input).	\
 	get<Hierarchy>(input).			\
 	get<Camera>(input).				\
-    get<Light>(input).				\
 	get<RigidBodyComponent>(input). \
 	get<ModelComponent>(input)	
+	//get<LightComponent>(input).				\
 	
 	Scene::Scene(const std::string& name)
 		:m_name(name)
@@ -125,7 +127,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		if (!Application::GetCurrent().GetEditorActive())
+		/*if (!Application::GetCurrent().GetEditorActive())
 		{
 			if (!cameraControllerView.IsEmpty())
 			{
@@ -153,7 +155,7 @@ namespace SaltnPepperEngine
 
 
 			}
-		}
+		}*/
 
 
 		
@@ -291,9 +293,7 @@ namespace SaltnPepperEngine
 	{
 		mainCameraTransform = transform;
 		mainCameraController = controller;
-		//mainAudioListener = listener;
-		//LOG_ERROR("Camera Transform : {0} : {1} : {2}", mainCameraTransform->GetPosition().x, mainCameraTransform->GetPosition().y, mainCameraTransform->GetPosition().z);
-
+		
 	}
 
 	void Scene::SetMainCameraPosition(Vector3 position)
@@ -307,9 +307,15 @@ namespace SaltnPepperEngine
 	}
 
 
+	Camera* Scene::GetMainCamera()
+	{
+		return mainCameraController->GetCamera();
+	}
 
-
-
+	Transform* Scene::GetMainCameraTransform()
+	{
+		return mainCameraTransform;
+	}
 
 	void Scene::Serialize(const std::string& filename, bool binary)
 	{
@@ -375,11 +381,8 @@ namespace SaltnPepperEngine
 
 	}
 
-	Transform* Scene::GetMainCameraTransform() const
-	{
-		return mainCameraTransform;
-	}
 
+	
 	template <typename T>
 	static void DeserialiseComponentIfExists(Entity entity, cereal::JSONInputArchive& archive)
 	{

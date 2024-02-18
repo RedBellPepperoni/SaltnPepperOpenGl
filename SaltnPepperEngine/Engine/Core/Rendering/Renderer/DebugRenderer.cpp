@@ -1,7 +1,7 @@
 #include "DebugRenderer.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
-#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Rendering/Lights/BaseLight.h"
 
 #include "Engine/Utils/Logging/Log.h"
 #include <cstdarg>
@@ -259,9 +259,9 @@ namespace SaltnPepperEngine
 		}
 
 
-		void DebugRenderer::DebugDraw(const Light& light, const Quaternion& rotation, const Vector4& color)
+		void DebugRenderer::DebugDraw(const BaseLight& light, const Quaternion& rotation, const Vector4& color)
 		{
-			switch (light.type)
+			/*switch (light.type)
 			{
 			case LightType::DirectionLight:
 
@@ -285,7 +285,7 @@ namespace SaltnPepperEngine
 				break;
 			default:
 				break;
-			}
+			}*/
 
 		}
 

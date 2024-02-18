@@ -32,7 +32,9 @@
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Image.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
-#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Rendering/Lights/BaseLight.h"
+#include "Engine/Core/Rendering/Lights/DirectionalLight.h"
+#include "Engine/Core/Rendering/Lights/LightComponent.h"
 
 // ========= SCENE and ECS STUFF ===================
 #include "Engine/Core/Scene/Scene.h" 

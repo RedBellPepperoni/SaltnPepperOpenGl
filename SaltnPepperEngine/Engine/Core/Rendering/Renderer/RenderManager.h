@@ -46,7 +46,7 @@ namespace SaltnPepperEngine
 
 
 			void ProcessScene(Scene* scene);
-
+			void UpdateDirectionalCascade(Scene* scene);
 			// Start of the render Pipeline
 			void RenderFrame();
 			// End of the pipeline

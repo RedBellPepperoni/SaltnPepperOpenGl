@@ -17,7 +17,7 @@
 #include "Engine/Core/Components/Transform.h"
 
 
-#include "Engine/Core/Rendering/Lights/Light.h"
+#include "Engine/Core/Rendering/Lights/BaseLight.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 #include "Engine/Core/Rendering/Textures/CubeMap.h"
@@ -669,7 +669,7 @@ namespace SaltnPepperEngine
             shader->SetUniform("uboLights.lightCount", (int)m_pipeline.lightElementList.size());
 
 
-            for (LightElement element : m_pipeline.lightElementList)
+           /* for (LightElement element : m_pipeline.lightElementList)
             {
 
                 const std::string colorUniform = element.uniformName + ".color";
@@ -714,7 +714,7 @@ namespace SaltnPepperEngine
                 default:
                     break;
                 }
-            }
+            }*/
 
 
 
@@ -745,8 +745,6 @@ namespace SaltnPepperEngine
         
 
             Matrix4 transformMatrix = transform.GetMatrix();
-            Vector3 Newposition = transformMatrix[3];
-
           
             Matrix4 view = Math::Inverse(transformMatrix);
 
@@ -800,29 +798,29 @@ namespace SaltnPepperEngine
 
 
 
-        void Renderer::ProcessLightElement(Light& light, Transform& transform)
-        {
-            size_t currentIndex = m_pipeline.lightElementList.size();
+        //void Renderer::ProcessLightElement(Light& light, Transform& transform)
+        //{
+        //    //size_t currentIndex = m_pipeline.lightElementList.size();
 
-            // Create anew Light Element;
-            LightElement& lightElement = m_pipeline.lightElementList.emplace_back();
-
-
-            lightElement.color = light.color;
-            lightElement.direction = light.direction = Normalize(transform.GetForwardVector());
-            lightElement.innerAngle = light.innerAngle;
-            lightElement.outerAngle = light.outerAngle;
-            lightElement.intensity = light.intensity;
-            lightElement.position = transform.GetPosition();
-            light.position = transform.GetPosition();
-            lightElement.radius = light.radius;
-            lightElement.type = light.type;
-
-            lightElement.uniformName = "uboLights.lights[" + std::to_string(currentIndex) + "]";
+        //    //// Create anew Light Element;
+        //    //LightElement& lightElement = m_pipeline.lightElementList.emplace_back();
 
 
+        //    //lightElement.color = light.color;
+        //    //lightElement.direction = light.direction = Normalize(transform.GetForwardVector());
+        //    //lightElement.innerAngle = light.innerAngle;
+        //    //lightElement.outerAngle = light.outerAngle;
+        //    //lightElement.intensity = light.intensity;
+        //    //lightElement.position = transform.GetPosition();
+        //    //light.position = transform.GetPosition();
+        //    //lightElement.radius = light.radius;
+        //    //lightElement.type = light.type;
 
-        }
+        //    //lightElement.uniformName = "uboLights.lights[" + std::to_string(currentIndex) + "]";
+
+
+
+        //}
 
         void Renderer::RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod)
         {
