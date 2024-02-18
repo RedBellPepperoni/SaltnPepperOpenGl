@@ -11,7 +11,7 @@ namespace SaltnPepperEngine
     {
 
         Camera::Camera()
-            : m_aspectRatio(16.0f / 9.0f)
+            : m_aspectRatio(16.0f / 10.0f)
             , m_near(0.01f)
             , m_far(1000.0f)
             , m_fov(60.0f)
@@ -22,6 +22,20 @@ namespace SaltnPepperEngine
 
 
         }
+
+        Camera::Camera(const std::string name)
+            : m_aspectRatio(16.0f / 10.0f)
+            , m_near(0.01f)
+            , m_far(1000.0f)
+            , m_fov(60.0f)
+            , m_orthographic(false)
+            , m_name(name)
+        {
+
+            InitializeRenderTexture();
+
+        }
+
         Camera::Camera(float FOV, float Near, float Far, float Aspect)
             : m_aspectRatio(Aspect)
             , m_fov(FOV)
@@ -247,6 +261,10 @@ namespace SaltnPepperEngine
             normalTexture = MakeShared<Texture>();
             depthTexture = MakeShared<Texture>();
             materialTexture = MakeShared<Texture>();
+
+            postProcessTexture = MakeShared<Texture>();
+            swapOneTexture = MakeShared<Texture>();
+            swapTwoTexture = MakeShared<Texture>();
             
 
             Resize(width,height);
@@ -288,6 +306,18 @@ namespace SaltnPepperEngine
             depthTexture->LoadDepth(width, height, TextureFormat::DEPTH32F);
             depthTexture->SetFilePath("camera depth");
             depthTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+
+            postProcessTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
+            postProcessTexture->SetFilePath("camera postprocess");
+            postProcessTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+
+            swapOneTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
+            swapOneTexture->SetFilePath("camera postprocess");
+            swapOneTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+
+            swapTwoTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
+            swapTwoTexture->SetFilePath("camera postprocess");
+            swapTwoTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
         }
     }

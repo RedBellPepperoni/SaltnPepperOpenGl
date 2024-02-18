@@ -25,6 +25,12 @@ namespace SaltnPepperEngine
             SharedPtr<Texture> materialTexture;
             SharedPtr<Texture> depthTexture;
 
+            SharedPtr<Texture> postProcessTexture;
+            SharedPtr<Texture> swapOneTexture;
+            SharedPtr<Texture> swapTwoTexture;
+
+            
+
             void Init(int width, int height);
             void Resize(int width, int height);
 
@@ -39,6 +45,7 @@ namespace SaltnPepperEngine
         public:
 
             Camera();
+            Camera(const std::string name);
             Camera(float FOV, float Near, float Far, float Aspect);
             Camera(float Aspect, float Near, float Far);
             ~Camera() = default;

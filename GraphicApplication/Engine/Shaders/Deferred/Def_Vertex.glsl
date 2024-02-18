@@ -6,8 +6,15 @@ layout(location = 3)  in vec3 tangent;
 layout(location = 4)  in vec3 bitangent;
 
 uniform mat4 model;
-uniform mat4 viewProj;
 uniform mat4 normalMat;
+
+
+struct Camera
+{
+    vec3 position;
+    mat4 viewProj;
+    mat4 invViewProj;
+};
 
 struct VertexOut
 {
@@ -18,12 +25,14 @@ struct VertexOut
 
 };
 
+uniform Camera camera;
+
 layout(location = 0) out VertexOut vsout;
 
 void main()
 {
 
-    mat4 modelViewProj = viewProj * model;
+    mat4 modelViewProj = camera.viewProj * model;
 
     // gathering nomalized TBN data
     vec3 tempTangent = normalize(mat3(normalMat) * tangent);

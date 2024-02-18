@@ -103,12 +103,18 @@ namespace SaltnPepperEngine
 			SharedPtr<Texture> materialTexture;
 			SharedPtr<Texture> depthTexture;
 
+
+			SharedPtr<Texture> postProcessTexture;
+
 			// Buffer Textures
-			SharedPtr<Texture> swapTextureOne;
-			SharedPtr<Texture> swapTextureTwo;
+			SharedPtr<Texture> swapOneTexture;
+			SharedPtr<Texture> swapTwoTexture;
 
 			// the premultiplied View ProjectionMatrix
 			Matrix4 viewProjMatrix;
+
+			// The inverse of the View projection
+			Matrix4 invViewProjMatrix;
 
 			// Static view proj matric for the Skybox rendering
 			Matrix4 staticViewProjectMatrix;
@@ -308,16 +314,15 @@ namespace SaltnPepperEngine
 
 			void BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId);
 			void BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader);
-			//const PipeLine& GetPipeLine() const;
+			void BindCameraBuffers(const CameraElement& camera, SharedPtr<Shader>& shader, int startid);
 			PipeLine& GetPipeLine();
 
 			// Draws the provided Elements with the provided shader
 
 
 			void ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList);
-
-
-
+			void ImagedBasedLightPass(SharedPtr<Shader> shader ,const CameraElement& camera, SharedPtr<Texture> outputTexture);
+			void DirectionalLightPass(const CameraElement& camera, SharedPtr<Texture> outputTexture);
 			void SkyBoxPass(SharedPtr<Shader> shader, const CameraElement& camera);
 			void DebugPass(const CameraElement& camera);
 

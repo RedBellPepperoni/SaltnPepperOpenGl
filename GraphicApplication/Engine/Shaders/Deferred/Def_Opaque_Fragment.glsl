@@ -44,7 +44,14 @@ uniform sampler2D mapMetallic;
 uniform sampler2D mapEmissive;
 uniform sampler2D mapNormal;
 
-uniform vec3 cameraView;
+struct Camera
+{
+    vec3 position;
+    mat4 viewProj;
+    mat4 invViewProj;
+};
+
+uniform Camera camera;
 uniform UniformMaterialData materialProperties;
 uniform vec2 uvMultipliers;
 
@@ -121,7 +128,7 @@ vec3 GetEmissive(vec3 albedo)
 void main()
 {
     vec2 TexCoord = uvMultipliers * fsin.TexCoord;
-    vec3 viewDirection = fsin.Position.xyz - cameraView;
+    vec3 viewDirection = fsin.Position.xyz - camera.position;
     //TexCoord = applyParallaxMapping(TexCoord, fsin.TBN * viewDirection, map_height, displacement, parallaxOcclusion);
 
     vec3 normal = normalize(fsin.Normal);

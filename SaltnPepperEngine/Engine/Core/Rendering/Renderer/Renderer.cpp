@@ -204,8 +204,22 @@ namespace SaltnPepperEngine
 
         void Renderer::BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader)
         {
-            shader->SetUniform("viewProj", camera.viewProjMatrix);
-            shader->SetUniform("cameraView", camera.viewPosition);
+            shader->SetUniform("camera.viewProj", camera.viewProjMatrix);
+            shader->SetUniform("camera.invViewProj", camera.invViewProjMatrix);
+            shader->SetUniform("camera.position", camera.viewPosition);
+        }
+
+        void Renderer::BindCameraBuffers(const CameraElement& camera, SharedPtr<Shader>& shader, int startid)
+        {
+            camera.albedoTexture->Bind(startid++);
+            camera.normalTexture->Bind(startid++);
+            camera.materialTexture->Bind(startid++);
+            camera.depthTexture->Bind(startid++);
+
+            shader->SetUniform("albedoMap", camera.albedoTexture->GetBoundId());
+            shader->SetUniform("normalMap", camera.albedoTexture->GetBoundId());
+            shader->SetUniform("materialMap", camera.albedoTexture->GetBoundId());
+            shader->SetUniform("depthMap", camera.albedoTexture->GetBoundId());
         }
 
 
@@ -391,7 +405,7 @@ namespace SaltnPepperEngine
 
         void Renderer::ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList)
         {
-
+            GLDEBUG(glEnable(GL_DEPTH_TEST));
             if (shader == nullptr) { LOG_CRITICAL("Object PASS :  Shader not loaded"); }
 
             // Nothing to draw
@@ -416,6 +430,22 @@ namespace SaltnPepperEngine
 
 
 
+        }
+
+        void Renderer::ImagedBasedLightPass(SharedPtr<Shader> shader, const CameraElement& camera, SharedPtr<Texture> outputTexture)
+        {
+            shader->Bind();
+            shader->IgnoreNonExistingUniform("camera.viewProj");
+            int textureId = 0;
+
+            BindCameraBuffers(camera,shader,textureId);
+            BindCameraInformation(camera,shader);
+            BindSkyBoxInformation(camera, shader, textureId);
+
+        }
+
+        void Renderer::DirectionalLightPass(const CameraElement& camera, SharedPtr<Texture> outputTexture)
+        {
         }
 
         void Renderer::SkyBoxPass(SharedPtr<Shader> shader, const CameraElement& camera)
@@ -698,29 +728,19 @@ namespace SaltnPepperEngine
         CameraElement Renderer::GenerateCameraElement(Camera& cameraRef, Transform& transform)
         {
             // Creating a new  Data only Camera element
-            CameraElement camera;
+            CameraElement camera{};
 
             // Setting the details
             camera.aspectRatio = cameraRef.GetAspectRatio();
             camera.isOrtho = cameraRef.IsOrthographic();
 
             camera.viewPosition = transform.GetPosition();
-
-            //          Vector3 dir = camera.viewPosition + cameraRef->GetDirection();
-
-                        // For now , since the camera is not parented to anything. Later multiply the parent's transform to it
-                        //Matrix4 view = Math::GetLookAt(camera.viewPosition, camera.viewPosition + cameraRef.GetDirection(), cameraRef.GetUpVector());
-
+        
 
             Matrix4 transformMatrix = transform.GetMatrix();
             Vector3 Newposition = transformMatrix[3];
 
-            //LOG_INFO("{0} : {1} : {2}",Newposition.x,Newposition.y,Newposition.z);
-
-            // Matrix4 transformMatrix = transform.GetLocalMatrix();
-
-             // get the inverse of the Camera trasfrom
-            // Matrix4 view = (transformMatrix);
+          
             Matrix4 view = Math::Inverse(transformMatrix);
 
             // get the inverse of the Camera transform without any position data (only Rotation0
@@ -737,6 +757,7 @@ namespace SaltnPepperEngine
 
             // Store the camera values
             camera.viewProjMatrix = projView;
+            camera.invViewProjMatrix = Math::Inverse(projView);
             camera.staticViewProjectMatrix = staticProjView;
 
             camera.outputTexture = cameraRef.GetRenderTexture();
@@ -746,6 +767,12 @@ namespace SaltnPepperEngine
             camera.normalTexture = cameraRef.GetBuffers()->normalTexture;
             camera.materialTexture = cameraRef.GetBuffers()->materialTexture;
             camera.depthTexture = cameraRef.GetBuffers()->depthTexture;
+
+            camera.postProcessTexture = cameraRef.GetBuffers()->postProcessTexture;
+            camera.swapOneTexture = cameraRef.GetBuffers()->swapOneTexture;
+            camera.swapTwoTexture = cameraRef.GetBuffers()->swapTwoTexture;
+
+
 
 
             return camera;
