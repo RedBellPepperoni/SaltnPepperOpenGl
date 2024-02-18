@@ -54,21 +54,21 @@ namespace SaltnPepperEngine
 
 
 
-			void AttachFrameBuffer(const SharedPtr<FrameBuffer>& frameBuffer);
-			void AttachFrameBufferNoClear(const SharedPtr<FrameBuffer>& frameBuffer);
+			void AttachFrameBuffer(SharedPtr<FrameBuffer>& frameBuffer);
+			void AttachFrameBufferNoClear(SharedPtr<FrameBuffer>& frameBuffer);
 
-			void RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader);
-			void RenderToFrameBuffer(const SharedPtr<FrameBuffer>& frameBuffer, const SharedPtr<Shader>& shader);
-			void RenderToFrameBufferNoClear(const SharedPtr<FrameBuffer>& frameBuffer, const SharedPtr<Shader>& shader);
+			void RenderToAttachedFrameBuffer(SharedPtr<Shader>& shader);
+			void RenderToFrameBuffer(SharedPtr<FrameBuffer>& frameBuffer, SharedPtr<Shader>& shader);
+			void RenderToFrameBufferNoClear(SharedPtr<FrameBuffer>& frameBuffer,SharedPtr<Shader>& shader);
 
-			void RenderToTexture(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
-			void RenderToTextureNoClear(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
+			void RenderToTexture(SharedPtr<Texture>& texture,SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
+			void RenderToTextureNoClear(SharedPtr<Texture>& texture, SharedPtr<Shader>& shader, Attachment attachment = Attachment::COLOR_ATTACH_0);
 
 
 			void CopyTexture(SharedPtr<Texture> inputTexture, SharedPtr<Texture> outputTexture);
 
 			void SetViewPort(int x, int y, int width, int height);
-			void ProcessImage(const SharedPtr<Texture>& texture, int lod = 0);
+			void ProcessImage(SharedPtr<Texture>& texture, int lod = 0);
 
 			void SetWindowSize(Vector2Int size);
 

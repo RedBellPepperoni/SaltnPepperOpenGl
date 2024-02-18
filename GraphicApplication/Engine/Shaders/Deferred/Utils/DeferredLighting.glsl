@@ -1,25 +1,19 @@
 #include "Utils\ShaderUtils.glsl"
 #include "Utils\PBRLightFunctions.glsl"
 
-vec3 calculateLighting(FragmentInfo fragment, vec3 viewDirection, vec3 lightDirection, vec3 lightColor, float ambientFactor, float shadowFactor)
+
+struct Light
 {
-    float roughness = clamp(fragment.roughnessFactor, 0.05, 0.95);
-    float metallic = clamp(fragment.metallicFactor, 0.05, 0.95);
+    vec3 color;
+    vec3 position;
+    vec3 direction;
+    float intensity;
+    float radius;
+    int type;
+    float innerAngle;
+    float outerAngle;
+};
 
-    vec3 specularColor = vec3(0.0);
-    vec3 diffuseColor = vec3(0.0);
-    GGXCookTorranceSampled(fragment.normal, normalize(lightDirection), viewDirection, roughness, metallic, fragment.albedo, 
-        specularColor, diffuseColor);
-
-    vec3 ambientColor = diffuseColor * ambientFactor;
-
-    float NL = clamp(dot(fragment.normal, lightDirection), 0.0, 1.0);
-
-    float shadowCoef = NL * shadowFactor;
-
-    vec3 totalColor = (ambientColor + (diffuseColor + specularColor) * shadowCoef) * lightColor;
-    return totalColor * fragment.ambientOcclusion;
-}
 
 
 vec3 calculateIBL(FragmentInfo fragment, vec3 viewDirection, EnvironmentInfo environment, float gamma)
@@ -47,3 +41,25 @@ vec3 calculateIBL(FragmentInfo fragment, vec3 viewDirection, EnvironmentInfo env
 
     return fragment.emmisionFactor * fragment.albedo + iblColor * fragment.ambientOcclusion;
 }
+
+vec3 calculateLighting(FragmentInfo fragment, vec3 viewDirection, vec3 lightDirection, vec3 lightColor, float ambientFactor, float shadowFactor)
+{
+    float roughness = clamp(fragment.roughnessFactor, 0.05, 0.95);
+    float metallic = clamp(fragment.metallicFactor, 0.05, 0.95);
+
+    vec3 specularColor = vec3(0.0);
+    vec3 diffuseColor = vec3(0.0);
+    GGXCookTorranceSampled(fragment.normal, normalize(lightDirection), viewDirection, roughness, metallic, fragment.albedo, 
+        specularColor, diffuseColor);
+
+    vec3 ambientColor = diffuseColor * ambientFactor;
+
+    float NL = clamp(dot(fragment.normal, lightDirection), 0.0, 1.0);
+
+    float shadowCoef = NL * shadowFactor;
+
+    vec3 totalColor = (ambientColor + (diffuseColor + specularColor) * shadowCoef) * lightColor;
+    return totalColor * fragment.ambientOcclusion;
+}
+
+

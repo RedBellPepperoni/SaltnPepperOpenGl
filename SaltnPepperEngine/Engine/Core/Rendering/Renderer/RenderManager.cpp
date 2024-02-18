@@ -32,11 +32,9 @@ namespace SaltnPepperEngine
 		{
 			// Loading the Default Shader 
 			// Add other Defaultr Shaders below <----
-
+			CHECKNULL(GetShaderLibrary()->LoadShader("IBLDeferred", FileSystem::GetShaderDir().string() + "Common\\renderBufferVert.glsl", FileSystem::GetShaderDir().string() + "Deferred\\Def_IBL_Fragment.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("ObjectForward", FileSystem::GetShaderDir().string() + "Forward\\spaceshipVert.glsl", FileSystem::GetShaderDir().string() + "Forward\\spaceshipFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueDeferred", FileSystem::GetShaderDir().string() + "Deferred\\Def_Vertex.glsl", FileSystem::GetShaderDir().string() + "Deferred\\Def_Opaque_Fragment.glsl"));
-			CHECKNULL(GetShaderLibrary()->LoadShader("IBLDeferred", FileSystem::GetShaderDir().string() + "Common\\renderBufferVert.glsl", FileSystem::GetShaderDir().string() + "Deferred\\Def_IBL_Fragment.glsl"));
-
 
 			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxForward", FileSystem::GetShaderDir().string() + "Forward\\skyboxVert.glsl", FileSystem::GetShaderDir().string() + "Forward\\skyboxFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugLineShader", FileSystem::GetShaderDir().string() + "Common\\DebugLineVert.glsl", FileSystem::GetShaderDir().string() + "Common\\DebugLineFrag.glsl"));
@@ -219,7 +217,8 @@ namespace SaltnPepperEngine
 					GLDEBUG(glEnable(GL_DEPTH_TEST));
 					m_renderer->Clear(true);
 
-					
+					// ===== Post Render Skybox Pass =================
+					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), cameraElement);
 				
 					// ====== Deferred Pass for Opaque Eleemnts ============
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueDeferred"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
@@ -227,15 +226,15 @@ namespace SaltnPepperEngine
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();
 
-					// ===== Post Render Skybox Pass =================
-				    //m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxForward"), cameraElement);
+					
 
 
-					//SharedPtr<Shader> iblShader = m_ShaderLibrary->GetResource("IBLDeferred");
+					SharedPtr<Shader> iblShader = m_ShaderLibrary->GetResource("IBLDeferred");
+					
 
 					// ======= Light Pass =====================
-					/*m_renderer->ImagedBasedLightPass(iblShader,cameraElement,cameraElement.postProcessTexture);
-					RenderToTexture(cameraElement.postProcessTexture,iblShader);*/
+					m_renderer->ImagedBasedLightPass(iblShader,cameraElement,cameraElement.postProcessTexture);
+					RenderToTexture(cameraElement.postProcessTexture,iblShader);
 
 					
 				
@@ -243,7 +242,7 @@ namespace SaltnPepperEngine
 
 					//ProcessImage()
 
-					CopyTexture(cameraElement.albedoTexture,cameraElement.outputTexture);
+					CopyTexture(cameraElement.postProcessTexture,cameraElement.outputTexture);
 				
 				}
 
@@ -283,7 +282,7 @@ namespace SaltnPepperEngine
 			m_renderer->ClearRectangleObjectVAO();
 		}
 
-		void RenderManager::AttachFrameBuffer(const SharedPtr<FrameBuffer>& frameBuffer)
+		void RenderManager::AttachFrameBuffer(SharedPtr<FrameBuffer>& frameBuffer)
 		{
 			AttachFrameBufferNoClear(frameBuffer);
 
@@ -292,7 +291,7 @@ namespace SaltnPepperEngine
 			GetRenderer()->Clear();
 		}
 
-		void RenderManager::AttachFrameBufferNoClear(const SharedPtr<FrameBuffer>& frameBuffer)
+		void RenderManager::AttachFrameBufferNoClear(SharedPtr<FrameBuffer>& frameBuffer)
 		{
 			frameBuffer->Bind();
 
@@ -306,31 +305,31 @@ namespace SaltnPepperEngine
 
 		
 
-		void RenderManager::RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader)
+		void RenderManager::RenderToAttachedFrameBuffer(SharedPtr<Shader>& shader)
 		{
 			m_renderer->RenderToAttachedFrameBuffer(shader);	
 		}
 
-		void RenderManager::RenderToFrameBuffer(const SharedPtr<FrameBuffer>& frameBuffer, const SharedPtr<Shader>& shader)
+		void RenderManager::RenderToFrameBuffer(SharedPtr<FrameBuffer>& frameBuffer,SharedPtr<Shader>& shader)
 		{
 			AttachFrameBuffer(frameBuffer);
 			RenderToAttachedFrameBuffer(shader);
 		}
 
-		void RenderManager::RenderToFrameBufferNoClear(const SharedPtr<FrameBuffer>& frameBuffer, const SharedPtr<Shader>& shader)
+		void RenderManager::RenderToFrameBufferNoClear(SharedPtr<FrameBuffer>& frameBuffer, SharedPtr<Shader>& shader)
 		{
 			AttachFrameBufferNoClear(frameBuffer);
 			RenderToAttachedFrameBuffer(shader);
 		}
 
-		void RenderManager::RenderToTexture(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment)
+		void RenderManager::RenderToTexture(SharedPtr<Texture>& texture, SharedPtr<Shader>& shader, Attachment attachment)
 		{
 			//Bind Texture to use for the frameBuffer
 			m_renderer->GetPostProcessFrameBuffer()->AttachTexture(texture, attachment);
 			RenderToFrameBuffer(m_renderer->GetPipeLine().postprocessFrameBuffer, shader);
 		}
 
-		void RenderManager::RenderToTextureNoClear(const SharedPtr<Texture>& texture, const SharedPtr<Shader>& shader, Attachment attachment)
+		void RenderManager::RenderToTextureNoClear(SharedPtr<Texture>& texture,SharedPtr<Shader>& shader, Attachment attachment)
 		{
 			m_renderer->GetPostProcessFrameBuffer()->AttachTexture(texture, attachment);
 			RenderToFrameBufferNoClear(m_renderer->GetPostProcessFrameBuffer(), shader);
@@ -348,7 +347,7 @@ namespace SaltnPepperEngine
 			m_renderer->SetViewport(x, y, width, height);
 		}
 
-		void RenderManager::ProcessImage(const SharedPtr<Texture>& texture, int lod)
+		void RenderManager::ProcessImage(SharedPtr<Texture>& texture, int lod)
 		{
 			SharedPtr<Shader> screenRectShader = m_ShaderLibrary->GetResource("ScreenShader");
 			m_renderer->RenderScreenQuad(screenRectShader,texture);

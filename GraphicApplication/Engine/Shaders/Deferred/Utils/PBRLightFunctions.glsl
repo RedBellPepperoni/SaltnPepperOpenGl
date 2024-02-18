@@ -1,5 +1,4 @@
 
-// https://m.habr.com/ru/post/326852/
 #define PI 3.1415926535f
 
 float GGXPartialGeometry(float NV, float roughness2)

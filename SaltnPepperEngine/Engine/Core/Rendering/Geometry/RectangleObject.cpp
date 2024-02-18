@@ -61,7 +61,8 @@ namespace SaltnPepperEngine
         VBO = MakeShared<VertexBuffer>(
 
             
-            vertices.size() * 4 * sizeof(float),
+           // vertices.size() * 4 * sizeof(float),
+            vertices.size() * (sizeof(Vector4)),
             vertices.data(),
             UsageType::STATIC_DRAW
         );
@@ -73,8 +74,8 @@ namespace SaltnPepperEngine
         );
 
         std::vector vertexLayout = {
-            VertexAttribute::Attribute<Vector2>(),
-            VertexAttribute::Attribute<Vector2>()
+            VertexAttribute::Attribute<Vector4>()
+            
         };
 
         VAO = MakeShared<VertexArray>();
@@ -86,6 +87,7 @@ namespace SaltnPepperEngine
         
         IBO->Bind();
         VAO->UnBind();
+        VBO->UnBind();
         IBO->UnBind();
 
 	}

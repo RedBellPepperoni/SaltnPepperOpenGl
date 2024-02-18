@@ -231,7 +231,7 @@ namespace SaltnPepperEngine
 		}
 		void BaseShader::IgnoreNonExistingUniform(const char* name) const
 		{
-			(void)m_uniformMap.GetUniformLocation(name, true);
+			(void)m_uniformMap.GetUniformLocation(name, false);
 		}
 		BaseShader::UniformIdType BaseShader::GetUniformLocation(const std::string& name) const
 		{

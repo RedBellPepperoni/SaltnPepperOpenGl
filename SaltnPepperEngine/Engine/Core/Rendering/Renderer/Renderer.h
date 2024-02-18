@@ -313,9 +313,9 @@ namespace SaltnPepperEngine
 			void SetSkyboxIntensity(float intensity);
 			const float GetSkyboxIntensity() const;
 
-			void BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId);
+			void BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int& textureBindId);
 			void BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader);
-			void BindCameraBuffers(const CameraElement& camera, SharedPtr<Shader>& shader, int startid);
+			void BindCameraBuffers(const CameraElement& camera, SharedPtr<Shader>& shader, int& startid);
 			PipeLine& GetPipeLine();
 
 			// Draws the provided Elements with the provided shader
@@ -345,7 +345,7 @@ namespace SaltnPepperEngine
 
 
 
-			void RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader);
+			void RenderToAttachedFrameBuffer(SharedPtr<Shader>& shader);
 
 
 			void Clear(bool clearDepth = false);

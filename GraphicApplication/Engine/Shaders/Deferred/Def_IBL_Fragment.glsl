@@ -3,11 +3,10 @@
 in vec2 TexCoord;
 out vec4 OutColor;
 
-uniform sampler2D albedoTex;
-uniform sampler2D normalTex;
-uniform sampler2D materialTex;
-uniform sampler2D depthTex;
-uniform float gamma;
+uniform sampler2D albedoMap;
+uniform sampler2D normalMap;
+uniform sampler2D materialMap;
+uniform sampler2D depthMap;
 
 struct Camera
 {
@@ -21,7 +20,9 @@ uniform EnvironmentInfo environment;
 
 void main()
 {
-    FragmentInfo fragment = getFragmentInfo(TexCoord, albedoTex, normalTex, materialTex, depthTex, camera.invViewProjMatrix);
+    float gamma = 2.2f;
+
+    FragmentInfo fragment = getFragmentInfo(TexCoord, albedoMap, normalMap, materialMap, depthMap, camera.invViewProjMatrix);
     vec3 viewDirection = normalize(camera.position - fragment.position);
 
     vec3 IBL = calculateIBL(fragment, viewDirection, environment, gamma);

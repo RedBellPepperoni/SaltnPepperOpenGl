@@ -190,14 +190,14 @@ namespace SaltnPepperEngine
             return m_pipeline.skybox.GetIntensity();
         }
 
-        void Renderer::BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId)
+        void Renderer::BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int& textureBindId)
         {
             m_pipeline.skybox.cubeMap->Bind(textureBindId++);
             m_pipeline.brdfLUTTexture->Bind(textureBindId++);
             shader->SetUniform("environment.skybox", m_pipeline.skybox.cubeMap->getBoundId());
             shader->SetUniform("environment.irradiance", m_pipeline.skybox.cubeMap->getBoundId());
-            shader->SetUniform("environment.skyboxRotaion", Matrix3(1.0f));
-            shader->SetUniform("encironment.envBRDFLUT", m_pipeline.brdfLUTTexture->GetBoundId());
+            shader->SetUniform("environment.skyboxRotation", Matrix3(1.0f));
+            shader->SetUniform("environment.envBRDFLUT", m_pipeline.brdfLUTTexture->GetBoundId());
 
             // get the intensity from the pipeline
             float skyluminance = m_pipeline.skybox.GetIntensity();
@@ -215,7 +215,7 @@ namespace SaltnPepperEngine
             shader->SetUniform("camera.position", camera.viewPosition);
         }
 
-        void Renderer::BindCameraBuffers(const CameraElement& camera, SharedPtr<Shader>& shader, int startid)
+        void Renderer::BindCameraBuffers(const CameraElement& camera, SharedPtr<Shader>& shader, int& startid)
         {
             camera.albedoTexture->Bind(startid++);
             camera.normalTexture->Bind(startid++);
@@ -223,9 +223,9 @@ namespace SaltnPepperEngine
             camera.depthTexture->Bind(startid++);
 
             shader->SetUniform("albedoMap", camera.albedoTexture->GetBoundId());
-            shader->SetUniform("normalMap", camera.albedoTexture->GetBoundId());
-            shader->SetUniform("materialMap", camera.albedoTexture->GetBoundId());
-            shader->SetUniform("depthMap", camera.albedoTexture->GetBoundId());
+            shader->SetUniform("normalMap", camera.normalTexture->GetBoundId());
+            shader->SetUniform("materialMap", camera.materialTexture->GetBoundId());
+            shader->SetUniform("depthMap", camera.depthTexture->GetBoundId());
         }
 
 
@@ -338,15 +338,15 @@ namespace SaltnPepperEngine
 
 
 
-        void Renderer::RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader)
+        void Renderer::RenderToAttachedFrameBuffer(SharedPtr<Shader>& shader)
         {
-            RectangleObject& rectObject = m_pipeline.rectangularObject;
+           
             shader->Bind();
 
-            rectObject.GetVAO()->Bind();
+            m_pipeline.rectangularObject.GetVAO()->Bind();
+            DrawIndices(DrawType::TRIANGLES, m_pipeline.rectangularObject.IndexCount, 0);
             
-            DrawIndices(DrawType::TRIANGLES, rectObject.IndexCount, 0);
-            //rectObject.GetVAO()->UnBind();
+          
         }
 
         void Renderer::Clear(bool clearDepth)
