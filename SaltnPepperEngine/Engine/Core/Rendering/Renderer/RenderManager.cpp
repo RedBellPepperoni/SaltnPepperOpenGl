@@ -38,6 +38,7 @@ namespace SaltnPepperEngine
 			CHECKNULL(GetShaderLibrary()->LoadShader("IBLDeferred", FileSystem::GetShaderDir().string() + "Common\\renderBufferVert.glsl", FileSystem::GetShaderDir().string() + "Deferred\\Def_IBL_Fragment.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("ObjectForward", FileSystem::GetShaderDir().string() + "Forward\\spaceshipVert.glsl", FileSystem::GetShaderDir().string() + "Forward\\spaceshipFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueDeferred", FileSystem::GetShaderDir().string() + "Deferred\\Def_Vertex.glsl", FileSystem::GetShaderDir().string() + "Deferred\\Def_Opaque_Fragment.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("DirLightDeferred", FileSystem::GetShaderDir().string() + "Common\\renderBufferVert.glsl", FileSystem::GetShaderDir().string() + "Deferred\\Def_DirLight_Fragment.glsl"));
 
 			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxForward", FileSystem::GetShaderDir().string() + "Forward\\skyboxVert.glsl", FileSystem::GetShaderDir().string() + "Forward\\skyboxFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugLineShader", FileSystem::GetShaderDir().string() + "Common\\DebugLineVert.glsl", FileSystem::GetShaderDir().string() + "Common\\DebugLineFrag.glsl"));
@@ -273,15 +274,15 @@ namespace SaltnPepperEngine
 
 
 					SharedPtr<Shader> iblShader = m_ShaderLibrary->GetResource("IBLDeferred");
-					
+					SharedPtr<Shader> dirLightShader = m_ShaderLibrary->GetResource("DirLightDeferred");
 
 					// ======= Light Pass =====================
 					m_renderer->ImagedBasedLightPass(iblShader,cameraElement,cameraElement.postProcessTexture);
 					RenderToTexture(cameraElement.postProcessTexture,iblShader);
 
 					
-				
-					
+					m_renderer->DirectionalLightPass(dirLightShader, cameraElement, cameraElement.postProcessTexture);
+					RenderToTextureNoClear(cameraElement.postProcessTexture, dirLightShader);
 
 					//ProcessImage()
 
@@ -322,7 +323,39 @@ namespace SaltnPepperEngine
 			
 			}
 			
-			//m_renderer->ClearRectangleObjectVAO();
+			
+		}
+
+		void RenderManager::PrepareShadowMaps()
+		{
+			/*bool hasDirectionalLights = !this->Pipeline.Lighting.DirectionalLights.empty();
+			
+
+			if (!hasDirectionalLights ) return;
+
+		
+
+			ShadowMapGenerator generatorOpaque(this->Pipeline.ShadowCasters, this->Pipeline.RenderUnits, this->Pipeline.MaterialUnits);
+			ShadowMapGenerator generatorMasked(this->Pipeline.MaskedShadowCasters, this->Pipeline.RenderUnits, this->Pipeline.MaterialUnits);
+
+			this->Pipeline.Environment.RenderVAO->Bind();
+
+			if (hasDirectionalLights)
+			{
+				MAKE_RENDER_PASS_SCOPE("RenderController::PrepareDirectionalLightMaps()");
+				generatorOpaque.GenerateFor(
+					*this->Pipeline.Environment.Shaders["DirLightDepthMap"_id],
+					this->Pipeline.Lighting.DirectionalLights,
+					ShadowMapGenerator::LoadStoreOptions::CLEAR
+				);
+				generatorMasked.GenerateFor(
+					*this->Pipeline.Environment.Shaders["DirLightMaskDepthMap"_id],
+					this->Pipeline.Lighting.DirectionalLights,
+					ShadowMapGenerator::LoadStoreOptions::LOAD
+				);
+			}*/
+
+			
 		}
 
 		void RenderManager::AttachFrameBuffer(SharedPtr<FrameBuffer>& frameBuffer)

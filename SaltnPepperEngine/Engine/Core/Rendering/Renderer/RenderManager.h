@@ -52,7 +52,7 @@ namespace SaltnPepperEngine
 			// End of the pipeline
 			void EndFrame();
 
-
+			void PrepareShadowMaps();
 
 			void AttachFrameBuffer(SharedPtr<FrameBuffer>& frameBuffer);
 			void AttachFrameBufferNoClear(SharedPtr<FrameBuffer>& frameBuffer);

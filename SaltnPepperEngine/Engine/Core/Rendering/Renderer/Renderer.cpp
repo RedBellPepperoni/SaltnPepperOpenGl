@@ -138,6 +138,7 @@ namespace SaltnPepperEngine
             m_pipeline.defaultWhiteTexture = ColoredTexture::MakeTexture(ColoredTexture::WHITE);
             m_pipeline.defaultNormalTexture = ColoredTexture::MakeTexture(ColoredTexture::FLAT_NORMAL);
             m_pipeline.brdfLUTTexture = Application::GetCurrent().GetTextureLibrary()->GetResource("BrdfLutTexture");
+            m_pipeline.defaultShadowMap = ColoredTexture::MakeTexture(ColoredTexture::BLACK);
 
 
             m_pipeline.SkyboxCubeObject.Init();
@@ -457,6 +458,8 @@ namespace SaltnPepperEngine
         void Renderer::ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList)
         {
             GLDEBUG(glEnable(GL_DEPTH_TEST));
+           
+
             if (shader == nullptr) { LOG_CRITICAL("Object PASS :  Shader not loaded"); }
 
             // Nothing to draw
@@ -509,12 +512,7 @@ namespace SaltnPepperEngine
             BindCameraBuffers(camera,shader, textureId);
             BindCameraInformation(camera, shader);
 
-            //SubmitDirectionalLightInformation(shader, textureId);
-
-
-
-
-           // this->RenderToTextureNoClear(output, shader);
+            SubmitDirectionalLightData(shader, textureId);
         }
 
         void Renderer::SkyBoxPass(SharedPtr<Shader> shader, const CameraElement& camera)
@@ -791,7 +789,7 @@ namespace SaltnPepperEngine
             dirLight.ShadowMap->Bind(textureId++);
             shader->SetUniform("light.color", colorPacked); 
             shader->SetUniform("light.direction", dirLight.Direction); 
-            shader->SetUniform("lightDepthMaps", dirLight.ShadowMap->GetBoundId()); 
+            shader->SetUniform("lightDepthMap", dirLight.ShadowMap->GetBoundId()); 
 
             for (size_t j = 0; j < dirLight.BiasedProjectionMatrices.size(); j++)
             {
@@ -799,14 +797,10 @@ namespace SaltnPepperEngine
                 shader->SetUniform(uniformname,dirLight.BiasedProjectionMatrices[j]);
             }
          
-               
-           
+    
 
-           /* m_pipeline.defaultShadowMap->Bind(textureId);
-            for (size_t i = lightCount; i < MaxDirLightCount; i++)
-            {
-                shader->SetUniform(MxFormat("lightDepthMaps[{}]", i), this->Pipeline.Environment.DefaultShadowMap->GetBoundId());
-            }*/
+            m_pipeline.defaultShadowMap->Bind(textureId);
+            shader->SetUniform("lightDepthMap", m_pipeline.defaultShadowMap->GetBoundId());
         }
 
 

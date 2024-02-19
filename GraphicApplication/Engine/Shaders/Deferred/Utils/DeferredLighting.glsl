@@ -2,19 +2,6 @@
 #include "Utils\PBRLightFunctions.glsl"
 
 
-struct Light
-{
-    vec3 color;
-    vec3 position;
-    vec3 direction;
-    float intensity;
-    float radius;
-    int type;
-    float innerAngle;
-    float outerAngle;
-};
-
-
 
 vec3 calculateIBL(FragmentInfo fragment, vec3 viewDirection, EnvironmentInfo environment, float gamma)
 {
