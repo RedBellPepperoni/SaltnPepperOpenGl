@@ -751,6 +751,8 @@ namespace SaltnPepperEngine
 
             m_pipeline.rectangularObject.GetVAO()->Bind();
             DrawIndices(DrawType::TRIANGLES,  m_pipeline.rectangularObject.IndexCount, 0);
+
+            m_pipeline.rectangularObject.GetVAO()->UnBind();
             //DrawVertices(DrawType::TRIANGLES, 0, 6);
 
         }

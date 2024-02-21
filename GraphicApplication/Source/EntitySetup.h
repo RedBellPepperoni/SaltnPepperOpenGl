@@ -231,5 +231,44 @@ Entity CreateEnemyAI(AI::BehaviorState state, EnemyModel model,Vector3 position 
 }
 
 
+SharedPtr<Material> CreateMonitor(const Vector3& position)
+{
+	Entity tvEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
+	Hierarchy& hierarchyComp = tvEntity.AddComponent<Hierarchy>();
+	Transform& transform = tvEntity.GetComponent<Transform>();
+
+	transform.SetPosition(position);
+
+	ModelComponent* modelComp = &tvEntity.AddComponent<ModelComponent>(PrimitiveType::Quad);
+	
+	SharedPtr<Material> mat  = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+	
+	return mat;
+}
+
+
+Camera* CreateSecurityCamera(const Vector3& position)
+{
+	Entity meshEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SecuritytCamera");
+	Hierarchy& hierarchyComp = meshEntity.AddComponent<Hierarchy>();
+	Transform& transform = meshEntity.GetComponent<Transform>();
+
+	transform.SetPosition(position);
+
+	ModelComponent* modelComp = &meshEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+
+
+	Entity cameraEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SecondaryCamera");
+	Hierarchy& camhierarchyComp = cameraEntity.AddComponent<Hierarchy>();
+    Transform& camtransform = cameraEntity.GetComponent<Transform>();
+	camtransform.SetPosition(Vector3(0.0f,1.0f,-2.0f));
+	Camera* camera = &cameraEntity.AddComponent<Camera>();
+
+	cameraEntity.SetParent(meshEntity);
+
+	return camera;
+
+}
+
 #endif //  EntitySetup
 

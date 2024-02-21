@@ -18,7 +18,19 @@ class GraphicRuntime : public Application
 
         StartPhysics(true);
 
+
+        Camera* camera = CreateSecurityCamera(Vector3(0.0f, 10.0f, 0.0f));
+        SharedPtr<Material> mat = CreateMonitor(Vector3(0.0f, 20.0f, 0.0f));
+        mat->textureMaps.albedoMap = (camera->GetRenderTexture());
+       
+
+
         Entity mainCamera = CreateMainCamera();
+
+        Camera* cam = &mainCamera.GetComponent<Camera>();
+
+       
+
         CreateDirectionalLight();
         CreateParentedEntity();
         CreateBaseFloor();
@@ -35,8 +47,6 @@ class GraphicRuntime : public Application
         CreateEnemyAI(AI::BehaviorState::Flee,EnemyModel::SHEEP,Vector3(20.0f,0.0f,20.0f));*/
 
        
-
-
 	}
 
 
@@ -80,6 +90,10 @@ private:
     SharedPtr<AI::AIManager> aiManager = nullptr;
 
 };
+
+
+
+
 
 int main(int argc, char* argv)
 {

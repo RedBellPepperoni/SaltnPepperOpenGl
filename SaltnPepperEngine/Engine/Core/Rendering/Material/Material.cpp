@@ -45,6 +45,13 @@ namespace SaltnPepperEngine
             textureMaps.albedoMap = GatherTexture(filePath);
         }
 
+        void Material::SetAlbedoTexture(SharedPtr<Texture>& texture)
+        {
+            textureMaps.albedoMap = texture;
+        }
+
+
+
         void Material::SetNormalTexture(const std::string& filePath)
         {
             textureMaps.normalMap = GatherTexture(filePath);
