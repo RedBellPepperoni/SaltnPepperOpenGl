@@ -91,7 +91,7 @@ namespace SaltnPepperEngine
 
 			inline int IndexFrom2D(int x, int y);
 
-			const float substeps = 10;
+			const float substeps = 25;
 		};
 
 

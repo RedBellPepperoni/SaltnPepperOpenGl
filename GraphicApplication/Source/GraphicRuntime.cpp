@@ -33,7 +33,7 @@ void CreateCloth(const Vector3 position)
     Transform& clothtransform = clothEntity.GetComponent<Transform>();
     clothtransform.SetPosition(position);
 
-    ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(8);
+    ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(16);
     clothComp.clothHandle->OnInit(balltransform,sphereCollider);
 
 }
