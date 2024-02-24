@@ -6,18 +6,26 @@
 
 namespace SaltnPepperEngine
 {
+	namespace Components
+	{
+		class Transform;
+	}
+
 	namespace Rendering
 	{
 		class Mesh;
+		struct Vertex;
 	}
 
 
 
 
 	using Rendering::Mesh;
+	using Components::Transform;
 
 	namespace Physics
 	{
+		class SphereCollider;
 
 		class SoftBodyParticle
 		{
@@ -58,7 +66,10 @@ namespace SaltnPepperEngine
 			Cloth();
 			Cloth(int n, float RangeBetweenPoints);
 
-			void Simulate(float deltaTime);
+			void OnInit(Transform* Transform, SharedPtr<SphereCollider>& collider);
+			void OnUpdate(float deltaTime,const Transform& ballTransform,const Transform& clothTransform);
+
+			void Simulate(float deltaTime,const Transform& ballTransform, const Transform& clothTransform);
 			void UpdateMesh();
 
 			SharedPtr<Mesh> clothMesh = nullptr;
@@ -68,17 +79,27 @@ namespace SaltnPepperEngine
 		private:
 		
 
-			void CalculateNormals(unsigned int* indices, unsigned int indiceCount, float* vertices, unsigned int verticeCount,
-				unsigned int vLength, unsigned int normalOffset);
+
+			void SphereClothCollision(SoftBodyParticle& particle,  const Transform& ballTransform, const Transform& clothTransform);
 
 			int numberofSegments = 0;
 			float rangeBetweenPoints = 0.0f;
 
 			std::vector<SoftBodyParticle> particles;
+			Transform* sphereTransform = nullptr;
+			SharedPtr<SphereCollider> sphere = nullptr;
 
 			inline int IndexFrom2D(int x, int y);
 
-			
+			const float substeps = 10;
+		};
+
+
+		struct ClothComponent
+		{
+			ClothComponent(uint32_t numberSegments = 8) { clothHandle = MakeShared<Cloth>(numberSegments, 0.5f); }
+
+			SharedPtr<Cloth> clothHandle;
 		};
 
 

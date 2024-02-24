@@ -61,7 +61,13 @@ namespace SaltnPepperEngine
 			const std::vector<Vertex>& GetVertexData();
 			const std::vector<uint32_t>& GetIndexData();
 
-			const uint32_t GetIndexCount();
+			/*std::vector<Vertex>& GetVertexData();
+			std::vector<uint32_t>& GetIndexData();*/
+
+			void SetVertexData(const std::vector<Vertex> newVertexData);
+
+			const uint32_t GetIndexCount() const;
+			const uint32_t GetVertexCount() const;
 
 			// Getters for Vertex and Index buffers
 			SharedPtr<VertexBuffer>& GetVBO();
@@ -70,7 +76,7 @@ namespace SaltnPepperEngine
 			void SetMaterial(const SharedPtr<Material>& newMaterial);
 			SharedPtr<Material>& GetMaterial();
  
-
+			void RecalculateNormals(std::vector<Vertex>& vertices,const std::vector<uint32_t>& indices);
 
 		};
     }

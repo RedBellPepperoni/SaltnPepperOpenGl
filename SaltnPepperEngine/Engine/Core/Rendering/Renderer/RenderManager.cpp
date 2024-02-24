@@ -21,6 +21,9 @@
 #include "Engine/Core/Rendering/Geometry/Model.h"
 
 
+#include "Engine/Core/Physics/SoftBody/Cloth.h"
+
+
 namespace SaltnPepperEngine
 {
 	using Components::MeshComponent;
@@ -104,14 +107,17 @@ namespace SaltnPepperEngine
 
 				}
 
-				
-				
-
-
-				
 				// Sending the mesh data for processing
 				
 			}
+
+
+			ComponentView clothView = scene->GetEntityManager()->GetComponentsOfType<SaltnPepperEngine::Physics::ClothComponent>();
+			Transform& clothtransform = clothView[0].GetComponent<Transform>();
+			SharedPtr<Mesh> clothMesh = clothView[0].GetComponent<SaltnPepperEngine::Physics::ClothComponent>().clothHandle->clothMesh;
+
+			m_renderer->ProcessRenderElement(clothMesh, clothMesh->GetMaterial(), clothtransform);
+
 
 			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();
 

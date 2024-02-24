@@ -70,9 +70,19 @@ namespace SaltnPepperEngine
 			return m_indicies;
 		}
 
-		const uint32_t Mesh::GetIndexCount()
+		void Mesh::SetVertexData(const std::vector<Vertex> newVertexData)
+		{
+			m_vertices = newVertexData;
+		}
+
+		const uint32_t Mesh::GetIndexCount() const
 		{
 			return m_indiciesCount;
+		}
+
+		const uint32_t Mesh::GetVertexCount() const
+		{
+			return m_vertexCount;
 		}
 
 		SharedPtr<VertexBuffer>& Mesh::GetVBO()
@@ -92,6 +102,29 @@ namespace SaltnPepperEngine
 		SharedPtr<Material>& Mesh::GetMaterial() 
 		{
 			return m_material;
+		}
+		void Mesh::RecalculateNormals(std::vector<Vertex>& vertices,const std::vector<uint32_t>& indices)
+		{
+			std::vector<Vector3> normals = std::vector<Vector3>(vertices.size(), Vector3(0.0f));
+
+			for (uint32_t i = 0; i < indices.size(); i += 3)
+			{
+				const int a = indices[i];
+				const int b = indices[i + 1];
+				const int c = indices[i + 2];
+
+				const glm::vec3 _normal = Cross((vertices[b].position - vertices[a].position), (vertices[c].position - vertices[a].position));
+
+				normals[a] += _normal;
+				normals[b] += _normal;
+				normals[c] += _normal;
+			}
+
+			for (uint32_t i = 0; i < vertices.size(); ++i)
+			{
+				Normalize(normals[i]);
+				vertices[i].normal = normals[i];
+			}
 		}
     }
 }
