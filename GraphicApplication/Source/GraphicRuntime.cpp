@@ -35,6 +35,7 @@ void CreateCloth(const Vector3 position)
 
     ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(16);
     clothComp.clothHandle->OnInit(balltransform,sphereCollider);
+    clothComp.clothHandle->clothMesh->GetMaterial()->SetAlbedoTexture("grass");
 
 }
 

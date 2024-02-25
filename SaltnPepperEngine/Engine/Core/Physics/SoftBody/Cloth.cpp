@@ -86,7 +86,13 @@ namespace SaltnPepperEngine
 
 		void Cloth::Simulate(float deltaTime, const Transform& ballTransform, const Transform& clothTransform)
 		{
+			timeStepCounter += deltaTime;
+			if (timeStepCounter < fixedDeltaTime)
+			{
+				return;
+			}
 
+			timeStepCounter = 0.0f;
 
 			for (int i = 0; i < particles.size(); i++) 
 			{
@@ -95,12 +101,12 @@ namespace SaltnPepperEngine
 
 					Vector3 prevPos = particles[i].position;
 					Vector3 displacement = particles[i].position - particles[i].previousPosition;
-					particles[i].velocity = displacement / deltaTime;
+					particles[i].velocity = displacement / fixedDeltaTime;
 					particles[i].position += displacement;
-					particles[i].position += Vector3(0.0f, -1.0f, 0.0f) * 9.81f * deltaTime * deltaTime;
+					particles[i].position += Vector3(0.0f, -1.0f, 0.0f) * 9.81f * fixedDeltaTime * fixedDeltaTime;
 
 					float speed = glm::sqrt(Length(particles[i].velocity));
-					particles[i].position -= displacement * particles[i].friction * glm::pow(speed, 2.0f) * deltaTime;
+					particles[i].position -= displacement * particles[i].friction * glm::pow(speed, 2.0f) * fixedDeltaTime;
 					particles[i].previousPosition = prevPos;
 				}
 			}
@@ -177,7 +183,8 @@ namespace SaltnPepperEngine
 
 
 			
-			clothMesh->RecalculateNormals(vertexList,clothMesh->GetIndexData());
+			//clothMesh->RecalculateNormals(vertexList,clothMesh->GetIndexData());
+			Mesh::RecalculateNormals(vertexList,clothMesh->GetIndexData());
 			clothMesh->SetVertexData(vertexList);
 			clothMesh->GetVBO()->SetSubData(0, sizeof(Vertex) * clothMesh->GetVertexCount(), vertexList.data());
 

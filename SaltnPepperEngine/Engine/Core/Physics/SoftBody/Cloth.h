@@ -91,7 +91,10 @@ namespace SaltnPepperEngine
 
 			inline int IndexFrom2D(int x, int y);
 
-			const float substeps = 25;
+			const float substeps = 32;
+
+			static constexpr float fixedDeltaTime = 1.0f / 60.0f;
+			float timeStepCounter = 0.0f;
 		};
 
 

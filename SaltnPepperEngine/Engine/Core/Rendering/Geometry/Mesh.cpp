@@ -103,6 +103,7 @@ namespace SaltnPepperEngine
 		{
 			return m_material;
 		}
+
 		void Mesh::RecalculateNormals(std::vector<Vertex>& vertices,const std::vector<uint32_t>& indices)
 		{
 			std::vector<Vector3> normals = std::vector<Vector3>(vertices.size(), Vector3(0.0f));
