@@ -28,16 +28,17 @@ namespace SaltnPepperEngine
 			std::vector<Vertex> renderVertices;
 			
 			// Fill in the vertex positions accotding to the given Data
-			for (int i = 0; i < numParticles; i +=3)
+			for (int i = 0; i < numParticles * 3; i +=3)
 			{
 				Vector3& vertex = vertPositions.emplace_back();
-				Vertex renderVertex;
+				Vertex& renderVertex = renderVertices.emplace_back();
 	
 				vertex.x = tetmesh->Vertices[i];
 				vertex.y = tetmesh->Vertices[i+1];
 				vertex.z = tetmesh->Vertices[i+2];		
 
 				renderVertex.position = vertex;
+
 			}
 
 			// Copy over the Vector
@@ -54,7 +55,7 @@ namespace SaltnPepperEngine
 
 			particleVelocityList = std::vector<Vector3>(numParticles, Vector3(0.0f));
 			inverseMassList = std::vector<float>(numParticles, 0.0f);
-			edgeLengthList = std::vector<float>(edgeIdList.size(), 0.0f);
+			edgeLengthList = std::vector<float>(edgeIdList.size()/2, 0.0f);
 		
 
 			restVolume = std::vector<float>(numTets, 0.0f);
@@ -232,7 +233,7 @@ namespace SaltnPepperEngine
 					newgrad = Cross(temp_0, temp_1);
 					newgrad *= 1.0f/6.0f;
 	
-					weight = inverseMassList[tetIdList[4 * i * j]] * LengthSquared(newgrad);
+					weight = inverseMassList[tetIdList[4 * i + j]] * LengthSquared(newgrad);
 				}
 
 				if (weight <= 0.001f) { continue; }
