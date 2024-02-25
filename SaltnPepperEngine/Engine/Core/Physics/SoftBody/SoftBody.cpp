@@ -25,22 +25,22 @@ namespace SaltnPepperEngine
 			numParticles = tetmesh->Vertices.size() / 3;
 			numTets = tetmesh->TetIds.size() / 4;
 
-			std::vector<Vertex> renderVertices;
+			std::vector<Vertex> renderVertices = std::vector<Vertex>(numParticles);
 			
 			// Fill in the vertex positions accotding to the given Data
 			for (int i = 0; i < numParticles * 3; i +=3)
 			{
 				Vector3& vertex = vertPositions.emplace_back();
-				Vertex& renderVertex = renderVertices.emplace_back();
 	
 				vertex.x = tetmesh->Vertices[i];
 				vertex.y = tetmesh->Vertices[i+1];
 				vertex.z = tetmesh->Vertices[i+2];		
 
-				renderVertex.position = vertex;
+				renderVertices[i/3].position = vertex;
 
 			}
 
+		
 			// Copy over the Vector
 			std::copy(vertPositions.begin(), vertPositions.end(),
 				std::back_inserter(vertPreviousPositions));
@@ -66,17 +66,6 @@ namespace SaltnPepperEngine
 			// Generate the actual render Mesh
 			renderMesh = MakeShared<Mesh>(renderVertices,tetmesh->TetSurfaceTriIds);
 			
-		}
-
-
-		void SoftBody::OnInit(const Vector3& position)
-		{
-			for (int index = 0; index < numParticles; index++)
-			{
-				vertPositions[index] += position;
-				vertPreviousPositions[index] += position;
-			}
-
 			for (int index = 0; index < numTets; index++)
 			{
 				float volume = GetTetVolume(index);
@@ -93,45 +82,65 @@ namespace SaltnPepperEngine
 			for (int index = 0; index < edgeLengthList.size(); index++)
 			{
 				uint32_t ID_0 = edgeIdList[2 * index];
-				uint32_t ID_1 = edgeIdList[2 * index  + 1];
+				uint32_t ID_1 = edgeIdList[2 * index + 1];
 				edgeLengthList[index] = Distance(vertPositions[ID_0], vertPositions[ID_1]);
 			}
+
+
+		}
+
+
+		void SoftBody::OnInit(const Vector3& position)
+		{
+			
+			
+			for (int index = 0; index < numParticles; index++)
+			{
+				vertPositions[index] += position;
+				vertPreviousPositions[index] += position;
+			}
+
+
+			UpdateMesh();
 
 		}
 
 
 		void SoftBody::UpdateMesh()
 		{
-			std::vector<Vertex> renderVertices;
+			std::vector<Vertex> renderVertices = std::vector<Vertex>(numParticles);
 
 			for (int index = 0; index < vertPositions.size(); index++)
 			{
-				Vertex& updatedVertex = renderVertices.emplace_back();
-				updatedVertex.position = vertPositions[index];
+				//Vertex& updatedVertex = renderVertices.emplace_back();
+				//updatedVertex.position = vertPositions[index];
+				renderVertices[index].position = vertPositions[index];
 				
 			}
+
+			renderVertices;
 			// Recalculat ethe Normals
 			Mesh::RecalculateNormals(renderVertices, renderMesh->GetIndexData());
 
 			// Update The VBO
-			renderMesh->GetVBO()->SetSubData(0,renderVertices.size(),renderVertices.data());
-
+			renderMesh->GetVBO()->SetSubData(0, sizeof(Vertex) * renderVertices.size(),renderVertices.data());
+			renderMesh->GetVBO()->UnBind();
 
 		}
 
 		float SoftBody::GetTetVolume(int index)
 		{
-			int index0 = tetIdList[4 * index];
-			int index1 = tetIdList[4 * index +1];
-			int index2 = tetIdList[4 * index +2];
-			int index3 = tetIdList[4 * index +3];
+			uint32_t index0 = tetIdList[4 * index];
+			uint32_t index1 = tetIdList[4 * index + 1];
+			uint32_t index2 = tetIdList[4 * index + 2];
+			uint32_t index3 = tetIdList[4 * index + 3];
 
 			Vector3 temp0 = vertPositions[index1] - vertPositions[index0];
 			Vector3 temp1 = vertPositions[index2] - vertPositions[index0];
 			Vector3 temp2 = vertPositions[index3] - vertPositions[index0];
 			Vector3 temp3 = Cross(temp0,temp1);
 		
-			return Dot(temp3, temp2);	
+			return Dot(temp3, temp2) / 6.0f;	
 		}
 
 		void SoftBody::PreSolve(const float& deltaTime, const Vector3& gravity)
@@ -148,7 +157,7 @@ namespace SaltnPepperEngine
 				particleVelocityList[index] += gravity * deltaTime;
 
 				// Store the current particle position in to the previous position list 
-				vertPreviousPositions[index] = vertPositions[index];
+ 				vertPreviousPositions[index] = vertPositions[index];
 
 				// Apply velocity to the particle
 				vertPositions[index] += particleVelocityList[index] * deltaTime;
@@ -170,9 +179,10 @@ namespace SaltnPepperEngine
 		{
 			for (int index = 0; index < numParticles; index++)
 			{
-				if (inverseMassList[index] <= 0.001f) { continue; }
+				if (inverseMassList[index] == 0.0f) { continue; }
 
-				particleVelocityList[index] = vertPositions[index] - vertPreviousPositions[index] * (1.0f / deltaTime);
+				particleVelocityList[index] = (vertPositions[index] - vertPreviousPositions[index]) * (1.0f / deltaTime);
+				
 			}
 
 			UpdateMesh();
@@ -180,7 +190,7 @@ namespace SaltnPepperEngine
 
 		void SoftBody::SolveEdges(const float& deltaTime)
 		{
-			float alpha = edgeCompliance / deltaTime / deltaTime;
+			float alpha = (edgeCompliance / deltaTime) / deltaTime;
 
 			for (int index = 0; index < edgeLengthList.size(); index++)
 			{
@@ -189,35 +199,36 @@ namespace SaltnPepperEngine
 
 				const float weight_0 = inverseMassList[index_0];
 				const float weight_1 = inverseMassList[index_1];
+
 				const float weight = (weight_0 + weight_1);
-				if (weight <= 0.001f) { continue; }
+				if (weight == 0.0f) { continue; }
 
 				Vector3 grad = vertPositions[index_0] - vertPositions[index_1];
 				float length = Length(grad);
 
-				if (length <= 0.001f) { continue; }
+				if (length == 0.0f) { continue; }
 				
-				grad *= 1.0f / length;
+				grad *= (1.0f / length);
 
 				float restLength = edgeLengthList[index];
 				float Coeff = length - restLength;
 				float s = -Coeff / (weight + alpha);
 
-				vertPositions[index_0] += (grad * s * weight_0);
-				vertPositions[index_1] += (grad * -s * weight_1);
+				vertPositions[index_0] += grad * s * weight_0;
+				vertPositions[index_1] += grad * -s * weight_1;
 
 			}
 		}
 
 		void SoftBody::SolveVolumes(const float& deltaTime)
 		{
-			float alpha = volumeCompliance / deltaTime / deltaTime;
+			float alpha = (volumeCompliance / deltaTime) / deltaTime; 
 
 			for (int i = 0; i < numTets; i++)
 			{
 				float weight = 0.0f;
 
-				std::vector<Vector3> grads;
+				std::vector<Vector3> grads = std::vector<Vector3>(4);
 
 				for (int j = 0; j < 4; j++)
 				{
@@ -228,15 +239,14 @@ namespace SaltnPepperEngine
 					Vector3 temp_0 = vertPositions[index_1] - vertPositions[index_0];
 					Vector3 temp_1 = vertPositions[index_2] - vertPositions[index_0];
 				
-					Vector3& newgrad = grads.emplace_back();
-
-					newgrad = Cross(temp_0, temp_1);
-					newgrad *= 1.0f/6.0f;
+					
+					grads[j] = Cross(temp_0, temp_1);
+					grads[j] *= (1.0f / 6.0f);
 	
-					weight = inverseMassList[tetIdList[4 * i + j]] * LengthSquared(newgrad);
+					weight += inverseMassList[tetIdList[4 * i + j]] * LengthSquared(grads[j]);
 				}
 
-				if (weight <= 0.001f) { continue; }
+				if (weight == 0.0f) { continue; }
 
 				float vol = GetTetVolume(i);
 				float restVol = restVolume[i];
@@ -261,6 +271,8 @@ namespace SaltnPepperEngine
 
 		void Solver::OnUpdate(const float& deltaTime)
 		{
+			if (isPaused) { return; }
+
 			timestepCounter += deltaTime;
 
 			if(timestepCounter < fixedDeltaTime)
@@ -276,27 +288,34 @@ namespace SaltnPepperEngine
 
 			float subDeltatime = fixedDeltaTime / numSubsteps;
 
-
-			for (Entity softEntity : softBodyView)
+			for (int step = 0; step < numSubsteps; step++)
 			{
-				SharedPtr<SoftBody> softBody = softEntity.GetComponent<SoftBodyComponent>().softBodyhandle;
-				softbodyList.push_back(softBody);	
+				for (Entity softEntity : softBodyView)
+				{
+					SharedPtr<SoftBody>& softBody = softEntity.GetComponent<SoftBodyComponent>().softBodyhandle;
+					softbodyList.push_back(softBody);	
+				}
+
+				for (SharedPtr<SoftBody>& body : softbodyList)
+				{
+					body->PreSolve(subDeltatime);
+					body->Solve(subDeltatime);
+					body->PostSolve(subDeltatime);
+				}
+
+				/*for (SharedPtr<SoftBody>& body : softbodyList)
+				{
+					
+				
+				}
+
+				for (SharedPtr<SoftBody>& body : softbodyList)
+				{
+					
+				}*/
 			}
 
-			for (SharedPtr<SoftBody>& body : softbodyList)
-			{
-				body->PreSolve(subDeltatime);
-			}
-
-			for (SharedPtr<SoftBody>& body : softbodyList)
-			{
-				body->Solve(subDeltatime);
-			}
-
-			for (SharedPtr<SoftBody>& body : softbodyList)
-			{
-				body->PostSolve(subDeltatime);
-			}
+			
 
 		}
 	}

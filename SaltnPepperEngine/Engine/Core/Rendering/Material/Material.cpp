@@ -45,7 +45,7 @@ namespace SaltnPepperEngine
             textureMaps.albedoMap = GatherTexture(filePath);
         }
 
-        void Material::SetAlbedoTexture(SharedPtr<Texture>& texture)
+        void Material::SetAlbedoRef(SharedPtr<Texture>& texture)
         {
             textureMaps.albedoMap = texture;
         }

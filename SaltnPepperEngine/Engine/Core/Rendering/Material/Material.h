@@ -101,7 +101,7 @@ namespace SaltnPepperEngine
 
 
             void SetAlbedoTexture(const std::string& filePath);
-            void SetAlbedoTexture(SharedPtr<Texture>& texture);
+            void SetAlbedoRef(SharedPtr<Texture>& texture);
             void SetNormalTexture(const std::string& filePath);
             void SetMetallicTexture(const std::string& filePath);
             void SetAOTexture(const std::string& filePath);

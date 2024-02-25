@@ -187,6 +187,7 @@ namespace SaltnPepperEngine
 			Mesh::RecalculateNormals(vertexList,clothMesh->GetIndexData());
 			clothMesh->SetVertexData(vertexList);
 			clothMesh->GetVBO()->SetSubData(0, sizeof(Vertex) * clothMesh->GetVertexCount(), vertexList.data());
+			clothMesh->GetVBO()->UnBind();
 
 		}
 		Cloth::~Cloth()

@@ -42,7 +42,7 @@ namespace SaltnPepperEngine
 		{
 		public:
 
-			SoftBody(SharedPtr<TetMesh>& tetmesh, const float& EdgeCompliance = 0.1f, const float& VolumeCompliance = 0.13f);
+			SoftBody(SharedPtr<TetMesh>& tetmesh, const float& EdgeCompliance = 100.0f, const float& VolumeCompliance = 0.0f);
 			~SoftBody(){};
 
 			void OnInit(const Vector3& position);
@@ -51,7 +51,7 @@ namespace SaltnPepperEngine
 			SharedPtr<Mesh>& GetRenderMesh() { return renderMesh; }
 
 
-			void PreSolve(const float& deltaTime, const Vector3& gravity = Vector3(0.0f, -9.81f, 0.0f));
+			void PreSolve(const float& deltaTime, const Vector3& gravity = Vector3(0.0f, -10.0f, 0.0f));
 			void Solve(const float& deltaTime);
 			void PostSolve(const float& deltaTime);
 
@@ -115,15 +115,16 @@ namespace SaltnPepperEngine
 		public:
 			Solver();
 			~Solver();
-
+			void SetPaused(bool paused) { isPaused = paused; };
+			const bool GetPaused() const { return isPaused; }
 			void OnUpdate(const float& deltaTime);
 			
 		private:
 
-			Vector3 gravity = Vector3(0.0f, -9.81f, 0.0f);
+			Vector3 gravity = Vector3(0.0f, -10.0f, 0.0f);
 			float fixedDeltaTime = 1.0f / 60.0f;
 			int numSubsteps = 10;
-
+			bool isPaused = true;
 			float timestepCounter = 0.0f;
 		};
 
