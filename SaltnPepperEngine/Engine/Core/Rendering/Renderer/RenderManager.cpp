@@ -112,26 +112,6 @@ namespace SaltnPepperEngine
 				
 			}
 
-
-			ComponentView clothView = scene->GetEntityManager()->GetComponentsOfType<SaltnPepperEngine::Physics::ClothComponent>();
-			Transform& clothtransform = clothView[0].GetComponent<Transform>();
-			SharedPtr<Mesh> clothMesh = clothView[0].GetComponent<SaltnPepperEngine::Physics::ClothComponent>().clothHandle->clothMesh;
-
-			m_renderer->ProcessRenderElement(clothMesh, clothMesh->GetMaterial(), clothtransform);
-
-
-			ComponentView softView = scene->GetEntityManager()->GetComponentsOfType<Physics::SoftBodyComponent>();
-			
-
-			for (Entity softBodyEntity : softView)
-			{
-				Transform& softtransform = softBodyEntity.GetComponent<Transform>();
-				SharedPtr<Mesh> softMesh = softBodyEntity.GetComponent<Physics::SoftBodyComponent>().softBodyhandle->GetRenderMesh();
-
-				m_renderer->ProcessRenderElement(softMesh, softMesh->GetMaterial(), softtransform);
-			}
-
-
 			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();
 
 			for (Entity lightObject : lightView)

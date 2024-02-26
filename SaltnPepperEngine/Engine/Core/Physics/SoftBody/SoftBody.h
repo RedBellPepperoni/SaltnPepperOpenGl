@@ -130,9 +130,11 @@ namespace SaltnPepperEngine
 		{
 		public:
 
+			SharedPtr<VisualMesh> mesh = nullptr;
+
 			SoftBodyComponent(SharedPtr<TetMesh>& tetmesh)
 			{
-				softBodyhandle = MakeShared<SoftBody>(tetmesh,nullptr);
+				softBodyhandle = MakeShared<SoftBody>(tetmesh,mesh);
 			}
 
 			SharedPtr<SoftBody> softBodyhandle = nullptr;

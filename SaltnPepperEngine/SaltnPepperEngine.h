@@ -28,11 +28,16 @@
 #include "Engine/Core/Rendering/Geometry/Model.h"
 
 // ============= RENDERING ESSENTAILS ================
-#include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Image.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
+
+//=============== CAMERA STUFF ===============
+#include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Rendering/Camera/CameraController.h"
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+#include "Engine/Core/Rendering/Camera/EditorCameraController.h"
 
 // ========= SCENE and ECS STUFF ===================
 #include "Engine/Core/Scene/Scene.h" 
