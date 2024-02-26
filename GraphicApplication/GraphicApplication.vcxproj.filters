@@ -24,10 +24,7 @@
     <ClCompile Include="Source\AIStuff\AIManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PlayerCharacter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdPersonCameraController.cpp">
+    <ClCompile Include="Source\SecurityCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,10 +38,7 @@
     <ClInclude Include="Source\AIStuff\AIManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\PlayerCharacter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdPersonCameraController.h">
+    <ClInclude Include="Source\SecurityCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,8 +2,9 @@
 #define  ENTITYSETUP_H
 
 #include "SaltnPepperEngine.h"
+#include "SecurityCamera.h"
 
-
+static int cameraCount = 0;
 
 
 void LoadAllModels()
@@ -16,6 +17,22 @@ void LoadAllModels()
 	modelLib->LoadModel("MiningRig", "Assets\\Models\\Asteroid_MiningRig.fbx");
 	modelLib->LoadModel("MiningRig_Other","Assets\\Models\\Asteroid_Other_Mine.fbx");
 	modelLib->LoadModel("IndustrialMiningRig","Assets\\Models\\Asteroid_Industrial_Mine.fbx");
+
+	// Consoles
+	modelLib->LoadModel("CenterConsole","Assets\\Models\\CenterConsole.fbx");
+	modelLib->LoadModel("CornerConsoleRight","Assets\\Models\\CornerConsole_Right.fbx");
+	modelLib->LoadModel("CornerConsoleLeft", "Assets\\Models\\CornerConsole_Left.fbx");
+
+	// CenterWindow and Screen
+	modelLib->LoadModel("CenterWindow", "Assets\\Models\\CenterWindow.fbx");
+	modelLib->LoadModel("CenterScreenLeft", "Assets\\Models\\CenterScreenLeft.fbx");
+	modelLib->LoadModel("CenterScreenRight", "Assets\\Models\\CenterScreenRight.fbx");
+
+	modelLib->LoadModel("CornerWindowRight", "Assets\\Models\\CornerWindow_Right.fbx");
+	modelLib->LoadModel("CornerScreenRight", "Assets\\Models\\CornerScreen_Right.fbx");
+
+	modelLib->LoadModel("CornerWindowLeft", "Assets\\Models\\CornerWindow_Left.fbx");
+	modelLib->LoadModel("CornerScreenLeft", "Assets\\Models\\CornerScreen_Left.fbx");
 
 
 }
@@ -82,12 +99,26 @@ Entity CreateAsteroidParent()
 	return AsteroidParentEntity;
 }
 
+Entity CreatePointLight(Vector3 position = Vector3{ 0.0f }, float Radius = 5.0f, float Intensity = 1.0f, Vector3 color = Vector3(1.0f))
+{
+	Entity pointLightEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PointLight");
+	Transform& transform = pointLightEntity.GetComponent<Transform>();
+	transform.SetPosition(position);
+
+	Light& light = pointLightEntity.AddComponent<Light>();
+	light.type = LightType::PointLight;
+	light.radius = Radius;
+	light.intensity = Intensity;
+	light.color = color;
+
+	return pointLightEntity;
+}
 
 Entity CreateDirectionalLight()
 {
 	Entity dirLightEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Directional Light");
 	Transform& transform = dirLightEntity.GetComponent<Transform>();
-	transform.SetEularRotation(Vector3(-36.0f, 0.0f, 0.0f));
+	transform.SetEularRotation(Vector3(154.0f, -51.0f, -180.0f));
 	Light& light = dirLightEntity.AddComponent<Light>();
 	light.type = LightType::DirectionLight;
 	light.intensity = 1.2f;
@@ -95,6 +126,7 @@ Entity CreateDirectionalLight()
 	return dirLightEntity;
 }
 
+// Asteroid Stuff
 
 Entity CreateMainAsteroid(const Vector3& position = Vector3(0.0f))
 {
@@ -198,43 +230,164 @@ Entity CreateSecondaryMiningRig(const Vector3& position = Vector3(0.0f))
 	return miningEntity;
 }
 
+// Consoles Stuff
 
-SharedPtr<Material> CreateMonitor(const Vector3& position = Vector3(0.0f))
+Entity CreateConsoleRoom(const Vector3& position = Vector3(0.0f))
 {
-	Entity tvEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
-	Hierarchy& hierarchyComp = tvEntity.AddComponent<Hierarchy>();
-	Transform& transform = tvEntity.GetComponent<Transform>();
+	Entity consoleRoomEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("ConsoleRoom");
+	Hierarchy& hierarchy = consoleRoomEntity.AddComponent<Hierarchy>();
 
-	transform.SetPosition(position);
+	Transform& roomTransform = consoleRoomEntity.GetComponent<Transform>();
+	roomTransform.SetPosition(position);
 
-	ModelComponent* modelComp = &tvEntity.AddComponent<ModelComponent>(PrimitiveType::Quad);
-	
-	SharedPtr<Material> mat  = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
-	
-	return mat;
+	return consoleRoomEntity;
+}
+
+Entity CreateCenterConsole (const Vector3& position = Vector3(0.0f))
+{
+	Entity consoleEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CenterConsole");
+	Transform& consoleTransform = consoleEntity.GetComponent<Transform>();
+
+	consoleTransform.SetPosition(position);
+
+	Hierarchy& hierarchy = consoleEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelComp = consoleEntity.AddComponent<ModelComponent>("CenterConsole");
+
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("spaceship");
+
+	return consoleEntity;
+}
+
+Entity CreateCornerConsoleRight(const Vector3& position = Vector3(0.0f))
+{
+	Entity consoleEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CornerConsoleRight");
+	Transform& consoleTransform = consoleEntity.GetComponent<Transform>();
+
+	consoleTransform.SetPosition(position);
+
+	Hierarchy& hierarchy = consoleEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelComp = consoleEntity.AddComponent<ModelComponent>("CornerConsoleRight");
+
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("spaceship");
+
+	return consoleEntity;
+}
+
+Entity CreateCornerConsoleLeft(const Vector3& position = Vector3(0.0f))
+{
+	Entity consoleEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CornerConsoleLeft");
+	Transform& consoleTransform = consoleEntity.GetComponent<Transform>();
+
+	consoleTransform.SetPosition(position);
+
+	Hierarchy& hierarchy = consoleEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelComp = consoleEntity.AddComponent<ModelComponent>("CornerConsoleLeft");
+
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("spaceship");
+
+	return consoleEntity;
 }
 
 
-Camera* CreateSecurityCamera(const Vector3& position)
+//SharedPtr<Material> CreateMonitor(const Vector3& position = Vector3(0.0f))
+//{
+//	Entity tvEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
+//	Hierarchy& hierarchyComp = tvEntity.AddComponent<Hierarchy>();
+//	Transform& transform = tvEntity.GetComponent<Transform>();
+//
+//	transform.SetPosition(position);
+//
+//	ModelComponent* modelComp = &tvEntity.AddComponent<ModelComponent>(PrimitiveType::Quad);
+//	
+//	SharedPtr<Material> mat  = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+//	
+//	return mat;
+//}
+
+//Camera* CreateSecurityCamera(const Vector3& position)
+//{
+//	Entity meshEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SecuritytCamera");
+//	Hierarchy& hierarchyComp = meshEntity.AddComponent<Hierarchy>();
+//	Transform& transform = meshEntity.GetComponent<Transform>();
+//
+//	transform.SetPosition(position);
+//
+//	ModelComponent* modelComp = &meshEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+//
+//
+//	Entity cameraEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SecondaryCamera");
+//	Hierarchy& camhierarchyComp = cameraEntity.AddComponent<Hierarchy>();
+//    Transform& camtransform = cameraEntity.GetComponent<Transform>();
+//	camtransform.SetPosition(Vector3(0.0f,1.0f,-2.0f));
+//	Camera* camera = &cameraEntity.AddComponent<Camera>();
+//
+//	cameraEntity.SetParent(meshEntity);
+//
+//	return camera;
+//
+//}
+
+SharedPtr<Material> CreateCornerScreen(Entity parentEntity,const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
 {
-	Entity meshEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SecuritytCamera");
+	std::string name = isRightScreen ? "CornerScreen_Right" : "CornerScreen_Left";
+	Entity screenEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
+	Hierarchy& hierarchyComp = screenEntity.AddComponent<Hierarchy>();
+	Transform& transform = screenEntity.GetComponent<Transform>();
+	transform.SetPosition(position);
+
+	screenEntity.SetParent(parentEntity);
+
+	std::string modelName = isRightScreen ? "CornerScreenRight" : "CornerScreenLeft";
+	ModelComponent* modelComp = &screenEntity.AddComponent<ModelComponent>(modelName);
+
+	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+
+	return mat;
+}
+
+SharedPtr<Texture> CreateSecurityCamera(const Vector3& position = Vector3(0.0f),const Vector3& rotation = Vector3(0.0f))
+{
+	cameraCount++;
+
+	std::string name = "SecurityCameraRotator_" + std::to_string(cameraCount);
+	Entity rotatorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
+	Hierarchy& rothierarchyComp = rotatorEntity.AddComponent<Hierarchy>();
+	Transform& rottransform = rotatorEntity.GetComponent<Transform>();
+	SecurityCamera& cameraSec = rotatorEntity.AddComponent<SecurityCamera>();
+
+	rottransform.SetPosition(position);
+
+	float randomYaw = Random32::Range.GetRandom(-15.0f, 15.0f);
+	
+	rottransform.SetEularRotation(Vector3(0.0f, randomYaw, 0.0f));
+
+	name = "SecurityCameraEntity_" + std::to_string(cameraCount);
+	Entity meshEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
 	Hierarchy& hierarchyComp = meshEntity.AddComponent<Hierarchy>();
 	Transform& transform = meshEntity.GetComponent<Transform>();
 
-	transform.SetPosition(position);
+	transform.SetEularRotation(rotation);
 
 	ModelComponent* modelComp = &meshEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
 
+	meshEntity.SetParent(rotatorEntity);
 
-	Entity cameraEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SecondaryCamera");
+	name = "Camera_" + std::to_string(cameraCount);
+	Entity cameraEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
 	Hierarchy& camhierarchyComp = cameraEntity.AddComponent<Hierarchy>();
-    Transform& camtransform = cameraEntity.GetComponent<Transform>();
-	camtransform.SetPosition(Vector3(0.0f,1.0f,-2.0f));
-	Camera* camera = &cameraEntity.AddComponent<Camera>();
+	Transform& camtransform = cameraEntity.GetComponent<Transform>();
+	camtransform.SetPosition(Vector3(0.0f, 1.0f, -2.0f));
+	Camera& camera = cameraEntity.AddComponent<Camera>(16.0f/9.0f,0.01f,1500.0f);
 
 	cameraEntity.SetParent(meshEntity);
 
-	return camera;
+	return camera.GetRenderTexture();
 
 }
 
