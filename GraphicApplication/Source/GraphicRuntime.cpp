@@ -27,8 +27,9 @@ class GraphicRuntime : public Application
         //Camera* camera = CreateSecurityCamera(Vector3(0.0f, 10.0f, 0.0f));
        // SharedPtr<Material> mat = CreateMonitor(Vector3(0.0f, 20.0f, 0.0f));
        // mat->textureMaps.albedoMap = (camera->GetRenderTexture());
-       
-
+        glPolygonMode(GL_FRONT, GL_FILL);
+        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
         Entity mainCamera = CreateMainCamera();
 
         Camera* cam = &mainCamera.GetComponent<Camera>();
@@ -46,11 +47,17 @@ class GraphicRuntime : public Application
         Entity indusAsteroid = CreateIndustrialAsteroid();
         Entity indusMining = CreateIndustrialMiningRig();
 
+
+        Entity otherAsteroid = CreateSecondaryAsteroid();
+        Entity otherMining = CreateSecondaryMiningRig();
+
         mainMining.SetParent(mainAsteroid);
         indusMining.SetParent(indusAsteroid);
+        otherMining.SetParent(otherAsteroid);
 
         mainAsteroid.SetParent(parentAsteroid);
         indusAsteroid.SetParent(parentAsteroid);
+        otherAsteroid.SetParent(parentAsteroid);
 
 
 	}

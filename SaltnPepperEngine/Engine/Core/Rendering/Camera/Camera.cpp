@@ -11,7 +11,7 @@ namespace SaltnPepperEngine
     {
 
         Camera::Camera()
-            : m_aspectRatio(16.0f / 9.0f)
+            : m_aspectRatio(16.0f / 10.0f)
             , m_near(0.01f)
             , m_far(1000.0f)
             , m_fov(60.0f)

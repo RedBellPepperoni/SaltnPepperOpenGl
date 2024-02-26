@@ -12,7 +12,9 @@ void LoadAllModels()
 
 	modelLib->LoadModel("Asteroid","Assets\\Models\\Asteroid.fbx");
 	modelLib->LoadModel("Asteroid_Industrial","Assets\\Models\\Asteroid_Industrial.fbx");
-	modelLib->LoadModel("MiningRig","Assets\\Models\\Asteroid_MiningRig.fbx");
+	modelLib->LoadModel("Asteroid_Other", "Assets\\Models\\Asteroid_Other.fbx");
+	modelLib->LoadModel("MiningRig", "Assets\\Models\\Asteroid_MiningRig.fbx");
+	modelLib->LoadModel("MiningRig_Other","Assets\\Models\\Asteroid_Other_Mine.fbx");
 	modelLib->LoadModel("IndustrialMiningRig","Assets\\Models\\Asteroid_Industrial_Mine.fbx");
 
 
@@ -25,6 +27,7 @@ void LoadAllTextures()
 	textureLib->LoadTexture("asteroid", "Assets\\Textures\\asteroid.jpg", TextureFormat::RGBA);
 	textureLib->LoadTexture("spaceship", "Assets\\Textures\\spaceship.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 	
 }
 
@@ -34,7 +37,7 @@ Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vec
 	Entity cameraEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CameraEntity");
 		
 		// Add a Camera component to the entitty
-	Camera& camera = cameraEntity.AddComponent<Camera>();
+	Camera& camera = cameraEntity.AddComponent<Camera>(16.0f/10.0f,0.01f,2000.0f);
 
 	// Cache the transform Reference
 	Transform& transform = cameraEntity.GetComponent<Transform>();
@@ -139,7 +142,7 @@ Entity CreateMiningRig(const Vector3& position = Vector3(0.0f))
 	ModelComponent& modelComp = miningEntity.AddComponent<ModelComponent>("MiningRig");
 
 	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("snow");
+	mat->SetAlbedoTexture("metal");
 
 	return miningEntity;
 }
@@ -156,11 +159,44 @@ Entity CreateIndustrialMiningRig(const Vector3& position = Vector3(0.0f))
 	ModelComponent& modelComp = miningEntity.AddComponent<ModelComponent>("IndustrialMiningRig");
 
 	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("snow");
+	mat->SetAlbedoTexture("metal");
 
 	return miningEntity;
 }
 
+Entity CreateSecondaryAsteroid(const Vector3& position = Vector3(0.0f))
+{
+	Entity asteroidEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Asteroid_Other_Entity");
+	Transform& asteroidTransform = asteroidEntity.GetComponent<Transform>();
+
+	asteroidTransform.SetPosition(position);
+
+	Hierarchy& hierarchy = asteroidEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelComp = asteroidEntity.AddComponent<ModelComponent>("Asteroid_Other");
+
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("asteroid");
+
+	return asteroidEntity;
+}
+
+Entity CreateSecondaryMiningRig(const Vector3& position = Vector3(0.0f))
+{
+	Entity miningEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Other_Mining_Entity");
+	Transform& miningTransform = miningEntity.GetComponent<Transform>();
+
+	miningTransform.SetPosition(position);
+
+	Hierarchy& hierarchy = miningEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelComp = miningEntity.AddComponent<ModelComponent>("MiningRig_Other");
+
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("metal");
+
+	return miningEntity;
+}
 
 
 SharedPtr<Material> CreateMonitor(const Vector3& position = Vector3(0.0f))
