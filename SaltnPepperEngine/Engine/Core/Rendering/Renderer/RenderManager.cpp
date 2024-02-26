@@ -38,6 +38,8 @@ namespace SaltnPepperEngine
 			// Add other Defaultr Shaders below <----
 
 			CHECKNULL(GetShaderLibrary()->LoadShader("StandardShader", FileSystem::GetShaderDir().string() + "spaceshipVert.glsl", FileSystem::GetShaderDir().string() + "spaceshipFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("TransparentShader", FileSystem::GetShaderDir().string() + "transparentVert.glsl", FileSystem::GetShaderDir().string() + "transparentFrag.glsl"));
+			//CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShader", FileSystem::GetShaderDir().string() + "screenVert.glsl", FileSystem::GetShaderDir().string() + "screenFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxShader", FileSystem::GetShaderDir().string() + "skyboxVert.glsl", FileSystem::GetShaderDir().string() + "skyboxFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugLineShader", FileSystem::GetShaderDir().string() + "DebugLineVert.glsl", FileSystem::GetShaderDir().string() + "DebugLineFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugPointShader", FileSystem::GetShaderDir().string() + "DebugPointVert.glsl", FileSystem::GetShaderDir().string() + "DebugPointFrag.glsl"));
@@ -188,8 +190,11 @@ namespace SaltnPepperEngine
 				//// ===== Object Pass for Opaque Elements ================ 
 				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
 
-				//// ===== Object Pass for Masked Elements ================ 
-				//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("MaskedShader"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
+				//// ===== Object Pass for Transparent Elements ================ 
+				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), m_editorCameraElement, m_renderer->GetPipeLine().transparentElementList);
+				
+				//// ===== Object Pass for Transparent Elements ================ 
+				//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShader"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
 
 
 				m_editorCameraElement.depthTexture->GenerateMipMaps();
@@ -205,6 +210,8 @@ namespace SaltnPepperEngine
 				for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
 				{
 
+					
+
 					AttachFrameBuffer(cameraElement.gBuffer);
 
 					GLDEBUG(glEnable(GL_DEPTH_TEST));
@@ -215,7 +222,13 @@ namespace SaltnPepperEngine
 
 					// ===== Forward Pass for Opaque Elements ================ 
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
-				
+
+					//// ===== Object Pass for Transparent Elements ================ 
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), cameraElement, m_renderer->GetPipeLine().transparentElementList);
+
+					//// ===== Object Pass for Transparent Elements ================ 
+					//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShader"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
+
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();
 

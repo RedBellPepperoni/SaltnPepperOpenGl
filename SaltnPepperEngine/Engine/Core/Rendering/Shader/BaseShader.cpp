@@ -24,7 +24,7 @@ namespace SaltnPepperEngine
 				if (!msg.empty())
 				{
 					msg.pop_back(); // extra \n character
-					LOG_ERROR("ShaderError : ", msg);
+					LOG_ERROR("ShaderError : {0}", msg);
 				}
 				return true;
 			}
@@ -46,7 +46,7 @@ namespace SaltnPepperEngine
 				if (!msg.empty())
 				{
 					msg.pop_back(); // extra \n character
-					LOG_ERROR("OpenGL::ErrorHandler", msg);
+					LOG_ERROR("OpenGL::ErrorHandler : {0}", msg);
 				}
 				return true;
 			}
@@ -104,13 +104,13 @@ namespace SaltnPepperEngine
 			GLDEBUG(glLinkProgram(program));
 			if (CheckProgramErrors(program, GL_LINK_STATUS))
 			{
-				LOG_WARN("Shader : failed to link shader program with id = " + std::to_string(program));
+				LOG_WARN("Shader : failed to link shader program with id = {0}" ,std::to_string(program));
 			}
 
 			GLDEBUG(glValidateProgram(program));
 			if (CheckProgramErrors(program, GL_VALIDATE_STATUS))
 			{
-				LOG_WARN("Shader : failed to validate shader program with id = " + std::to_string(program));
+				LOG_WARN("Shader : failed to validate shader program with id {0} ",std::to_string(program));
 			}
 
 			for (size_t i = 0; i < shaderCount; i++)

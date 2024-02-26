@@ -30,7 +30,8 @@ class GraphicRuntime : public Application
         glPolygonMode(GL_FRONT, GL_FILL);
         glCullFace(GL_BACK);
         glEnable(GL_CULL_FACE);
-       
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
        
 
         CreateDirectionalLight();
@@ -60,9 +61,19 @@ class GraphicRuntime : public Application
         Entity cornerConsoleRight = CreateCornerConsoleRight(Vector3(7.5f,0.0f,5.0f));
         Entity cornerConsoleLeft = CreateCornerConsoleLeft(Vector3(-7.5f,0.0f,5.0f));
 
+
         centerConsole.SetParent(consoleRoom);
         cornerConsoleRight.SetParent(consoleRoom);
         cornerConsoleLeft.SetParent(consoleRoom);
+
+        Entity centerWindow = CreateCenterWindow(Vector3(0.0f));
+        centerWindow.SetParent(centerConsole);
+
+        Entity cornerwinRight = CreateCornerWindow(Vector3(0.0f));
+        cornerwinRight.SetParent(cornerConsoleRight);
+
+        Entity cornerwinLeft = CreateCornerWindow(Vector3(0.0f), true);
+        cornerwinLeft.SetParent(cornerConsoleLeft);
 
         cornerScreenRightMat = CreateCornerScreen(cornerConsoleRight,Vector3(0.0f),true);
         cornerScreenLeftMat = CreateCornerScreen(cornerConsoleLeft,Vector3(0.0f),false);
@@ -72,7 +83,7 @@ class GraphicRuntime : public Application
 
         CreatePointLight(Vector3(-20.33f, 216.81f, 51.57),16.0f,1.0f);
 
-
+         
         // Camera One {Looking from the Rig Pole to the asetroids}
         SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-1167.13f,-20.78f,537.41f),Vector3(-10.20f,-80.28f,0.0f));
         SharedPtr<Texture> camTwoTexture = CreateSecurityCamera(Vector3(0.76f,-152.31f,-110.21f),Vector3(-155.70f,-1.28f,179.99f));

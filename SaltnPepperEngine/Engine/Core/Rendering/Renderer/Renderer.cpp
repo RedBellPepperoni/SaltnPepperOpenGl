@@ -137,28 +137,6 @@ namespace SaltnPepperEngine
             m_pipeline.bloomFrameBuffer = MakeShared<FrameBuffer>();
 
             m_pipeline.rectangularObject.Init(1.0f);
-
-            //SecondaryFrameBuffer = MakeShared<FrameBuffer>();
-            //SecondaryTexture = MakeShared<Texture>();
-
-            //Vector2Int viewport = Application::GetCurrent().GetWindowSize();
-
-            //SecondaryTexture->Load(nullptr, viewport.x, viewport.y, 3, false, TextureFormat::RGB);
-            //SecondaryTexture->SetFilePath("RenderTexture");
-            //SecondaryTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
-
-            //SecondaryFrameBuffer->AttachTexture(SecondaryTexture);
-            //
-
-            //
-            //glGenRenderbuffers(1, &rbo);
-            //glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-            //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, viewport.x, viewport.y); // use a single renderbuffer object for both a depth AND stencil buffer.
-            //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
-
-           
-            //SecondaryFrameBuffer->Validate();
-            //SecondaryFrameBuffer->UnBind();
         }
 
 
@@ -279,9 +257,14 @@ namespace SaltnPepperEngine
                 break;
 
             case MaterialType::Transparent:
+                m_pipeline.transparentElementList.push_back(elementIndex);
                 break;
 
             case MaterialType::Masked:
+
+            case MaterialType::Custom:
+                m_pipeline.customElementList.push_back(elementIndex);
+                break;
 
                 break;
 
@@ -310,7 +293,7 @@ namespace SaltnPepperEngine
 
         void Renderer::Clear(bool clearDepth)
         {
-            GLDEBUG(glClearColor(0.5f, 0.1f, 0.1f, 1.0f));
+            GLDEBUG(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
             if (clearDepth)
             {
                 GLDEBUG(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
@@ -327,6 +310,8 @@ namespace SaltnPepperEngine
             m_pipeline.MaterialList.clear();
             m_pipeline.MeshList.clear();
             m_pipeline.opaqueElementList.clear();
+            m_pipeline.transparentElementList.clear();
+            m_pipeline.customElementList.clear();
             m_pipeline.renderElementList.clear();
             m_pipeline.lightElementList.clear();
             m_pipeline.textureBindIndex = 0;
@@ -535,6 +520,14 @@ namespace SaltnPepperEngine
             {
                 mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
                 shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
+
+                if (mat->m_type == MaterialType::Transparent)
+                {
+                    mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
+                    shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
+                }
+
+               
                 //shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedomapFactor);
                 shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
                 shader->SetUniform("materialProperties.Metallic", mat->metallic);

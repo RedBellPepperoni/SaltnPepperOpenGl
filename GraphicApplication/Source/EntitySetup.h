@@ -45,6 +45,11 @@ void LoadAllTextures()
 	textureLib->LoadTexture("spaceship", "Assets\\Textures\\spaceship.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
+
+	textureLib->LoadTexture("centerwin", "Assets\\Textures\\centerwin.tga", TextureFormat::RGBA);
+	textureLib->LoadTexture("centerwin_f", "Assets\\Textures\\centerwin_F.tga", TextureFormat::RGBA);
+	textureLib->LoadTexture("cornerscratch", "Assets\\Textures\\cornerscratch.tga", TextureFormat::RGBA);
+	textureLib->LoadTexture("cornerdent", "Assets\\Textures\\cornerdent.tga", TextureFormat::RGBA);
 	
 }
 
@@ -294,6 +299,43 @@ Entity CreateCornerConsoleLeft(const Vector3& position = Vector3(0.0f))
 	return consoleEntity;
 }
 
+Entity CreateCenterWindow(const Vector3& position = Vector3(0.0f))
+{
+	Entity windowEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CenterWindow");
+	Transform& windowTransform = windowEntity.GetComponent<Transform>();
+
+	windowTransform.SetPosition(position);
+
+	Hierarchy& hierarchy = windowEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelComp = windowEntity.AddComponent<ModelComponent>("CenterWindow");
+
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("centerwin");
+	mat->SetMetallicTexture("centerwin_f");
+	mat->m_type = MaterialType::Transparent;
+
+	return windowEntity;
+}
+
+Entity CreateCornerWindow(const Vector3& position = Vector3(0.0f), bool left = false)
+{
+	Entity windowEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(left? "LeftCornerWindow" : "RightCornerWindow");
+	Transform& windowTransform = windowEntity.GetComponent<Transform>();
+
+	windowTransform.SetPosition(position);
+
+	Hierarchy& hierarchy = windowEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelComp = windowEntity.AddComponent<ModelComponent>(left ? "CornerWindowLeft" : "CornerWindowRight");
+
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture(left? "cornerscratch" : "cornerdent");
+	mat->SetMetallicTexture("centerwin_f");
+	mat->m_type = MaterialType::Transparent;
+
+	return windowEntity;
+}
 
 //SharedPtr<Material> CreateMonitor(const Vector3& position = Vector3(0.0f))
 //{

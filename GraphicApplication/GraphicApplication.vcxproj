@@ -144,7 +144,6 @@
     <ClCompile Include="Source\AIStuff\AIManager.cpp" />
     <ClCompile Include="Source\AIStuff\AIBaseAgent.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
-    <ClCompile Include="Source\SecurityCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaltnPepperEngine\SaltnPepperEngine.vcxproj">

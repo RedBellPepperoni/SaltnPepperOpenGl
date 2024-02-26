@@ -221,8 +221,11 @@ namespace SaltnPepperEngine
 			// The indices of all the Opaque Shader Elements
 			std::vector<size_t> opaqueElementList;
 
-			// The indices of all the Opaque Shader Elements
-			std::vector<size_t>transparentElementList;
+			// The indices of all the Transparent Shader Elements
+			std::vector<size_t> transparentElementList;
+
+			// The indices of all the Custom Shader Elements
+			std::vector<size_t> customElementList;
 
 			// properties of all the Cameras that are in the scene
 			std::vector<CameraElement> cameraList;

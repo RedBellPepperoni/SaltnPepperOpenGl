@@ -21,7 +21,9 @@ namespace SaltnPepperEngine
         {
             Opaque,
             Transparent,
-            Masked
+            Masked,
+            Custom,
+            MaxNum
 
         };
 
