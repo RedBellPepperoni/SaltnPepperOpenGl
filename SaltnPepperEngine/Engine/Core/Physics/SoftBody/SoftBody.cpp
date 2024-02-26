@@ -20,7 +20,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		SoftBody::SoftBody(SharedPtr<TetMesh>& tetmesh, const float& EdgeCompliance, const float& VolumeCompliance)
+		SoftBody::SoftBody(SharedPtr<TetMesh>& tetmesh, SharedPtr<VisualMesh>& visualMesh,const float& EdgeCompliance, const float& VolumeCompliance)
 		{
 			numParticles = tetmesh->Vertices.size() / 3;
 			numTets = tetmesh->TetIds.size() / 4;
@@ -126,6 +126,10 @@ namespace SaltnPepperEngine
 			renderMesh->GetVBO()->SetSubData(0, sizeof(Vertex) * renderVertices.size(),renderVertices.data());
 			renderMesh->GetVBO()->UnBind();
 
+		}
+
+		void SoftBody::ComputeSkinningInfo(std::vector<Vector3>& visualVertices)
+		{
 		}
 
 		float SoftBody::GetTetVolume(int index)
@@ -288,14 +292,16 @@ namespace SaltnPepperEngine
 
 			float subDeltatime = fixedDeltaTime / numSubsteps;
 
+			for (Entity softEntity : softBodyView)
+			{
+				SharedPtr<SoftBody>& softBody = softEntity.GetComponent<SoftBodyComponent>().softBodyhandle;
+				softbodyList.push_back(softBody);
+			}
+
+
 			for (int step = 0; step < numSubsteps; step++)
 			{
-				for (Entity softEntity : softBodyView)
-				{
-					SharedPtr<SoftBody>& softBody = softEntity.GetComponent<SoftBodyComponent>().softBodyhandle;
-					softbodyList.push_back(softBody);	
-				}
-
+				
 				for (SharedPtr<SoftBody>& body : softbodyList)
 				{
 					body->PreSolve(subDeltatime);
@@ -316,6 +322,100 @@ namespace SaltnPepperEngine
 			}
 
 			
+
+		}
+
+		Hash::Hash(int newspacing, uint32_t maxnumObjects)
+		{
+			spacing = newspacing;
+			tableSize = 2 * maxnumObjects;
+			cellStart = std::vector<int>(tableSize + 1,0);
+			cellEntries = std::vector<int>(maxnumObjects,0);
+			queryIds = std::vector<int>(maxnumObjects,0);
+
+			querySize = 0;
+		}
+
+		int Hash::HashCords(int xi, int yi, int zi)
+		{
+			int hash = ((xi * 92837111) ^ (yi * 689287499) ^ (zi* 283923481));
+			
+			return abs(hash) % tableSize;
+		}
+
+		int Hash::IntCoords(const float& axisdata)
+		{
+			return floor(axisdata / spacing);
+		}
+
+		int Hash::HashPosition(const Vector3& data)
+		{
+			return HashCords(IntCoords(data.x), IntCoords(data.y), IntCoords(data.z));
+
+		}
+
+		void Hash::Create(const std::vector<Vector3>& positions)
+		{
+			size_t numObjects = min(positions.size(), cellEntries.size());
+			
+			// Determin the cell sizes
+			for (int index = 0; index < numObjects; index++)
+			{
+				int hash = HashPosition(positions[index]);
+				cellStart[hash]++;
+			}
+
+			// Determine the cell start
+
+			int start = 0;
+			for (int index = 0; index < tableSize; index++)
+			{
+				start += cellStart[index];
+				cellStart[index] = start;
+			}
+			// Guard clause
+			cellStart[tableSize] = start;
+
+			// Finally fill in the Object Ids
+
+			for (int index = 0; index < numObjects; index++)
+			{
+				int hash = HashPosition(positions[index]);
+				cellStart[hash]--;
+				cellEntries[cellStart[hash]] = index;
+			}
+
+		}
+
+		void Hash::Query(const Vector3& position, const float& maxDistance)
+		{
+			int x0 = IntCoords(position.x - maxDistance);
+			int y0 = IntCoords(position.y - maxDistance);
+			int z0 = IntCoords(position.z - maxDistance);
+
+			int x1 = IntCoords(position.x + maxDistance);
+			int y1 = IntCoords(position.y + maxDistance);
+			int z1 = IntCoords(position.z + maxDistance);
+
+			querySize = 0;
+
+			for (int xi = x0; xi <= x1; xi++) 
+			{
+				for (int yi = y0; yi <= y1; yi++) 
+				{
+					for (int zi = z0; zi <= z1; zi++) 
+					{
+						int hash = HashCords(xi, yi, zi);
+						int start = cellStart[hash];
+						int end = cellStart[hash + 1];
+
+						for (int index = start; index < end; index++) {
+							queryIds[querySize] = cellEntries[index];
+							querySize++;
+						}
+					}
+				}
+			}
 
 		}
 	}

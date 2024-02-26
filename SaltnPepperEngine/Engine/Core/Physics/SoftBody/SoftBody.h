@@ -23,11 +23,32 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
-
-		namespace SoftBodyMath
+		class Hash
 		{
+		public:
+			Hash(int newspacing, uint32_t maxnumObjects);
+			~Hash() {};
+
+			int HashCords(int xi, int yi, int zi);
+			int IntCoords(const float& axisdata);
+
+			int HashPosition(const Vector3& data);
+
+			void Create(const std::vector<Vector3>& positions);
+			void Query(const Vector3& position, const float& maxDistance);
+
+
+		private:
+
+			int spacing;
+			size_t tableSize;
+			std::vector<int> cellStart;
+			std::vector<int> cellEntries;
+			std::vector<int> queryIds;
+
+			size_t querySize = 0;
 			
-		}
+		};
 
 		struct TetMesh
 		{
@@ -38,11 +59,17 @@ namespace SaltnPepperEngine
 			std::vector<uint32_t> TetSurfaceTriIds;
 		};
 
+		struct VisualMesh
+		{
+			std::vector<float> Vertices;
+			std::vector<uint32_t> Indicie;
+		};
+
 		class SoftBody
 		{
 		public:
 
-			SoftBody(SharedPtr<TetMesh>& tetmesh, const float& EdgeCompliance = 100.0f, const float& VolumeCompliance = 0.0f);
+			SoftBody(SharedPtr<TetMesh>& tetmesh, SharedPtr<VisualMesh>& visualMesh,const float& EdgeCompliance = 100.0f, const float& VolumeCompliance = 0.0f);
 			~SoftBody(){};
 
 			void OnInit(const Vector3& position);
@@ -59,6 +86,7 @@ namespace SaltnPepperEngine
 
 			//void SyncParticleTransform(const Transform& transform);
 
+			void ComputeSkinningInfo(std::vector<Vector3>& visualVertices);
 			float GetTetVolume(int index);
 
 
@@ -104,7 +132,7 @@ namespace SaltnPepperEngine
 
 			SoftBodyComponent(SharedPtr<TetMesh>& tetmesh)
 			{
-				softBodyhandle = MakeShared<SoftBody>(tetmesh);
+				softBodyhandle = MakeShared<SoftBody>(tetmesh,nullptr);
 			}
 
 			SharedPtr<SoftBody> softBodyhandle = nullptr;
