@@ -274,32 +274,6 @@ float ramp(float y, float start, float end)
 	
 }
 
-float stripes(vec2 uv)
-{
-	
-	float noi = noise(uv*vec2(0.5,1.) + vec2(1.,3.));
-	return ramp(mod(uv.y*4. + shaderTime/2.+sin(shaderTime + sin(shaderTime*0.63)),1.),0.5,0.6)*noi;
-}
-
-vec3 getVideo(vec2 uv)
-{
-	vec2 look = uv;
-	float window = 1./(1.+20.*(look.y-mod(shaderTime/4.,1.))*(look.y-mod(shaderTime/4.,1.)));
-	look.x = look.x + sin(look.y*10. + shaderTime)/50.*onOff(4.,4.,.3)*(1.+cos(shaderTime*80.))*window;
-	float vShift = 0.4*onOff(2.,3.,.9)*(sin(shaderTime)*sin(shaderTime*20.) + 
-										 (0.5 + 0.1*sin(shaderTime*200.)*cos(shaderTime)));
-	look.y = mod(look.y + vShift, 1.);
-	vec3 video = vec3(texture(mapAlbedo,look));
-	return video;
-}
-
-vec2 screenDistort(vec2 uv)
-{
-	uv -= vec2(.5,.5);
-	uv = uv*1.2*(1./1.2+2.*uv.x*uv.x*uv.y*uv.y);
-	uv += vec2(.5,.5);
-	return uv;
-}
 
 
 float rand(vec2 co)
@@ -333,18 +307,34 @@ vec3 GetChromatic()
 
 vec3 GetDistortion()
 {
-    vec2 uv = VertexOutput.TexCoord;
-	uv = screenDistort(uv);
-	vec3 video = getVideo(uv);
-	float vigAmt = 3.+.3*sin(shaderTime + 5.*cos(shaderTime*5.));
-	float vignette = (1.-vigAmt*(uv.y-.5)*(uv.y-.5))*(1.-vigAmt*(uv.x-.5)*(uv.x-.5));
+    // distance from center of image, used to adjust blur
+	vec2 uv = VertexOutput.TexCoord;
+	float d = length(uv - vec2(0.5,0.5));
 	
-	video += stripes(uv);
-	video += noise(uv*2.)/2.;
-	video *= vignette;
-	video *= (12.+mod(uv.y*30.+shaderTime,1.))/13.;
+	// blur amount
+	float blur = 0.0;	
+	blur = (1.0 + sin(shaderTime*6.0)) * 0.5;
+	blur *= 1.0 + sin(shaderTime*16.0) * 0.5;
+	blur = pow(blur, 3.0);
+	blur *= 0.05;
+	// reduce blur towards center
+	blur *= d;
 	
-	return vec3(video);
+	// final color
+    vec3 col;
+    col.r = texture( mapAlbedo, vec2(uv.x+blur,uv.y) ).r;
+    col.g = texture( mapAlbedo, uv ).g;
+    col.b = texture( mapAlbedo, vec2(uv.x-blur,uv.y) ).b;
+	
+	// scanline
+	float scanline = sin(uv.y*800.0)*0.04;
+	col -= scanline;
+	
+	// vignette
+	col *= 1.0 - d * 0.5;
+	
+   
+	return vec3(col);
 }
 
 void main()
