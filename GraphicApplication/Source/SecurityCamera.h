@@ -38,6 +38,8 @@ namespace SaltnPepperEngine
 			transform.SetEularRotation(Vector3(0.0f, yawRotation, 0.0f));
 		}
 
+		
+
 	private:
 		bool sweepRight = false;
 		float rotationSpeed = 1.0f;
@@ -45,6 +47,8 @@ namespace SaltnPepperEngine
 		
 		float minAngle = -40.0f;
 		float maxAngle = 40.0f;
+
+		
 
 	};
 

@@ -20,7 +20,7 @@ class GraphicRuntime : public Application
         LoadAllModels();
         LoadAllTextures();
 
-        StartPhysics(true);
+        //StartPhysics(true);
 
         MultiThreader::Init();
 
@@ -36,53 +36,14 @@ class GraphicRuntime : public Application
 
         CreateDirectionalLight();
       
-        // ======== Asteroid Entities ===================
-        Entity parentAsteroid = CreateAsteroidParent();
-        
-        Entity mainAsteroid = CreateMainAsteroid(Vector3(0.0f));
-        Entity mainMining = CreateMiningRig();
-
-        Entity indusAsteroid = CreateIndustrialAsteroid();
-        Entity indusMining = CreateIndustrialMiningRig();
-
-        Entity otherAsteroid = CreateSecondaryAsteroid();
-        Entity otherMining = CreateSecondaryMiningRig();
-
-        mainMining.SetParent(mainAsteroid);
-        indusMining.SetParent(indusAsteroid);
-        otherMining.SetParent(otherAsteroid);
-
-        mainAsteroid.SetParent(parentAsteroid);
-        indusAsteroid.SetParent(parentAsteroid);
-        otherAsteroid.SetParent(parentAsteroid);
-
-        Entity consoleRoom = CreateConsoleRoom(Vector3(-20.07f, 214.89f,49.24f));
-        Entity centerConsole = CreateCenterConsole(Vector3(2.5f,0.0f,0.0f));
-        Entity cornerConsoleRight = CreateCornerConsoleRight(Vector3(7.5f,0.0f,5.0f));
-        Entity cornerConsoleLeft = CreateCornerConsoleLeft(Vector3(-7.5f,0.0f,5.0f));
-
-
-        centerConsole.SetParent(consoleRoom);
-        cornerConsoleRight.SetParent(consoleRoom);
-        cornerConsoleLeft.SetParent(consoleRoom);
-
-        Entity centerWindow = CreateCenterWindow(Vector3(0.0f));
-        centerWindow.SetParent(centerConsole);
-
-        Entity cornerwinRight = CreateCornerWindow(Vector3(0.0f));
-        cornerwinRight.SetParent(cornerConsoleRight);
-
-        Entity cornerwinLeft = CreateCornerWindow(Vector3(0.0f), true);
-        cornerwinLeft.SetParent(cornerConsoleLeft);
-
-        cornerScreenRightMat = CreateCornerScreen(cornerConsoleRight,Vector3(0.0f),true);
-        cornerScreenLeftMat = CreateCornerScreen(cornerConsoleLeft,Vector3(0.0f),false);
-
-        
- 
+     
+        createAsteroidScene();
+        createConsoleScene();
+       
 
         CreatePointLight(Vector3(-20.33f, 216.81f, 51.57),16.0f,1.0f);
 
+        //blacktexture = m_textureLibrary->GetResource("Black");
          
         // Camera One {Looking from the Rig Pole to the asetroids}
         SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-1167.13f,-20.78f,537.41f),Vector3(-10.20f,-80.28f,0.0f));
@@ -99,6 +60,15 @@ class GraphicRuntime : public Application
         ScreenRenders.push_back(camFourTexture);
         ScreenRenders.push_back(camFiveTexture);
 
+        cornerScreenLeftMat->m_type = MaterialType::Custom;
+        cornerScreenRightMat->m_type = MaterialType::Custom;
+
+        cornerScreenLeftMat->name = "Chromatic";
+        cornerScreenRightMat->name = "Chromatic";
+
+        cornerScreenLeftMat->SetMetallicTexture("noise");
+        cornerScreenRightMat->SetMetallicTexture("noise");
+
         cornerScreenRightMat->textureMaps.albedoMap = camOneTexture;
         cornerScreenLeftMat->textureMaps.albedoMap = camThreeTexture;
 
@@ -111,10 +81,13 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
+        if (Input::InputSystem::GetInstance().GetKeyDown(Key::num2) || Input::InputSystem::GetInstance().GetKeyDown(Key::Numpad2))
+        {
+            ToggleScreenActive();
+        }
+
         ApplyCameraCycle(deltaTime);
 
-
-  
 
         ComponentView securityView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SecurityCamera>();
 
@@ -126,10 +99,28 @@ class GraphicRuntime : public Application
             cam.Update(transform, deltaTime);
         }
 
+        ComponentView screenview = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ScifiScreen>();
+
+        for (Entity entityScreen : screenview)
+        {
+            ScifiScreen& screen = entityScreen.GetComponent<ScifiScreen>();
+
+            screen.Update(deltaTime);
+        }
 	}
 
     void ApplyCameraCycle(float deltaTime)
     {
+
+        if (screenOff) 
+        {
+            leftScreenCounter = leftScreenSwitchTime +1;
+            rightScreenCounter = rightScreenSwitchTime +1;
+            return; 
+        }
+
+        
+
         //Left Screnn Cycle Logic
         leftScreenCounter += deltaTime;
         if (leftScreenCounter > leftScreenSwitchTime) 
@@ -166,7 +157,89 @@ class GraphicRuntime : public Application
            
         
     }
+
+    void createAsteroidScene()
+    {
+        // ======== Asteroid Entities ===================
+     Entity parentAsteroid = CreateAsteroidParent();
+
+     Entity mainAsteroid = CreateMainAsteroid(Vector3(0.0f));
+     Entity mainMining = CreateMiningRig();
+
+     Entity indusAsteroid = CreateIndustrialAsteroid();
+     Entity indusMining = CreateIndustrialMiningRig();
+
+     Entity otherAsteroid = CreateSecondaryAsteroid();
+     Entity otherMining = CreateSecondaryMiningRig();
+
+     mainMining.SetParent(mainAsteroid);
+     indusMining.SetParent(indusAsteroid);
+     otherMining.SetParent(otherAsteroid);
+
+     mainAsteroid.SetParent(parentAsteroid);
+     indusAsteroid.SetParent(parentAsteroid);
+     otherAsteroid.SetParent(parentAsteroid);
+    }
+
+    void createConsoleScene()
+    {
+        Entity consoleRoom = CreateConsoleRoom(Vector3(-20.07f, 214.89f, 49.24f));
+        Entity centerConsole = CreateCenterConsole(Vector3(2.5f, 0.0f, 0.0f));
+        Entity cornerConsoleRight = CreateCornerConsoleRight(Vector3(7.5f, 0.0f, 5.0f));
+        Entity cornerConsoleLeft = CreateCornerConsoleLeft(Vector3(-7.5f, 0.0f, 5.0f));
+
+
+        centerConsole.SetParent(consoleRoom);
+        cornerConsoleRight.SetParent(consoleRoom);
+        cornerConsoleLeft.SetParent(consoleRoom);
+
+        Entity centerWindow = CreateCenterWindow(Vector3(0.0f));
+        centerWindow.SetParent(centerConsole);
+
+        Entity cornerwinRight = CreateCornerWindow(Vector3(0.0f));
+        cornerwinRight.SetParent(cornerConsoleRight);
+
+        Entity cornerwinLeft = CreateCornerWindow(Vector3(0.0f), true);
+        cornerwinLeft.SetParent(cornerConsoleLeft);
+
+        cornerScreenRightMat = CreateCornerScreen(cornerConsoleRight, Vector3(0.0f), true);
+        cornerScreenLeftMat = CreateCornerScreen(cornerConsoleLeft, Vector3(0.0f), false);
+
+        Entity centerScreen_Left = CreateCenterScreen(Vector3(0.0f), false);
+        Entity centerScreen_Right = CreateCenterScreen(Vector3(0.0f), true);
+
+        centerScreen_Left.SetParent(centerConsole);
+        centerScreen_Right.SetParent(centerConsole);
+
+        CreateFloorCeiling(consoleRoom, Vector3(0.0f, 0.0f, 0.0f));
+        CreateFloorCeiling(consoleRoom, Vector3(5.0f,0.0f,0.0f));
+        CreateFloorCeiling(consoleRoom, Vector3(5.0f, 0.0f, 5.0f));
+        CreateFloorCeiling(consoleRoom, Vector3(0.0f, 0.0f, 5.0f));
+    }
    
+    void ToggleScreenActive()
+    {
+        screenOff = !screenOff;
+
+
+        ComponentView screenview = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ScifiScreen>();
+
+        for (Entity entityScreen : screenview)
+        {
+            ScifiScreen& screen = entityScreen.GetComponent<ScifiScreen>();
+
+            screen.SwitchActive(!screenOff);
+        }
+
+        if (screenOff)
+        {
+            cornerScreenRightMat->SetAlbedoTexture("Black");
+            cornerScreenLeftMat->SetAlbedoTexture("Black");
+        }
+
+        
+    }
+
 private:
 
     //std::vector<int> availableCameras;
@@ -182,6 +255,9 @@ private:
     std::vector<SharedPtr<Texture>> ScreenRenders;
     SharedPtr<Material> cornerScreenRightMat = nullptr;
     SharedPtr<Material> cornerScreenLeftMat = nullptr;
+
+    bool screenOff = false;
+
 
    
    

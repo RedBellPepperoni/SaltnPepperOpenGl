@@ -3,6 +3,7 @@
 
 #include "SaltnPepperEngine.h"
 #include "SecurityCamera.h"
+#include "ScifiScreen.h"
 
 static int cameraCount = 0;
 
@@ -10,6 +11,10 @@ static int cameraCount = 0;
 void LoadAllModels()
 {
 	SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
+
+	modelLib->LoadModel("Floor", "Assets\\Models\\Floor.fbx");
+	modelLib->LoadModel("Ceiling", "Assets\\Models\\Ceiling.fbx");
+	modelLib->LoadModel("Seat", "Assets\\Models\\Prop_Seat.fbx");
 
 	modelLib->LoadModel("Asteroid","Assets\\Models\\Asteroid.fbx");
 	modelLib->LoadModel("Asteroid_Industrial","Assets\\Models\\Asteroid_Industrial.fbx");
@@ -43,6 +48,19 @@ void LoadAllTextures()
 
 	textureLib->LoadTexture("asteroid", "Assets\\Textures\\asteroid.jpg", TextureFormat::RGBA);
 	textureLib->LoadTexture("spaceship", "Assets\\Textures\\spaceship.png", TextureFormat::RGBA);
+
+	SharedPtr<Texture> noise = textureLib->LoadTexture("noise", "Assets\\Textures\\noise.png", TextureFormat::RGBA);
+	noise->SetWarping(TextureWraping::REPEAT);
+
+	textureLib->LoadTexture("leftOne", "Assets\\Textures\\leftOne.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("leftTwo", "Assets\\Textures\\leftTwo.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("leftThree", "Assets\\Textures\\leftThree.png", TextureFormat::RGBA);
+	
+
+	textureLib->LoadTexture("rightOne", "Assets\\Textures\\rightOne.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("rightTwo", "Assets\\Textures\\rightTwo.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("rightThree", "Assets\\Textures\\rightThree.png", TextureFormat::RGBA);
+
 	textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 
@@ -337,6 +355,38 @@ Entity CreateCornerWindow(const Vector3& position = Vector3(0.0f), bool left = f
 	return windowEntity;
 }
 
+ void CreateFloorCeiling(Entity parent, const Vector3& position)
+{
+	
+
+	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Floor");
+	Transform& floorTransform = floorEntity.GetComponent<Transform>();
+
+	floorTransform.SetPosition(position);
+
+	Hierarchy& hierarchy = floorEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelComp = floorEntity.AddComponent<ModelComponent>("Floor");
+	SharedPtr<Material> mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("spaceship");
+
+	floorEntity.SetParent(parent);
+
+	Entity ceilingEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Ceiling");
+	Transform& cielingTransform = ceilingEntity.GetComponent<Transform>();
+
+	cielingTransform.SetPosition(position + Vector3(0.0f,5.1f,0.0f));
+
+	Hierarchy& hierarchyC = ceilingEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& modelCompC = ceilingEntity.AddComponent<ModelComponent>("Ceiling");
+	mat = modelCompC.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("spaceship");
+
+	ceilingEntity.SetParent(parent);
+
+}
+
 //SharedPtr<Material> CreateMonitor(const Vector3& position = Vector3(0.0f))
 //{
 //	Entity tvEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
@@ -374,6 +424,50 @@ Entity CreateCornerWindow(const Vector3& position = Vector3(0.0f), bool left = f
 //	return camera;
 //
 //}
+
+Entity CreateCenterScreen(const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
+{
+	std::string name = isRightScreen ? "CenterScreen_Right" : "CenterScreen_Left";
+	Entity screenEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
+	Hierarchy& hierarchyComp = screenEntity.AddComponent<Hierarchy>();
+	Transform& transform = screenEntity.GetComponent<Transform>();
+	transform.SetPosition(position);
+
+	float switchtime = isRightScreen ? 4.0f : 5.1f;
+
+	ScifiScreen& screen = screenEntity.AddComponent<ScifiScreen>(switchtime);
+
+	
+	std::string modelName = isRightScreen ? "CenterScreenRight" : "CenterScreenLeft";
+	ModelComponent* modelComp = &screenEntity.AddComponent<ModelComponent>(modelName);
+
+	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+	mat->m_type = MaterialType::Custom;
+
+	
+	isRightScreen ? mat->SetAlbedoTexture("rightOne") : mat->SetAlbedoTexture("leftOne");
+	mat->SetMetallicTexture("noise");
+	mat->name = isRightScreen ? "Distort" : "Chromatic";
+
+	SharedPtr<TextureLibrary>& textureLib = Application::GetCurrent().GetTextureLibrary();
+
+	screen.SetMaterialRef(mat);
+	
+	if (isRightScreen)
+	{
+		screen.AddTexture(textureLib->GetResource("rightOne"));
+		screen.AddTexture(textureLib->GetResource("rightTwo"));
+		screen.AddTexture(textureLib->GetResource("rightThree"));
+	}
+	else
+	{
+		screen.AddTexture(textureLib->GetResource("leftOne"));
+		screen.AddTexture(textureLib->GetResource("leftTwo"));
+		screen.AddTexture(textureLib->GetResource("leftThree"));
+	}
+
+	return screenEntity;
+}
 
 SharedPtr<Material> CreateCornerScreen(Entity parentEntity,const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
 {

@@ -39,7 +39,7 @@ namespace SaltnPepperEngine
 
 			CHECKNULL(GetShaderLibrary()->LoadShader("StandardShader", FileSystem::GetShaderDir().string() + "spaceshipVert.glsl", FileSystem::GetShaderDir().string() + "spaceshipFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("TransparentShader", FileSystem::GetShaderDir().string() + "transparentVert.glsl", FileSystem::GetShaderDir().string() + "transparentFrag.glsl"));
-			//CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShader", FileSystem::GetShaderDir().string() + "screenVert.glsl", FileSystem::GetShaderDir().string() + "screenFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShaderOne", FileSystem::GetShaderDir().string() + "chromaticShaderVert.glsl", FileSystem::GetShaderDir().string() + "chromaticShaderFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxShader", FileSystem::GetShaderDir().string() + "skyboxVert.glsl", FileSystem::GetShaderDir().string() + "skyboxFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugLineShader", FileSystem::GetShaderDir().string() + "DebugLineVert.glsl", FileSystem::GetShaderDir().string() + "DebugLineFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugPointShader", FileSystem::GetShaderDir().string() + "DebugPointVert.glsl", FileSystem::GetShaderDir().string() + "DebugPointFrag.glsl"));
@@ -194,7 +194,7 @@ namespace SaltnPepperEngine
 				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), m_editorCameraElement, m_renderer->GetPipeLine().transparentElementList);
 				
 				//// ===== Object Pass for Transparent Elements ================ 
-				//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShader"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
+				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
 
 
 				m_editorCameraElement.depthTexture->GenerateMipMaps();
@@ -227,7 +227,7 @@ namespace SaltnPepperEngine
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), cameraElement, m_renderer->GetPipeLine().transparentElementList);
 
 					//// ===== Object Pass for Transparent Elements ================ 
-					//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShader"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), cameraElement, m_renderer->GetPipeLine().customElementList);
 
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();

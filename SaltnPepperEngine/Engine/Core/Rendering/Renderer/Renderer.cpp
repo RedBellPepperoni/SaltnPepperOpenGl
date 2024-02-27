@@ -117,6 +117,8 @@ namespace SaltnPepperEngine
             // ============== LOADING TEXTURES =======================
             // Loading default Albedo texture
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultTexture", "Engine\\Textures\\DefaultTexture.png", TextureFormat::RGB);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("Black", "Engine\\Textures\\black.png", TextureFormat::RGBA);
+            
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("FieldSkybox", "Engine\\Textures\\fieldRight.png", "Engine\\Textures\\fieldLeft.png", "Engine\\Textures\\fieldTop.png", "Engine\\Textures\\fieldBottom.png", "Engine\\Textures\\fieldFront.png", "Engine\\Textures\\fieldBack.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("GalaxySkybox", "Engine\\Textures\\galaxyLeft.png", "Engine\\Textures\\galaxyRight.png", "Engine\\Textures\\galaxyTop.png", "Engine\\Textures\\galaxyBottom.png", "Engine\\Textures\\galaxyFront.png", "Engine\\Textures\\galaxyBack.png");
@@ -525,6 +527,22 @@ namespace SaltnPepperEngine
                 {
                     mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
                     shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
+                }
+                if (mat->m_type == MaterialType::Custom)
+                {
+                    float time = Time::CurrentTime();
+                    mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
+                    shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
+                    shader->SetUniform("shaderTime",time);
+
+                    if (mat->name == "Distort")
+                    {
+                        shader->SetUniform("distort",true);
+                    }
+                    else
+                    {
+                        shader->SetUniform("distort", false);
+                    }
                 }
 
                
