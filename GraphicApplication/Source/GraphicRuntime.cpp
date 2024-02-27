@@ -215,6 +215,16 @@ class GraphicRuntime : public Application
         CreateFloorCeiling(consoleRoom, Vector3(5.0f,0.0f,0.0f));
         CreateFloorCeiling(consoleRoom, Vector3(5.0f, 0.0f, 5.0f));
         CreateFloorCeiling(consoleRoom, Vector3(0.0f, 0.0f, 5.0f));
+        CreateFloorCeiling(consoleRoom, Vector3(-5.0f, 0.0f, 5.0f));
+        CreateFloorCeiling(consoleRoom, Vector3(10.0f, 0.0f, 5.0f));
+
+        CreateWalls(consoleRoom);
+
+        Entity seatOne = CreateSeat(Vector3(-2.0f,0.0f,3.0f));
+        Entity seatTwo = CreateSeat(Vector3(2.0f,0.0f,3.0f));
+
+        seatOne.SetParent(consoleRoom);
+        seatTwo.SetParent(consoleRoom);
     }
    
     void ToggleScreenActive()

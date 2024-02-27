@@ -387,6 +387,53 @@ Entity CreateCornerWindow(const Vector3& position = Vector3(0.0f), bool left = f
 
 }
 
+ void CreateWalls(Entity parent)
+ {
+
+
+	 Entity wallOne = Application::GetCurrent().GetCurrentScene()->CreateEntity("WallOne");
+	 Transform& wallOneTransform = wallOne.GetComponent<Transform>();
+
+	 wallOneTransform.SetPosition(Vector3(-8.0f,2.53,6.54f));
+	 wallOneTransform.SetScale(Vector3(1.0f,8.0f,5.0f));
+
+	 Hierarchy& hierarchy = wallOne.AddComponent<Hierarchy>();
+
+	 ModelComponent& modelComp = wallOne.AddComponent<ModelComponent>(PrimitiveType::Cube);
+	 
+
+	 wallOne.SetParent(parent);
+
+	 Entity wallTwo = Application::GetCurrent().GetCurrentScene()->CreateEntity("WallTwo");
+	 Transform& wallTwoTransform = wallTwo.GetComponent<Transform>();
+	 wallTwoTransform.SetScale(Vector3(1.0f, 8.0f, 5.0f));
+	 wallTwoTransform.SetPosition(Vector3(8.0f,2.53f,6.54));
+
+	 Hierarchy& hierarchyC = wallTwo.AddComponent<Hierarchy>();
+
+	 ModelComponent& modelCompC = wallTwo.AddComponent<ModelComponent>(PrimitiveType::Cube);
+	
+
+	 wallTwo.SetParent(parent);
+
+ }
+
+ Entity CreateSeat(const Vector3& position)
+ {
+	 Entity seatEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Seat");
+	 Transform& seatTransform = seatEntity.GetComponent<Transform>();
+
+	 seatTransform.SetPosition(position);
+
+	 Hierarchy& hierarchy = seatEntity.AddComponent<Hierarchy>();
+
+	 ModelComponent& modelComp = seatEntity.AddComponent<ModelComponent>("Seat");
+	 SharedPtr<Material> mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	 mat->SetAlbedoTexture("spaceship");
+
+	 return seatEntity;
+ }
+
 //SharedPtr<Material> CreateMonitor(const Vector3& position = Vector3(0.0f))
 //{
 //	Entity tvEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
