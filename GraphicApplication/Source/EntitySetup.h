@@ -89,6 +89,8 @@ Entity CreateDirectionalLight()
 	return dirLightEntity;
 }
 
+using namespace Verlet;
+
 Entity CreateCloth(const Vector3& position)
 {
 	/*Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
@@ -102,6 +104,8 @@ Entity CreateCloth(const Vector3& position)
 	Transform& clothTransform = clothEntity.GetComponent<Transform>();
 
 	VerletClothComponent& clothComp = clothEntity.AddComponent<VerletClothComponent>(16,Vector2(5.0f,3.0f));
+
+	clothComp.clothsim->OnInit(32, Vector2(10.0f, 6.0f));
 
 	return clothEntity;
 }

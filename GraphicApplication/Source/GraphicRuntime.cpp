@@ -86,7 +86,7 @@ class GraphicRuntime : public Application
             //Transform& transform = clothEntity.GetComponent<Transform>();
             SharedPtr<Simulation>& cloth = clothEntity.GetComponent<VerletClothComponent>().clothsim;
 
-           // cloth->OnUpdate(deltaTime);
+            cloth->OnUpdate(deltaTime);
             //cloth->SetForce(force ? randomForce : Vector3(0.0f));
 
         }
