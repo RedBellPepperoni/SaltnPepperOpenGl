@@ -76,6 +76,8 @@ namespace SaltnPepperEngine
 			SharedPtr<Material>& GetMaterial();
 			SharedPtr<Mesh>& GetMesh();
 
+			void RemoveNode(const Vector2Int& node);
+
 			void SetForce(const Vector3& NewForce) { force = NewForce; }
 
 		private:

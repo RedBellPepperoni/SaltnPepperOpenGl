@@ -133,6 +133,12 @@ namespace SaltnPepperEngine
 			}
 		}
 
+		void Simulation::Cut(int stick)
+		{
+			int randomStick = Random32::Range.GetRandom(0, stickList.size() - 1);
+			stickList[randomStick].cut = true;
+		}
+
 		void Simulation::OnUpdate(const float& deltaTime)
 		{
 			timeCounter += deltaTime;

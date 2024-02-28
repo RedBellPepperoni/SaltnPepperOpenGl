@@ -34,8 +34,7 @@ namespace SaltnPepperEngine
 					
 					Vector3 position = Vector3(0.0f, j * rangeBetweenPoints, i * rangeBetweenPoints);
 					VerletParticle currentPoint = VerletParticle(position, pinned, 0.125f);
-					particles.push_back(currentPoint);
-
+					
 					Vertex vertex;
 
 					vertex.position = position;
@@ -44,14 +43,23 @@ namespace SaltnPepperEngine
 
 					vertexList.push_back(vertex);
 
+			
+
+					particles.push_back(currentPoint);
+
+
 				}
 			}
 
-			for (int i = 0; i < numberofSegments - 1; i++) {
-				for (int j = 0; j < numberofSegments - 1; j++) {
-					indexList.push_back(i * numberofSegments + j);
-					indexList.push_back(numberofSegments * (i + 1) + j + 1);
-					indexList.push_back(i * numberofSegments + j + 1);
+			for (int i = 0; i < numberofSegments - 1; i++) 
+			{
+
+				for (int j = 0; j < numberofSegments - 1; j++) 
+				{
+
+					indexList.push_back(i * numberofSegments + j); //0
+					indexList.push_back(numberofSegments * (i + 1) + j + 1); //n + 1
+					indexList.push_back(i * numberofSegments + j + 1); //1
 
 					indexList.push_back(i * numberofSegments + j);
 					indexList.push_back(numberofSegments * (i + 1) + j);
@@ -89,6 +97,43 @@ namespace SaltnPepperEngine
 		{
 			return clothMesh;
 		}
+
+		void VerletCloth::RemoveNode(const Vector2Int& node)
+		{
+			int index = IndexFrom2D(node.x, node.y);
+
+			if (index > particles.size() || index < 0)
+			{
+				return;
+			}
+
+			std::vector<uint32_t> indexList;
+
+			for (int i = 0; i < numberofSegments - 1; i++)
+			{
+
+				for (int j = 0; j < numberofSegments - 1; j++)
+				{
+
+					if (j == node.y && i == node.x) { continue; }
+
+					indexList.push_back(i * numberofSegments + j); //0
+					indexList.push_back(numberofSegments * (i + 1) + j + 1); //n + 1
+					indexList.push_back(i * numberofSegments + j + 1); //1
+
+					indexList.push_back(i * numberofSegments + j);
+					indexList.push_back(numberofSegments * (i + 1) + j);
+					indexList.push_back(numberofSegments * (i + 1) + j + 1);
+				}
+			}
+
+			clothMesh = MakeShared<Mesh>(clothMesh->GetVertexData(), indexList);
+
+			UpdateRenderMesh();
+
+
+		}
+
 		void VerletCloth::Simulate(const float& deltaTime, const Transform& clothtransform)
 		{
 			timeStepCounter += deltaTime;
@@ -118,7 +163,7 @@ namespace SaltnPepperEngine
 					particles[i].position += Vector3(xVariation,yVariation,zVariation) * fixedDeltaTime * fixedDeltaTime;
 					
 
-					float speed = glm::sqrt(Length(particles[i].velocity));
+					float speed = (Length(particles[i].velocity));
 					particles[i].position -= displacement * particles[i].friction * glm::pow(speed, 2.0f) * fixedDeltaTime;
 					particles[i].previousPosition = prevPos;
 				}

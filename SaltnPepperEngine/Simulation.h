@@ -52,6 +52,7 @@ namespace SaltnPepperEngine
 			void OnInit(const int& clothSegments, const Vector2& clothSize);
 
 			void Cut(const Vector3& start, const Vector3& end);
+			void Cut(int stick);
 			void OnUpdate(const float& deltaTime);
 
 			SharedPtr<Mesh> GetMesh();

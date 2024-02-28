@@ -1,11 +1,11 @@
 #include "SaltnPepperEngine.h"
 #include "EntitySetup.h"
 #include "AIStuff/AIManager.h"
-//#include "Engine/Core/Physics/SoftBody/VerletCloth.h"
+#include "Engine/Core/Physics/SoftBody/VerletCloth.h"
 #include "Engine/Core/Threading/MultiThreader.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
-#include "Simulation.h"
+//#include "Simulation.h"
 
 //#include "SecurityCamera.h"
 
@@ -49,10 +49,12 @@ class GraphicRuntime : public Application
             IncreaseForce(false);
         }
 
+      
+
         timeCounter += deltaTime * 5;
 
 
-        //ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
+        ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
 
         float xForce = Random32::Range.GetRandom(-windForce.x, windForce.x);
         Vector3 randomForce = Vector3(xForce, windForce.y, windForce.z) * (speed / 10.0f);
@@ -69,7 +71,7 @@ class GraphicRuntime : public Application
         }
         
 
-       /* for (Entity clothEntity : clothCompView)
+        for (Entity clothEntity : clothCompView)
         {
             Transform& transform = clothEntity.GetComponent<Transform>();
             SharedPtr<Physics::VerletCloth>& cloth = clothEntity.GetComponent<Physics::ClothComponent>().clothHandle;
@@ -77,19 +79,28 @@ class GraphicRuntime : public Application
             cloth->OnUpdate(deltaTime,transform);
             cloth->SetForce(force ? randomForce : Vector3(0.0f));
             
-        }*/
-
-
-        ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<VerletClothComponent>();
-        for (Entity clothEntity : clothCompView)
-        {
-            //Transform& transform = clothEntity.GetComponent<Transform>();
-            SharedPtr<Simulation>& cloth = clothEntity.GetComponent<VerletClothComponent>().clothsim;
-
-            cloth->OnUpdate(deltaTime);
-            //cloth->SetForce(force ? randomForce : Vector3(0.0f));
+            if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Enter))
+            {
+                cloth->RemoveNode(Vector2Int(8,8));
+            }
 
         }
+
+
+        //ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<VerletClothComponent>();
+        //for (Entity clothEntity : clothCompView)
+        //{
+        //    //Transform& transform = clothEntity.GetComponent<Transform>();
+        //    SharedPtr<Simulation>& cloth = clothEntity.GetComponent<VerletClothComponent>().clothsim;
+
+        //    cloth->OnUpdate(deltaTime);
+
+        //    if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Enter))
+        //    {
+        //        cloth->Cut(2);
+        //    }
+
+        //}
       
 	}
 
