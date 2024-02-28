@@ -1,6 +1,6 @@
-# AI Navigation Project (AI behavior)
+# Graphic MidTerm (Term - 2  :Jan - April)
 
-This projects deals with the Differnt AI bagent behaviours
+This Project deals with the Graphic Midterm questionaire
 
 
 # Building Notes : 
@@ -18,28 +18,27 @@ You can find these files in the [Dlls] folder at the root of the solution direct
 
 [RightClick] + [MousePan] to look around
 
+Press [2] or [KeyPad 2 ] to toggle the screens active /inactive; 
 
 # Editor Controls
 Press [`] Key to toggle the Editor Mode 
  
-In the editor mode you can use gizmos to move characters around
+In the editor mode you can use gizmos to move stuff around
 
 Selecting the Entity from the inspector and pressing [F] will focus the editor camera on that entity
 
 # General Notes: 
 
-There are 5 AI agents each displaying a differnt behaviour
+All three questions are answered sucessfully.
 
-1) Goblin : [Seek] The goblin will continously move towards the player's position
-2) Sheep  : [Flee] The Sheep will move away from the player when player is in range
-3) Spider : [Pursue] The Spider will move towards where the player is heading, and will try to corner the player [try to get in fron tof the player ]
-4) Deer   : [Evade] The Deer will flee from the player's curent heading direction [when in range]
-4) Cat    : [Approach] The Cat will try to go near the player until a set distance then will stop. if the player closes the distance, the cat will move away 
+There are 3 types of Translucent glass effects for each window.
+1) LeftMost : has Scratches + fingerprints
+2) Middle : has Dirt + fingerprints
+3) RightMost : has Another variation of Dirt + fingerprints
 
-The Spawning can be handing using the  [CreateEnemyAI()] function in the [GraphicsApplication/Source/GraphicRuntime.cpp]
+There are 2 screen Effects :
+1) Chromatic : The R G B channels are skewd for the image
+2) Distortion : staticis added to the image and theres a glitch effect
 
-The [CreateEnemyAI()] takes 3 Parameters :
-1) AI::BehaviorState : this defines the behaviour of the Created Enemy
-2) EnemyModel : this defines what model is going to beapplied for the enemy
-3) SpawnPosition : this defines where the AI agent will spawn in the world# SaltnPepper
- Refactored Engine from the First Semester of GDP-1 in Fanshawe
+[Bonus] : 
+The camera actually Pan around
