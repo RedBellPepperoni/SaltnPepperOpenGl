@@ -1,9 +1,11 @@
 #include "SaltnPepperEngine.h"
 #include "EntitySetup.h"
 #include "AIStuff/AIManager.h"
-#include "Engine/Core/Physics/SoftBody/VerletCloth.h"
+//#include "Engine/Core/Physics/SoftBody/VerletCloth.h"
 #include "Engine/Core/Threading/MultiThreader.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
+
+#include "Simulation.h"
 
 //#include "SecurityCamera.h"
 
@@ -38,24 +40,55 @@ class GraphicRuntime : public Application
 	{
         bool force = false;
 
-        if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::H))
+        if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::NumpadAdd))
+        {
+            IncreaseForce(true);
+        }
+        else if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::NumpadSubtract))
+        {
+            IncreaseForce(false);
+        }
+
+        timeCounter += deltaTime * 5;
+
+
+        //ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
+
+        float xForce = Random32::Range.GetRandom(-windForce.x, windForce.x);
+        Vector3 randomForce = Vector3(xForce, windForce.y, windForce.z) * (speed / 10.0f);
+
+        float time = sin(timeCounter);
+        if (timeCounter > 50.0f)
+        {
+            timeCounter = 0.0f;
+        }
+
+        if (time < 0.5)
         {
             force = true;
         }
+        
 
-        ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
-
-
-        Vector3 randomForce = Vector3(Random32::Range.GetRandom(-100, 100), 0.0f, -200.0f);
-
-        for (Entity clothEntity : clothCompView)
+       /* for (Entity clothEntity : clothCompView)
         {
             Transform& transform = clothEntity.GetComponent<Transform>();
             SharedPtr<Physics::VerletCloth>& cloth = clothEntity.GetComponent<Physics::ClothComponent>().clothHandle;
 
             cloth->OnUpdate(deltaTime,transform);
-            cloth->SetForce(force ? randomForce: Vector3(0.0f));
+            cloth->SetForce(force ? randomForce : Vector3(0.0f));
             
+        }*/
+
+
+        ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<VerletClothComponent>();
+        for (Entity clothEntity : clothCompView)
+        {
+            //Transform& transform = clothEntity.GetComponent<Transform>();
+            SharedPtr<Simulation>& cloth = clothEntity.GetComponent<VerletClothComponent>().clothsim;
+
+           // cloth->OnUpdate(deltaTime);
+            //cloth->SetForce(force ? randomForce : Vector3(0.0f));
+
         }
       
 	}
@@ -63,7 +96,18 @@ class GraphicRuntime : public Application
    
 private:
 
- 
+    void IncreaseForce(bool increase)
+    {
+        increase? speed++ : speed--;
+        
+        Clamp(speed, minSpeed, maxSpeed);
+    }
+
+    float timeCounter = 0.0f;
+    int speed = 1;
+    const int maxSpeed = 10;
+    const int minSpeed = 0;
+    Vector3 windForce = Vector3(30.0f, 3.0f, -40.0f);
    
 };
 

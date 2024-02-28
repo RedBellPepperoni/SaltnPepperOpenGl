@@ -3,6 +3,7 @@
 
 #include "SaltnPepperEngine.h"
 #include "Engine/Core/Physics/SoftBody/VerletCloth.h"
+#include "Simulation.h"
 static int cameraCount = 0;
 using namespace Physics;
 
@@ -80,7 +81,7 @@ Entity CreateDirectionalLight()
 {
 	Entity dirLightEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Directional Light");
 	Transform& transform = dirLightEntity.GetComponent<Transform>();
-	transform.SetEularRotation(Vector3(154.0f, -51.0f, -180.0f));
+	transform.SetEularRotation(Vector3(20.0f,60.0f,0.0f));
 	Light& light = dirLightEntity.AddComponent<Light>();
 	light.type = LightType::DirectionLight;
 	light.intensity = 1.2f;
@@ -90,10 +91,17 @@ Entity CreateDirectionalLight()
 
 Entity CreateCloth(const Vector3& position)
 {
+	/*Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
+	Transform& clothTransform = clothEntity.GetComponent<Transform>();
+
+	ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(16);
+
+	return clothEntity;*/
+
 	Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
 	Transform& clothTransform = clothEntity.GetComponent<Transform>();
 
-	ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>();
+	VerletClothComponent& clothComp = clothEntity.AddComponent<VerletClothComponent>(16,Vector2(5.0f,3.0f));
 
 	return clothEntity;
 }

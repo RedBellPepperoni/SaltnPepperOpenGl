@@ -3,6 +3,7 @@
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Rendering/Material/Material.h"
+#include "Engine/Utils/Maths/Random.h"
 
 namespace SaltnPepperEngine
 {
@@ -25,7 +26,12 @@ namespace SaltnPepperEngine
 				for (int j = 0; j < numberofSegments; j++)
 				{
 					// Pin the side particles
+
 					bool pinned = (i == 0);
+				
+					
+
+					
 					Vector3 position = Vector3(0.0f, j * rangeBetweenPoints, i * rangeBetweenPoints);
 					VerletParticle currentPoint = VerletParticle(position, pinned, 0.125f);
 					particles.push_back(currentPoint);
@@ -103,7 +109,13 @@ namespace SaltnPepperEngine
 					particles[i].velocity = displacement / fixedDeltaTime;
 					particles[i].position += displacement;
 					particles[i].position += Vector3(0.0f, -10.0f, 0.0f) * fixedDeltaTime * fixedDeltaTime;
-					particles[i].position += force * fixedDeltaTime * fixedDeltaTime;
+
+					float xVariation = Random32::Range.GetRandom(force.x - 5.0f, force.x + 5.0f);
+					float yVariation = Random32::Range.GetRandom(force.y - 2.0f, force.y + 2.0f);
+					float zVariation = Random32::Range.GetRandom(force.z - 5.0f, force.z + 5.0f);
+
+
+					particles[i].position += Vector3(xVariation,yVariation,zVariation) * fixedDeltaTime * fixedDeltaTime;
 					
 
 					float speed = glm::sqrt(Length(particles[i].velocity));

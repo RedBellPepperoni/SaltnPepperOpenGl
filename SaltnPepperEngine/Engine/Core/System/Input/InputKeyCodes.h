@@ -212,6 +212,8 @@ namespace SaltnPepperEngine
 
                     {GLFW_KEY_KP_ADD, Key::NumpadAdd },
                     {GLFW_KEY_KP_ENTER, Key::NumpadEnter},
+                    {GLFW_KEY_KP_SUBTRACT, Key::NumpadSubtract},
+                    //{GLFW_KEY_KP_ENTER, Key::NumpadEnter},
 
                     { GLFW_KEY_UP, Key::Up },
                     { GLFW_KEY_DOWN,Key::Down },

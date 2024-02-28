@@ -55,7 +55,7 @@ namespace SaltnPepperEngine
 			// Extra node details
 			bool isPinned = false;
 			float radius = 1.0f;
-			float friction = 0.5f;
+			float friction = 0.89f;
 		};
 
 
