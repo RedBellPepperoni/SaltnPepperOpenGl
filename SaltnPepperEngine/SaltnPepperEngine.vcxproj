@@ -196,6 +196,7 @@
     <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\SoftBody.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\VerletCloth.h" />
+    <ClInclude Include="Simulation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\Physics\SoftBody\Cloth.cpp" />
@@ -294,6 +295,7 @@
     <ClCompile Include="Engine\Core\Rendering\Shader\Shader.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\SoftBody.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\VerletCloth.cpp" />
+    <ClCompile Include="Simulation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -154,8 +154,6 @@
     <ClInclude Include="Source\AIStuff\AIManager.h" />
     <ClInclude Include="Source\AIStuff\AIBaseAgent.h" />
     <ClInclude Include="Source\EntitySetup.h" />
-    <ClInclude Include="Source\ScifiScreen.h" />
-    <ClInclude Include="Source\SecurityCamera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -189,7 +189,7 @@ namespace SaltnPepperEngine
 				
 			}
 
-			UpdateMesh();
+			
 		}
 
 		void SoftBody::SolveEdges(const float& deltaTime)
@@ -305,21 +305,25 @@ namespace SaltnPepperEngine
 				for (SharedPtr<SoftBody>& body : softbodyList)
 				{
 					body->PreSolve(subDeltatime);
-					body->Solve(subDeltatime);
-					body->PostSolve(subDeltatime);
+					
 				}
-
-				/*for (SharedPtr<SoftBody>& body : softbodyList)
+				for (SharedPtr<SoftBody>& body : softbodyList)
 				{
+					body->Solve(subDeltatime);
 					
 				
 				}
-
 				for (SharedPtr<SoftBody>& body : softbodyList)
 				{
-					
-				}*/
+					body->PostSolve(subDeltatime);
+				}
 			}
+
+			for (SharedPtr<SoftBody>& body : softbodyList)
+			{
+				body->UpdateMesh();
+			}
+			
 
 			
 

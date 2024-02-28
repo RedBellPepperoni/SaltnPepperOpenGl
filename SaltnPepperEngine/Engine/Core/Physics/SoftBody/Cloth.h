@@ -68,6 +68,8 @@ namespace SaltnPepperEngine
 
 			void OnInit(Transform* Transform, SharedPtr<SphereCollider>& collider);
 			void OnUpdate(float deltaTime,const Transform& ballTransform,const Transform& clothTransform);
+			//void OnUpdate(const float Deltatime)
+
 
 			void Simulate(float deltaTime,const Transform& ballTransform, const Transform& clothTransform);
 			void UpdateMesh();
@@ -98,12 +100,12 @@ namespace SaltnPepperEngine
 		};
 
 
-		struct ClothComponent
+		/*struct ClothComponent
 		{
 			ClothComponent(uint32_t numberSegments = 8) { clothHandle = MakeShared<Cloth>(numberSegments, 0.5f); }
 
 			SharedPtr<Cloth> clothHandle;
-		};
+		};*/
 
 
 	}

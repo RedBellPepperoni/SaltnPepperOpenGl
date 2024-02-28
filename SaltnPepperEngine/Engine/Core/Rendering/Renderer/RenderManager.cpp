@@ -21,7 +21,7 @@
 #include "Engine/Core/Rendering/Geometry/Model.h"
 
 
-#include "Engine/Core/Physics/SoftBody/Cloth.h"
+#include "Engine/Core/Physics/SoftBody/VerletCloth.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
 
@@ -113,6 +113,17 @@ namespace SaltnPepperEngine
 				// Sending the mesh data for processing
 				
 			}
+
+			ComponentView clothCompView = scene->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
+
+			for (Entity clothEntity : clothCompView)
+			{
+				Transform& transform = clothEntity.GetComponent<Transform>();
+				SharedPtr<Physics::VerletCloth>& cloth = clothEntity.GetComponent<Physics::ClothComponent>().clothHandle;
+
+				m_renderer->ProcessRenderElement(cloth->GetMesh(), cloth->GetMaterial(), transform);
+			}
+
 
 			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();
 

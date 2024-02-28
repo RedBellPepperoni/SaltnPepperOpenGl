@@ -28,8 +28,8 @@ namespace SaltnPepperEngine
 			{
 				for (int j = 0; j < n; j++) 
 				{
-					// Pin the top most particles
-					bool pinned = (i == 0);
+					// Pin the side particles
+					bool pinned = (j == 0);
 					Vector3 position = Vector3(j * rangeBetweenPoints, 0.0f, i * rangeBetweenPoints);
 					SoftBodyParticle currentPoint = SoftBodyParticle(position,pinned,0.125f,0.75f); 
 					particles.push_back(currentPoint);
@@ -61,6 +61,8 @@ namespace SaltnPepperEngine
 
 			clothMesh = MakeShared<Mesh>(vertexList,indexList);
 			particles;
+
+			UpdateMesh();
 		}
 
 
