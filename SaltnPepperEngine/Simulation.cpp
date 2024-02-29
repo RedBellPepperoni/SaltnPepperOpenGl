@@ -145,10 +145,13 @@ namespace SaltnPepperEngine
 
 
 			Point* point = &pointList[index];
+			
+			cutPoints.push_back(index);
+			
 
 			std::vector<Stick*> tempsticks;
 
-			for (int i = 0; i < stickList.size(); i++)
+			/*for (int i = 0; i < stickList.size(); i++)
 			{
 				if (point == stickList[i].pointOne || point == stickList[i].pointTwo)
 				{
@@ -156,12 +159,12 @@ namespace SaltnPepperEngine
 					stick->cut = true;
 					tempsticks.push_back(stick);
 				}
-			}
+			}*/
 
 			tempsticks;
 
 
-			int number = (node.x * numPoints + node.y);
+			
 
 			std::vector<uint32_t> indexList;
 
@@ -170,26 +173,33 @@ namespace SaltnPepperEngine
 
 				for (int j = 0; j < numPoints - 1; j++)
 				{
-
-
-					int index0 = i * numPoints + j;
-					int index1 = numPoints * (i + 1) + j + 1;
-					int index2 = i * numPoints + j + 1;
-					int index3 = numPoints * (i + 1) + j;
-
-					if (index0 == number || index1 == number || index2 == number || index3 == number)
+					for (int& node : cutPoints)
 					{
-						continue;
+						
+						int index0 = j * numPoints + i;
+						int index1 = numPoints * (j + 1) + i + 1;
+						int index2 = j * numPoints + i + 1;
+						int index3 = numPoints * (j + 1) + i;
+
+						if (index0 == node || index1 == node || index2 == node || index3 == node)
+						{
+							continue;
+						}
+
+						
+							indexList.push_back(index0); //0
+							indexList.push_back(index1); //n + 1
+							indexList.push_back(index2); //1
+						
+						
+						
+							indexList.push_back(index0);
+							indexList.push_back(index3);
+							indexList.push_back(index1);
+						
+					
+
 					}
-
-
-					indexList.push_back(index0); //0
-					indexList.push_back(index1); //n + 1
-					indexList.push_back(index2); //1
-
-					indexList.push_back(index0);
-					indexList.push_back(index3);
-					indexList.push_back(index1);
 				}
 			}
 

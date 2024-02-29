@@ -109,7 +109,8 @@ namespace SaltnPepperEngine
 			float timeStepCounter = 0.0f;
 
 			Vector3 force = Vector3(0.0f);
-
+			
+			std::vector<int> cutPoints;
 		};
 
 		struct ClothComponent

@@ -29,6 +29,7 @@ void LoadAllTextures()
 
 	textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
+	textureLib->LoadTexture("banner", "Assets\\Textures\\banner.png", TextureFormat::RGBA);
 
 	
 	
@@ -93,21 +94,24 @@ using namespace Verlet;
 
 Entity CreateCloth(const Vector3& position)
 {
-	/*Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
-	Transform& clothTransform = clothEntity.GetComponent<Transform>();
-
-	ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(32);
-
-	return clothEntity;*/
-
 	Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
 	Transform& clothTransform = clothEntity.GetComponent<Transform>();
 
-	VerletClothComponent& clothComp = clothEntity.AddComponent<VerletClothComponent>(32,Vector2(5.0f,3.0f));
+	ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(32);
+	SharedPtr<Material> mat = clothComp.clothHandle->GetMaterial();
 
-	clothComp.clothsim->OnInit(32, Vector2(10.0f, 6.0f));
+	mat->SetAlbedoTexture("banner");
 
 	return clothEntity;
+
+	//Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
+	//Transform& clothTransform = clothEntity.GetComponent<Transform>();
+
+	//VerletClothComponent& clothComp = clothEntity.AddComponent<VerletClothComponent>(32,Vector2(5.0f,3.0f));
+
+	//clothComp.clothsim->OnInit(32, Vector2(10.0f, 6.0f));
+
+	//return clothEntity;
 }
 
 // Asteroid Stuff

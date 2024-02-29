@@ -89,6 +89,7 @@ namespace SaltnPepperEngine
 			Vector3 gravity = Vector3(0.0f, -10.0f, 0.0f);
 			Vector3 wind = Vector3(0.0f);
 
+			std::vector<int> cutPoints;
 
 		protected:
 

@@ -5,6 +5,7 @@
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Utils/Maths/Random.h"
 
+
 namespace SaltnPepperEngine
 {
 	using namespace	Rendering;
@@ -53,9 +54,9 @@ namespace SaltnPepperEngine
 
 			for (int i = 0; i < numberofSegments - 1; i++) 
 			{
-
-				for (int j = 0; j < numberofSegments - 1; j++) 
+				for (int j = 0; j < numberofSegments - 1; j++)
 				{
+
 
 					indexList.push_back(i * numberofSegments + j); //0
 					indexList.push_back(numberofSegments * (i + 1) + j + 1); //n + 1
@@ -65,6 +66,7 @@ namespace SaltnPepperEngine
 					indexList.push_back(numberofSegments * (i + 1) + j);
 					indexList.push_back(numberofSegments * (i + 1) + j + 1);
 				}
+				
 			}
 
 
@@ -109,25 +111,73 @@ namespace SaltnPepperEngine
 
 			std::vector<uint32_t> indexList;
 
+			indexList.clear();
+
+			cutPoints.push_back(index);
+
+			bool renderindex = false;
+
 			for (int i = 0; i < numberofSegments - 1; i++)
 			{
 
 				for (int j = 0; j < numberofSegments - 1; j++)
 				{
 
-					if (j == node.y && i == node.x) { continue; }
 
-					indexList.push_back(i * numberofSegments + j); //0
-					indexList.push_back(numberofSegments * (i + 1) + j + 1); //n + 1
-					indexList.push_back(i * numberofSegments + j + 1); //1
+					int index0 = i * numberofSegments + j;
+					int index1 = numberofSegments * (i + 1) + j + 1;
+					int index2 = i * numberofSegments + j + 1;
+					int index3 = numberofSegments * (i + 1) + j;
 
-					indexList.push_back(i * numberofSegments + j);
-					indexList.push_back(numberofSegments * (i + 1) + j);
-					indexList.push_back(numberofSegments * (i + 1) + j + 1);
+					indexList.push_back(index0); //0
+					indexList.push_back(index1); //n + 1
+					indexList.push_back(index2); //1
+
+
+
+					indexList.push_back(index0);
+					indexList.push_back(index3);
+					indexList.push_back(index1);
+
+					for (int& node : cutPoints)
+					{	
+
+						/*int index0 = j * numberofSegments + i;
+						int index1 = numberofSegments * (j + 1) + i + 1;
+						int index2 = j * numberofSegments + i + 1;
+						int index3 = numberofSegments * (j + 1) + i;*/
+
+						if (index0 == node || index1 == node || index2 == node || index3 == node)
+						{
+							//continue;
+
+							indexList.pop_back();
+							indexList.pop_back();
+							indexList.pop_back();
+
+							indexList.pop_back();
+							indexList.pop_back();
+							indexList.pop_back();
+
+						}
+
+
+					}
+
+
+					
+				
 				}
 			}
 
-			clothMesh = MakeShared<Mesh>(clothMesh->GetVertexData(), indexList);
+
+			indexList;
+
+			clothMesh->GetIBO()->Bind();
+			clothMesh->GetIBO()->SetSubData(0, indexList.size() * sizeof(uint32_t), indexList.data());
+			clothMesh->GetIBO()->UnBind();
+
+			clothMesh->SetIndexData(indexList);
 
 			UpdateRenderMesh();
 

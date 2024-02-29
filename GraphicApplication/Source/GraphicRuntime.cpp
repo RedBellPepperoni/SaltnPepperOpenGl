@@ -1,11 +1,11 @@
 #include "SaltnPepperEngine.h"
 #include "EntitySetup.h"
 #include "AIStuff/AIManager.h"
-//#include "Engine/Core/Physics/SoftBody/VerletCloth.h"
+#include "Engine/Core/Physics/SoftBody/VerletCloth.h"
 #include "Engine/Core/Threading/MultiThreader.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
-#include "Simulation.h"
+//#include "Simulation.h"
 
 //#include "SecurityCamera.h"
 
@@ -54,7 +54,7 @@ class GraphicRuntime : public Application
         timeCounter += deltaTime * 5;
 
 
-       // ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
+        ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
 
         float xForce = Random32::Range.GetRandom(-windForce.x, windForce.x);
         Vector3 randomForce = Vector3(xForce, windForce.y, windForce.z) * (speed / 10.0f);
@@ -71,7 +71,7 @@ class GraphicRuntime : public Application
         }
         
 
-  /*      for (Entity clothEntity : clothCompView)
+        for (Entity clothEntity : clothCompView)
         {
             Transform& transform = clothEntity.GetComponent<Transform>();
             SharedPtr<Physics::VerletCloth>& cloth = clothEntity.GetComponent<Physics::ClothComponent>().clothHandle;
@@ -82,29 +82,36 @@ class GraphicRuntime : public Application
             if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Enter))
             {
                 cloth->RemoveNode(Vector2Int(8,8));
-                cloth->RemoveNode(Vector2Int(8,9));
-                cloth->RemoveNode(Vector2Int(9,8));
-                cloth->RemoveNode(Vector2Int(7,8));
-            }
-
-        }*/
-
-
-        ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<VerletClothComponent>();
-        for (Entity clothEntity : clothCompView)
-        {
-            //Transform& transform = clothEntity.GetComponent<Transform>();
-            SharedPtr<Simulation>& cloth = clothEntity.GetComponent<VerletClothComponent>().clothsim;
-
-            cloth->OnUpdate(deltaTime);
-
-            if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Enter))
-            {
-                cloth->Cut(Vector2Int(8,8));
+                cloth->RemoveNode(Vector2Int(9,9));
+                cloth->RemoveNode(Vector2Int(3,25));
+                cloth->RemoveNode(Vector2Int(30,8));
             }
 
         }
-      
+
+
+ //       ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<VerletClothComponent>();
+ //       for (Entity clothEntity : clothCompView)
+ //       {
+ //           //Transform& transform = clothEntity.GetComponent<Transform>();
+ //           SharedPtr<Simulation>& cloth = clothEntity.GetComponent<VerletClothComponent>().clothsim;
+
+ //           cloth->OnUpdate(deltaTime);
+
+ //           if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Enter))
+ //           {    
+ //               cloth->Cut(Vector2Int(8,8));
+ //             
+ //           }
+
+ //           if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::R))
+ //           {
+ //               cloth->Cut(Vector2Int(16, 16));
+
+ //           }
+
+ //       }
+ //     
 	}
 
    
