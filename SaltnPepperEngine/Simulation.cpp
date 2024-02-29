@@ -1,6 +1,7 @@
 #include "Simulation.h"
 #include "Engine/Core/Rendering/RenderDefinitions.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
+#include "Engine/Core/Rendering/Buffers/IndexBuffer.h"
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Utils/Maths/Random.h"
@@ -102,7 +103,7 @@ namespace SaltnPepperEngine
 				}
 			}
 
-			CreateOrderArray();
+			//CreateOrderArray();
 
 
 			for (int x = 0; x < numPoints - 1; x++) {
@@ -133,10 +134,79 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		void Simulation::Cut(int stick)
+		void Simulation::Cut(Vector2Int node)
 		{
-			int randomStick = Random32::Range.GetRandom(0, stickList.size() - 1);
-			stickList[randomStick].cut = true;
+			int index = IndexFrom2DCoord(node.x, node.y);
+
+			if (index > pointList.size() || index < 0)
+			{
+				return;
+			}
+
+
+			Point* point = &pointList[index];
+
+			std::vector<Stick*> tempsticks;
+
+			for (int i = 0; i < stickList.size(); i++)
+			{
+				if (point == stickList[i].pointOne || point == stickList[i].pointTwo)
+				{
+					Stick* stick = &stickList[i];
+					stick->cut = true;
+					tempsticks.push_back(stick);
+				}
+			}
+
+			tempsticks;
+
+
+			int number = (node.x * numPoints + node.y);
+
+			std::vector<uint32_t> indexList;
+
+			for (int i = 0; i < numPoints - 1; i++)
+			{
+
+				for (int j = 0; j < numPoints - 1; j++)
+				{
+
+
+					int index0 = i * numPoints + j;
+					int index1 = numPoints * (i + 1) + j + 1;
+					int index2 = i * numPoints + j + 1;
+					int index3 = numPoints * (i + 1) + j;
+
+					if (index0 == number || index1 == number || index2 == number || index3 == number)
+					{
+						continue;
+					}
+
+
+					indexList.push_back(index0); //0
+					indexList.push_back(index1); //n + 1
+					indexList.push_back(index2); //1
+
+					indexList.push_back(index0);
+					indexList.push_back(index3);
+					indexList.push_back(index1);
+				}
+			}
+
+			
+
+
+
+			
+
+
+			renderMesh->GetIBO()->Bind();
+			renderMesh->GetIBO()->SetSubData(0,indexList.size() * sizeof(uint32_t),indexList.data());
+			renderMesh->GetIBO()->UnBind();
+
+			renderMesh->SetIndexData(indexList);
+
+			UpdateRenderMesh();
 		}
 
 		void Simulation::OnUpdate(const float& deltaTime)
@@ -247,7 +317,7 @@ namespace SaltnPepperEngine
 				order[index] = index;
 			}
 
-			ShuffleArray(order);
+			//ShuffleArray(order);
 
 
 		}

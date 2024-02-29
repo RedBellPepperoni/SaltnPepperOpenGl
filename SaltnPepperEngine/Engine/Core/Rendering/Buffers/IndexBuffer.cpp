@@ -17,8 +17,10 @@ namespace SaltnPepperEngine
 			// Binding the Generated buffer for use
 			GLDEBUG(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferId));
 
+			byteSize = count * sizeof(uint32_t);
+
 			// Loading Data into the binded buffer
-			GLDEBUG(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), data, GetGLBufferUsage(usage)));
+			GLDEBUG(glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, data, GetGLBufferUsage(usage)));
 
 
 		}
@@ -39,6 +41,20 @@ namespace SaltnPepperEngine
 		size_t IndexBuffer::GetIndiciesCount()
 		{
 			return indiciesCount;
+		}
+		void IndexBuffer::SetData(size_t size, const void* data)
+		{
+		}
+		void IndexBuffer::SetSubData(size_t offset, size_t size, const void* data)
+		{
+			if (size + offset >= byteSize)
+			{
+				// Error, size is over the data
+			}
+			Bind();
+
+			// Updating data in a previous set buffer
+			GLDEBUG(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data));
 		}
     }
 }

@@ -19,6 +19,7 @@ namespace SaltnPepperEngine
 
 			uint32_t bufferId = 0;
 			size_t indiciesCount = 0;
+			size_t byteSize = 0;
 
 			UsageType bufferUsage;// = UsageType::STATIC_DRAW;
 
@@ -32,6 +33,11 @@ namespace SaltnPepperEngine
 			void Bind();
 			void UnBind();
 			size_t GetIndiciesCount();
+
+			void SetData(size_t size, const void* data);
+
+			// This should be used to update/override the data in the buffer
+			void SetSubData(size_t offset, size_t size, const void* data);
 
 		};
     }

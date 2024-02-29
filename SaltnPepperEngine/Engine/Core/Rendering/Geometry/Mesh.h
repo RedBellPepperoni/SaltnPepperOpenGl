@@ -65,6 +65,7 @@ namespace SaltnPepperEngine
 			std::vector<uint32_t>& GetIndexData();*/
 
 			void SetVertexData(const std::vector<Vertex> newVertexData);
+			void SetIndexData(const std::vector<uint32_t> newIndexData);
 
 			const uint32_t GetIndexCount() const;
 			const uint32_t GetVertexCount() const;

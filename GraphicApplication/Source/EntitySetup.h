@@ -93,21 +93,21 @@ using namespace Verlet;
 
 Entity CreateCloth(const Vector3& position)
 {
-	Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
-	Transform& clothTransform = clothEntity.GetComponent<Transform>();
-
-	ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(16);
-
-	return clothEntity;
-
 	/*Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
 	Transform& clothTransform = clothEntity.GetComponent<Transform>();
 
-	VerletClothComponent& clothComp = clothEntity.AddComponent<VerletClothComponent>(8,Vector2(5.0f,3.0f));
-
-	clothComp.clothsim->OnInit(8, Vector2(10.0f, 6.0f));
+	ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(32);
 
 	return clothEntity;*/
+
+	Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
+	Transform& clothTransform = clothEntity.GetComponent<Transform>();
+
+	VerletClothComponent& clothComp = clothEntity.AddComponent<VerletClothComponent>(32,Vector2(5.0f,3.0f));
+
+	clothComp.clothsim->OnInit(32, Vector2(10.0f, 6.0f));
+
+	return clothEntity;
 }
 
 // Asteroid Stuff

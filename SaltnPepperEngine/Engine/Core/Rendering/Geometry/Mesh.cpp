@@ -75,6 +75,11 @@ namespace SaltnPepperEngine
 			m_vertices = newVertexData;
 		}
 
+		void Mesh::SetIndexData(const std::vector<uint32_t> newIndexData)
+		{
+			m_indicies = newIndexData;
+		}
+
 		const uint32_t Mesh::GetIndexCount() const
 		{
 			return m_indiciesCount;
