@@ -90,8 +90,8 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		//return std::move(connections);
-		return (connections);
+		return std::move(connections);
+		//return (connections);
 	}
 
 	std::vector<GraphNode*> Graph::GetNodes()
@@ -118,8 +118,8 @@ namespace SaltnPepperEngine
 		for (int i = 0; i < (iCols * iRows); ++i)
 		{
 			auto pNode = std::make_unique<GraphNode>(i, this);
-			pNode->SetPosition({ i % iCols * fNodeWidth,
-									i / iCols * fNodeHeight, 0.f, 1.f });
+			pNode->SetPosition( Vector2(i % iCols * fNodeWidth,
+									i / iCols * fNodeHeight));
 			m_nodes.push_back(std::move(pNode));
 		}
 
@@ -141,7 +141,7 @@ namespace SaltnPepperEngine
 		}
 	}
 
-	void Graph::Create(std::vector<bool>& mapdata, int iCols, int iRows, float fNodeWidth, float fNodeHeight)
+	void Graph::Create(const std::vector<bool>& mapdata, int iCols, int iRows, float fNodeWidth, float fNodeHeight)
 	{
 		Clean();
 
@@ -161,8 +161,10 @@ namespace SaltnPepperEngine
 		for (int i = 0; i < (dataSize); ++i)
 		{
 			auto pNode = std::make_unique<GraphNode>(i, this);
-			pNode->SetPosition({ i % iCols * fNodeWidth,
-									i / iCols * fNodeHeight, 0.f, 1.f });
+
+			Vector2 position = Vector2(i % iCols * fNodeWidth, i / iCols * fNodeHeight);
+
+			pNode->SetPosition(position);
 
 			pNode->SetBlocked(mapdata[i]);
 

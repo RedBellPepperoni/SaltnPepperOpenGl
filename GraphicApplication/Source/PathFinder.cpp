@@ -35,7 +35,7 @@ namespace SaltnPepperEngine
 		return m_path;
 	}
 
-	void PathFinder::Setup(const SharedPtr<Graph>& pGraph)
+	void PathFinder::Setup(const std::shared_ptr<Graph>& pGraph)
 	{
 		m_pGraph = pGraph;
 
@@ -55,35 +55,6 @@ namespace SaltnPepperEngine
 		}
 
 		ClearPath();
-	}
-
-	bool PathFinder::Step()
-	{
-		if (m_pEnd && m_pCurrent &&
-			m_iCurrentSteps++ < m_iMaxSteps && !m_nodes.empty())
-		{
-			m_pCurrent = *m_nodes.begin();
-
-			m_pCurrent->SetVisited(true);
-
-			m_nodes.erase(m_nodes.begin());
-
-			if (m_pCurrent == m_pEnd)
-			{
-				CreatePath(m_pCurrent);
-				return true;
-			}
-
-			LoadConnections(m_pCurrent);
-
-		}
-		else
-		{
-			//CreatePath(m_pCurrent);
-			return true;
-		}
-
-		return false;
 	}
 
 	void PathFinder::Cleanup()
@@ -124,39 +95,6 @@ namespace SaltnPepperEngine
 		return m_iEnd;
 	}
 
-	void PathFinder::LoadConnections(GraphNode* pNode)
-	{
-		std::vector<GraphNode*> connections = std::move(GetConnections(pNode));
-
-		for (GraphNode*& node : connections)
-		{
-			float fTentDist = pNode->GetTentativeDistance() + node->GetWeight();
-			float fNodeTent = node->GetTentativeDistance();
-			if (!node->Visited() && !node->IsBlocked() &&
-				fTentDist < fNodeTent)
-			{
-				// tree Iterator
-				auto it = m_nodes.find(node);
-
-				if (it != m_nodes.end())
-				{
-					m_nodes.erase(it);
-				}
-
-				node->SetTentativeDistance(fTentDist);
-
-				m_nodes.insert(node);
-
-				node->SetParent(pNode);
-			}
-		}
-	}
-
-	void PathFinder::ClearNodes()
-	{
-		m_nodes.clear();
-	}
-
 	void PathFinder::CreatePath(GraphNode* pEnd)
 	{
 		m_path.clear();
@@ -174,11 +112,5 @@ namespace SaltnPepperEngine
 	{
 		return  m_pGraph->GetNodeConnections(pNode);
 	}
-	bool LessThanF::operator()(GraphNode* pA, GraphNode* pB) const
-	{
-		Graph* pGraph = pA->GetGraph();
-		float hA = pGraph->GetNodeHeuristic(pA);
-		float hB = pGraph->GetNodeHeuristic(pB);
-		return (hA + pA->GetTentativeDistance()) < (hB + pB->GetTentativeDistance());
-	}
+	
 }

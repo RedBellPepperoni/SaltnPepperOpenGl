@@ -30,7 +30,7 @@ namespace SaltnPepperEngine
 		std::vector<GraphNode*> GetNodeConnections(GraphNode* node);
 		std::vector<GraphNode*> GetNodes();
 		void Create(int iCols, int iRows, float fNodeWidth, float fNodeHeight);
-		void Create(std::vector<bool>& mapdata, int iCols, int iRows, float fNodeWidth, float fNodeHeight);
+		void Create(const std::vector<bool>& mapdata, int iCols, int iRows, float fNodeWidth, float fNodeHeight);
 
 		void SetHeuristicFunction(HeuristeicFuncType func);
 		void SetBegin(id_type id);

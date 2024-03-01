@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AstarFinder.cpp" />
     <ClCompile Include="Source\EntitySetup.cpp" />
     <ClCompile Include="Source\Graph.cpp" />
     <ClCompile Include="Source\GraphNode.cpp" />
@@ -156,6 +157,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AstarFinder.h" />
     <ClInclude Include="Source\Graph.h" />
     <ClInclude Include="Source\GraphNode.h" />
     <ClInclude Include="Source\PathFinder.h" />

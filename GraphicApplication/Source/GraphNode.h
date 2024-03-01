@@ -23,14 +23,14 @@ namespace SaltnPepperEngine
 		bool Visited();
 		void SetParent(GraphNode* parent);
 		void SetVisited(bool visit);
-		void SetPosition(const Vector4& pos);
+		void SetPosition(const Vector2& pos);
 		void SetName(std::string name);
 		void SetGraph(Graph* graph);
 		void SetWeight(float fWeight);
 		void SetBlocked(bool bBlocked);
 		void SetTentativeDistance(float fTentativeDistance);
 
-		Vector4 GetPosition();
+		Vector2 GetPosition();
 
 		GraphNode* GetParent();
 		id_type GetID();
@@ -49,7 +49,7 @@ namespace SaltnPepperEngine
 	    Graph* m_pGraph;
 		std::string m_name;
 		GraphNode* m_pParent;
-		Vector4 m_position;
+		Vector2 m_position;
 
 	};
 

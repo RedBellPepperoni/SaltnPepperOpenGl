@@ -30,12 +30,12 @@ namespace SaltnPepperEngine
 		return m_pParent;
 	}
 
-	void GraphNode::SetPosition(const Vector4& pos)
+	void GraphNode::SetPosition(const Vector2& pos)
 	{
 		m_position = pos;
 	}
 
-	Vector4 GraphNode::GetPosition()
+	Vector2 GraphNode::GetPosition()
 	{
 		return m_position;
 	}

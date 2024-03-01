@@ -85,7 +85,7 @@ namespace SaltnPepperEngine
 
 		Entity hunterEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Hunter");
 		Transform* hunterTransform = hunterEntity.TryGetComponent<Transform>();
-		hunterTransform->SetPosition(Vector3(0.5f, 0.0f, 0.5f));
+		hunterTransform->SetPosition(Vector3(0.5f, 0.0f, -0.5f));
 		Hierarchy& hunter = hunterEntity.AddComponent<Hierarchy>();
 		//hunterTransform->SetPosition(Vector3(0.0f));
 
