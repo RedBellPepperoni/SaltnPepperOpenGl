@@ -12,9 +12,9 @@ namespace SaltnPepperEngine
 	{
 	}
 
-	void TreasureHunter::SetGraph(Graph* graph)
+	void TreasureHunter::SetGraph(SharedPtr<Graph>& graph)
 	{
-		graphCopy = MakeShared<Graph>(*graph);
+		graphBase = graph;
 	}
 
 	void TreasureHunter::SetSpawn(const int x, const int y)
@@ -37,6 +37,8 @@ namespace SaltnPepperEngine
 
 		int currentX = hunterTransform->GetPosition().x;
 		int currentY = hunterTransform->GetPosition().z;
+
+		graphCopy = MakeShared<Graph>(*graphBase);
 
 		pathFinder->SetBegin(GetIndex(currentX, currentY));
 		pathFinder->SetEnd(GetIndex(x, y));

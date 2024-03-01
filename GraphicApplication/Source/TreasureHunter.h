@@ -22,7 +22,7 @@ namespace SaltnPepperEngine
 		TreasureHunter();
 		~TreasureHunter();
 
-		void SetGraph(Graph* graph);
+		void SetGraph(SharedPtr<Graph>& graph);
 		void SetSpawn(const int x, const int y);
 		void SetTransform(Transform* transform);
 
@@ -43,6 +43,7 @@ namespace SaltnPepperEngine
 		UniquePtr<AstarFinder> pathFinder = nullptr;
 		Transform* hunterTransform;
 		SharedPtr<Graph> graphCopy = nullptr;
+		SharedPtr<Graph> graphBase = nullptr;
 
 
 		std::vector<Vector3> currentPath;
@@ -53,7 +54,7 @@ namespace SaltnPepperEngine
 
 		float counter = 0.0f;
 		// time the hunter moves 1 unit in seconds
-		float timeToMove = 1.0f;
+		float timeToMove = 0.1f;
 	};
 
 

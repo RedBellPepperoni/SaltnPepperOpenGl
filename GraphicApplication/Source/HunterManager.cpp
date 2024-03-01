@@ -32,7 +32,7 @@ namespace SaltnPepperEngine
 		{
 			SharedPtr<TreasureHunter> hunter = MakeShared<TreasureHunter>();
 			Transform* T = CreateHunter(Vector3(1.0f, 0.0f, 1.0f));
-			hunter->SetGraph(dungeonGraph.get());
+			hunter->SetGraph(dungeonGraph);
 			hunter->SetTransform(T);
 			hunter->SetSpawn(1, 1);
 
