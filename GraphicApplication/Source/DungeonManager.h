@@ -1,6 +1,6 @@
 #ifndef DUNGEONMANAGER_H
 #define DUNGEONMANAGER_H
-
+#include "EntitySetup.h"
 #include "TileDefinitions.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include <string>
@@ -23,6 +23,8 @@ namespace SaltnPepperEngine
 
 		void SetStartandEnd();
 		void PrintMap();
+
+		void Create3DMap();
 		const std::vector<bool>& GetWallData() const{ return m_wallData; }
 
 	private:

@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\EntitySetup.cpp" />
     <ClCompile Include="Source\Graph.cpp" />
     <ClCompile Include="Source\GraphNode.cpp" />
     <ClCompile Include="Source\PathFinder.cpp" />

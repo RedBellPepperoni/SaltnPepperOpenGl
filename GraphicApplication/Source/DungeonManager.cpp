@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 
+
 namespace SaltnPepperEngine
 {
 	bool DungeonManager::LoadTSVMap(const std::string& filepath)
@@ -176,5 +177,29 @@ namespace SaltnPepperEngine
         }
 
         //std::cout << m_printableData[116] << std::endl;
+    }
+    void DungeonManager::Create3DMap()
+    {
+        for (int y = 0; y < 149; y++)
+        {
+            for (int x = 0; x < 115; x++)
+            {
+                int index = x + y * 115;
+
+                Vector3 position = Vector3(x, 0.0f, y);
+
+                if (m_wallData[index])
+                {
+                    CreateWall(position);
+                }
+                else
+                {
+                    CreateFloor(position);
+                }
+
+            }
+
+           
+        }
     }
 }

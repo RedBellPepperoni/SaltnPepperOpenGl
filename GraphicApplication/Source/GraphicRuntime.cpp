@@ -30,8 +30,8 @@ class GraphicRuntime : public Application
         manager->LoadTSVMap("Assets\\Data\\DungeonCleanCompact.tsv");
         manager->SetStartandEnd();
 
-        manager->PrintMap();
-
+        //manager->PrintMap();
+        manager->Create3DMap();
         CreateDirectionalLight();
       
      
