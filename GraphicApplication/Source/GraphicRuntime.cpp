@@ -1,7 +1,7 @@
 #include "SaltnPepperEngine.h"
 #include "EntitySetup.h"
 #include "Engine/Core/Threading/MultiThreader.h"
-
+#include "DungeonManager.h"
 
 
 
@@ -16,19 +16,21 @@ class GraphicRuntime : public Application
         LoadAllModels();
         LoadAllTextures();
 
-        //StartPhysics(true);
-
+       
         MultiThreader::Init();
 
-        //Camera* camera = CreateSecurityCamera(Vector3(0.0f, 10.0f, 0.0f));
-       // SharedPtr<Material> mat = CreateMonitor(Vector3(0.0f, 20.0f, 0.0f));
-       // mat->textureMaps.albedoMap = (camera->GetRenderTexture());
+     
         glPolygonMode(GL_FRONT, GL_FILL);
         glCullFace(GL_BACK);
         glEnable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-       
+      
+
+        manager = MakeShared<DungeonManager>();
+
+        manager->LoadTSVMap("Assets\\Data\\DungeonCleanCompact.tsv");
+        manager->SetStartandEnd();
+
+        manager->PrintMap();
 
         CreateDirectionalLight();
       
@@ -48,7 +50,7 @@ class GraphicRuntime : public Application
        
 	}
 
-   
+    SharedPtr<DungeonManager> manager;
    
 };
 

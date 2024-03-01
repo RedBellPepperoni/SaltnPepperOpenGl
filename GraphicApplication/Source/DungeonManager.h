@@ -3,7 +3,8 @@
 
 #include "TileDefinitions.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
-#include <unordered_map>
+#include <string>
+#include <vector>
 
 
 namespace SaltnPepperEngine
@@ -15,17 +16,28 @@ namespace SaltnPepperEngine
 	{
 	public:
 
-		DungeonManager(); 
-		~DungeonManager();
+		DungeonManager() = default; 
+		~DungeonManager() = default;
 
+		bool LoadTSVMap(const std::string& filepath);
+
+		void SetStartandEnd();
+		void PrintMap();
+		const std::vector<bool>& GetWallData() const{ return m_wallData; }
 
 	private:
 
-		void LoadFromFile();
+
+
+
 
 		std::vector<bool> m_wallData;
-		int m_rows = 0;
-		int m_cols = 0;
+		std::vector<std::string> m_printableData;
+		int m_rows = 150;
+		int m_cols = 116;
+
+		int startIndex = -1;
+		int endIndex = -1;
 
 		float m_nodeWidth = 0.0f;
 		float m_nodeHeight = 0.0f;
