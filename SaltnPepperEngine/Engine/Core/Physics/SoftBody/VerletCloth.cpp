@@ -82,9 +82,18 @@ namespace SaltnPepperEngine
 
 		void VerletCloth::OnUpdate(const float& deltaTime, const Transform& clothtransform)
 		{
+
+			timeStepCounter += deltaTime;
+			if (timeStepCounter < fixedDeltaTime)
+			{
+				return;
+			}
+
+			timeStepCounter = 0.0f;
+
 			for (int i = 0; i < substeps; ++i)
 			{
-				Simulate(deltaTime / (float)substeps, clothtransform);
+				Simulate(fixedDeltaTime/2.0f, clothtransform);
 				//UpdateMesh();
 			}
 			// Only Updating the Render mesh once per update
@@ -113,7 +122,16 @@ namespace SaltnPepperEngine
 
 			indexList.clear();
 
-			cutPoints.push_back(index);
+			// map iterator (hence using auto)
+			auto itr = cutPoints.find(index);
+
+			if (itr == cutPoints.end())
+			{
+				cutPoints.emplace(index, false);
+			}
+			
+
+
 
 			bool renderindex = false;
 
@@ -139,13 +157,13 @@ namespace SaltnPepperEngine
 					indexList.push_back(index3);
 					indexList.push_back(index1);
 
-					for (int& node : cutPoints)
-					{	
 
-						/*int index0 = j * numberofSegments + i;
-						int index1 = numberofSegments * (j + 1) + i + 1;
-						int index2 = j * numberofSegments + i + 1;
-						int index3 = numberofSegments * (j + 1) + i;*/
+					
+					for (auto itr = cutPoints.begin(); itr != cutPoints.end();itr++)
+					{
+						if (itr->second) { continue; }
+
+						int node = itr->first;
 
 						if (index0 == node || index1 == node || index2 == node || index3 == node)
 						{
@@ -184,15 +202,17 @@ namespace SaltnPepperEngine
 
 		}
 
+		void VerletCloth::Cut()
+		{
+			for (VerletParticle& p : particles)
+			{
+				p.isPinned = false;
+			}
+		}
+
 		void VerletCloth::Simulate(const float& deltaTime, const Transform& clothtransform)
 		{
-			timeStepCounter += deltaTime;
-			if (timeStepCounter < fixedDeltaTime)
-			{
-				return;
-			}
-
-			timeStepCounter = 0.0f;
+			
 
 			for (int i = 0; i < particles.size(); i++)
 			{
@@ -201,20 +221,20 @@ namespace SaltnPepperEngine
 
 					Vector3 prevPos = particles[i].position;
 					Vector3 displacement = particles[i].position - particles[i].previousPosition;
-					particles[i].velocity = displacement / fixedDeltaTime;
+					particles[i].velocity = displacement / deltaTime;
 					particles[i].position += displacement;
-					particles[i].position += Vector3(0.0f, -10.0f, 0.0f) * fixedDeltaTime * fixedDeltaTime;
+					particles[i].position += Vector3(0.0f, -3.0f, 0.0f) * deltaTime * deltaTime;
 
 					float xVariation = Random32::Range.GetRandom(force.x - 5.0f, force.x + 5.0f);
 					float yVariation = Random32::Range.GetRandom(force.y - 2.0f, force.y + 2.0f);
 					float zVariation = Random32::Range.GetRandom(force.z - 5.0f, force.z + 5.0f);
 
 
-					particles[i].position += Vector3(xVariation,yVariation,zVariation) * fixedDeltaTime * fixedDeltaTime;
+					particles[i].position += Vector3(xVariation,yVariation,zVariation) * deltaTime * deltaTime;
 					
 
 					float speed = (Length(particles[i].velocity));
-					particles[i].position -= displacement * particles[i].friction * glm::pow(speed, 2.0f) * fixedDeltaTime;
+					particles[i].position -= displacement * particles[i].friction * glm::pow(speed, 2.0f) * deltaTime;
 					particles[i].previousPosition = prevPos;
 				}
 			}

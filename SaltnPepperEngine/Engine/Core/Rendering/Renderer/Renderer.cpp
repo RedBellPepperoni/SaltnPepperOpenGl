@@ -122,6 +122,7 @@ namespace SaltnPepperEngine
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("FieldSkybox", "Engine\\Textures\\fieldRight.png", "Engine\\Textures\\fieldLeft.png", "Engine\\Textures\\fieldTop.png", "Engine\\Textures\\fieldBottom.png", "Engine\\Textures\\fieldFront.png", "Engine\\Textures\\fieldBack.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("GalaxySkybox", "Engine\\Textures\\galaxyLeft.png", "Engine\\Textures\\galaxyRight.png", "Engine\\Textures\\galaxyTop.png", "Engine\\Textures\\galaxyBottom.png", "Engine\\Textures\\galaxyFront.png", "Engine\\Textures\\galaxyBack.png");
+            Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("WarSkybox", "Engine\\Textures\\warleft.png", "Engine\\Textures\\warright.png", "Engine\\Textures\\wartop.png", "Engine\\Textures\\warbottom.png", "Engine\\Textures\\warfront.png", "Engine\\Textures\\warback.png");
 
 
             m_pipeline.defaultTextureMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultTexture");
@@ -130,8 +131,8 @@ namespace SaltnPepperEngine
 
 
 
-            m_pipeline.skybox.cubeMap = Application::GetCurrent().GetCubeMapLibrary()->GetResource("GalaxySkybox");
-            m_pipeline.skybox.SetIntensity(3.30f);
+            m_pipeline.skybox.cubeMap = Application::GetCurrent().GetCubeMapLibrary()->GetResource("FieldSkybox");
+            m_pipeline.skybox.SetIntensity(1.00f);
 
 
             m_pipeline.postprocessFrameBuffer = MakeShared<FrameBuffer>();

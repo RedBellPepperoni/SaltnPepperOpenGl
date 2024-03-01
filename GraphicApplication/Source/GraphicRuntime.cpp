@@ -5,7 +5,7 @@
 #include "Engine/Core/Threading/MultiThreader.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
-//#include "Simulation.h"
+#include "Simulation.h"
 
 //#include "SecurityCamera.h"
 
@@ -28,10 +28,11 @@ class GraphicRuntime : public Application
 
         CreateDirectionalLight();
 
-        Entity mainCamera = CreateMainCamera(Vector3(0.0f),Vector3(0.0f));
+        Entity mainCamera = CreateMainCamera(Vector3(-19.37f,5.16f,-5.56f),Vector3(0.3f,-76,0));
 
         Camera* cam = &mainCamera.GetComponent<Camera>();
 
+        CreatePole();
         CreateCloth(Vector3(0.0f));
 
 	}
@@ -54,23 +55,25 @@ class GraphicRuntime : public Application
         timeCounter += deltaTime * 5;
 
 
-        ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
+       
 
         float xForce = Random32::Range.GetRandom(-windForce.x, windForce.x);
         Vector3 randomForce = Vector3(xForce, windForce.y, windForce.z) * (speed / 10.0f);
 
-        float time = sin(timeCounter);
-        if (timeCounter > 50.0f)
+        float time = sin(timeCounter/10.0f);
+        if (timeCounter > 20.0f)
         {
             timeCounter = 0.0f;
         }
 
-        if (time < 0.5)
+       /* if (time > 0.5)
         {
             force = true;
-        }
-        
+        }*/
 
+        force = true;
+        
+         ComponentView clothCompView = GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Physics::ClothComponent>();
         for (Entity clothEntity : clothCompView)
         {
             Transform& transform = clothEntity.GetComponent<Transform>();
@@ -78,13 +81,35 @@ class GraphicRuntime : public Application
 
             cloth->OnUpdate(deltaTime,transform);
             cloth->SetForce(force ? randomForce : Vector3(0.0f));
+           
+
+            if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::G))
+            {
+                clothEntity.Destroy();
+                CreateCloth(Vector3(0.0f));
+            }
+
             
             if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Enter))
             {
-                cloth->RemoveNode(Vector2Int(8,8));
-                cloth->RemoveNode(Vector2Int(9,9));
-                cloth->RemoveNode(Vector2Int(3,25));
-                cloth->RemoveNode(Vector2Int(30,8));
+                int min = 0 + cloth->GetNumPoints()/4;
+                int max = cloth->GetNumPoints() - cloth->GetNumPoints() / 4;
+
+                int randomX = Random32::Range.GetRandom(min, max);
+                int randomY = Random32::Range.GetRandom(min, max);
+
+                Vector2Int basePoint = Vector2Int(randomX, randomY);
+                Vector2Int baseTop = basePoint + Vector2Int(1,0);
+                Vector2Int baseside = basePoint + Vector2Int(0,1);
+
+                cloth->RemoveNode(basePoint);
+                cloth->RemoveNode(baseTop);
+                cloth->RemoveNode(baseside);
+            }
+
+            if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Space))
+            {
+                cloth->Cut();
             }
 
         }
@@ -100,18 +125,29 @@ class GraphicRuntime : public Application
 
  //           if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Enter))
  //           {    
- //               cloth->Cut(Vector2Int(8,8));
+ //               int x = Random32::Range.GetRandom(8,28);
+ //               int y = Random32::Range.GetRandom(8,28);
+
+ //               cloth->Cut(Vector2Int((x,y)));
  //             
  //           }
 
  //           if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::R))
  //           {
- //               cloth->Cut(Vector2Int(16, 16));
+ //               
+ //               for (int i = 0; i < 32; i++)
+ //               {
+ //                   cloth->Cut(Vector2Int(2, i));
+ //               }
+ //              
+ //             
 
  //           }
 
+ //           
+
  //       }
- //     
+ ////     
 	}
 
    
@@ -128,7 +164,8 @@ private:
     int speed = 1;
     const int maxSpeed = 10;
     const int minSpeed = 0;
-    Vector3 windForce = Vector3(30.0f, 3.0f, -40.0f);
+    bool clothCut = false;
+    Vector3 windForce = Vector3(8.0f, 0.0f, -10.0f);
    
 };
 

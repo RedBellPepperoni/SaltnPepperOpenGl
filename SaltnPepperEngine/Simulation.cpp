@@ -123,15 +123,10 @@ namespace SaltnPepperEngine
 			UpdateRenderMesh();
 		}
 
-		void Simulation::Cut(const Vector3& start, const Vector3& end)
+		void Simulation::Cut()
 		{
-			for (int i = stickList.size() - 1; i >= 0; i--)
-			{
-				if (LineSegmentIntersect(start, end, stickList[i].pointOne->position, stickList[i].pointTwo->position))
-				{
-					stickList[i].cut = true;
-				}
-			}
+			//
+			// for()
 		}
 
 		void Simulation::Cut(Vector2Int node)
@@ -151,7 +146,7 @@ namespace SaltnPepperEngine
 
 			std::vector<Stick*> tempsticks;
 
-			/*for (int i = 0; i < stickList.size(); i++)
+			for (int i = 0; i < stickList.size(); i++)
 			{
 				if (point == stickList[i].pointOne || point == stickList[i].pointTwo)
 				{
@@ -159,7 +154,7 @@ namespace SaltnPepperEngine
 					stick->cut = true;
 					tempsticks.push_back(stick);
 				}
-			}*/
+			}
 
 			tempsticks;
 
@@ -168,38 +163,49 @@ namespace SaltnPepperEngine
 
 			std::vector<uint32_t> indexList;
 
+			indexList.clear();
+
 			for (int i = 0; i < numPoints - 1; i++)
 			{
 
 				for (int j = 0; j < numPoints - 1; j++)
 				{
+
+					int index0 = j * numPoints + i;
+					int index1 = numPoints * (j + 1) + i + 1;
+					int index2 = j * numPoints + i + 1;
+					int index3 = numPoints * (j + 1) + i;
+
+					indexList.push_back(index0); //0
+					indexList.push_back(index1); //n + 1
+					indexList.push_back(index2); //1
+
+
+
+					indexList.push_back(index0);
+					indexList.push_back(index3);
+					indexList.push_back(index1);
+
 					for (int& node : cutPoints)
 					{
 						
-						int index0 = j * numPoints + i;
-						int index1 = numPoints * (j + 1) + i + 1;
-						int index2 = j * numPoints + i + 1;
-						int index3 = numPoints * (j + 1) + i;
 
 						if (index0 == node || index1 == node || index2 == node || index3 == node)
 						{
-							continue;
+							indexList.pop_back();
+							indexList.pop_back();
+							indexList.pop_back();
+
+							indexList.pop_back();
+							indexList.pop_back();
+							indexList.pop_back();
 						}
 
-						
-							indexList.push_back(index0); //0
-							indexList.push_back(index1); //n + 1
-							indexList.push_back(index2); //1
-						
-						
-						
-							indexList.push_back(index0);
-							indexList.push_back(index3);
-							indexList.push_back(index1);
-						
-					
-
+	
 					}
+
+
+					
 				}
 			}
 

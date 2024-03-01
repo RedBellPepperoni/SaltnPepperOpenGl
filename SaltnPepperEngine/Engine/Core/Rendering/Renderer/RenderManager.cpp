@@ -24,7 +24,7 @@
 #include "Engine/Core/Physics/SoftBody/VerletCloth.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
-//#include "Simulation.h"
+#include "Simulation.h"
 
 namespace SaltnPepperEngine
 {
@@ -133,8 +133,8 @@ namespace SaltnPepperEngine
 				SharedPtr<Simulation>& cloth = clothEntity.GetComponent<VerletClothComponent>().clothsim;
 
 				m_renderer->ProcessRenderElement(cloth->GetMesh(), cloth->GetMaterial(), transform);
-			}*/
-
+			}
+*/
 
 
 			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();

@@ -11,8 +11,9 @@ void LoadAllModels()
 {
 	SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
 
-	/*modelLib->LoadModel("Floor", "Assets\\Models\\Floor.fbx");
-	modelLib->LoadModel("Ceiling", "Assets\\Models\\Ceiling.fbx");
+	//modelLib->LoadModel("FlagPole", "Assets\\Models\\FlagPole.fbx");
+
+	/*modelLib->LoadModel("Ceiling", "Assets\\Models\\Ceiling.fbx");
 	modelLib->LoadModel("Seat", "Assets\\Models\\Prop_Seat.fbx");*/
 
 
@@ -94,24 +95,50 @@ using namespace Verlet;
 
 Entity CreateCloth(const Vector3& position)
 {
+
+
 	Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
 	Transform& clothTransform = clothEntity.GetComponent<Transform>();
-
+	Hierarchy& hie = clothEntity.AddComponent<Hierarchy>();
 	ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(32);
 	SharedPtr<Material> mat = clothComp.clothHandle->GetMaterial();
+
+
+	//clothEntity.SetParent(poleEntity);
 
 	mat->SetAlbedoTexture("banner");
 
 	return clothEntity;
 
-	//Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
-	//Transform& clothTransform = clothEntity.GetComponent<Transform>();
+	/*Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Cloth");
+	Transform& clothTransform = clothEntity.GetComponent<Transform>();
 
-	//VerletClothComponent& clothComp = clothEntity.AddComponent<VerletClothComponent>(32,Vector2(5.0f,3.0f));
+	VerletClothComponent& clothComp = clothEntity.AddComponent<VerletClothComponent>(32,Vector2(5.0f,3.0f));
 
-	//clothComp.clothsim->OnInit(32, Vector2(10.0f, 6.0f));
 
-	//return clothEntity;
+	clothComp.clothsim->OnInit(32, Vector2(10.0f, 6.0f));
+
+
+	SharedPtr<Material> mat = clothComp.clothsim->GetMaterial();
+
+	mat->SetAlbedoTexture("banner");
+
+	return clothEntity;*/
+}
+
+Entity CreatePole()
+{
+	Entity poleEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Pole");
+	Transform& poleTransform = poleEntity.GetComponent<Transform>();
+	Hierarchy& poleHierarchy = poleEntity.AddComponent<Hierarchy>();
+	poleTransform.SetPosition(Vector3(0.0f, -10.0f, 0.0f));
+	poleTransform.SetScale(Vector3(1.0f, 50.0f, 1.0f));
+	ModelComponent& modelComp = poleEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+
+	SharedPtr<Material>& poleMat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	poleMat->SetAlbedoTexture("metal");
+
+	return poleEntity;
 }
 
 // Asteroid Stuff

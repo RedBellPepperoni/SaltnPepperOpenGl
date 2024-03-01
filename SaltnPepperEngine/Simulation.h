@@ -51,7 +51,7 @@ namespace SaltnPepperEngine
 
 			void OnInit(const int& clothSegments, const Vector2& clothSize);
 
-			void Cut(const Vector3& start, const Vector3& end);
+			void Cut();
 			void Cut(Vector2Int node);
 			void OnUpdate(const float& deltaTime);
 

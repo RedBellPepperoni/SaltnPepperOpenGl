@@ -4,6 +4,7 @@
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include <vector>
+#include <unordered_map>
 
 namespace SaltnPepperEngine
 {
@@ -20,6 +21,7 @@ namespace SaltnPepperEngine
 	}
 
 
+	
 
 	using Rendering::Mesh;
 	using Rendering::Material;
@@ -27,6 +29,8 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
+		
+
 		struct VerletParticle
 		{
 			// Defauolt C'tor and D'tor
@@ -77,8 +81,11 @@ namespace SaltnPepperEngine
 			SharedPtr<Mesh>& GetMesh();
 
 			void RemoveNode(const Vector2Int& node);
+			void Cut();
 
 			void SetForce(const Vector3& NewForce) { force = NewForce; }
+
+			int GetNumPoints() const { return numberofSegments ; }
 
 		private:
 
@@ -102,7 +109,7 @@ namespace SaltnPepperEngine
 			std::vector<VerletParticle> particles;
 			
 			// The substeps the physics engine will perform each fixed update
-			const float substeps = 16;
+			const float substeps = 32;
 
 			// Fixed update rate and counter
 			static constexpr float fixedDeltaTime = 1.0f / 60.0f;
@@ -110,7 +117,7 @@ namespace SaltnPepperEngine
 
 			Vector3 force = Vector3(0.0f);
 			
-			std::vector<int> cutPoints;
+			std::unordered_map<int, bool> cutPoints;
 		};
 
 		struct ClothComponent
