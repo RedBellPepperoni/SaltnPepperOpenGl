@@ -141,6 +141,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graph.cpp" />
+    <ClCompile Include="Source\GraphNode.cpp" />
+    <ClCompile Include="Source\PathFinder.cpp" />
+    <ClCompile Include="Source\DungeonManager.cpp" />
     <ClCompile Include="Source\AIStuff\AIManager.cpp" />
     <ClCompile Include="Source\AIStuff\AIBaseAgent.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
@@ -151,11 +155,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Graph.h" />
+    <ClInclude Include="Source\GraphNode.h" />
+    <ClInclude Include="Source\PathFinder.h" />
+    <ClInclude Include="Source\DungeonManager.h" />
     <ClInclude Include="Source\AIStuff\AIManager.h" />
     <ClInclude Include="Source\AIStuff\AIBaseAgent.h" />
     <ClInclude Include="Source\EntitySetup.h" />
-    <ClInclude Include="Source\ScifiScreen.h" />
-    <ClInclude Include="Source\SecurityCamera.h" />
+    <ClInclude Include="Source\TileDefinitions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
