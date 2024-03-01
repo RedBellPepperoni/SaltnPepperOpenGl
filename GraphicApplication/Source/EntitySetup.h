@@ -27,6 +27,7 @@ namespace SaltnPepperEngine {
 
 	Entity CreateFloor(const Vector3& position);
 
+	Transform* CreateTreasure(const Vector3& position);
 }
 // Asteroid Stuff
 

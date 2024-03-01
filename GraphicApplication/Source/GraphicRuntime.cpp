@@ -6,11 +6,45 @@
 #include "AstarFinder.h"
 #include "Graph.h"
 #include "GraphNode.h"
+#include "TreasureHunter.h"
 
 
 class GraphicRuntime : public Application
 {
+
+    Vector3 GetPositionfromIndex(int index)
+    {
+        int y = index / 115;
+        int x = index % 115;
+
+        return Vector3(x, 0.0f, y);
+    }
+
+    int GetRandomFloorIndex()
+    {
+        int index = Random32::Range.GetRandom(0, dungeonGraph->GetNodes().size()-1);
+
+        if (dungeonGraph->GetNodes()[index]->IsBlocked() == false)
+        {
+            return index;
+        }
+
+        
+        return GetRandomFloorIndex();
+    }
    
+    Transform* SpawnRandomTreasure()
+    {
+        int randomIndex = GetRandomFloorIndex();
+
+        Vector3 spawnPos = GetPositionfromIndex(randomIndex);
+
+        Transform* tr = CreateTreasure(spawnPos);
+
+        return tr;
+    }
+
+
 
     void OnInit()
     {
@@ -38,10 +72,10 @@ class GraphicRuntime : public Application
         CreateDirectionalLight();
       
      
-        hunterT = CreateHunter(Vector3(1.0f,0.0f,1.0f));
+       
 
         
-        Entity mainCamera = CreateMainCamera(Vector3(-17.3f,218.02f,56.26f),Vector3(-13.17f,24.86,0.00f));
+        Entity mainCamera = CreateMainCamera(Vector3(19.3f,23.01f,14.20f),Vector3(-75.85,-0.67,0.00f));
 
         Camera* cam = &mainCamera.GetComponent<Camera>();
 
@@ -57,26 +91,54 @@ class GraphicRuntime : public Application
         dungeonGraph->Create(manager->GetWallData(), 115, 149, 1.0f, 1.0f);
         dungeonGraph->SetHeuristicFunction(euclideanDistance);
 
-        hunter = MakeUnique<AstarFinder>();
+        //hunter = MakeUnique<AstarFinder>();
 
-        SharedPtr<Graph> copy = MakeShared<Graph>(*dungeonGraph);
+        //SharedPtr<Graph> copy = MakeShared<Graph>(*dungeonGraph);
 
-        hunter->SetBegin(GetIndex(1, 1));
-        hunter->SetEnd(GetIndex(13, 12));
-        hunter->FindPath(copy);
+        //hunter->SetBegin(GetIndex(1, 1));
+        //hunter->SetEnd(GetIndex(13, 12));
+        //hunter->FindPath(copy);
 
-        std::deque<GraphNode*> path = hunter->GetPath();
+        //std::deque<GraphNode*> path = hunter->GetPath();
 
-        for (auto& node : path)
+        //for (auto& node : path)
+        //{
+        //   //LOG_WARN("NODE : {0}, {1}", node->GetPosition().x, node->GetPosition().y);
+
+        //    Vector2 nodePos = Vector2(node->GetPosition().x, node->GetPosition().y);
+
+        //    nodes.push_back(nodePos);
+        //}
+
+        ////pathCounter = path.begin();
+
+        for (int i = 0; i < 1; i++)
         {
-           //LOG_WARN("NODE : {0}, {1}", node->GetPosition().x, node->GetPosition().y);
+           SharedPtr<TreasureHunter> hunter = MakeShared<TreasureHunter>();
+           Transform*  T = CreateHunter(Vector3(1.0f, 0.0f, 1.0f));
+           hunter->SetGraph(dungeonGraph.get());
+           hunter->SetTransform(T);
+           hunter->SetSpawn(1,1);
 
-            Vector2 nodePos = Vector2(node->GetPosition().x, node->GetPosition().y);
+           hunters.push_back(hunter);
 
-            nodes.push_back(nodePos);
         }
 
-        //pathCounter = path.begin();
+        hunters[0]->SetNewTarget(12, 13);
+      /*  hunters[1]->SetNewTarget(20, 3);
+        hunters[2]->SetNewTarget(21, 1);
+        hunters[3]->SetNewTarget(19, 14);
+        hunters[4]->SetNewTarget(12, 12);*/
+
+
+        for (int i = 0; i < 250; i++)
+        {
+            Transform* treasturetransform = SpawnRandomTreasure();
+
+            availableTreasures.push_back(treasturetransform);
+        }
+       
+
 	}
 
     int GetIndex(int x, int y)
@@ -86,41 +148,12 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
-        
-
-        counter += deltaTime;
-
-        if (counter > timer)
+        for (SharedPtr<TreasureHunter>& hun : hunters)
         {
-            counter = 0.0f;
-
-           // std::deque<GraphNode*> path = hunter->GetPath();
-
-
-
-            if (nodes.empty())
-            {
-                LOG_ERROR("No Path Found");
-                return;
-            }
-
-           // if (pathCounter < path.end())
-            if (pathCounter < nodes.size())
-            {
-                Vector2 posNode = nodes[pathCounter];
-
-                Vector3 pos = Vector3(posNode.x,0.0f,posNode.y);
-                //  Vector3 pos = hunterT->GetPosition();
-
-               // pos = pos + Vector3(1.0f, 0.0f, 0.0f);
-
-                LOG_WARN("NODE : {0}, {1}", posNode.x, posNode.y);
-
-                hunterT->SetPosition(pos);
-
-                pathCounter++;
-            }
+            hun->Update(deltaTime);
         }
+
+        
 	}
 
 
@@ -133,6 +166,12 @@ private:
     Transform* hunterT = nullptr;
 
     SharedPtr<Graph> dungeonGraph;
+
+    std::vector<SharedPtr<TreasureHunter>> hunters;
+
+
+    std::vector<Transform*> availableTreasures;
+    std::vector<Transform*> pickedTreasures;
 
     float timer = 1.0f;
     float counter = 0.0f;

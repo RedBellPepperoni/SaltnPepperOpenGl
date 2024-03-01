@@ -2,8 +2,6 @@
 #include "Engine/Utils/Loading/FileSystem.h"
 #include "Engine/Utils/Logging/Log.h"
 #include <sstream>
-#include <fstream>
-#include <iostream>
 #include <string>
 
 
@@ -81,12 +79,7 @@ namespace SaltnPepperEngine
 
           rows++;
 
-         // std::cout << std::endl;
-         // std::cout << key << std::endl;
-                
-
-
-
+      
               
 
             
@@ -138,7 +131,7 @@ namespace SaltnPepperEngine
 
     void DungeonManager::PrintMap()
     {
-        for (int y = 0; y < 149; y++)
+       /* for (int y = 0; y < 149; y++)
         {
             for (int x = 0; x < 115; x++)
             {
@@ -155,7 +148,7 @@ namespace SaltnPepperEngine
             }
 
             std::cout << std::endl;
-        }
+        }*/
 
         //std::cout << m_printableData[116] << std::endl;
     }

@@ -9,6 +9,7 @@ namespace SaltnPepperEngine
 		modelLib->LoadModel("Floor", "Assets\\Models\\DungeonFloor.fbx");
 		modelLib->LoadModel("Wall", "Assets\\Models\\DungeonWall.fbx");
 		modelLib->LoadModel("Hunter", "Assets\\Models\\TreasureHunter.fbx");
+		modelLib->LoadModel("Treasure", "Assets\\Models\\Treasure.fbx");
 	}
 
 	void LoadAllTextures()
@@ -20,6 +21,7 @@ namespace SaltnPepperEngine
 		textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
 		textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 		textureLib->LoadTexture("hunter", "Assets\\Textures\\hunter.png", TextureFormat::RGBA);
+		textureLib->LoadTexture("treasure", "Assets\\Textures\\treasure.png", TextureFormat::RGBA);
 
 
 	}
@@ -127,5 +129,30 @@ namespace SaltnPepperEngine
 		return wallEntity;
 		
 		
+	}
+	Transform* CreateTreasure(const Vector3& position)
+	{
+		Entity treasureParent = Application::GetCurrent().GetCurrentScene()->CreateEntity("Treasure_");
+		Transform* treasureParentTransform = treasureParent.TryGetComponent<Transform>();
+		Hierarchy& parent = treasureParent.AddComponent<Hierarchy>();
+		treasureParentTransform->SetPosition(position);
+
+
+		Entity treasureEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Treasure_Model");
+		Transform* treasureTransform = treasureEntity.TryGetComponent<Transform>();
+		treasureTransform->SetPosition(Vector3(0.5f, 0.0f, -0.5f));
+		treasureTransform->SetRotation(Vector3(0.0f, 180.0f, 0.0f));
+		Hierarchy& treasure = treasureEntity.AddComponent<Hierarchy>();
+		//treasureTransform->SetPosition(Vector3(0.0f));
+
+		ModelComponent& comp = treasureEntity.AddComponent<ModelComponent>("Treasure");
+		SharedPtr<Material>& mat = comp.m_handle->GetMeshes()[0]->GetMaterial();
+
+		mat->SetAlbedoTexture("treasure");
+
+
+		treasureEntity.SetParent(treasureParent);
+
+		return treasureParentTransform;
 	}
 }
