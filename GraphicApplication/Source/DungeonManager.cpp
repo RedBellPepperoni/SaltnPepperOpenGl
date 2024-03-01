@@ -99,30 +99,11 @@ namespace SaltnPepperEngine
         // Assuming there is only one mesh per file (for now)
 
         // =============================== Loading Vertex data from the file ==================================
-        
-
-
-
+    
         return true;
 
 
-        //std::fstream newfile;
-      
- 
-        //newfile.open(filepath, std::ios::in); //open a file to perform read operation using file object
-        //if (newfile.is_open()) 
-        //{   //checking whether the file is open
-        //    std::string tp;
-
-
-        //    while (getline(newfile, tp)) 
-        //    { //read data from file object and put it into string.
-        //        std::cout << tp << "\n"; //print the data of the string
-        //    }
-        //    newfile.close(); //close the file object.
-        //}
-
-        //return true;
+       
 
 	}
 

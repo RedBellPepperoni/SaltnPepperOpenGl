@@ -90,7 +90,8 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		return std::move(connections);
+		//return std::move(connections);
+		return (connections);
 	}
 
 	std::vector<GraphNode*> Graph::GetNodes()
@@ -147,16 +148,17 @@ namespace SaltnPepperEngine
 		m_iRows = iRows;
 		m_iCols = iCols;
 
-		if (iRows + iCols >= mapdata.size())
+		size_t dataSize = (size_t)iRows * (size_t)iCols;
+
+		if (dataSize > mapdata.size())
 		{
 			LOG_CRITICAL("ROW + Colums Exceed Vector size");
-			return;
 		}
 
 
-		m_nodes.reserve(iCols * iRows);
+		m_nodes.reserve(dataSize);
 
-		for (int i = 0; i < (iCols * iRows); ++i)
+		for (int i = 0; i < (dataSize); ++i)
 		{
 			auto pNode = std::make_unique<GraphNode>(i, this);
 			pNode->SetPosition({ i % iCols * fNodeWidth,

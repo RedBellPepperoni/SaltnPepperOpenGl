@@ -35,7 +35,7 @@ class GraphicRuntime : public Application
         CreateDirectionalLight();
       
      
-       
+        hunterT = CreateHunter(Vector3(2.0f,0.0f,0.0f));
 
         
         Entity mainCamera = CreateMainCamera(Vector3(-17.3f,218.02f,56.26f),Vector3(-13.17f,24.86,0.00f));
@@ -47,11 +47,25 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
-       
+        /*counter += deltaTime;
+
+        if (counter > timer)
+        {
+            counter = 0.0f;
+
+            Vector3 pos = hunterT->GetPosition();
+
+            pos = pos + Vector3(1.0f, 0.0f, 0.0f);
+
+            hunterT->SetPosition(pos);
+        }*/
 	}
 
     SharedPtr<DungeonManager> manager;
-   
+    Transform* hunterT = nullptr;
+
+    float timer = 1.0f;
+    float counter = 0.0f;
 };
 
 

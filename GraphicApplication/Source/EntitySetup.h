@@ -20,6 +20,7 @@ namespace SaltnPepperEngine {
 
 	Entity CreateDirectionalLight();
 
+	Transform* CreateHunter(const Vector3& position);
 
 	Entity CreateWall(const Vector3& position);
 	

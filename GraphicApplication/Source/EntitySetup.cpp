@@ -8,7 +8,7 @@ namespace SaltnPepperEngine
 
 		modelLib->LoadModel("Floor", "Assets\\Models\\DungeonFloor.fbx");
 		modelLib->LoadModel("Wall", "Assets\\Models\\DungeonWall.fbx");
-		//modelLib->LoadModel("Seat", "Assets\\Models\\Prop_Seat.fbx");
+		modelLib->LoadModel("Hunter", "Assets\\Models\\TreasureHunter.fbx");
 	}
 
 	void LoadAllTextures()
@@ -19,6 +19,7 @@ namespace SaltnPepperEngine
 
 		textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
 		textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
+		textureLib->LoadTexture("hunter", "Assets\\Textures\\hunter.png", TextureFormat::RGBA);
 
 
 	}
@@ -73,6 +74,31 @@ namespace SaltnPepperEngine
 		light.intensity = 1.2f;
 
 		return dirLightEntity;
+	}
+	Transform* CreateHunter(const Vector3& position)
+	{
+		Entity hunterParent = Application::GetCurrent().GetCurrentScene()->CreateEntity("Hunter");
+		Transform* hunterParentTransform = hunterParent.TryGetComponent<Transform>();
+		Hierarchy& parent = hunterParent.AddComponent<Hierarchy>();
+		hunterParentTransform->SetPosition(position);
+
+
+		Entity hunterEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Hunter");
+		Transform* hunterTransform = hunterEntity.TryGetComponent<Transform>();
+		hunterTransform->SetPosition(Vector3(0.5f, 0.0f, 0.5f));
+		Hierarchy& hunter = hunterEntity.AddComponent<Hierarchy>();
+		//hunterTransform->SetPosition(Vector3(0.0f));
+
+		ModelComponent& comp = hunterEntity.AddComponent<ModelComponent>("Hunter");
+		SharedPtr<Material>& mat = comp.m_handle->GetMeshes()[0]->GetMaterial();
+
+		mat->SetAlbedoTexture("hunter");
+
+
+		hunterEntity.SetParent(hunterParent);
+
+		return hunterParentTransform;
+
 	}
 	Entity CreateWall(const Vector3& position)
 	{

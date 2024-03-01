@@ -1,7 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include "GraphNode.h"
-
+#include "Engine/Core/Memory/MemoryDefinitions.h"
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -16,7 +16,7 @@ namespace SaltnPepperEngine
 	public:
 		using id_type = unsigned int;
 		using ConnectionsMap = std::unordered_map<id_type, std::unordered_set<id_type>>;
-		using NodesMap = std::vector<std::unique_ptr<GraphNode>>;
+		using NodesMap = std::vector<UniquePtr<GraphNode>>;
 		using HeuristeicFuncType = std::function<float(GraphNode* node, Graph* graph)>;
 	public:
 		Graph();
