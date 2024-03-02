@@ -31,6 +31,8 @@ namespace SaltnPepperEngine
 	}
 	void HunterManager::CreateHunters(int count)
 	{
+		
+
 		for (int i = 0; i < count; i++)
 		{
 			SharedPtr<TreasureHunter> hunter = MakeShared<TreasureHunter>();
@@ -39,6 +41,7 @@ namespace SaltnPepperEngine
 			hunter->SetTransform(T);
 			hunter->SetSpawn(1, 1);
 			hunter->SetTimeToMove(Random32::Range.GetRandom(1.0f, 0.8f));
+			hunter->SetHunterIndex(i);
 			hunters.push_back(hunter);
 
 			
@@ -183,6 +186,23 @@ namespace SaltnPepperEngine
 		for (SharedPtr<TreasureHunter>& hun : hunters)
 		{
 			/*hun->Update(deltaTime);*/
+
+			if (hun->GetFinal()) { continue; }
+
+			if (availableTreasures.empty())
+			{
+
+				Vector2 pos = hun->GetPosition();
+				hun->SetNewTarget(1,1);
+				if (abs(pos.x - 0) < 0.03f && abs(pos.y - 0) < 0.03f)
+				{
+					hun->SetFinal();
+					int hunterIndex = hun->GetHunterIndex();
+					int treasurecount = hun->GetTreasureCount();
+
+					LOG_CRITICAL("Hunter [{0}] collected : [{1}] Treasures",hunterIndex,treasurecount);
+				}
+			}
 			
 
 			for (int i = 0; i < availableTreasures.size(); i++)
@@ -192,6 +212,8 @@ namespace SaltnPepperEngine
 
 				if (abs(pos.x - tPos.x) < 0.03f && abs(pos.y - tPos.z) < 0.03f)
 				{
+
+
 					hun->ReachedTarget(true);
 					UsedUpTreasure(i);
 
@@ -200,12 +222,18 @@ namespace SaltnPepperEngine
 					{
 
 					}*/
+					int hunterIndex = hun->GetHunterIndex();
+
+					LOG_INFO("Hunter [{0}] collected Treasure ", hunterIndex);
+					
 
 					hun->SetNewTarget(pos.x, pos.y);
 					
 					break;
 				}
 			}
+
+
 		}
 
 	}

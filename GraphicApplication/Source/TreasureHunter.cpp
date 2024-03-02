@@ -86,6 +86,8 @@ namespace SaltnPepperEngine
 
 	void TreasureHunter::Update(const float deltaTime)
 	{
+		if (Final) { return; }
+
 		counter += deltaTime;
 
 		if (counter < timeToMove)

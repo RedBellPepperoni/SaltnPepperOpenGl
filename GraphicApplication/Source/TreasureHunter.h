@@ -40,9 +40,17 @@ namespace SaltnPepperEngine
 		void ReachedTarget(bool collected);
 		void SetTimeToMove(float time) { timeToMove = time; }
 
+		int GetTreasureCount() const {return treasureCount;}
+
+		void SetFinal() { Final = true; }
+		bool GetFinal() const { return Final; }
+		void SetHunterIndex(const int index) { hunterIndex = index; }
+		int GetHunterIndex() const { return hunterIndex; }
 	private:
 
 		int GetIndex(int x, int y);
+
+		int hunterIndex = 0;
 
 		Vector2Int currentTargetPos;
 
@@ -62,6 +70,8 @@ namespace SaltnPepperEngine
 		float counter = 0.0f;
 		// time the hunter moves 1 unit in seconds
 		float timeToMove = 0.1f;
+
+		bool Final = false;
 	};
 
 
