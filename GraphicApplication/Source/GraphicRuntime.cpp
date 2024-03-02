@@ -41,6 +41,7 @@ class GraphicRuntime : public Application
 
         mainmanager->CreateDungeon();
         mainmanager->CreateHunters(64);
+        //mainmanager->CreateHunters(1);
         mainmanager->CreateTreasures(250);
        
         mainmanager->LaunchHunters();

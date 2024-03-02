@@ -47,14 +47,18 @@ namespace SaltnPepperEngine
 	{
 		currentPath.clear();
 
-		currentState = HunterState::SEARCHING;
+		int spawnX = GetPosition().x;
+		int spawnY = GetPosition().y;
 
-		int currentX = hunterTransform->GetPosition().x;
-		int currentY = hunterTransform->GetPosition().z;
+		currentPathNode = 0;
+
+		//currentState = HunterState::SEARCHING;
+
+	
 
 		graphCopy = MakeShared<Graph>(*graphBase);
 
-		pathFinder->SetBegin(GetIndex(currentX, currentY));
+		pathFinder->SetBegin(GetIndex(spawnX, spawnY));
 		pathFinder->SetEnd(GetIndex(x, y));
 		pathFinder->FindPath(graphCopy);
 
@@ -77,7 +81,7 @@ namespace SaltnPepperEngine
 
 		currentState = HunterState::MOVING;
 
-
+		SetSpawn(spawnX, spawnY);
 	}
 
 	void TreasureHunter::Update(const float deltaTime)
