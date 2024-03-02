@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\HunterThreaded.cpp" />
     <ClCompile Include="Source\HunterManager.cpp" />
     <ClCompile Include="Source\AstarFinder.cpp" />
     <ClCompile Include="Source\EntitySetup.cpp" />
@@ -152,7 +153,7 @@
     <ClCompile Include="Source\AIStuff\AIBaseAgent.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
     <ClCompile Include="Source\TreasureHunter.cpp" />
-    <ClCompile Include="Treasure.cpp" />
+    <ClCompile Include="Source\Treasure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaltnPepperEngine\SaltnPepperEngine.vcxproj">
@@ -160,6 +161,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\HunterThreaded.h" />
     <ClInclude Include="Source\HunterManager.h" />
     <ClInclude Include="Source\AstarFinder.h" />
     <ClInclude Include="Source\Graph.h" />
@@ -171,7 +173,7 @@
     <ClInclude Include="Source\EntitySetup.h" />
     <ClInclude Include="Source\TileDefinitions.h" />
     <ClInclude Include="Source\TreasureHunter.h" />
-    <ClInclude Include="Treasure.h" />
+    <ClInclude Include="Source\Treasure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

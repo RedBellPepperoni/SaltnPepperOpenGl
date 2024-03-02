@@ -7,6 +7,7 @@
 #include "Graph.h"
 #include "GraphNode.h"
 #include "TreasureHunter.h"
+#include "HunterThreaded.h"
 
 namespace SaltnPepperEngine
 {
@@ -52,7 +53,9 @@ namespace SaltnPepperEngine
         SharedPtr<Graph> dungeonGraph;
 
         std::vector<SharedPtr<TreasureHunter>> hunters;
+        std::vector<SharedPtr<HunterThreadInfo>> threadInfos;
 
+        std::vector<HANDLE> threadhandleList;
 
         std::vector<Transform*> availableTreasures;
         std::vector<Transform*> pickedTreasures;

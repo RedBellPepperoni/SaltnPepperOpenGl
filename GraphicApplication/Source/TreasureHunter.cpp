@@ -12,9 +12,23 @@ namespace SaltnPepperEngine
 	{
 	}
 
-	void TreasureHunter::SetGraph(SharedPtr<Graph>& graph)
+	void TreasureHunter::SetGraph(const SharedPtr<Graph>& graph, SharedPtr<DungeonManager>& man)
 	{
-		graphBase = graph;
+		manager = man;
+
+		auto euclideanDistance = [](GraphNode* pNode, Graph* pGraph)
+			{
+				auto pEnd = pGraph->GetEndNode();
+				return Length(pEnd->GetPosition() - pNode->GetPosition());
+			};
+
+		graphBase = MakeShared<Graph>();
+
+
+		graphBase->Create(manager->GetWallData(), 115, 149, 1.0f, 1.0f);
+		graphBase->SetHeuristicFunction(euclideanDistance);
+	
+		
 	}
 
 	void TreasureHunter::SetSpawn(const int x, const int y)

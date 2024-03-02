@@ -2,11 +2,16 @@
 #define TREASUREHUNTER_H
 #include "AstarFinder.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
+#include "DungeonManager.h"
 #include "Engine/Core/Components/Transform.h"
 #include "Graph.h"
 
+
+
 namespace SaltnPepperEngine
 {
+
+	
 	enum class HunterState
 	{
 		IDLE,
@@ -22,7 +27,7 @@ namespace SaltnPepperEngine
 		TreasureHunter();
 		~TreasureHunter();
 
-		void SetGraph(SharedPtr<Graph>& graph);
+		void SetGraph(const SharedPtr<Graph>& graph, SharedPtr<DungeonManager>& man);
 		void SetSpawn(const int x, const int y);
 		void SetTransform(Transform* transform);
 
@@ -33,6 +38,7 @@ namespace SaltnPepperEngine
 		const Vector2 GetPosition() const;
 
 		void ReachedTarget(bool collected);
+		void SetTimeToMove(float time) { timeToMove = time; }
 
 	private:
 
@@ -41,10 +47,11 @@ namespace SaltnPepperEngine
 		Vector2Int currentTargetPos;
 
 		UniquePtr<AstarFinder> pathFinder = nullptr;
+		
 		Transform* hunterTransform;
 		SharedPtr<Graph> graphCopy = nullptr;
 		SharedPtr<Graph> graphBase = nullptr;
-
+		SharedPtr<DungeonManager> manager = nullptr;
 
 		std::vector<Vector3> currentPath;
 		int treasureCount = 0;
@@ -57,6 +64,8 @@ namespace SaltnPepperEngine
 		float timeToMove = 0.1f;
 	};
 
+
+	
 
 }
 

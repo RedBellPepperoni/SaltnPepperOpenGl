@@ -45,10 +45,13 @@
     <ClCompile Include="Source\TreasureHunter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Treasure.cpp">
+    <ClCompile Include="Source\Treasure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\HunterManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HunterThreaded.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,10 +86,13 @@
     <ClInclude Include="Source\TreasureHunter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Treasure.h">
+    <ClInclude Include="Source\Treasure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\HunterManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\HunterThreaded.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

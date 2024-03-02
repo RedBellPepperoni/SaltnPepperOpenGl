@@ -40,7 +40,7 @@ class GraphicRuntime : public Application
         mainmanager = MakeUnique<HunterManager>();
 
         mainmanager->CreateDungeon();
-        mainmanager->CreateHunters(1);
+        mainmanager->CreateHunters(64);
         mainmanager->CreateTreasures(250);
        
         mainmanager->LaunchHunters();

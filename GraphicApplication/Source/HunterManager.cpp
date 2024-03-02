@@ -1,5 +1,8 @@
 #include "HunterManager.h"
 #include "EntitySetup.h"
+
+
+
 namespace SaltnPepperEngine
 {
 	void HunterManager::CreateDungeon()
@@ -32,12 +35,38 @@ namespace SaltnPepperEngine
 		{
 			SharedPtr<TreasureHunter> hunter = MakeShared<TreasureHunter>();
 			Transform* T = CreateHunter(Vector3(1.0f, 0.0f, 1.0f));
-			hunter->SetGraph(dungeonGraph);
+			hunter->SetGraph(dungeonGraph,manager);
 			hunter->SetTransform(T);
 			hunter->SetSpawn(1, 1);
-
+			hunter->SetTimeToMove(Random32::Range.GetRandom(1.0f, 0.8f));
 			hunters.push_back(hunter);
 
+			
+			SharedPtr<HunterThreadInfo> HTParams = MakeShared<HunterThreadInfo>();
+			HTParams->hunterRef = hunters[i];
+			
+			HTParams->isAlive = true;
+			HTParams->run = true;
+
+			threadInfos.push_back(HTParams);
+
+			HunterThreadInfo* htInfo = HTParams.get();
+
+			DWORD ThreadId = 0;
+			HANDLE threadHandle = 0;
+			threadHandle = CreateThread(
+				NULL,					// lpThreadAttributes,
+				0,						// dwStackSize,
+				UpdateThreadHunter,		// lpStartAddress,
+				(void*)htInfo,				//  lpParameter,
+				0,						// dwCreationFlags (0 or CREATE_SUSPENDED)
+				&ThreadId); // lpThreadId
+
+
+			ThreadId++;
+
+
+			threadhandleList.push_back(threadHandle);
 		}
 
 	}
@@ -153,7 +182,7 @@ namespace SaltnPepperEngine
 	{
 		for (SharedPtr<TreasureHunter>& hun : hunters)
 		{
-			hun->Update(deltaTime);
+			/*hun->Update(deltaTime);*/
 			
 
 			for (int i = 0; i < availableTreasures.size(); i++)
