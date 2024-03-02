@@ -1,7 +1,6 @@
 #include "SaltnPepperEngine.h"
 #include "EntitySetup.h"
-#include "Engine/Core/Threading/MultiThreader.h"
-#include "HunterManager.h"
+#include "MidtermGems/HunterManager.h"
 
 
 
@@ -17,8 +16,7 @@ class GraphicRuntime : public Application
         LoadAllTextures();
 
        
-        MultiThreader::Init();
-
+     
      
         glPolygonMode(GL_FRONT, GL_FILL);
         glCullFace(GL_BACK);
@@ -41,8 +39,9 @@ class GraphicRuntime : public Application
 
         mainmanager->CreateDungeon();
         mainmanager->CreateHunters(64);
-        //mainmanager->CreateHunters(1);
+
         mainmanager->CreateTreasures(250);
+        //mainmanager->CreateTestTreasures();
        
         mainmanager->LaunchHunters();
       

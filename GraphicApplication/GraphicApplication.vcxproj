@@ -141,19 +141,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\HunterThreaded.cpp" />
-    <ClCompile Include="Source\HunterManager.cpp" />
-    <ClCompile Include="Source\AstarFinder.cpp" />
+    <ClCompile Include="Source\MidtermGems\HunterThreaded.cpp" />
+    <ClCompile Include="Source\MidtermGems\HunterManager.cpp" />
+    <ClCompile Include="Source\PathFinding\AstarFinder.cpp" />
     <ClCompile Include="Source\EntitySetup.cpp" />
-    <ClCompile Include="Source\Graph.cpp" />
-    <ClCompile Include="Source\GraphNode.cpp" />
-    <ClCompile Include="Source\PathFinder.cpp" />
-    <ClCompile Include="Source\DungeonManager.cpp" />
+    <ClCompile Include="Source\PathFinding\Graph.cpp" />
+    <ClCompile Include="Source\PathFinding\GraphNode.cpp" />
+    <ClCompile Include="Source\PathFinding\PathFinder.cpp" />
+    <ClCompile Include="Source\MidtermGems\DungeonManager.cpp" />
     <ClCompile Include="Source\AIStuff\AIManager.cpp" />
     <ClCompile Include="Source\AIStuff\AIBaseAgent.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
-    <ClCompile Include="Source\TreasureHunter.cpp" />
-    <ClCompile Include="Source\Treasure.cpp" />
+    <ClCompile Include="Source\MidtermGems\TreasureHunter.cpp" />
+    <ClCompile Include="Source\MidtermGems\Treasure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaltnPepperEngine\SaltnPepperEngine.vcxproj">
@@ -161,19 +161,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\HunterThreaded.h" />
-    <ClInclude Include="Source\HunterManager.h" />
-    <ClInclude Include="Source\AstarFinder.h" />
-    <ClInclude Include="Source\Graph.h" />
-    <ClInclude Include="Source\GraphNode.h" />
-    <ClInclude Include="Source\PathFinder.h" />
-    <ClInclude Include="Source\DungeonManager.h" />
+    <ClInclude Include="Source\MidtermGems\HunterThreaded.h" />
+    <ClInclude Include="Source\MidtermGems\HunterManager.h" />
+    <ClInclude Include="Source\PathFinding\AstarFinder.h" />
+    <ClInclude Include="Source\PathFinding\Graph.h" />
+    <ClInclude Include="Source\PathFinding\GraphNode.h" />
+    <ClInclude Include="Source\PathFinding\PathFinder.h" />
+    <ClInclude Include="Source\MidtermGems\DungeonManager.h" />
     <ClInclude Include="Source\AIStuff\AIManager.h" />
     <ClInclude Include="Source\AIStuff\AIBaseAgent.h" />
     <ClInclude Include="Source\EntitySetup.h" />
-    <ClInclude Include="Source\TileDefinitions.h" />
-    <ClInclude Include="Source\TreasureHunter.h" />
-    <ClInclude Include="Source\Treasure.h" />
+    <ClInclude Include="Source\MidtermGems\TreasureHunter.h" />
+    <ClInclude Include="Source\MidtermGems\Treasure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,7 +20,7 @@ namespace SaltnPepperEngine
                 //float delta = Time::DeltaTime();
 
                 double currentTime = glfwGetTime();
-                double deltaTime = currentTime - lastFrameTime;
+                float deltaTime = (float)(currentTime - lastFrameTime);
                 lastFrameTime = currentTime;
               
                 totalElapsedFrameTime += deltaTime;

@@ -1,10 +1,10 @@
 #ifndef TREASUREHUNTER_H
 #define TREASUREHUNTER_H
-#include "AstarFinder.h"
+#include "PathFinding/AstarFinder.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "DungeonManager.h"
 #include "Engine/Core/Components/Transform.h"
-#include "Graph.h"
+#include "PathFinding/Graph.h"
 
 
 
@@ -46,6 +46,8 @@ namespace SaltnPepperEngine
 		bool GetFinal() const { return Final; }
 		void SetHunterIndex(const int index) { hunterIndex = index; }
 		int GetHunterIndex() const { return hunterIndex; }
+
+		HunterState GetState() const { return currentState; }
 	private:
 
 		int GetIndex(int x, int y);

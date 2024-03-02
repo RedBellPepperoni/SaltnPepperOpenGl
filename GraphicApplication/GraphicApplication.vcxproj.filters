@@ -24,34 +24,34 @@
     <ClCompile Include="Source\AIStuff\AIManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DungeonManager.cpp">
+    <ClCompile Include="Source\MidtermGems\DungeonManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PathFinder.cpp">
+    <ClCompile Include="Source\PathFinding\PathFinder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graph.cpp">
+    <ClCompile Include="Source\PathFinding\Graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GraphNode.cpp">
+    <ClCompile Include="Source\PathFinding\GraphNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\EntitySetup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\AstarFinder.cpp">
+    <ClCompile Include="Source\PathFinding\AstarFinder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TreasureHunter.cpp">
+    <ClCompile Include="Source\MidtermGems\TreasureHunter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Treasure.cpp">
+    <ClCompile Include="Source\MidtermGems\Treasure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\HunterManager.cpp">
+    <ClCompile Include="Source\MidtermGems\HunterManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\HunterThreaded.cpp">
+    <ClCompile Include="Source\MidtermGems\HunterThreaded.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,34 +65,31 @@
     <ClInclude Include="Source\AIStuff\AIManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DungeonManager.h">
+    <ClInclude Include="Source\MidtermGems\DungeonManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\TileDefinitions.h">
+    <ClInclude Include="Source\PathFinding\PathFinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\PathFinder.h">
+    <ClInclude Include="Source\PathFinding\Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graph.h">
+    <ClInclude Include="Source\PathFinding\GraphNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GraphNode.h">
+    <ClInclude Include="Source\PathFinding\AstarFinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\AstarFinder.h">
+    <ClInclude Include="Source\MidtermGems\TreasureHunter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\TreasureHunter.h">
+    <ClInclude Include="Source\MidtermGems\Treasure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Treasure.h">
+    <ClInclude Include="Source\MidtermGems\HunterManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\HunterManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\HunterThreaded.h">
+    <ClInclude Include="Source\MidtermGems\HunterThreaded.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

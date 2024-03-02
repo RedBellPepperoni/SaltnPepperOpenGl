@@ -40,7 +40,7 @@ namespace SaltnPepperEngine
 			hunter->SetGraph(dungeonGraph,manager);
 			hunter->SetTransform(T);
 			hunter->SetSpawn(1, 1);
-			hunter->SetTimeToMove(Random32::Range.GetRandom(1.0f, 0.8f));
+			hunter->SetTimeToMove(Random32::Range.GetRandom(0.1f, 0.4f));
 			hunter->SetHunterIndex(i);
 			hunters.push_back(hunter);
 
@@ -92,6 +92,45 @@ namespace SaltnPepperEngine
 			availableTreasures.push_back(treasturetransform);
 		}
 	}
+	void HunterManager::CreateTestTreasures()
+	{
+		//Treasure 1
+		Vector3 position = Vector3(2.0f, 0.0f, 9.0f);
+		Transform* treasturetransform = CreateTreasure(position);
+		availableTreasures.push_back(treasturetransform);
+
+		//Treasure 2
+		position = Vector3(1.0f, 0.0f, 12.0f);
+		treasturetransform = CreateTreasure(position);
+		availableTreasures.push_back(treasturetransform);
+
+		//Treasure 3
+		position = Vector3(2.0f, 0.0f, 17.0f);
+		treasturetransform = CreateTreasure(position);
+		availableTreasures.push_back(treasturetransform);
+
+		//Treasure 4
+		position = Vector3(7.0f, 0.0f, 25.0f);
+		treasturetransform = CreateTreasure(position);
+		availableTreasures.push_back(treasturetransform);
+
+		//Treasure 5
+		position = Vector3(25.0f, 0.0f, 23.0f);
+		treasturetransform = CreateTreasure(position);
+		availableTreasures.push_back(treasturetransform);
+
+		//Treasure 6
+		position = Vector3(4.0f, 0.0f, 49.0f);
+		treasturetransform = CreateTreasure(position);
+		availableTreasures.push_back(treasturetransform);
+
+		//Treasure 7
+		position = Vector3(6.0f, 0.0f, 39.0f);
+		treasturetransform = CreateTreasure(position);
+		availableTreasures.push_back(treasturetransform);
+
+
+	}
 	Vector3 HunterManager::GetPositionfromIndex(int index)
 	{
 		int y = index / 115;
@@ -103,7 +142,7 @@ namespace SaltnPepperEngine
 
 	int HunterManager::GetRandomFloorIndex()
 	{
-		int index = Random32::Range.GetRandom(0, dungeonGraph->GetNodes().size() - 1);
+		int index = Random32::Range.GetRandom(0, (int32_t)dungeonGraph->GetNodes().size() - 1);
 
 		if (dungeonGraph->GetNodes()[index]->IsBlocked() == false)
 		{
@@ -132,7 +171,7 @@ namespace SaltnPepperEngine
 			return Vector2Int(1, 1);
 		}
 
-		int randomIndex = Random32::Range.GetRandom(0, availableTreasures.size() - 1);
+		int randomIndex = Random32::Range.GetRandom(0, (int32_t)availableTreasures.size() - 1);
 		Vector3 pos = availableTreasures[randomIndex]->GetPosition();
 		Vector2Int out = Vector2Int(pos.x, pos.z);
 
@@ -183,6 +222,17 @@ namespace SaltnPepperEngine
 
 	void HunterManager::Update(const float deltaTime)
 	{
+		if (availableTreasures.empty() && !finalcall)
+		{
+			finalcall = true;
+			for (SharedPtr<TreasureHunter>& hun : hunters)
+			{
+				hun->SetNewTarget(1, 1);
+			}
+
+		}
+
+
 		for (SharedPtr<TreasureHunter>& hun : hunters)
 		{
 			/*hun->Update(deltaTime);*/
@@ -193,8 +243,8 @@ namespace SaltnPepperEngine
 			{
 
 				Vector2 pos = hun->GetPosition();
-				hun->SetNewTarget(1,1);
-				if (abs(pos.x - 0) < 0.03f && abs(pos.y - 0) < 0.03f)
+
+				if (abs(pos.x - 2) < 0.03f && abs(pos.y - 1) < 0.03f)
 				{
 					hun->SetFinal();
 					int hunterIndex = hun->GetHunterIndex();
@@ -204,6 +254,13 @@ namespace SaltnPepperEngine
 				}
 			}
 			
+
+			if (hun->GetState() == HunterState::IDLE)
+			{
+				Vector2Int pos = GetRandomAvailableTreasure();
+				hun->SetNewTarget(pos.x, pos.y);
+				break;
+			}
 
 			for (int i = 0; i < availableTreasures.size(); i++)
 			{
@@ -231,6 +288,8 @@ namespace SaltnPepperEngine
 					
 					break;
 				}
+
+				
 			}
 
 

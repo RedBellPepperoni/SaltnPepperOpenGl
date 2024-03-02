@@ -2,10 +2,10 @@
 #define HUNTERMANAGER_H
 #include "SaltnPepperEngine.h"
 #include "DungeonManager.h"
-#include "PathFinder.h"
-#include "AstarFinder.h"
-#include "Graph.h"
-#include "GraphNode.h"
+#include "PathFinding/PathFinder.h"
+#include "PathFinding/AstarFinder.h"
+#include "PathFinding/Graph.h"
+#include "PathFinding/GraphNode.h"
 #include "TreasureHunter.h"
 #include "HunterThreaded.h"
 
@@ -20,6 +20,7 @@ namespace SaltnPepperEngine
         void CreateHunters(int count);
         void LaunchHunters();
         void CreateTreasures(int count);
+        void CreateTestTreasures();
 
         Vector3 GetPositionfromIndex(int index);   
 
@@ -45,6 +46,7 @@ namespace SaltnPepperEngine
     private:
 
         int pathCounter = 0;
+        bool finalcall = false;
         // std::deque<GraphNode*>::iterator pathCounter;
         std::vector<Vector2> nodes;
         SharedPtr<DungeonManager> manager;

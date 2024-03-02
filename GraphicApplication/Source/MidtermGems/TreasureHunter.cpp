@@ -1,5 +1,5 @@
 #include "TreasureHunter.h"
-#include "GraphNode.h"
+#include "PathFinding/GraphNode.h"
 
 namespace SaltnPepperEngine
 {
@@ -47,8 +47,8 @@ namespace SaltnPepperEngine
 	{
 		currentPath.clear();
 
-		int spawnX = GetPosition().x;
-		int spawnY = GetPosition().y;
+		int spawnX = (int)GetPosition().x;
+		int spawnY = (int)GetPosition().y;
 
 		currentPathNode = 0;
 
@@ -68,6 +68,7 @@ namespace SaltnPepperEngine
 		if (path.empty())
 		{
 			// Shouldnt really happen but still an edge catch
+			LOG_ERROR("NO PATH");
 			return;
 		}
 
@@ -104,8 +105,10 @@ namespace SaltnPepperEngine
 		case SaltnPepperEngine::HunterState::MOVING:
 
 			// Found a treasure , take a break
-			if (currentPathNode >= currentPath.size()) { currentState = HunterState::IDLE; 
-			return;
+			if (currentPathNode >= currentPath.size()) 
+			{
+				currentState = HunterState::IDLE; 
+				return;
 			}
 
 			Vector3 nextPosition = currentPath[currentPathNode];
