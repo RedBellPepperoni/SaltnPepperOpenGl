@@ -20,7 +20,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		SoftBody::SoftBody(SharedPtr<TetMesh>& tetmesh, SharedPtr<VisualMesh>& visualMesh,const float& EdgeCompliance, const float& VolumeCompliance)
+		SoftBody::SoftBody(SharedPtr<TetMesh>& tetmesh ,const float& EdgeCompliance, const float& VolumeCompliance)
 		{
 			numParticles = tetmesh->Vertices.size() / 3;
 			numTets = tetmesh->TetIds.size() / 4;
@@ -128,6 +128,7 @@ namespace SaltnPepperEngine
 
 		}
 
+		
 		void SoftBody::ComputeSkinningInfo(std::vector<Vector3>& visualVertices)
 		{
 		}
@@ -149,6 +150,8 @@ namespace SaltnPepperEngine
 
 		void SoftBody::PreSolve(const float& deltaTime, const Vector3& gravity)
 		{
+			//if (isPaused) { return; }
+
 			for (int index = 0; index < numParticles; index++)
 			{
 				// Ignore particles with Infinite mass
@@ -175,12 +178,16 @@ namespace SaltnPepperEngine
 
 		void SoftBody::Solve(const float& deltaTime)
 		{
+			//if (isPaused) { return; }
+
 			SolveEdges(deltaTime);
 			SolveVolumes(deltaTime);
 		}
 
 		void SoftBody::PostSolve(const float& deltaTime)
 		{
+			//if (isPaused) { return; }
+
 			for (int index = 0; index < numParticles; index++)
 			{
 				if (inverseMassList[index] == 0.0f) { continue; }
@@ -189,7 +196,7 @@ namespace SaltnPepperEngine
 				
 			}
 
-			UpdateMesh();
+			//UpdateMesh();
 		}
 
 		void SoftBody::SolveEdges(const float& deltaTime)
@@ -418,5 +425,176 @@ namespace SaltnPepperEngine
 			}
 
 		}
+
+
+
+		ThreadedSolver::ThreadedSolver(const int maxThreadcount)
+		{
+
+		}
+
+		ThreadedSolver::~ThreadedSolver()
+		{
+
+		}
+
+		void ThreadedSolver::OnInit()
+		{
+			ComponentView softBodyView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SoftBodyComponent>();
+
+			for (Entity softComp : softBodyView)
+			{
+				// Get the softbody handle from the compoenet
+				SharedPtr<SoftBody> bodyref = softComp.GetComponent<SoftBodyComponent>().softBodyhandle;
+				// Store the reference for faster access
+				softBodies.push_back(bodyref);
+			}
+		}
+
+		DWORD WINAPI UpdateThreadedSoftBody(LPVOID lpParameter)
+		{
+			SoftBodyThreadInfo* threadInfo = (SoftBodyThreadInfo*)lpParameter;
+
+
+
+			double lastFrameTime = glfwGetTime();
+			double counter = 0.0f;
+
+			while (threadInfo->isAlive)
+			{
+				if (threadInfo->run)
+				{
+					// Adjust sleep time based on actual framerate
+					//float delta = Time::DeltaTime();
+
+					double currentTime = glfwGetTime();
+					float deltaTime = (float)(currentTime - lastFrameTime);
+					lastFrameTime = currentTime;
+
+					counter += deltaTime;
+
+					if (counter > threadInfo->fixedDeltatime) 
+					{ 
+						counter = 0.0f;
+
+						float substepDelta = threadInfo->fixedDeltatime / threadInfo->numberofSubsetps;
+
+						for (int i = 0; i < 12; i++)
+						{
+							for (SharedPtr<SoftBody>& body : threadInfo->softBodyHandles)
+							{
+								body->PreSolve(substepDelta);
+								body->Solve(substepDelta);
+								body->PostSolve(substepDelta);
+							}
+							
+						}
+
+						
+					}
+
+					
+					//Sleep(threadInfo->sleepTime);
+					Sleep(0);
+					
+
+				}
+			}
+
+			return 0;
+		}
+
+
+		// call this function only Once
+		void ThreadedSolver::SetupSoftBodyThreads()
+		{
+			int softBodyCount = (int)softBodies.size();
+
+			//int bodyPerThread = softBodyCount / maximumThreadCount;
+			
+			if (softBodyCount > maximumThreadCount * bodyPerThread)
+			{
+				int difference = (maximumThreadCount * bodyPerThread) - softBodyCount;
+
+				LOG_CRITICAL("Large Number of SoftBodies : deleting {0} out of {1}", difference, softBodyCount);
+
+
+				softBodies.resize(maximumThreadCount * bodyPerThread);
+			}
+			
+
+			
+
+			int newbodyCount = (int)(softBodies).size();
+
+			int threadstouse = newbodyCount % bodyPerThread == 0 ? newbodyCount / bodyPerThread : newbodyCount / bodyPerThread +1;
+			int bodyCounter = 0;
+
+			for(int i = 0; i < threadstouse; i++)
+			{
+				// Create a new thread Info
+				SharedPtr<SoftBodyThreadInfo> info = MakeShared<SoftBodyThreadInfo>();
+
+				info->fixedDeltatime = 1.0f / 60.0f;
+				info->gravity = Vector3(0.0f, -9.81f, 0.0f);
+				info->sleepTime = 1;
+				info->softBodyHandles;
+				info->run = true;
+				info->isAlive = true;
+
+				for (int j = 0; j < bodyPerThread; j++)
+				{
+					if (bodyCounter < newbodyCount)
+					{
+						SharedPtr<SoftBody> body = softBodies[bodyCounter];
+						info->softBodyHandles.push_back(body);
+						bodyCounter++;
+					}
+				}
+			
+
+				
+				SoftBodyThreadInfo* tsInfo = info.get();
+
+				DWORD ThreadId = 0;
+				HANDLE threadHandle = 0;
+				threadHandle = CreateThread(
+					NULL,					// lpThreadAttributes,
+					0,						// dwStackSize,
+					UpdateThreadedSoftBody,		// lpStartAddress,
+					(void*)tsInfo,				//  lpParameter,
+					0,						// dwCreationFlags (0 or CREATE_SUSPENDED)
+					&ThreadId); // lpThreadId
+
+
+				ThreadId++;
+
+				threadInfoList.push_back(info);
+			}
+
+			
+		}
+
+		void ThreadedSolver::OnUpdate(const float deltaTime)
+		{
+			timestepCounter += deltaTime;
+			if (timestepCounter < fixedDeltaTime) { return; }
+
+			timestepCounter = 0.0f;
+			for (SharedPtr<SoftBody>& body : softBodies)
+			{
+				body->UpdateMesh();
+			}
+		}
+
+		void ThreadedSolver::SetPaused(bool paused)
+		{
+			for (SharedPtr<SoftBody>& body : softBodies)
+			{
+				body->SetPaused(paused);
+			}
+		}
+
+		
 	}
 }

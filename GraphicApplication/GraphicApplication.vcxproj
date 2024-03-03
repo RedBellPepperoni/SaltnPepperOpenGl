@@ -141,9 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\AIStuff\AIManager.cpp" />
     <ClCompile Include="Source\PlayerCharacter.cpp" />
-    <ClCompile Include="Source\AIStuff\AIBaseAgent.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
     <ClCompile Include="Source\ThirdPersonCameraController.cpp" />
   </ItemGroup>
@@ -153,9 +151,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\AIStuff\AIManager.h" />
     <ClInclude Include="Source\PlayerCharacter.h" />
-    <ClInclude Include="Source\AIStuff\AIBaseAgent.h" />
     <ClInclude Include="Source\EntitySetup.h" />
     <ClInclude Include="Source\ThirdPersonCameraController.h" />
   </ItemGroup>

@@ -1,8 +1,6 @@
 #include "SaltnPepperEngine.h"
 #include "EntitySetup.h"
-#include "AIStuff/AIManager.h"
 #include "Engine/Core/Physics/SoftBody/Cloth.h"
-#include "Engine/Core/Threading/MultiThreader.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
 struct Ball
@@ -51,11 +49,7 @@ class GraphicRuntime : public Application
 
     void OnInit()
     {
-        //Define all the scenes
-        //m_sceneManager->EnqueSceneFromFile("//Engine//Scene//TestScene.json");
-        //m_sceneManager->EnqueSceneFromFile("//Engine//Scene//LightScene.json");
-        //m_sceneManager->NextScene();
-        //m_sceneManager->SwitchScene("TestScene");
+     
 
 
        
@@ -64,26 +58,34 @@ class GraphicRuntime : public Application
 
         StartPhysics(true);
 
-        MultiThreader::Init();
-
+       
 		LoadSoftBunny();
 
 
-		CreateBunnyEntity(Vector3(10.0f,10.0f,0.0f));
-		CreateBunnyEntity(Vector3(5.0f,10.0f,0.0f));
-		CreateBunnyEntity(Vector3(0.0f,10.0f,10.0f));
-		/*CreateBunnyEntity(Vector3(7.0f,10.0f,0.0f));
-		CreateBunnyEntity(Vector3(6.0f,10.0f,0.0f));
-		CreateBunnyEntity(Vector3(5.0f,10.0f,0.0f));*/
+		int XGrid = 9;
+		int yGrid = 8;
 
-        Camera* camera = CreateSecurityCamera(Vector3(0.0f, 10.0f, 0.0f));
-        SharedPtr<Material> mat = CreateMonitor(Vector3(0.0f, 20.0f, 0.0f));
-        mat->textureMaps.albedoMap = (camera->GetRenderTexture());
-       
+		for (int x = 0; x < XGrid; x++)
+		{
+			for (int y = 0; y < yGrid; y++)
+			{
+				float randomY = Random32::Range.GetRandom(9.0f, 13.0f);
+				CreateBunnyEntity(Vector3(x * 2.0f, randomY ,y* 2.0f));
 
+			}
+		}
+
+
+
+		//CreateBunnyEntity(Vector3(5.0f,10.0f,0.0f));
+		//CreateBunnyEntity(Vector3(0.0f,10.0f,10.0f));
+		//CreateBunnyEntity(Vector3(7.0f,10.0f,0.0f));
+		//CreateBunnyEntity(Vector3(8.0f,10.0f,5.0f));
+		//CreateBunnyEntity(Vector3(5.0f,10.0f,5.0f));
+
+		
 
         Entity mainCamera = CreateMainCamera();
-
         Camera* cam = &mainCamera.GetComponent<Camera>();
 
        
@@ -93,17 +95,17 @@ class GraphicRuntime : public Application
         CreateBaseFloor();
 
 
-        aiManager = MakeShared<AI::AIManager>();
-		softbodySolver = MakeShared<Solver>();
+		
 
         CreatePlayerCharacter(mainCamera);
-      /*  CreateEnemyAI(AI::BehaviorState::Seek,EnemyModel::GOBLIN,Vector3(10.0f,0.0f,10.0f));
-        CreateEnemyAI(AI::BehaviorState::Approach,EnemyModel::CAT,Vector3(-10.0f,0.0f,-10.0f));
-        CreateEnemyAI(AI::BehaviorState::Pursue,EnemyModel::SPIDER,Vector3(20.0f,0.0f,10.0f));
-        CreateEnemyAI(AI::BehaviorState::Evade,EnemyModel::DEER,Vector3(10.0f,0.0f,20.0f));
-        CreateEnemyAI(AI::BehaviorState::Flee,EnemyModel::SHEEP,Vector3(20.0f,0.0f,20.0f));*/
-
         CreateCloth(Vector3(0.0f,0.0f,0.0f));
+
+
+		softbodySolver = MakeShared<ThreadedSolver>();
+		//softbodySolver = MakeShared<Solver>();
+
+		softbodySolver->OnInit();
+		softbodySolver->SetupSoftBodyThreads();
 	}
 
 
@@ -123,8 +125,7 @@ class GraphicRuntime : public Application
 
         Transform* lookTransform = &PlayerLookView[0].GetComponent<Transform>();
 
-        aiManager->Update(deltaTime, playerTransform, lookTransform);
-
+      
         ComponentView ballView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Ball>();
         ComponentView clothView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ClothComponent>();
 
@@ -759,8 +760,9 @@ class GraphicRuntime : public Application
 
 private:
 
-    SharedPtr<AI::AIManager> aiManager = nullptr;
-	SharedPtr<Solver> softbodySolver = nullptr;
+   
+	//SharedPtr<Solver> softbodySolver = nullptr;
+	SharedPtr<ThreadedSolver> softbodySolver = nullptr;
 
 };
 
