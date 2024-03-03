@@ -62,8 +62,8 @@ class GraphicRuntime : public Application
 		LoadSoftBunny();
 
 
-		int XGrid = 9;
-		int yGrid = 8;
+		int XGrid = 12;
+		int yGrid = 12;
 
 		for (int x = 0; x < XGrid; x++)
 		{
@@ -85,20 +85,20 @@ class GraphicRuntime : public Application
 
 		
 
-        Entity mainCamera = CreateMainCamera();
+        Entity mainCamera = CreateMainCamera(Vector3(-7.60f,13.02f,26.80f), Vector3(-31.05f,-51.40f,0.0f));
         Camera* cam = &mainCamera.GetComponent<Camera>();
 
        
 
         CreateDirectionalLight();
-        CreateParentedEntity();
+       // CreateParentedEntity();
         CreateBaseFloor();
 
 
 		
 
-        CreatePlayerCharacter(mainCamera);
-        CreateCloth(Vector3(0.0f,0.0f,0.0f));
+       // CreatePlayerCharacter(mainCamera);
+        CreateCloth(Vector3(15.0f,10.0f,0.0f));
 
 
 		softbodySolver = MakeShared<ThreadedSolver>();
@@ -114,18 +114,9 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
-        ComponentView PlayerView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerCharacter>();
-
-        Entity player = PlayerView[0];
-        Transform* playerTransform = &player.GetComponent<Transform>();
-        PlayerCharacter& playerCharacter = player.GetComponent<PlayerCharacter>();
-        playerCharacter.Update(deltaTime);
-
-        ComponentView PlayerLookView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerLook>();
-
-        Transform* lookTransform = &PlayerLookView[0].GetComponent<Transform>();
-
       
+     
+       
         ComponentView ballView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Ball>();
         ComponentView clothView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ClothComponent>();
 
@@ -149,16 +140,7 @@ class GraphicRuntime : public Application
             return;
         }
 
-        ComponentView TPSCameraView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ThirdPersonCameraController>();
-
-        Entity controller = TPSCameraView[0];
-        Transform& transform = controller.GetComponent<Transform>();
-        ThirdPersonCameraController& TPScontroller = controller.GetComponent<ThirdPersonCameraController>();
-
-        Vector2 mousePosition = Input::InputSystem::GetInstance().GetMousePosition();
-
-        TPScontroller.MouseInput(transform,mousePosition,deltaTime);
-        playerCharacter.ProcessKeyboardInput(transform,deltaTime);
+       
 
 
 	}

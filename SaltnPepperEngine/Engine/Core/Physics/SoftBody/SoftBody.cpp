@@ -150,7 +150,7 @@ namespace SaltnPepperEngine
 
 		void SoftBody::PreSolve(const float& deltaTime, const Vector3& gravity)
 		{
-			//if (isPaused) { return; }
+			if (isPaused) { return; }
 
 			for (int index = 0; index < numParticles; index++)
 			{
@@ -178,7 +178,7 @@ namespace SaltnPepperEngine
 
 		void SoftBody::Solve(const float& deltaTime)
 		{
-			//if (isPaused) { return; }
+			if (isPaused) { return; }
 
 			SolveEdges(deltaTime);
 			SolveVolumes(deltaTime);
@@ -186,7 +186,7 @@ namespace SaltnPepperEngine
 
 		void SoftBody::PostSolve(const float& deltaTime)
 		{
-			//if (isPaused) { return; }
+			if (isPaused) { return; }
 
 			for (int index = 0; index < numParticles; index++)
 			{
@@ -448,7 +448,10 @@ namespace SaltnPepperEngine
 				SharedPtr<SoftBody> bodyref = softComp.GetComponent<SoftBodyComponent>().softBodyhandle;
 				// Store the reference for faster access
 				softBodies.push_back(bodyref);
+
+				bodyref->SetPaused(isPaused);
 			}
+
 		}
 
 		DWORD WINAPI UpdateThreadedSoftBody(LPVOID lpParameter)

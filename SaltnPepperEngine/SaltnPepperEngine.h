@@ -29,6 +29,8 @@
 
 // ============= RENDERING ESSENTAILS ================
 #include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+#include "Engine/Core/Rendering/Camera/CameraController.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Image.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"

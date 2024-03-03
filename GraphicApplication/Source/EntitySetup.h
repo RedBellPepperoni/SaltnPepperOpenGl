@@ -58,7 +58,8 @@ Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vec
 	// Cache the transform Reference
 	Transform& transform = cameraEntity.GetComponent<Transform>();
 
-	ThirdPersonCameraController& controller = cameraEntity.AddComponent<ThirdPersonCameraController>();
+	//ThirdPersonCameraController& controller = cameraEntity.AddComponent<ThirdPersonCameraController>();
+	FlyCameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
 
 	controller.SetCamera(&camera);
 

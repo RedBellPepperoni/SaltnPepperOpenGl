@@ -224,7 +224,7 @@ namespace SaltnPepperEngine
 			bool isPaused = true;
 			float timestepCounter = 0.0f;
 
-			int bodyPerThread = 5;
+			int bodyPerThread = 10;
 
 			std::vector<SharedPtr<SoftBody>> softBodies;
 			std::vector<SharedPtr<SoftBodyThreadInfo>> threadInfoList;
