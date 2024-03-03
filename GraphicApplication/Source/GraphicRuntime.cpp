@@ -65,6 +65,7 @@ class GraphicRuntime : public Application
 		int XGrid = 12;
 		int yGrid = 12;
 
+
 		for (int x = 0; x < XGrid; x++)
 		{
 			for (int y = 0; y < yGrid; y++)

@@ -1,0 +1,148 @@
+{
+    "value0": {},
+    "value1": 5,
+    "value2": 3,
+    "value3": 1048576,
+    "value4": 1048577,
+    "value5": 3,
+    "value6": 1048578,
+    "value7": 1048580,
+    "value8": 3,
+    "value9": 1048576,
+    "value10": {
+        "Position": {
+            "value0": -0.16537511348724366,
+            "value1": 0.0,
+            "value2": 2.467482566833496
+        },
+        "Rotation": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 1.0
+        },
+        "Scale": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0
+        }
+    },
+    "value11": 3,
+    "value12": {
+        "Position": {
+            "value0": -5.050986295884741e-10,
+            "value1": 0.0,
+            "value2": -0.13558638095855714
+        },
+        "Rotation": {
+            "value0": 0.0,
+            "value1": 1.862645149230957e-9,
+            "value2": 0.0,
+            "value3": 1.0
+        },
+        "Scale": {
+            "value0": 1.0,
+            "value1": 1.0000053644180298,
+            "value2": 1.0
+        }
+    },
+    "value13": 1048577,
+    "value14": {
+        "Position": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "Rotation": {
+            "value0": -0.17631569504737855,
+            "value1": 0.3475351333618164,
+            "value2": 0.06671107560396195,
+            "value3": 0.918521523475647
+        },
+        "Scale": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 0.9999998807907105
+        }
+    },
+    "value15": 3,
+    "value16": 1048576,
+    "value17": {
+        "value0": 12027419739054640569
+    },
+    "value18": 1048577,
+    "value19": {
+        "value0": 17469970600051877933
+    },
+    "value20": 3,
+    "value21": {
+        "value0": 12997631924487157076
+    },
+    "value22": 3,
+    "value23": 1048576,
+    "value24": {
+        "Name": "Camera"
+    },
+    "value25": 1048577,
+    "value26": {
+        "Name": "Light"
+    },
+    "value27": 3,
+    "value28": {
+        "Name": "SphereTest"
+    },
+    "value29": 3,
+    "value30": 1048576,
+    "value31": {
+        "Active": true
+    },
+    "value32": 1048577,
+    "value33": {
+        "Active": true
+    },
+    "value34": 3,
+    "value35": {
+        "Active": true
+    },
+    "value36": 0,
+    "value37": 1,
+    "value38": 1048576,
+    "value39": {
+        "OrthoScale": 1.0,
+        "Aspect": 1.7777777910232545,
+        "FOV": 60.0,
+        "Near": 0.009999999776482582,
+        "Far": 1000.0
+    },
+    "value40": 1,
+    "value41": 1048577,
+    "value42": {
+        "value0": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "value1": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0
+        },
+        "value2": 0,
+        "value3": 0.0,
+        "value4": 0.0,
+        "value5": {
+            "value0": -0.6149125695228577,
+            "value1": -0.37026840448379519,
+            "value2": -0.6962642073631287
+        },
+        "value6": 1.0,
+        "value7": 10.0
+    },
+    "value43": 0,
+    "value44": 1,
+    "value45": 3,
+    "value46": {
+        "PrimitiveType": 3,
+        "FilePath": "Primitive"
+    }
+}

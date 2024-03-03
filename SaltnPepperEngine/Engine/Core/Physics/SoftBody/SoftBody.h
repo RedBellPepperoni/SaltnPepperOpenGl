@@ -160,6 +160,8 @@ namespace SaltnPepperEngine
 		public:
 			Solver();
 			~Solver();
+			void OnInit();
+
 			void SetPaused(bool paused) { isPaused = paused; };
 			const bool GetPaused() const { return isPaused; }
 			void OnUpdate(const float& deltaTime);
@@ -167,6 +169,8 @@ namespace SaltnPepperEngine
 		private:
 
 			Vector3 gravity = Vector3(0.0f, -10.0f, 0.0f);
+			std::vector<SharedPtr<SoftBody>> softBodyList;
+
 			float fixedDeltaTime = 1.0f / 60.0f;
 			int numSubsteps = 10;
 			bool isPaused = true;

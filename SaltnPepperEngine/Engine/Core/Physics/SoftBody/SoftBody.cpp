@@ -280,6 +280,19 @@ namespace SaltnPepperEngine
 		{
 		}
 
+		void Solver::OnInit()
+		{
+			ComponentView softBodyView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SoftBodyComponent>();
+
+		
+			for (Entity softEntity : softBodyView)
+			{
+				SharedPtr<SoftBody>& softBody = softEntity.GetComponent<SoftBodyComponent>().softBodyhandle;
+				softBodyList.push_back(softBody);
+			}
+
+		}
+
 		void Solver::OnUpdate(const float& deltaTime)
 		{
 			if (isPaused) { return; }
@@ -293,27 +306,21 @@ namespace SaltnPepperEngine
 
 			timestepCounter = 0.0f;
 
-			ComponentView softBodyView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SoftBodyComponent>();
-
-			std::vector<SharedPtr<SoftBody>> softbodyList;
+			
 
 			float subDeltatime = fixedDeltaTime / numSubsteps;
 
-			for (Entity softEntity : softBodyView)
-			{
-				SharedPtr<SoftBody>& softBody = softEntity.GetComponent<SoftBodyComponent>().softBodyhandle;
-				softbodyList.push_back(softBody);
-			}
-
+			
 
 			for (int step = 0; step < numSubsteps; step++)
 			{
 				
-				for (SharedPtr<SoftBody>& body : softbodyList)
+				for (SharedPtr<SoftBody>& body : softBodyList)
 				{
 					body->PreSolve(subDeltatime);
 					body->Solve(subDeltatime);
 					body->PostSolve(subDeltatime);
+					body->UpdateMesh();
 				}
 
 				/*for (SharedPtr<SoftBody>& body : softbodyList)

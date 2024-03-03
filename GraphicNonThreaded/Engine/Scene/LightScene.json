@@ -1,0 +1,196 @@
+{
+    "value0": {},
+    "value1": 4,
+    "value2": 4,
+    "value3": 1048576,
+    "value4": 1,
+    "value5": 1048578,
+    "value6": 3,
+    "value7": 4,
+    "value8": 1048576,
+    "value9": {
+        "Position": {
+            "value0": 2.049455404281616,
+            "value1": 0.0,
+            "value2": -1.5478124618530274
+        },
+        "Rotation": {
+            "value0": 0.0,
+            "value1": 0.8943461775779724,
+            "value2": 0.0,
+            "value3": 0.4473755657672882
+        },
+        "Scale": {
+            "value0": 0.9999980926513672,
+            "value1": 1.0,
+            "value2": 0.9999980926513672
+        }
+    },
+    "value10": 3,
+    "value11": {
+        "Position": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": -0.5386258959770203
+        },
+        "Rotation": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 1.0
+        },
+        "Scale": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0
+        }
+    },
+    "value12": 1048578,
+    "value13": {
+        "Position": {
+            "value0": 0.5515668392181397,
+            "value1": 0.0,
+            "value2": -0.05937480926513672
+        },
+        "Rotation": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 1.0
+        },
+        "Scale": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0
+        }
+    },
+    "value14": 1,
+    "value15": {
+        "Position": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.00019529461860656738
+        },
+        "Rotation": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0,
+            "value3": 1.0
+        },
+        "Scale": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 1.0
+        }
+    },
+    "value16": 4,
+    "value17": 1048576,
+    "value18": {
+        "value0": 14529074126551781062
+    },
+    "value19": 1,
+    "value20": {
+        "value0": 9350635693050999568
+    },
+    "value21": 1048578,
+    "value22": {
+        "value0": 2376029742769723818
+    },
+    "value23": 3,
+    "value24": {
+        "value0": 11154425372212142966
+    },
+    "value25": 3,
+    "value26": 1048576,
+    "value27": {
+        "Name": "Camera"
+    },
+    "value28": 1048578,
+    "value29": {
+        "Name": "Light"
+    },
+    "value30": 3,
+    "value31": {
+        "Name": "Light"
+    },
+    "value32": 4,
+    "value33": 1048576,
+    "value34": {
+        "Active": true
+    },
+    "value35": 1,
+    "value36": {
+        "Active": true
+    },
+    "value37": 1048578,
+    "value38": {
+        "Active": true
+    },
+    "value39": 3,
+    "value40": {
+        "Active": true
+    },
+    "value41": 0,
+    "value42": 1,
+    "value43": 1048576,
+    "value44": {
+        "OrthoScale": 1.0,
+        "Aspect": 1.7777777910232545,
+        "FOV": 60.0,
+        "Near": 0.009999999776482582,
+        "Far": 1000.0
+    },
+    "value45": 2,
+    "value46": 1048578,
+    "value47": {
+        "value0": {
+            "value0": 0.5515668392181397,
+            "value1": 0.0,
+            "value2": -0.05937480926513672
+        },
+        "value1": {
+            "value0": 0.006329059600830078,
+            "value1": 1.0,
+            "value2": 0.0
+        },
+        "value2": 2,
+        "value3": 0.0,
+        "value4": 0.0,
+        "value5": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "value6": 10.0,
+        "value7": 10.0
+    },
+    "value48": 3,
+    "value49": {
+        "value0": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": -0.5386258959770203
+        },
+        "value1": {
+            "value0": 1.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "value2": 2,
+        "value3": 0.0,
+        "value4": 0.0,
+        "value5": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "value6": 10.0,
+        "value7": 10.0
+    },
+    "value50": 1,
+    "value51": 1,
+    "value52": {
+        "PrimitiveType": 4,
+        "FilePath": "Primitive"
+    }
+}
