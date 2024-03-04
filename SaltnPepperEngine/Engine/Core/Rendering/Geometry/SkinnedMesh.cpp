@@ -62,8 +62,21 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		void SkinnedMesh::GetBoneTransforms(float AnimationTimeSec, vector<Matrix4>& Transforms)
+		void SkinnedMesh::GetBoneTransforms(float TimeInSeconds, vector<Matrix4>& Transforms)
 		{
+			Matrix4 Identity = Matrix4();
+			
+			float TicksPerSecond = (float)(pScene->mAnimations[0]->mTicksPerSecond != 0 ? pScene->mAnimations[0]->mTicksPerSecond : 25.0f);
+			float TimeInTicks = TimeInSeconds * TicksPerSecond;
+			float AnimationTimeTicks = fmod(TimeInTicks, (float)pScene->mAnimations[0]->mDuration);
+
+			ReadNodeHierarchy(AnimationTimeTicks, pScene->mRootNode, Identity);
+			Transforms.resize(m_BoneInfo.size());
+
+			for (int i = 0; i < (int)m_BoneInfo.size(); i++)
+			{
+				Transforms[i] = m_BoneInfo[i].FinalTransformation;
+			}
 		}
 
 		void SkinnedMesh::Clear()
@@ -213,7 +226,7 @@ namespace SaltnPepperEngine
 
 		void SkinnedMesh::LoadMeshBones(int MeshIndex, const aiMesh* pMesh)
 		{
-			for (int i = 0; i < pMesh->mNumBones; i++) 
+			for (int i = 0; i < (int)pMesh->mNumBones; i++) 
 			{
 				LoadSingleBone(MeshIndex, pMesh->mBones[i]);
 
@@ -239,6 +252,199 @@ namespace SaltnPepperEngine
 				const aiVertexWeight& vw = pBone->mWeights[i];
 				int GlobalVertexID = m_Meshes[MeshIndex].BaseVertex + pBone->mWeights[i].mVertexId;
 				m_Bones[GlobalVertexID].AddBoneData(BoneId, vw.mWeight);
+			}
+		}
+
+		int SkinnedMesh::GetBoneId(const aiBone* pBone)
+		{
+			int BoneIndex = 0;
+			string BoneName(pBone->mName.C_Str());
+
+			if (m_BoneNameToIndexMap.find(BoneName) == m_BoneNameToIndexMap.end()) {
+				// Allocate an index for a new bone
+				BoneIndex = (int)m_BoneNameToIndexMap.size();
+				m_BoneNameToIndexMap[BoneName] = BoneIndex;
+			}
+			else {
+				BoneIndex = m_BoneNameToIndexMap[BoneName];
+			}
+
+			return BoneIndex;
+		}
+
+		void SkinnedMesh::CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+		{
+			// we need at least two values to interpolate...
+			if (pNodeAnim->mNumScalingKeys == 1) {
+				Out = pNodeAnim->mScalingKeys[0].mValue;
+				return;
+			}
+
+			int ScalingIndex = FindScaling(AnimationTime, pNodeAnim);
+			int NextScalingIndex = ScalingIndex + 1;
+			assert(NextScalingIndex < (int)pNodeAnim->mNumScalingKeys);
+			float t1 = (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime;
+			float t2 = (float)pNodeAnim->mScalingKeys[NextScalingIndex].mTime;
+			float DeltaTime = t2 - t1;
+			float Factor = (AnimationTime - (float)t1) / DeltaTime;
+			assert(Factor >= 0.0f && Factor <= 1.0f);
+			const aiVector3D& Start = pNodeAnim->mScalingKeys[ScalingIndex].mValue;
+			const aiVector3D& End = pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
+			aiVector3D Delta = End - Start;
+			Out = Start + Factor * Delta;
+		}
+
+		void SkinnedMesh::CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+		{
+			// we need at least two values to interpolate...
+			if (pNodeAnim->mNumRotationKeys == 1) {
+				Out = pNodeAnim->mRotationKeys[0].mValue;
+				return;
+			}
+
+			int RotationIndex = FindRotation(AnimationTime, pNodeAnim);
+			int NextRotationIndex = RotationIndex + 1;
+			assert(NextRotationIndex < (int)pNodeAnim->mNumRotationKeys);
+			float t1 = (float)pNodeAnim->mRotationKeys[RotationIndex].mTime;
+			float t2 = (float)pNodeAnim->mRotationKeys[NextRotationIndex].mTime;
+			float DeltaTime = t2 - t1;
+			float Factor = (AnimationTime - t1) / DeltaTime;
+			assert(Factor >= 0.0f && Factor <= 1.0f);
+			const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
+			const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
+			aiQuaternion::Interpolate(Out, StartRotationQ, EndRotationQ, Factor);
+			Out.Normalize();
+		}
+
+		void SkinnedMesh::CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+		{
+			// we need at least two values to interpolate...
+			if (pNodeAnim->mNumPositionKeys == 1) {
+				Out = pNodeAnim->mPositionKeys[0].mValue;
+				return;
+			}
+
+			int PositionIndex = FindPosition(AnimationTime, pNodeAnim);
+			int NextPositionIndex = PositionIndex + 1;
+			assert(NextPositionIndex < (int)pNodeAnim->mNumPositionKeys);
+			float t1 = (float)pNodeAnim->mPositionKeys[PositionIndex].mTime;
+			float t2 = (float)pNodeAnim->mPositionKeys[NextPositionIndex].mTime;
+			float DeltaTime = t2 - t1;
+			float Factor = (AnimationTime - t1) / DeltaTime;
+			assert(Factor >= 0.0f && Factor <= 1.0f);
+			const aiVector3D& Start = pNodeAnim->mPositionKeys[PositionIndex].mValue;
+			const aiVector3D& End = pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
+			aiVector3D Delta = End - Start;
+			Out = Start + Factor * Delta;
+		}
+
+		int SkinnedMesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
+		{
+			assert(pNodeAnim->mNumScalingKeys > 0);
+
+			for (int i = 0; i < (int)pNodeAnim->mNumScalingKeys - 1; i++) 
+			{
+				float t = (float)pNodeAnim->mScalingKeys[i + 1].mTime;
+				if (AnimationTime < t)
+				{
+					return i;
+				}
+			}
+
+			return 0;
+		}
+
+		int SkinnedMesh::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
+		{
+			assert(pNodeAnim->mNumRotationKeys > 0);
+
+			for (int i = 0; i < (int)pNodeAnim->mNumRotationKeys - 1; i++) {
+				float t = (float)pNodeAnim->mRotationKeys[i + 1].mTime;
+
+				if (AnimationTime < t) 
+				{
+					return i;
+				}
+			}
+
+			return 0;
+		}
+
+		int SkinnedMesh::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
+		{
+			for (int i = 0; i < (int)pNodeAnim->mNumPositionKeys - 1; i++) 
+			{
+				float t = (float)pNodeAnim->mPositionKeys[i + 1].mTime;
+
+				if (AnimationTime < t) 
+				{
+					return i;
+				}
+			}
+
+			return 0;
+		}
+
+		const aiNodeAnim* SkinnedMesh::FindNodeAnim(const aiAnimation* pAnimation, const string& NodeName)
+		{
+			for (int i = 0; i < (int)pAnimation->mNumChannels; i++) {
+				const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
+
+				if (string(pNodeAnim->mNodeName.data) == NodeName) {
+					return pNodeAnim;
+				}
+			}
+
+			return NULL;
+		}
+
+		void SkinnedMesh::ReadNodeHierarchy(float AnimationTime, const aiNode* pNode, const Matrix4& ParentTransform)
+		{
+			string NodeName(pNode->mName.data);
+
+			const aiAnimation* pAnimation = pScene->mAnimations[0];
+
+			Matrix4 NodeTransformation;
+
+			AssimpToGLM(pNode->mTransformation, NodeTransformation);
+
+			const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, NodeName);
+
+			if (pNodeAnim) {
+				// Interpolate scaling and generate scaling transformation matrix
+				aiVector3D Scaling;
+				CalcInterpolatedScaling(Scaling, AnimationTime, pNodeAnim);
+				Matrix4 ScalingM = Matrix4(1.0f);
+				Scale(ScalingM, Vector3(Scaling.x, Scaling.y, Scaling.z));
+
+
+				// Interpolate rotation and generate rotation transformation matrix
+				aiQuaternion RotationQ;
+				CalcInterpolatedRotation(RotationQ, AnimationTime, pNodeAnim);
+
+				Quaternion quat = Quaternion(RotationQ.x, RotationQ.y, RotationQ.z, RotationQ.w);
+
+				Matrix4 RotationM = QuatToMatrix(quat);
+
+				// Interpolate translation and generate translation transformation matrix
+				aiVector3D Translation;
+				CalcInterpolatedPosition(Translation, AnimationTime, pNodeAnim);
+				Matrix4 TranslationM = Matrix4(1.0f);;
+				Translate(TranslationM, Vector3(Translation.x, Translation.y, Translation.z));
+
+				// Combine the above transformations
+				NodeTransformation = TranslationM * RotationM * ScalingM;
+			}
+
+			Matrix4 GlobalTransformation = ParentTransform * NodeTransformation;
+
+			if (m_BoneNameToIndexMap.find(NodeName) != m_BoneNameToIndexMap.end()) {
+				int BoneIndex = m_BoneNameToIndexMap[NodeName];
+				m_BoneInfo[BoneIndex].FinalTransformation = m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[BoneIndex].OffsetMatrix;
+			}
+
+			for (int i = 0; i < (int)pNode->mNumChildren; i++) {
+				ReadNodeHierarchy(AnimationTime, pNode->mChildren[i], GlobalTransformation);
 			}
 		}
 

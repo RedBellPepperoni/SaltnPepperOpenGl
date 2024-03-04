@@ -42,7 +42,7 @@ namespace SaltnPepperEngine
 				return m_Materials[0]; 
 			}
 
-			void GetBoneTransforms(float AnimationTimeSec, std::vector<Matrix4>& Transforms);
+			void GetBoneTransforms(float TimeInSeconds, std::vector<Matrix4>& Transforms);
 
 			
 
