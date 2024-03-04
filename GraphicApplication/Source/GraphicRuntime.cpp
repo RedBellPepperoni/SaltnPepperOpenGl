@@ -4,6 +4,7 @@
 #include "Engine/Core/Physics/SoftBody/Cloth.h"
 #include "Engine/Core/Threading/MultiThreader.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
+#include "SkinAnimator.h"
 
 //#include "SecurityCamera.h"
 
@@ -39,7 +40,22 @@ class GraphicRuntime : public Application
         Camera* cam = &mainCamera.GetComponent<Camera>();
 
 
-        SpawnSkinnedCharacter(Vector3(0.0f));
+        //SpawnSkinnedCharacter(Vector3(0.0f));
+
+
+        Entity characterEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SkinnedCharacter");
+        Transform& transform = characterEntity.GetComponent<Transform>();
+        transform.SetPosition(Vector3(0.0f));
+
+        SkinnedModelComponent& modelComp = characterEntity.AddComponent<SkinnedModelComponent>("Assets\\Models\\dancing_vampire.dae");
+
+        animation = MakeShared<SkinAnimation>("Assets\\Models\\dancing_vampire.dae", modelComp.m_handle);
+
+        SharedPtr<Material>& mat = modelComp.m_handle->meshes[0]->material;
+
+        mat->SetAlbedoTexture("vampire");
+
+        animator = MakeShared<Animator>(animation);
 
 	}
 
@@ -53,21 +69,9 @@ class GraphicRuntime : public Application
 private:
 
     //std::vector<int> availableCameras;
-    int rightScreenIndex = 0;
-    int leftScreenIndex = 2;
-
-    float leftScreenCounter = 0.0f;
-    float rightScreenCounter = 0.2f;
-
-    const float leftScreenSwitchTime = 5.0f;
-    const float rightScreenSwitchTime = 4.0f;
-
-    std::vector<SharedPtr<Texture>> ScreenRenders;
-    SharedPtr<Material> cornerScreenRightMat = nullptr;
-    SharedPtr<Material> cornerScreenLeftMat = nullptr;
-
-    bool screenOff = false;
-
+    SharedPtr<SkinnedModel> model;
+    SharedPtr<Animator> animator;
+    SharedPtr<SkinAnimation> animation;
 
    
    

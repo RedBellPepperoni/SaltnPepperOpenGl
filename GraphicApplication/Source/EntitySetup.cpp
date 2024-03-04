@@ -7,7 +7,7 @@ namespace SaltnPepperEngine
 	{
 		SharedPtr<SkinnedModelLibrary>& skinnedModelLib = Application::GetCurrent().GetSkinnedModelLibrary();
 
-		skinnedModelLib->LoadModel("Character", "Assets\\Models\\boblampclean.md5mesh");
+		//skinnedModelLib->LoadModel("Character", "dancing_vampire.dae");
 		//skinnedModelLib->LoadModel("Character", "Assets\\Models\\Vanguard.dae");
 
 	}
@@ -18,7 +18,7 @@ namespace SaltnPepperEngine
 
 		textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 		textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
-		textureLib->LoadTexture("vanguard", "Assets\\Textures\\vanguard.png", TextureFormat::RGBA);
+		textureLib->LoadTexture("vampire", "Assets\\Textures\\vampire.png", TextureFormat::RGBA);
 
 
 	}

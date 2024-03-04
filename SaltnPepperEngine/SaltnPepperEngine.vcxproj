@@ -199,6 +199,7 @@
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedMesh.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
     <ClInclude Include="SkinAnimation.h" />
+    <ClInclude Include="SkinAnimator.h" />
     <ClInclude Include="SkinBone.h" />
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +302,7 @@
     <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedMesh.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp" />
     <ClCompile Include="SkinAnimation.cpp" />
+    <ClCompile Include="SkinAnimator.cpp" />
     <ClCompile Include="SkinBone.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
