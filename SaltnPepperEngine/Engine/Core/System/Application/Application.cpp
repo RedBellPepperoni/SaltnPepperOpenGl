@@ -45,6 +45,7 @@ namespace SaltnPepperEngine
 
 		// Setting up teh Model and Object Library
 		m_modelLibrary = MakeShared<ModelLibrary>();
+		m_skinnedmodelLibrary = MakeShared<SkinnedModelLibrary>();
 		m_textureLibrary = MakeShared<TextureLibrary>();
 		m_cubeMapLibrary = MakeShared<CubeMapLibrary>();
 		//m_audioLibrary = MakeShared<AudioLibrary>();
@@ -330,6 +331,11 @@ namespace SaltnPepperEngine
 	SharedPtr<ModelLibrary>& Application::GetModelLibrary()
 	{
 		return m_modelLibrary;
+	}
+
+	SharedPtr<SkinnedModelLibrary>& Application::GetSkinnedModelLibrary()
+	{
+		return m_skinnedmodelLibrary;
 	}
 
 	SharedPtr<TextureLibrary>& Application::GetTextureLibrary()

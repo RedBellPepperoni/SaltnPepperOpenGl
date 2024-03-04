@@ -33,6 +33,7 @@ namespace SaltnPepperEngine
     {
 		// Forward Decalrartions for better compile times
 		class Mesh;
+		class SkinnedMesh;
 		class Material;
 		class VertexArray;
 		class Shader;
@@ -200,13 +201,16 @@ namespace SaltnPepperEngine
 			// The Vertex array for the current Pipeline
 
 			SharedPtr<VertexArray> VAO;
+			SharedPtr<VertexArray> SkinnedVAO;
 
 			std::vector<VertexAttribute> vertexLayout;
+			std::vector<VertexAttribute> vertexLayoutSkinned;
 
 			RectangleObject rectangularObject;
 
 			// All the Render Elements that need to be drawn
 			std::vector<RenderElement> renderElementList;
+			std::vector<RenderElement> renderSkinnedElementList;
 
 			std::vector<LightElement> lightElementList;
 
@@ -215,6 +219,7 @@ namespace SaltnPepperEngine
 
 			// All the mehses that needs to be drawn
 			std::vector<SharedPtr<Mesh>> MeshList;
+			std::vector<SharedPtr<SkinnedMesh>> SkinnedMeshList;
 
 
 
@@ -230,6 +235,8 @@ namespace SaltnPepperEngine
 			// properties of all the Cameras that are in the scene
 			std::vector<CameraElement> cameraList;
 
+
+			std::vector<size_t> skinnedElementList;
 
 			int textureBindIndex = 0;
 
@@ -291,6 +298,7 @@ namespace SaltnPepperEngine
 			void DrawIndices(const DrawType drawType, const uint32_t indexCount, const uint32_t indexOffset = 0);
 
 			void DrawElement(const CameraElement& camera, SharedPtr<Shader>& shader, const RenderElement& element);
+			void DrawSkinnedElement(const CameraElement& camera, SharedPtr<Shader>& shader, const RenderElement& element);
 
 
 			void SetLightUniform(SharedPtr<Shader>& shader);
@@ -316,7 +324,7 @@ namespace SaltnPepperEngine
 
 			void ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList);
 
-
+			void SkinnedObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList);
 
 			void SkyBoxPass(SharedPtr<Shader> shader, const CameraElement& camera);
 			void DebugPass(const CameraElement& camera);
@@ -326,6 +334,7 @@ namespace SaltnPepperEngine
 
 			// Adds a Render Element to the Queue
 			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform);
+			void ProcessSkinnedRenderElement(const SharedPtr<SkinnedMesh>& mesh, const SharedPtr<Material>& material, Transform& transform);
 			void ProcessLightElement(Light& light, Transform& transform);
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 

@@ -1,5 +1,6 @@
 #include "VertexAttribute.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
+#include "Engine/Core/Rendering/RenderDefinitions.h"
 #include "Engine/Utils/GLUtils.h"
 
 namespace SaltnPepperEngine
@@ -72,5 +73,11 @@ namespace SaltnPepperEngine
         {
             return { GL_FLOAT, 4, 4, sizeof(Matrix4) };
         }
+
+      /*  template<>
+        VertexAttribute VertexAttribute::Attribute<BoneInfluence>()
+        {
+            return { GL_FLOAT, 4, 4, sizeof(Matrix4) };
+        }*/
     }
 }

@@ -201,6 +201,34 @@ namespace SaltnPepperEngine
 			return m_rigidBody;
 		}
 
+		SkinnedModelComponent::SkinnedModelComponent()
+		{
+		}
+
+		SkinnedModelComponent::SkinnedModelComponent(const std::string& filePath)
+		{
+			LoadLibraryModel(filePath);
+		}
+
+		SkinnedModelComponent::SkinnedModelComponent(const SharedPtr<SkinnedModel>& modelRef)
+			: m_handle(modelRef)
+		{
+		}
+
+		void SkinnedModelComponent::LoadLibraryModel(const std::string filePath)
+		{
+			std::string clampedname = FileSystem::GetFileName(filePath);
+
+			m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->GetResource(clampedname);
+
+
+			if (m_handle == nullptr)
+			{
+				m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->LoadModel(clampedname, filePath);
+			}
+		
+		}
+
 }
 }
 

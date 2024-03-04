@@ -3,6 +3,10 @@
 
 #include "Engine/Utils/Loading/FileSystem.h"
 #include "Engine/Core/Rendering/RenderDefinitions.h"
+#include <map>
+
+struct aiMesh;
+struct aiBone;
 
 namespace SaltnPepperEngine
 {
@@ -69,6 +73,8 @@ namespace SaltnPepperEngine
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 
+		std::vector<BoneInfluence> boneData;
+		std::map<std::string, uint32_t> BoneNameToIndexMap;
 		MaterialDetails* material = nullptr;
 
 		bool useTexture = false;
@@ -122,9 +128,13 @@ namespace SaltnPepperEngine
 		// Loaded Function to use string paths
 		//static ModelDetail LoadPlyModel(const string& stringPath);
 
+	private:
 
+		static void LoadMeshBones(MeshDetails& meshDetail, const aiMesh* pMesh);
+		static void LoadSingleBone(MeshDetails& meshDetail, const aiBone* pBone);
 		//static std::vector<MaterialDetails> LoadMaterials(const FilePath& path);
 
+		
 
 	};
 }

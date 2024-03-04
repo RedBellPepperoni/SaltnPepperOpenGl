@@ -48,7 +48,7 @@ namespace SaltnPepperEngine
 			//Mesh(const Mesh& mesh);
 			Mesh(const std::vector<Vertex>& inVertices, const std::vector<uint32_t>& inIndicies);
 
-			~Mesh();
+			virtual ~Mesh();
 
 			// Change/Set the name of a mesh
 			void SetName(const std::string& newName);

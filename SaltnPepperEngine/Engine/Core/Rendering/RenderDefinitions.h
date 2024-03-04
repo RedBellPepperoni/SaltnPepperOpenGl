@@ -4,6 +4,8 @@
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Utils/GLUtils.h"
 
+#define MAX_NUM_OF_BONES_PER_VERTEX 4
+
 namespace SaltnPepperEngine
 {	
 
@@ -58,6 +60,52 @@ namespace SaltnPepperEngine
 			}
 		}
 
+		struct BoneInfluence
+		{
+			int BoneInfoIndices[MAX_NUM_OF_BONES_PER_VERTEX] = { 0, 0, 0, 0 };
+			float Weights[MAX_NUM_OF_BONES_PER_VERTEX] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+
+			void AddBoneData(int boneInfoIndex, float weight)
+			{
+				if (weight < 0.0f || weight > 1.0f)
+				{
+					weight = Clamp(weight, 0.0f, 1.0f);
+				}
+				if (weight > 0.0f)
+				{
+					for (size_t i = 0; i < MAX_NUM_OF_BONES_PER_VERTEX; i++)
+					{
+						if (Weights[i] == 0.0f)
+						{
+							BoneInfoIndices[i] = boneInfoIndex;
+							Weights[i] = weight;
+							return;
+						}
+					}
+				}
+			}
+
+			void NormalizeWeights()
+			{
+				float sumWeights = 0.0f;
+				for (size_t i = 0; i < 4; i++)
+				{
+					sumWeights += Weights[i];
+				}
+				if (sumWeights > 0.0f)
+				{
+					for (size_t i = 0; i < 4; i++)
+					{
+						Weights[i] /= sumWeights;
+					}
+				}
+			}
+
+			//static constexpr size_t Size =  
+		};
+
+
 		struct Vertex
 		{
 			Vector3 position{ 0.0f };
@@ -69,12 +117,27 @@ namespace SaltnPepperEngine
 			static const size_t Size = 3 + 2 + 3 + 3 + 3;
 		};
 
+		struct SkinnedVertex
+		{
+			Vector3 position{ 0.0f };
+			Vector2 texCoord{ 0.0f };
+			Vector3 normal{ 0.0f };
+			Vector3 tangent{ 0.0f };
+			Vector3 bitangent{ 0.0f };
+			BoneInfluence boneData{};
+			
+
+			//static const size_t Size = 3 + 2 + 3 + 3 + 3;
+		};
+
 		struct Triangle
 		{
 			Vertex v0;
 			Vertex v1;
 			Vertex v2;
 		};
+
+		
 
 
 	}

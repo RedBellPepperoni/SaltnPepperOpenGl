@@ -271,10 +271,18 @@ namespace SaltnPepperEngine
 
             }
 
+
+            meshDetails.boneData.resize(vertices.size());
+            LoadMeshBones(meshDetails,mesh);
+
             if (meshDetails.name.empty())
             {
                 meshDetails.name = FileSystem::GetFileName(filePath);
             }
+
+
+
+
 
             meshDetails.useTexture = true;
             meshDetails.vertices = std::move(vertices);
@@ -296,6 +304,39 @@ namespace SaltnPepperEngine
     ModelDetail ModelLoader::LoadModel(const string& stringPath)
     {
         return LoadModel(FileSystem::GetFilePathfromString(stringPath));
+    }
+
+    void ModelLoader::LoadMeshBones(MeshDetails& meshDetail, const aiMesh* pMesh)
+    {
+        for (uint32_t index = 0; index < pMesh->mNumBones; index++)
+        {
+            LoadSingleBone(meshDetail,pMesh->mBones[index]);
+        }
+    }
+
+    void ModelLoader::LoadSingleBone(MeshDetails& meshDetail, const aiBone* pBone)
+    {
+
+        int BoneId = 0;
+
+        std::string BoneName(pBone->mName.C_Str());
+
+        if (meshDetail.BoneNameToIndexMap.find(BoneName) == meshDetail.BoneNameToIndexMap.end())
+        {
+            BoneId = (int)meshDetail.BoneNameToIndexMap.size();
+            meshDetail.BoneNameToIndexMap[BoneName] = BoneId;
+        }
+        else
+        {
+            BoneId = meshDetail.BoneNameToIndexMap[BoneName];
+        }
+
+        for (uint32_t i = 0; i < pBone->mNumWeights; i++) {
+            const aiVertexWeight& vw = pBone->mWeights[i];
+            uint32_t GlobalVertexID = pBone->mWeights[i].mVertexId;
+            meshDetail.boneData[GlobalVertexID].AddBoneData(BoneId, vw.mWeight);
+        }
+
     }
 
 

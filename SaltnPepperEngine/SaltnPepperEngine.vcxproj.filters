@@ -339,6 +339,12 @@
     <ClInclude Include="Engine\Core\Physics\SoftBody\VerletCloth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SaltnPepperEngine.h">
@@ -627,6 +633,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Physics\SoftBody\VerletConstraint.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,7 +3,9 @@
 
 #include <string>
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedMesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
 
@@ -169,6 +171,23 @@ namespace SaltnPepperEngine
 					LoadLibraryModel(filePath);
 				}
 			}
+
+		};
+
+		struct SkinnedModelComponent
+		{
+			SkinnedModelComponent();
+			SkinnedModelComponent(const std::string& filePath);
+			SkinnedModelComponent(const SharedPtr<SkinnedModel>& modelRef);
+			
+
+			void LoadLibraryModel(const std::string filePath);
+
+		
+
+			SharedPtr<SkinnedModel> m_handle;
+
+			
 
 		};
 

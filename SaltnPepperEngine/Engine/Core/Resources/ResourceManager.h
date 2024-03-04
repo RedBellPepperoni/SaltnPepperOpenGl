@@ -26,6 +26,7 @@ namespace SaltnPepperEngine
 	}
 
 	class Model;
+	class SkinnedModel;
 
 	using Rendering::Shader;
 
@@ -144,6 +145,22 @@ namespace SaltnPepperEngine
 		SharedPtr<Model> LoadModel(const std::string& friendlyName, const std::string& modelpath);
 	};
 
+
+	// Definition for Model Resources
+	class SkinnedModelLibrary : public ResourceLibrary<SkinnedModel>
+	{
+	public:
+		// Just defining the Constructor and Destructor
+		SkinnedModelLibrary()
+		{
+		}
+
+		virtual ~SkinnedModelLibrary()
+		{
+		}
+
+		SharedPtr<SkinnedModel> LoadModel(const std::string& friendlyName, const std::string& modelpath);
+	};
 
 
 
