@@ -16,8 +16,9 @@ namespace SaltnPepperEngine
 #define BONE_WEIGHT_LOCATION 4
 
 
-		SkinnedMesh::SkinnedMesh()
+		SkinnedMesh::SkinnedMesh(const std::string filePath)
 		{
+			LoadMesh(filePath);
 		}
 
 		SkinnedMesh::~SkinnedMesh()
@@ -60,6 +61,29 @@ namespace SaltnPepperEngine
 
 		void SkinnedMesh::Render()
 		{
+			skinnedVAO->Bind();
+
+			for (unsigned int i = 0; i < m_Meshes.size(); i++) {
+				unsigned int MaterialIndex = m_Meshes[i].MaterialIndex;
+
+				assert(MaterialIndex < m_Materials.size());
+
+				if (m_Materials[MaterialIndex]->textureMaps.albedoMap)
+				{
+					m_Materials[MaterialIndex]->textureMaps.albedoMap->Bind(0);
+				}
+
+				
+
+				glDrawElementsBaseVertex(GL_TRIANGLES,
+					m_Meshes[i].NumIndices,
+					GL_UNSIGNED_INT,
+					(void*)(sizeof(unsigned int) * m_Meshes[i].BaseIndex),
+					m_Meshes[i].BaseVertex);
+			}
+
+			// Make sure the VAO is not changed from the outside
+			skinnedVAO->UnBind();
 		}
 
 		void SkinnedMesh::GetBoneTransforms(float TimeInSeconds, vector<Matrix4>& Transforms)

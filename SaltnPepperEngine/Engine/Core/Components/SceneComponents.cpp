@@ -207,15 +207,12 @@ namespace SaltnPepperEngine
 
 		SkinnedModelComponent::SkinnedModelComponent(const std::string& filePath)
 		{
-			LoadLibraryModel(filePath);
+			LoadLibraryMesh(filePath);
 		}
 
-		SkinnedModelComponent::SkinnedModelComponent(const SharedPtr<SkinnedModel>& modelRef)
-			: m_handle(modelRef)
-		{
-		}
+		
 
-		void SkinnedModelComponent::LoadLibraryModel(const std::string filePath)
+		void SkinnedModelComponent::LoadLibraryMesh(const std::string filePath)
 		{
 			std::string clampedname = FileSystem::GetFileName(filePath);
 

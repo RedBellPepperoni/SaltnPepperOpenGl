@@ -20,7 +20,7 @@
 #include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Geometry/SkinnedMesh.h"
-#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+
 
 
 #include "Engine/Core/Physics/SoftBody/Cloth.h"
@@ -116,41 +116,41 @@ namespace SaltnPepperEngine
 				// Sending the mesh data for processing
 				
 			}
-			ComponentView skinnedModelView = scene->GetEntityManager()->GetComponentsOfType<SkinnedModelComponent>();
+			//ComponentView skinnedModelView = scene->GetEntityManager()->GetComponentsOfType<SkinnedModelComponent>();
 
-			// Setting up Render elements for Skinned meshes
-			for (Entity modelObject : skinnedModelView)
-			{
+			//// Setting up Render elements for Skinned meshes
+			//for (Entity modelObject : skinnedModelView)
+			//{
 
-				//if (!modelObject.TryGetComponent<ActiveComponent>()->active)
-				if (!modelObject.IsActive())
-				{
-					//The mesh is not visible , so dont need to render it
-					continue;
-				}
+			//	//if (!modelObject.TryGetComponent<ActiveComponent>()->active)
+			//	if (!modelObject.IsActive())
+			//	{
+			//		//The mesh is not visible , so dont need to render it
+			//		continue;
+			//	}
 
-				// Cache the model ref and trasnfrom for later use
-				SkinnedModelComponent& modelComp = modelObject.GetComponent<SkinnedModelComponent>();
-				Transform& transform = modelObject.GetComponent<Transform>();
+			//	// Cache the model ref and trasnfrom for later use
+			//	SkinnedModelComponent& modelComp = modelObject.GetComponent<SkinnedModelComponent>();
+			//	Transform& transform = modelObject.GetComponent<Transform>();
 
-				const std::vector<SharedPtr<SkinnedMesh>>& meshes = modelComp.m_handle->GetMeshes();
+			//	const std::vector<SharedPtr<SkinnedMesh>>& meshes = modelComp.m_handle->GetMeshes();
 
-				for (SharedPtr<SkinnedMesh> mesh : meshes)
-				{
-					Matrix4& worldTransform = transform.GetMatrix();
+			//	for (SharedPtr<SkinnedMesh> mesh : meshes)
+			//	{
+			//		Matrix4& worldTransform = transform.GetMatrix();
 
-					// Check for frustum Optimization later
-					// Might need to add bound boxes to each mesh for this
+			//		// Check for frustum Optimization later
+			//		// Might need to add bound boxes to each mesh for this
 
-					const SharedPtr<Material>& material = mesh->GetMaterial();
+			//		const SharedPtr<Material>& material = mesh->GetMaterial();
 
-					m_renderer->ProcessSkinnedRenderElement(mesh, material, transform);
+			//		m_renderer->ProcessSkinnedRenderElement(mesh, material, transform);
 
-				}
+			//	}
 
-				// Sending the mesh data for processing
+			//	// Sending the mesh data for processing
 
-			}
+			//}
 
 
 			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();
@@ -236,7 +236,7 @@ namespace SaltnPepperEngine
 				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
 
 
-				m_renderer->SkinnedObjectPass(m_ShaderLibrary->GetResource("SkinnedShader"), m_editorCameraElement, m_renderer->GetPipeLine().skinnedElementList);
+				//m_renderer->SkinnedObjectPass(m_ShaderLibrary->GetResource("SkinnedShader"), m_editorCameraElement, m_renderer->GetPipeLine().skinnedElementList);
 
 				m_editorCameraElement.depthTexture->GenerateMipMaps();
 
@@ -270,7 +270,7 @@ namespace SaltnPepperEngine
 					//// ===== Object Pass for Transparent Elements ================ 
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), cameraElement, m_renderer->GetPipeLine().customElementList);
 
-					m_renderer->SkinnedObjectPass(m_ShaderLibrary->GetResource("SkinnedShader"), cameraElement, m_renderer->GetPipeLine().skinnedElementList);
+					//m_renderer->SkinnedObjectPass(m_ShaderLibrary->GetResource("SkinnedShader"), cameraElement, m_renderer->GetPipeLine().skinnedElementList);
 
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();

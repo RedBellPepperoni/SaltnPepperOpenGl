@@ -3,7 +3,7 @@
 
 #include "Engine/Core/Rendering/Shader/Shader.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
-#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedMesh.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
 #include "Engine/Core/Rendering/Textures/CubeMap.h"
@@ -113,9 +113,9 @@ namespace SaltnPepperEngine
 	}
 
 
-	SharedPtr<SkinnedModel> SkinnedModelLibrary::LoadModel(const std::string& friendlyName, const std::string& modelpath)
+	SharedPtr<SkinnedMesh> SkinnedModelLibrary::LoadModel(const std::string& friendlyName, const std::string& modelpath)
 	{
-		SharedPtr<SkinnedModel> newModel = Factory<SkinnedModel>::Create(modelpath);
+		SharedPtr<SkinnedMesh> newModel = Factory<SkinnedMesh>::Create(modelpath);
 
 		// Model was loaded successfully
 		if (newModel != nullptr)

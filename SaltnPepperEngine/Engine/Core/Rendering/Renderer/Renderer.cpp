@@ -291,74 +291,74 @@ namespace SaltnPepperEngine
 
         }
 
-        void Renderer::ProcessSkinnedRenderElement(const SharedPtr<SkinnedMesh>& mesh, const SharedPtr<Material>& material, Transform& transform)
-        {
-            if (material->albedoColour.a <= 0.0f)
-            {
-                // The Element is Invisible ... shouldn't be drawn
-                return;
-            }
+        //void Renderer::ProcessSkinnedRenderElement(const SharedPtr<SkinnedMesh>& mesh, const SharedPtr<Material>& material, Transform& transform)
+        //{
+        //    if (material->albedoColour.a <= 0.0f)
+        //    {
+        //        // The Element is Invisible ... shouldn't be drawn
+        //        return;
+        //    }
 
-            // Storing the new Element's index
-            size_t elementIndex = m_pipeline.renderSkinnedElementList.size();
+        //    // Storing the new Element's index
+        //    size_t elementIndex = m_pipeline.renderSkinnedElementList.size();
 
-            // Creatig a temporarty Element
-            SkinnedRenderElement newElement;
+        //    // Creatig a temporarty Element
+        //    SkinnedRenderElement newElement;
 
-            if (mesh != nullptr)
-            {
-                newElement.meshIndex = m_pipeline.SkinnedMeshList.size();
-                m_pipeline.SkinnedMeshList.push_back(mesh);
-            }
+        //    if (mesh != nullptr)
+        //    {
+        //        newElement.meshIndex = m_pipeline.SkinnedMeshList.size();
+        //        m_pipeline.SkinnedMeshList.push_back(mesh);
+        //    }
 
-            if (material != nullptr)
-            {
-                newElement.materialIndex = m_pipeline.MaterialList.size();
+        //    if (material != nullptr)
+        //    {
+        //        newElement.materialIndex = m_pipeline.MaterialList.size();
 
-                // For now just checking for albedo
-                if (material->textureMaps.albedoMap == nullptr)
-                {
-                    material->textureMaps.albedoMap = m_pipeline.defaultTextureMap;
-                }
+        //        // For now just checking for albedo
+        //        if (material->textureMaps.albedoMap == nullptr)
+        //        {
+        //            material->textureMaps.albedoMap = m_pipeline.defaultTextureMap;
+        //        }
 
-                m_pipeline.MaterialList.push_back(material);
-            }
-
-
-            newElement.ModelMatrix = transform.GetMatrix();
-            //newElement.ModelMatrix = transform.GetLocalMatrix();
-
-            // New!! - For lighting
-            newElement.NormalMatrix = transform.GetNormalMatrix();
+        //        m_pipeline.MaterialList.push_back(material);
+        //    }
 
 
-            newElement.boneTransforms = mesh->GetBoneTransforms();
+        //    newElement.ModelMatrix = transform.GetMatrix();
+        //    //newElement.ModelMatrix = transform.GetLocalMatrix();
 
-            // Getting the index of the element we are going to create
-            size_t currentElementIndex = m_pipeline.renderSkinnedElementList.size();
-
-            // Storing the render Element in the container
-            m_pipeline.renderSkinnedElementList.push_back(newElement);
+        //    // New!! - For lighting
+        //    newElement.NormalMatrix = transform.GetNormalMatrix();
 
 
+        //    newElement.boneTransforms = mesh->GetBoneTransforms();
 
-            switch (material->m_type)
-            {
-            case MaterialType::Opaque:
+        //    // Getting the index of the element we are going to create
+        //    size_t currentElementIndex = m_pipeline.renderSkinnedElementList.size();
 
-                // Storing the Render Element in the Opage container
-                m_pipeline.skinnedElementList.push_back(elementIndex);
-
-                break;
-
-            default:
-                break;
-            }
+        //    // Storing the render Element in the container
+        //    m_pipeline.renderSkinnedElementList.push_back(newElement);
 
 
 
+        //    switch (material->m_type)
+        //    {
+        //    case MaterialType::Opaque:
 
-        }
+        //        // Storing the Render Element in the Opage container
+        //        m_pipeline.skinnedElementList.push_back(elementIndex);
+
+        //        break;
+
+        //    default:
+        //        break;
+        //    }
+
+
+
+
+        //}
 
 
 
@@ -701,69 +701,69 @@ namespace SaltnPepperEngine
         void Renderer::DrawSkinnedElement(const CameraElement& camera, SharedPtr<Shader>& shader, const SkinnedRenderElement& element)
         {
 
-            m_pipeline.textureBindIndex = 0;
+            //m_pipeline.textureBindIndex = 0;
 
-            uint32_t shaderId = shader->GetNativeHandle();
-
-
-            SharedPtr<SkinnedMesh>& mesh = m_pipeline.SkinnedMeshList[element.meshIndex];
-            SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
-
-            if (mat != nullptr)
-            {
-                mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
-                shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
-
-                if (mat->m_type == MaterialType::Transparent)
-                {
-                    mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
-                    shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
-                }
-               
+            //uint32_t shaderId = shader->GetNativeHandle();
 
 
-                //shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedomapFactor);
-                shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
-                shader->SetUniform("materialProperties.Metallic", mat->metallic);
+            //SharedPtr<SkinnedMesh>& mesh = m_pipeline.SkinnedMeshList[element.meshIndex];
+            //SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
 
-            }
+            //if (mat != nullptr)
+            //{
+            //    mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
+            //    shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
+
+            //    if (mat->m_type == MaterialType::Transparent)
+            //    {
+            //        mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
+            //        shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
+            //    }
+            //   
 
 
-            // mat->textureMaps.albedoMap->UnBind();
+            //    //shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedomapFactor);
+            //    shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
+            //    shader->SetUniform("materialProperties.Metallic", mat->metallic);
+
+            //}
 
 
-            shader->SetUniform("model", element.ModelMatrix);
-
-            shader->SetUniform("normalMat", element.NormalMatrix);
+            //// mat->textureMaps.albedoMap->UnBind();
 
 
-            for (int i = 0; i < element.boneTransforms.size(); i++)
-            {
-                std::string name = "boneTransforms[" + std::to_string(i) + "]";
-                shader->SetUniform(name,element.boneTransforms[i]);
-            }
+            //shader->SetUniform("model", element.ModelMatrix);
 
-            //Always Bind the Buffer Array before adding Attributes 
-            mesh->GetVBO()->Bind();
+            //shader->SetUniform("normalMat", element.NormalMatrix);
 
-            m_pipeline.SkinnedVAO->Bind();
 
-            // Set the Shader Attributes
-            m_pipeline.SkinnedVAO->AddVertexAttribLayout(m_pipeline.vertexLayoutSkinned);
+            //for (int i = 0; i < element.boneTransforms.size(); i++)
+            //{
+            //    std::string name = "boneTransforms[" + std::to_string(i) + "]";
+            //    shader->SetUniform(name,element.boneTransforms[i]);
+            //}
+
+            ////Always Bind the Buffer Array before adding Attributes 
+            //mesh->GetVBO()->Bind();
+
+            //m_pipeline.SkinnedVAO->Bind();
+
+            //// Set the Shader Attributes
+            //m_pipeline.SkinnedVAO->AddVertexAttribLayout(m_pipeline.vertexLayoutSkinned);
            
-            //m_pipeline.SkinnedVAO->AddSkinnedVertexAttributelayout(shaderId);
+            ////m_pipeline.SkinnedVAO->AddSkinnedVertexAttributelayout(shaderId);
 
-            // Bind the Index Buffer
-            mesh->GetIBO()->Bind();
-
-
-            DrawIndices(DrawType::TRIANGLES, mesh->GetIndexCount(), 0);
+            //// Bind the Index Buffer
+            //mesh->GetIBO()->Bind();
 
 
+            //DrawIndices(DrawType::TRIANGLES, mesh->GetIndexCount(), 0);
 
-            // Unbind all the bound buffers 
-            mesh->GetIBO()->UnBind();
-            mesh->GetVBO()->UnBind();
+
+
+            //// Unbind all the bound buffers 
+            //mesh->GetIBO()->UnBind();
+            //mesh->GetVBO()->UnBind();
 
 
 

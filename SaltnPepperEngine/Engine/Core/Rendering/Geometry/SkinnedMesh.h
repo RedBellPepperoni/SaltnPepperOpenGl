@@ -22,7 +22,7 @@ namespace SaltnPepperEngine
 		{
 		public:
 
-			SkinnedMesh(); 
+			SkinnedMesh(const std::string filePath); 
 			virtual ~SkinnedMesh();
 
 			bool LoadMesh(const std::string filepath);
