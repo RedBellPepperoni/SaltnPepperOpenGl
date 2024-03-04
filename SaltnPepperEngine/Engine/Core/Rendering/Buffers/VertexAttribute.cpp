@@ -74,10 +74,6 @@ namespace SaltnPepperEngine
             return { GL_FLOAT, 4, 4, sizeof(Matrix4) };
         }
 
-      /*  template<>
-        VertexAttribute VertexAttribute::Attribute<BoneInfluence>()
-        {
-            return { GL_FLOAT, 4, 4, sizeof(Matrix4) };
-        }*/
+        
     }
 }

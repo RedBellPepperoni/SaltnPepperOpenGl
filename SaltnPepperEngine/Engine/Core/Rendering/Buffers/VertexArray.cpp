@@ -98,5 +98,38 @@ namespace SaltnPepperEngine
 
 
 		}
+
+		void VertexArray::AddSkinnedVertexAttributelayout(uint32_t shaderId)
+		{
+
+			// Should Make this Dynamic later on, actually store the atrribs in the shader itslef and pull data accordingly
+
+			GLsizei stride = (GLsizei)sizeof(SkinnedVertex);
+
+			GLDEBUG(glEnableVertexAttribArray(0));
+			GLDEBUG(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(SkinnedVertex, position)));
+
+			GLDEBUG(glEnableVertexAttribArray(1));
+			GLDEBUG(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(SkinnedVertex, texCoord)));
+
+
+			GLDEBUG(glEnableVertexAttribArray(2));
+			GLDEBUG(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(SkinnedVertex, normal)));
+
+
+			GLDEBUG(glEnableVertexAttribArray(3));
+			GLDEBUG(glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(SkinnedVertex, tangent)));
+
+
+			GLDEBUG(glEnableVertexAttribArray(4));
+			GLDEBUG(glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(SkinnedVertex, bitangent)));
+		
+			GLDEBUG(glEnableVertexAttribArray(5));
+			GLDEBUG(glVertexAttribPointer(5, 4, GL_INT, GL_FALSE, stride, (void*)offsetof(SkinnedVertex, boneData)));
+		
+
+			GLDEBUG(glEnableVertexAttribArray(6));
+			GLDEBUG(glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, stride, (void*)(offsetof(SkinnedVertex, boneData) + 4 * sizeof(int))));
+		}
     }
 }

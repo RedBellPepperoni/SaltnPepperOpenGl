@@ -5,9 +5,10 @@ namespace SaltnPepperEngine
 	
 	void LoadAllModels()
 	{
-		SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
+		SharedPtr<SkinnedModelLibrary>& skinnedModelLib = Application::GetCurrent().GetSkinnedModelLibrary();
 
-		modelLib->LoadModel("Character", "Assets\\Models\\Vanguard_Skinned.fbx");
+		skinnedModelLib->LoadModel("Character", "Assets\\Models\\boblampclean.md5mesh");
+		//skinnedModelLib->LoadModel("Character", "Assets\\Models\\Vanguard.dae");
 
 	}
 

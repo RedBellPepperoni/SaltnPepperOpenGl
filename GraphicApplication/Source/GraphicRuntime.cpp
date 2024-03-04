@@ -39,6 +39,8 @@ class GraphicRuntime : public Application
         Camera* cam = &mainCamera.GetComponent<Camera>();
 
 
+        SpawnSkinnedCharacter(Vector3(0.0f));
+
 	}
 
 	void OnUpdate(float deltaTime)

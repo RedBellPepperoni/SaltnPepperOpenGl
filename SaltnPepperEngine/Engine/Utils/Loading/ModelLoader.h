@@ -3,10 +3,16 @@
 
 #include "Engine/Utils/Loading/FileSystem.h"
 #include "Engine/Core/Rendering/RenderDefinitions.h"
+#include "Engine/Core/Memory/MemoryDefinitions.h"
 #include <map>
 
 struct aiMesh;
 struct aiBone;
+struct aiNode;
+struct aiScene;
+
+
+
 
 namespace SaltnPepperEngine
 {
@@ -19,6 +25,7 @@ namespace SaltnPepperEngine
 	using namespace Rendering;
 	using namespace std;
 
+	
 
 	struct MaterialDetails
 	{
@@ -66,6 +73,8 @@ namespace SaltnPepperEngine
 		normal = 1 << 1, // Binary 0010
 	};
 
+	
+
 	struct MeshDetails
 	{
 		std::string name;
@@ -73,8 +82,6 @@ namespace SaltnPepperEngine
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 
-		std::vector<BoneInfluence> boneData;
-		std::map<std::string, uint32_t> BoneNameToIndexMap;
 		MaterialDetails* material = nullptr;
 
 		bool useTexture = false;
@@ -83,7 +90,6 @@ namespace SaltnPepperEngine
 
 		bool useColor = false;
 
-		// Add Texture and material Details here
 	};
 
 
@@ -96,6 +102,7 @@ namespace SaltnPepperEngine
 		// Add materials list here 
 
 		std::vector<MaterialDetails> materials;
+	
 	};
 
 
@@ -116,6 +123,7 @@ namespace SaltnPepperEngine
 
 		// Function to implement when assimp is used : right now ignore
 		static ModelDetail LoadModel(const FilePath& filePath);
+		//static ModelDetail LoadSkinnedModel(const FilePath& filePath);
 
 		// Loaded Function to use string paths
 		static ModelDetail LoadModel(const string& stringPath);
@@ -133,9 +141,14 @@ namespace SaltnPepperEngine
 		static void LoadMeshBones(MeshDetails& meshDetail, const aiMesh* pMesh);
 		static void LoadSingleBone(MeshDetails& meshDetail, const aiBone* pBone);
 		//static std::vector<MaterialDetails> LoadMaterials(const FilePath& path);
-
 		
+		//static SharedPtr<Node> GenerateBoneHierarchy(aiNode* assimpNode,const int depth = 0);
 
+		static void GetBoneTransforms(MeshDetails& meshDetail, vector<Matrix4>& Transforms, const aiScene* pScene);
+		
+		static void ReadNodeHierarchy(MeshDetails& meshDetail, const aiNode* pNode, const Matrix4& ParentTransform);
+	
+		//static SharedPtr<Node> RootNode;
 	};
 }
 #endif // !MODELLOADER_H

@@ -6,9 +6,11 @@ struct VertexData
 	vec3 Normal;
 	vec2 TexCoord;
 	mat3 WorldNormal;
-	flat ivec4 BoneIds;
+	
 	vec4 BoneWights;
 };
+
+
 
 struct Material
 {
@@ -73,8 +75,9 @@ uniform sampler2D mapMetallic;
 uniform sampler2D mapEmissive;
 uniform sampler2D mapNormal;
 
-layout(location = 0) in VertexData VertexOutput;
-layout(location = 0) out vec4 FragColor;
+in VertexData VertexOutput;
+flat in ivec4 BoneIds;
+out vec4 FragColor;
 
 
 
@@ -289,7 +292,11 @@ void main()
     vec3 finalColor = CalculateLighting(material);
 
 
-   
+    // Displaying Bone Weights
+    for(int index = 0; index < 4; index++)
+    {
+       
+    }
 
     FragColor = vec4(finalColor, 1.0);
 

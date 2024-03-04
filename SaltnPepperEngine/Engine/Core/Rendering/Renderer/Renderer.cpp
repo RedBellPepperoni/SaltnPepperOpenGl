@@ -107,8 +107,7 @@ namespace SaltnPepperEngine
                 VertexAttribute::Attribute<Vector3>(), // normal
                 VertexAttribute::Attribute<Vector3>(), // tangent
                 VertexAttribute::Attribute<Vector3>(), // bitangent
-                VertexAttribute::Attribute<Vector4Int>(), // Bone Influence Index
-                VertexAttribute::Attribute<Vector4>() // Bone Influenece Weight
+                
             };
 
 
@@ -304,7 +303,7 @@ namespace SaltnPepperEngine
             size_t elementIndex = m_pipeline.renderSkinnedElementList.size();
 
             // Creatig a temporarty Element
-            RenderElement newElement;
+            SkinnedRenderElement newElement;
 
             if (mesh != nullptr)
             {
@@ -333,11 +332,13 @@ namespace SaltnPepperEngine
             newElement.NormalMatrix = transform.GetNormalMatrix();
 
 
+            newElement.boneTransforms = mesh->GetBoneTransforms();
+
             // Getting the index of the element we are going to create
             size_t currentElementIndex = m_pipeline.renderSkinnedElementList.size();
 
             // Storing the render Element in the container
-            m_pipeline.renderElementList.push_back(newElement);
+            m_pipeline.renderSkinnedElementList.push_back(newElement);
 
 
 
@@ -485,10 +486,10 @@ namespace SaltnPepperEngine
             for (int index = 0; index < elementList.size(); index++)
             {
                 // get the Elements by index from the Render Element List
-                RenderElement& elementToDraw = m_pipeline.renderElementList[elementList[index]];
+                SkinnedRenderElement& elementToDraw = m_pipeline.renderSkinnedElementList[elementList[index]];
 
                 // Send the Data to Draw that element
-                DrawElement(camera, shader, elementToDraw);
+                DrawSkinnedElement(camera, shader, elementToDraw);
             }
 
 
@@ -697,7 +698,7 @@ namespace SaltnPepperEngine
 
         }
 
-        void Renderer::DrawSkinnedElement(const CameraElement& camera, SharedPtr<Shader>& shader, const RenderElement& element)
+        void Renderer::DrawSkinnedElement(const CameraElement& camera, SharedPtr<Shader>& shader, const SkinnedRenderElement& element)
         {
 
             m_pipeline.textureBindIndex = 0;
@@ -736,6 +737,12 @@ namespace SaltnPepperEngine
             shader->SetUniform("normalMat", element.NormalMatrix);
 
 
+            for (int i = 0; i < element.boneTransforms.size(); i++)
+            {
+                std::string name = "boneTransforms[" + std::to_string(i) + "]";
+                shader->SetUniform(name,element.boneTransforms[i]);
+            }
+
             //Always Bind the Buffer Array before adding Attributes 
             mesh->GetVBO()->Bind();
 
@@ -744,6 +751,7 @@ namespace SaltnPepperEngine
             // Set the Shader Attributes
             m_pipeline.SkinnedVAO->AddVertexAttribLayout(m_pipeline.vertexLayoutSkinned);
            
+            //m_pipeline.SkinnedVAO->AddSkinnedVertexAttributelayout(shaderId);
 
             // Bind the Index Buffer
             mesh->GetIBO()->Bind();

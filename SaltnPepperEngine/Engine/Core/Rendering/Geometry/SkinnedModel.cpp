@@ -15,24 +15,24 @@ namespace SaltnPepperEngine
 	void SkinnedModel::Load(const FilePath& filepath)
 	{
 		// fetching the model details from the given filepath
-		ModelDetail loadedmodelDetail = ModelLoader::LoadModel(filepath);
+		//ModelDetail loadedmodelDetail = ModelLoader::LoadSkinnedModel(filepath);
 
-		int meshCount = 0;
+		//int meshCount = 0;
 
-		// Incase there are sub meshes we generate a mesh for each of them
-		for (MeshDetails meshDetail : loadedmodelDetail.meshes)
-		{
+		//// Incase there are sub meshes we generate a mesh for each of them
+		//for (MeshDetails meshDetail : loadedmodelDetail.meshes)
+		//{
 
-			// Creating a new Mesh from the gathered data
-			SharedPtr<SkinnedMesh> newMesh = MakeShared<SkinnedMesh>(meshDetail.vertices, meshDetail.indices, meshDetail.boneData, meshDetail.BoneNameToIndexMap);
-			newMesh->SetName(FileSystem::GetFileName(filepath) + std::to_string(meshCount));
+		//	// Creating a new Mesh from the gathered data
+		//	SharedPtr<SkinnedMesh> newMesh = MakeShared<SkinnedMesh>(meshDetail.skinnedVertices, meshDetail.indices, meshDetail.boneData, meshDetail.BoneNameToIndexMap);
+		//	newMesh->SetName(FileSystem::GetFileName(filepath) + std::to_string(meshCount));
 
+		//	newMesh->SetBoneTransforms(meshDetail.boneTransforms);
+		//	// Adding the generated mesh to the Model List of meshes
+		//	m_meshes.push_back(newMesh);
 
-			// Adding the generated mesh to the Model List of meshes
-			m_meshes.push_back(newMesh);
-
-			meshCount++;
-		}
+		//	meshCount++;
+		//}
 
 
 	}

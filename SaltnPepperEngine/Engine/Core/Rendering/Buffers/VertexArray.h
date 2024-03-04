@@ -34,6 +34,7 @@ namespace SaltnPepperEngine
 			void FreeArray();
 
 			void AddVertexAttributelayout(/*VertexBuffer& buffer,*/ uint32_t shaderId);
+			void AddSkinnedVertexAttributelayout(uint32_t shaderId);
 			void AddVertexAttribLayout(std::vector<VertexAttribute>& layout);
 			//void RemoveVertexAttribLayout(std::vector<VertexAttribute>& layout); 
 

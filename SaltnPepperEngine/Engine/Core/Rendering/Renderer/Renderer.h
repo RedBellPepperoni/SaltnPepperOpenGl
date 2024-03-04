@@ -63,6 +63,24 @@ namespace SaltnPepperEngine
 			Matrix4 NormalMatrix;
 		};
 
+		struct SkinnedRenderElement
+		{
+			// Stores the material of the current Eleemnt
+			size_t materialIndex;
+
+			// Defines which mesh is used for teh current Unit
+			size_t meshIndex;
+
+			// Define the transform/ model matrix
+			Matrix4 ModelMatrix;
+
+			// Defines the Normal matrix : used for calculating lights			
+			Matrix4 NormalMatrix;
+
+			std::vector<Matrix4> boneTransforms;
+		};
+
+
 		struct LightElement
 		{
 			// The Shader Uniform name
@@ -210,7 +228,7 @@ namespace SaltnPepperEngine
 
 			// All the Render Elements that need to be drawn
 			std::vector<RenderElement> renderElementList;
-			std::vector<RenderElement> renderSkinnedElementList;
+			std::vector<SkinnedRenderElement> renderSkinnedElementList;
 
 			std::vector<LightElement> lightElementList;
 
@@ -298,7 +316,7 @@ namespace SaltnPepperEngine
 			void DrawIndices(const DrawType drawType, const uint32_t indexCount, const uint32_t indexOffset = 0);
 
 			void DrawElement(const CameraElement& camera, SharedPtr<Shader>& shader, const RenderElement& element);
-			void DrawSkinnedElement(const CameraElement& camera, SharedPtr<Shader>& shader, const RenderElement& element);
+			void DrawSkinnedElement(const CameraElement& camera, SharedPtr<Shader>& shader, const SkinnedRenderElement& element);
 
 
 			void SetLightUniform(SharedPtr<Shader>& shader);

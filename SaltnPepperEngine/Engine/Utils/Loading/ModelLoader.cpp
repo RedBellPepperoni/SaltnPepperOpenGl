@@ -20,6 +20,17 @@ namespace SaltnPepperEngine
     const char* const AORoughMetalName = "aoroughmetal";
     const char* const PreferredExtension = ".png";
 
+
+   /* void AssimpToGLM(const aiMatrix4x4& a, glm::mat4& g)
+    {
+
+        g[0][0] = a.a1; g[0][1] = a.b1; g[0][2] = a.c1; g[0][3] = a.d1;
+        g[1][0] = a.a2; g[1][1] = a.b2; g[1][2] = a.c2; g[1][3] = a.d2;
+        g[2][0] = a.a3; g[2][1] = a.b3; g[2][2] = a.c3; g[2][3] = a.d3;
+        g[3][0] = a.a4; g[3][1] = a.b4; g[3][2] = a.c4; g[3][3] = a.d4;
+
+    }*/
+
     ModelLoader::ModelLoader()
     {
     }
@@ -272,8 +283,6 @@ namespace SaltnPepperEngine
             }
 
 
-            meshDetails.boneData.resize(vertices.size());
-            LoadMeshBones(meshDetails,mesh);
 
             if (meshDetails.name.empty())
             {
@@ -301,6 +310,7 @@ namespace SaltnPepperEngine
         return model;
     }
 
+    
     ModelDetail ModelLoader::LoadModel(const string& stringPath)
     {
         return LoadModel(FileSystem::GetFilePathfromString(stringPath));
@@ -317,27 +327,77 @@ namespace SaltnPepperEngine
     void ModelLoader::LoadSingleBone(MeshDetails& meshDetail, const aiBone* pBone)
     {
 
-        int BoneId = 0;
+        //int BoneId = 0;
 
-        std::string BoneName(pBone->mName.C_Str());
+        //std::string BoneName(pBone->mName.C_Str());
 
-        if (meshDetail.BoneNameToIndexMap.find(BoneName) == meshDetail.BoneNameToIndexMap.end())
-        {
-            BoneId = (int)meshDetail.BoneNameToIndexMap.size();
-            meshDetail.BoneNameToIndexMap[BoneName] = BoneId;
-        }
-        else
-        {
-            BoneId = meshDetail.BoneNameToIndexMap[BoneName];
-        }
+        //if (meshDetail.BoneNameToIndexMap.find(BoneName) == meshDetail.BoneNameToIndexMap.end())
+        //{
+        //    BoneId = (int)meshDetail.BoneNameToIndexMap.size();
+        //    meshDetail.BoneNameToIndexMap[BoneName] = BoneId;
+        //}
+        //else
+        //{
+        //    BoneId = meshDetail.BoneNameToIndexMap[BoneName];
+        //}
 
-        for (uint32_t i = 0; i < pBone->mNumWeights; i++) {
-            const aiVertexWeight& vw = pBone->mWeights[i];
-            uint32_t GlobalVertexID = pBone->mWeights[i].mVertexId;
-            meshDetail.boneData[GlobalVertexID].AddBoneData(BoneId, vw.mWeight);
-        }
+
+        //if (BoneId == meshDetail.boneInfo.size()) 
+        //{
+        //    Matrix4 offset;
+
+        //    AssimpToGLM(pBone->mOffsetMatrix, offset);
+
+        //    BoneInfo bi(offset);
+        //    meshDetail.boneInfo.push_back(bi);
+        //}
+
+
+        //for (uint32_t i = 0; i < pBone->mNumWeights; i++) {
+        //    const aiVertexWeight& vw = pBone->mWeights[i];
+        //    uint32_t GlobalVertexID = pBone->mWeights[i].mVertexId;
+        //    meshDetail.boneData[GlobalVertexID].AddBoneData(BoneId, vw.mWeight);
+        //}
 
     }
+
+
+    //SharedPtr<Node> ModelLoader::GenerateBoneHierarchy(aiNode* assimpNode, const int depth)
+    //{
+    //    Node* node = CreateAnimNode(assimpNode);
+    //    PRINT_SPACES(depth); printf("%s\n", assimpNode->mName.C_Str());
+    //    aiMatrix4x4& transformation = assimpNode->mTransformation;
+    //    aiVector3D position;
+    //    aiQuaternion rotation;
+    //    aiVector3D scaling;
+    //    transformation.Decompose(scaling, rotation, position);
+    //    PRINT_SPACES(depth + 1); printf("Position: {%.3f, %.3f, %.3f}\n", position.x, position.y, position.z);
+    //    PRINT_SPACES(depth + 1); printf("Scaling: {%.3f, %.3f, %.3f}\n", scaling.x, scaling.y, scaling.z);
+    //    PRINT_SPACES(depth + 1); printf("Quaternion: {%.3f, %.3f, %.3f, %.3f}\n", rotation.x, rotation.y, rotation.z, rotation.w);
+    //    printf("\n");
+
+    //    glm::mat4 glmMatrix;
+    //    AssimpToGLM(transformation, glmMatrix);
+
+    //    //glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.f), glm::vec3(position.x, position.y, position.z));
+    //    //glm::mat4 RotationMatrix = glm::mat4_cast(glm::quat(rotation.w, rotation.x, rotation.y, rotation.z));
+    //    //glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scaling.x, scaling.y, scaling.z));
+
+    //    //glm::mat4 ModelMatrix = TranslationMatrix * RotationMatrix * ScaleMatrix;
+
+    //    NodeNameToIdMap.insert(std::pair<std::string, int>(assimpNode->mName.C_Str(), NodeHeirarchyTransformations.size()));
+    //    NodeHeirarchyTransformations.emplace_back(glmMatrix);
+
+    //    for (int i = 0; i < assimpNode->mNumChildren; ++i)
+    //    {
+    //        node->Children.emplace_back(GenerateBoneHierarchy(assimpNode->mChildren[i], depth + 1));
+    //    }
+    //    return node;
+    //}
+
+    
+    
+
 
 
 
