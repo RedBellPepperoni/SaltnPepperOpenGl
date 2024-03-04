@@ -84,8 +84,10 @@ namespace SaltnPepperEngine
 		Transform& transform = characterEntity.GetComponent<Transform>();
 		transform.SetPosition(position);
 
-		/*SkinnedModelComponent& modelComp = characterEntity.AddComponent<SkinnedModelComponent>("Character");
-		SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+		SkinnedModelComponent& modelComp = characterEntity.AddComponent<SkinnedModelComponent>("Character");
+
+
+		/*SharedPtr<Material>& mat = modelComp.m_handle->GetMaterial();
 
 		mat->SetAlbedoTexture("vanguard");*/
 
