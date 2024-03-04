@@ -61,7 +61,10 @@ namespace SaltnPepperEngine
 
 			}
 
+			std::string GetDirectory(const std::string fileName);
+
 			void Clear();
+			void LoadTexture(SharedPtr<Material>& material, const string& Dir, const aiMaterial* pMaterial);
 
 			bool InitFromScene(const aiScene* pScene, const std::string& Filename);
 

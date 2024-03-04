@@ -352,7 +352,7 @@ namespace SaltnPepperEngine
 
 			// Adds a Render Element to the Queue
 			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform);
-			//void ProcessSkinnedRenderElement(const SharedPtr<SkinnedMesh>& mesh, const SharedPtr<Material>& material, Transform& transform);
+			void ProcessSkinnedRenderElement(const SharedPtr<SkinnedMesh>& mesh,Transform& transform);
 			void ProcessLightElement(Light& light, Transform& transform);
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 

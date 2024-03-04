@@ -103,12 +103,69 @@ namespace SaltnPepperEngine
 			}
 		}
 
+		std::string SkinnedMesh::GetDirectory(const std::string fileName)
+		{
+			// Extract the directory part from the file name
+			string::size_type SlashIndex;
+
+#ifdef _WIN64
+			SlashIndex = fileName.find_last_of("\\");
+
+			if (SlashIndex == -1) {
+				SlashIndex = fileName.find_last_of("/");
+			}
+#else
+			SlashIndex = fileName.find_last_of("/");
+#endif
+
+			string Dir;
+
+			if (SlashIndex == string::npos) {
+				Dir = ".";
+			}
+			else if (SlashIndex == 0) {
+				Dir = "/";
+			}
+			else {
+				Dir = fileName.substr(0, SlashIndex);
+			}
+
+			return Dir;
+		}
+
 		void SkinnedMesh::Clear()
 		{
 			if (m_Buffers[0] != 0) {
 				glDeleteBuffers(ARRAY_SIZE_IN_ELEMENTS(m_Buffers), m_Buffers);
 			}
 
+		}
+
+		void SkinnedMesh::LoadTexture(SharedPtr<Material>& material, const string& Dir, const aiMaterial* pMaterial)
+		{
+			if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+				aiString Path;
+
+				if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+					string p(Path.data);
+
+					if (p.substr(0, 2) == ".\\") {
+						p = p.substr(2, p.size() - 2);
+					}
+
+					string FullPath = Dir + "/" + p;
+
+					material->SetAlbedoTexture(FullPath.c_str());
+
+					if (!material->textureMaps.albedoMap) {
+						LOG_ERROR("Couldn't Load Texture : at {0}", FullPath.c_str());
+						exit(0);
+					}
+					else {
+						LOG_INFO("Loaded diffuse texture {0}", FullPath.c_str());
+					}
+				}
+			}
 		}
 
 		bool SkinnedMesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
@@ -205,15 +262,20 @@ namespace SaltnPepperEngine
 		{
 			m_Materials.clear();
 			
+			std::string directory = GetDirectory(Filename);
+
 			bool success = true;
 
 			// Initialize the materials
 			for (unsigned int i = 0; i < pScene->mNumMaterials; i++)
 			{
+				const aiMaterial* pMaterial = pScene->mMaterials[i];
+
 				SharedPtr<Material> mat = MakeShared<Material>();
 
 				m_Materials.push_back(mat);
-				
+
+				LoadTexture(mat,directory,pMaterial);
 			}
 
 			return success;
