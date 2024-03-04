@@ -5,6 +5,7 @@
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Geometry/SkinnedMesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
 
@@ -183,7 +184,7 @@ namespace SaltnPepperEngine
 
 		
 
-			SharedPtr<SkinnedMesh> m_handle;
+			SharedPtr<SkinnedModel> m_handle;
 
 			
 

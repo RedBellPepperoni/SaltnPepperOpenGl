@@ -2,6 +2,7 @@
 #define SKINNED_MESH_H
 #include "Engine/Core/Rendering/Buffers/VertexArray.h"
 #include "Engine/Core/Rendering/Material/Material.h"
+#include "Engine/Core/Rendering/Shader/Shader.h"
 #include "Mesh.h"
 #include <map>
 #include <unordered_map>
@@ -10,172 +11,124 @@
 #include <assimp/scene.h>       // Output data structure
 #include <assimp/postprocess.h> 
 
-#define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
+
 
 namespace SaltnPepperEngine
 {
-	namespace Rendering
-	{
+	
 
 
-		class SkinnedMesh 
-		{
-		public:
 
-			SkinnedMesh(const std::string filePath); 
-			virtual ~SkinnedMesh();
+#define MAX_BONE_INFLUENCE 4
 
-			bool LoadMesh(const std::string filepath);
-
-			void Render();
-
-			int NumBones() const { return (int)m_BoneNameToIndexMap.size(); }
-			
-			SharedPtr<Material>& GetMaterial() 
-			{
-				for (unsigned int i = 0; i < m_Materials.size(); i++) {
-					if (m_Materials[i]->albedoColour != Vector4(0.0f, 0.0f, 0.0f,0.0f)) {
-						return m_Materials[i];
-					}
-				}
-				
-				return m_Materials[0]; 
-			}
-
-			void GetBoneTransforms(float TimeInSeconds, std::vector<Matrix4>& Transforms);
-
-			
-
-			
-		protected:
-
-#define MAX_NUM_BONES_PER_VERTEX 4
-
-			inline void AssimpToGLM(const aiMatrix4x4& a, Matrix4& g)
-			{
-
-				g[0][0] = a.a1; g[0][1] = a.b1; g[0][2] = a.c1; g[0][3] = a.d1;
-				g[1][0] = a.a2; g[1][1] = a.b2; g[1][2] = a.c2; g[1][3] = a.d2;
-				g[2][0] = a.a3; g[2][1] = a.b3; g[2][2] = a.c3; g[2][3] = a.d3;
-				g[3][0] = a.a4; g[3][1] = a.b4; g[3][2] = a.c4; g[3][3] = a.d4;
-
-			}
-
-			std::string GetDirectory(const std::string fileName);
-
-			void Clear();
-			void LoadTexture(SharedPtr<Material>& material, const string& Dir, const aiMaterial* pMaterial);
-
-			bool InitFromScene(const aiScene* pScene, const std::string& Filename);
-
-			void CountVerticesAndIndices(const aiScene* pScene, unsigned int& NumVertices, unsigned int& NumIndices);
-
-			void ReserveSpace(unsigned int NumVertices, unsigned int NumIndices);
-
-			void InitAllMeshes(const aiScene* pScene);
-
-			void InitSingleMesh(int MeshIndex, const aiMesh* paiMesh);
-
-			bool InitMaterials(const aiScene* pScene, const std::string& Filename);
-
-			void PopulateBuffers();
-
-			struct VertexBoneData
-			{
-				int BoneIDs[MAX_NUM_BONES_PER_VERTEX] = { 0 };
-				float Weights[MAX_NUM_BONES_PER_VERTEX] = { 0.0f };
-
-				VertexBoneData()
-				{
-				}
-
-				void AddBoneData(int BoneID, float Weight)
-				{
-					for (int i = 0; i < ARRAY_SIZE_IN_ELEMENTS(BoneIDs); i++) {
-						if (Weights[i] == 0.0) {
-							BoneIDs[i] = BoneID;
-							Weights[i] = Weight;
-							//printf("Adding bone %d weight %f at index %i\n", BoneID, Weight, i);
-							return;
-						}
-					}
-
-					// should never get here - more bones than we have space for
-					assert(0);
-				}
-			};
-			
-
-			void LoadMeshBones(int MeshIndex, const aiMesh* pMesh);
-			void LoadSingleBone(int MeshIndex, const aiBone* pBone);
-			int GetBoneId(const aiBone* pBone);
-			void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-			void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-			void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-			int FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
-			int FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
-			int FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
-			const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const string& NodeName);
-			void ReadNodeHierarchy(float AnimationTime, const aiNode* pNode, const Matrix4& ParentTransform);
+        struct SkinVertex 
+        {
+            // position
+            glm::vec3 Position;
+            // normal
+            glm::vec3 Normal;
+            // texCoords
+            glm::vec2 TexCoords;
+            // tangent
+            glm::vec3 Tangent;
+            // bitangent
+            glm::vec3 Bitangent;
+            //bone indexes which will influence this vertex
+            int m_BoneIDs[MAX_BONE_INFLUENCE];
+            //weights from each bone
+            float m_Weights[MAX_BONE_INFLUENCE];
+        };
 
 
-			enum BUFFER_TYPE {
-				INDEX_BUFFER = 0,
-				POS_VB = 1,
-				TEXCOORD_VB = 2,
-				NORMAL_VB = 3,
-				BONE_VB = 4,
-				NUM_BUFFERS = 5
-			};
+        class SkinnedMesh 
+        {
+        public:
+            // mesh Data
+            std::vector<SkinVertex>  vertices;
+            std::vector<unsigned int> indices;
+            SharedPtr<Material> material;
+            unsigned int VAO;
 
-			SharedPtr<VertexArray> skinnedVAO;
-			GLuint m_Buffers[NUM_BUFFERS] = { 0 };
+            SkinnedMesh();
 
-#define INVALID_MATERIAL 0xFFFFFFFF
-			struct BasicMeshEntry {
-				BasicMeshEntry()
-				{
-					NumIndices = 0;
-					BaseVertex = 0;
-					BaseIndex = 0;
-					MaterialIndex = INVALID_MATERIAL;
-				}
+            // constructor
+            SkinnedMesh(std::vector<SkinVertex> vertices, vector<unsigned int> indices)
+            {
+                this->vertices = vertices;
+                this->indices = indices;
+                material = MakeShared<Material>();
 
-				unsigned int NumIndices;
-				unsigned int BaseVertex;
-				unsigned int BaseIndex;
-				unsigned int MaterialIndex;
-			};
+                // now that we have all the required data, set the vertex buffers and its attribute pointers.
+                setupMesh();
+            }
 
-			Assimp::Importer Importer;
-			const aiScene* pScene = NULL;
-			std::vector<BasicMeshEntry> m_Meshes;
-			std::vector<SharedPtr<Material>> m_Materials;
+            // render the mesh
+            void Render()
+            {
+                // bind appropriate textures
+              
+                
 
-			vector<Vector3> m_Positions;
-			vector<Vector3> m_Normals;
-			vector<Vector2> m_TexCoords;
-			vector<unsigned int> m_Indices;
-			vector<VertexBoneData> m_Bones;
+                // draw mesh
+                glBindVertexArray(VAO);
+                glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+                glBindVertexArray(0);
 
-			map<std::string, int> m_BoneNameToIndexMap;
+               
+            }
 
-			struct BoneInfo
-			{
-				Matrix4 OffsetMatrix;
-				Matrix4 FinalTransformation;
 
-				BoneInfo(const Matrix4& Offset)
-				{
-					OffsetMatrix = Offset;
-					FinalTransformation = Matrix4(0.0f);
-				};
-			};
 
-			vector<BoneInfo> m_BoneInfo;
-			Matrix4 m_GlobalInverseTransform;
-		};
-	}
+        private:
+            // render data 
+            unsigned int VBO, EBO;
+
+            // initializes all the buffer objects/arrays
+            void setupMesh()
+            {
+                // create buffers/arrays
+                glGenVertexArrays(1, &VAO);
+                glGenBuffers(1, &VBO);
+                glGenBuffers(1, &EBO);
+
+                glBindVertexArray(VAO);
+                // load data into vertex buffers
+                glBindBuffer(GL_ARRAY_BUFFER, VBO);
+                // A great thing about structs is that their memory layout is sequential for all its items.
+                // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
+                // again translates to 3/2 floats which translates to a byte array.
+                glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(SkinVertex), &vertices[0], GL_STATIC_DRAW);
+
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+                // set the vertex attribute pointers
+                // vertex Positions
+                glEnableVertexAttribArray(0);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SkinVertex), (void*)0);
+                // vertex normals
+                glEnableVertexAttribArray(1);
+                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(SkinVertex), (void*)offsetof(SkinVertex, Normal));
+                // vertex texture coords
+                glEnableVertexAttribArray(2);
+                glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(SkinVertex), (void*)offsetof(SkinVertex, TexCoords));
+                // vertex tangent
+                glEnableVertexAttribArray(3);
+                glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(SkinVertex), (void*)offsetof(SkinVertex, Tangent));
+                // vertex bitangent
+                glEnableVertexAttribArray(4);
+                glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(SkinVertex), (void*)offsetof(SkinVertex, Bitangent));
+                // ids
+                glEnableVertexAttribArray(5);
+                glVertexAttribIPointer(5, 4, GL_INT, sizeof(SkinVertex), (void*)offsetof(SkinVertex, m_BoneIDs));
+
+                // weights
+                glEnableVertexAttribArray(6);
+                glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(SkinVertex), (void*)offsetof(SkinVertex, m_Weights));
+                glBindVertexArray(0);
+            }
+        };
+	
 
 }
 

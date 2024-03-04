@@ -27,13 +27,13 @@ namespace SaltnPepperEngine
 
 
 	
-	
+	class SkinnedMesh;
 
     namespace Rendering
     {
 		// Forward Decalrartions for better compile times
 		class Mesh;
-		class SkinnedMesh;
+		
 		class Material;
 		class VertexArray;
 		class Shader;

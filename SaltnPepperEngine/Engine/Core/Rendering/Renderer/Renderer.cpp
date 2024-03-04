@@ -714,19 +714,9 @@ namespace SaltnPepperEngine
 
             shader->SetUniform("mapAlbedo", 0);
 
-            float AnimationTimeSec = Time::CurrentTime()/1000.0f;
-
-            std::vector<Matrix4> transforms;
-            mesh->GetBoneTransforms(AnimationTimeSec,transforms);
-
-            for (int i = 0; i < transforms.size(); i++)
-            {
-                std::string name = "boneTransforms[" + std::to_string(i) + "]";
-                shader->SetUniform(name, transforms[i]);
-            }
-
+         
             
-            mesh->Render();
+            //mesh->Render();
 
         }
 

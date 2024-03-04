@@ -197,6 +197,7 @@
     <ClInclude Include="Engine\Core\Physics\SoftBody\SoftBody.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\VerletCloth.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedMesh.h" />
+    <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\Physics\SoftBody\Cloth.cpp" />
@@ -296,6 +297,7 @@
     <ClCompile Include="Engine\Core\Physics\SoftBody\SoftBody.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\VerletCloth.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedMesh.cpp" />
+    <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

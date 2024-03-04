@@ -19,17 +19,17 @@ namespace SaltnPepperEngine
 		class Shader;
 		class Material;
 		class CubeMap;
-		class SkinnedMesh;
+		
 		enum class TextureFormat : uint8_t;
 		class Texture;
 
 	}
 
 	class Model;
-
-
+	class SkinnedModel;
+	class SkinnedMesh;
 	using Rendering::Shader;
-	using Rendering::SkinnedMesh;
+	
 	using Rendering::Material;
 
 	using Rendering::Texture;
@@ -147,7 +147,7 @@ namespace SaltnPepperEngine
 
 
 	// Definition for Model Resources
-	class SkinnedModelLibrary : public ResourceLibrary<SkinnedMesh>
+	class SkinnedModelLibrary : public ResourceLibrary<SkinnedModel>
 	{
 	public:
 		// Just defining the Constructor and Destructor
@@ -159,7 +159,7 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		SharedPtr<SkinnedMesh> LoadModel(const std::string& friendlyName, const std::string& modelpath);
+		SharedPtr<SkinnedModel> LoadModel(const std::string& friendlyName, const std::string& modelpath);
 	};
 
 
