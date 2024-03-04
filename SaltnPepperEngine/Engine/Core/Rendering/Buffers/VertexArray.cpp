@@ -124,12 +124,7 @@ namespace SaltnPepperEngine
 			GLDEBUG(glEnableVertexAttribArray(4));
 			GLDEBUG(glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride, (void*)offsetof(SkinnedVertex, bitangent)));
 		
-			GLDEBUG(glEnableVertexAttribArray(5));
-			GLDEBUG(glVertexAttribPointer(5, 4, GL_INT, GL_FALSE, stride, (void*)offsetof(SkinnedVertex, boneData)));
-		
-
-			GLDEBUG(glEnableVertexAttribArray(6));
-			GLDEBUG(glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, stride, (void*)(offsetof(SkinnedVertex, boneData) + 4 * sizeof(int))));
+			
 		}
     }
 }

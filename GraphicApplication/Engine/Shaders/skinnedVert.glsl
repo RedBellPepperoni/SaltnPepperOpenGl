@@ -14,11 +14,8 @@ struct VertexData
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in vec3 vNormal;
-layout (location = 3) in vec3 vTangent;
-layout (location = 4) in vec3 vBitangent;
-
-layout (location = 5) in ivec4 vBoneId;
-layout (location = 6) in vec4 vBoneWeights;
+layout (location = 3) in ivec4 vBoneId;
+layout (location = 4) in vec4 vBoneWeights;
 
 const int MAX_BONES = 200;
 
@@ -43,27 +40,29 @@ void main()
 	vec4 posL = boneT * vec4(vPosition, 1.0f);
 
 	mat4 modelViewProj = viewProj * model;
-	gl_Position = modelViewProj * posL;
+	//gl_Position = modelViewProj * posL;
 
 
-	//gl_Position = modelViewProj * vec4(vPosition, 1.0f);
-
-
+	
 	vec3 tempNorm = normalize(mat3(normalMat) * vNormal);
-	vec3 tempTangent = normalize(mat3(normalMat) * vTangent);
-	vec3 tempBiTangent = normalize(mat3(normalMat) * vBitangent);
 
 
 	VertexOutput.Normal = tempNorm;
-	//VertexOutput.Position = model * vec4(vPosition, 1.0f);
-	VertexOutput.Position = model * posL;
+	VertexOutput.Position = model * vec4(vPosition, 1.0f);
+	//VertexOutput.Position = model * posL;
 
+
+	VertexOutput.Position = vec4(vPosition, 1.0f);
 	VertexOutput.TexCoord = aTexCoord;
 
 	// The TBN matrix
-	VertexOutput.WorldNormal = transpose(mat3(tempTangent, tempBiTangent, tempNorm));
+	//VertexOutput.WorldNormal = transpose(mat3(tempTangent, tempBiTangent, tempNorm));
 	BoneIds = vBoneId;
 	VertexOutput.BoneWights = vBoneWeights;
+
+	//gl_Position = modelViewProj * vec4(vPosition, 1.0f);
+	gl_Position = vec4(vPosition, 1.0f);
+
 }
 
 

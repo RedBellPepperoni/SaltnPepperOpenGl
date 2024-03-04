@@ -34,7 +34,7 @@ class GraphicRuntime : public Application
       
      
         
-        Entity mainCamera = CreateMainCamera(Vector3(-17.3f,218.02f,56.26f),Vector3(-13.17f,24.86,0.00f));
+        Entity mainCamera = CreateMainCamera(Vector3(0.0f,0.0f,10.0f),Vector3(10.0f));
 
         Camera* cam = &mainCamera.GetComponent<Camera>();
 

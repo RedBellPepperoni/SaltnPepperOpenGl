@@ -217,8 +217,7 @@ namespace SaltnPepperEngine
 				GLDEBUG(glEnable(GL_DEPTH_TEST));
 				m_renderer->Clear(true);
 
-				//// ===== Post Render Skybox Pass =================
-				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
+				
 
 				//// ===== Object Pass for Opaque Elements ================ 
 				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
@@ -231,6 +230,9 @@ namespace SaltnPepperEngine
 
 
 				m_renderer->SkinnedObjectPass(m_ShaderLibrary->GetResource("SkinnedShader"), m_editorCameraElement, m_renderer->GetPipeLine().skinnedElementList);
+
+				//// ===== Post Render Skybox Pass =================
+				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
 
 				m_editorCameraElement.depthTexture->GenerateMipMaps();
 
@@ -252,8 +254,7 @@ namespace SaltnPepperEngine
 					GLDEBUG(glEnable(GL_DEPTH_TEST));
 					m_renderer->Clear(true);
 
-					// ===== Post Render Skybox Pass =================
-					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
+					
 
 					// ===== Forward Pass for Opaque Elements ================ 
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
@@ -265,6 +266,9 @@ namespace SaltnPepperEngine
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), cameraElement, m_renderer->GetPipeLine().customElementList);
 
 					m_renderer->SkinnedObjectPass(m_ShaderLibrary->GetResource("SkinnedShader"), cameraElement, m_renderer->GetPipeLine().skinnedElementList);
+
+					// ===== Post Render Skybox Pass =================
+				//	m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
 
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();
