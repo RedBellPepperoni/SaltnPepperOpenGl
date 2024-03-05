@@ -5,6 +5,7 @@
 #include "Engine/Core/Threading/MultiThreader.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 #include "SkinAnimator.h"
+#include "Engine/Core/Rendering/Renderer/RenderManager.h"
 
 //#include "SecurityCamera.h"
 
@@ -55,7 +56,7 @@ class GraphicRuntime : public Application
 
         mat->SetAlbedoTexture("vampire");
 
-        animator = MakeShared<Animator>(animation);
+        Application::GetCurrent().GetRenderManager()->GetRenderer()->animator  = MakeShared<Animator>(animation);
 
 	}
 
@@ -70,14 +71,12 @@ private:
 
     //std::vector<int> availableCameras;
     SharedPtr<SkinnedModel> model;
-    SharedPtr<Animator> animator;
+   
     SharedPtr<SkinAnimation> animation;
 
    
    
 };
-
-
 
 
 

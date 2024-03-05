@@ -683,26 +683,26 @@ namespace SaltnPepperEngine
 
 
             SharedPtr<SkinnedMesh>& mesh = m_pipeline.SkinnedMeshList[element.meshIndex];
-            //SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
+            SharedPtr<Material>& mat = mesh->material;
 
-            //if (mat != nullptr)
-            //{
-            //    mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
-            //    shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
+            if (mat != nullptr)
+            {
+                mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
+                shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
 
-            //    if (mat->m_type == MaterialType::Transparent)
-            //    {
-            //        mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
-            //        shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
-            //    }
-            //   
+                if (mat->m_type == MaterialType::Transparent)
+                {
+                    mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
+                    shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
+                }
+               
 
 
-            //    //shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedomapFactor);
-            //    shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
-            //    shader->SetUniform("materialProperties.Metallic", mat->metallic);
+                //shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedomapFactor);
+                shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
+                shader->SetUniform("materialProperties.Metallic", mat->metallic);
 
-            //}
+            }
 
 
             // mat->textureMaps.albedoMap->UnBind();
@@ -714,9 +714,14 @@ namespace SaltnPepperEngine
 
             shader->SetUniform("mapAlbedo", 0);
 
-         
+            auto transforms = animator->GetFinalBoneMatrices();
+            for (int i = 0; i < transforms.size(); ++i)
+            {
+                shader->SetUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+            }
+
             
-            //mesh->Render();
+            mesh->Render();
 
         }
 

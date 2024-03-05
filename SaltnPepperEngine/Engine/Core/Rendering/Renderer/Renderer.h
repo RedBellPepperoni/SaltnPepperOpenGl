@@ -14,6 +14,8 @@
 
 #include "Engine/Core/Rendering/Geometry/RectangleObject.h"
 
+#include "SkinAnimator.h"
+
 namespace SaltnPepperEngine
 {
 	namespace Components
@@ -305,6 +307,9 @@ namespace SaltnPepperEngine
 			/*SharedPtr<FrameBuffer> SecondaryFrameBuffer;
 			SharedPtr<Texture> SecondaryTexture;*/
 			//unsigned int rbo;
+
+
+			SharedPtr<Animator> animator;
 
 		private:
 

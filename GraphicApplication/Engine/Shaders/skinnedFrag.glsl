@@ -6,11 +6,7 @@ struct VertexData
 	vec3 Normal;
 	vec2 TexCoord;
 	mat3 WorldNormal;
-	
-	vec4 BoneWights;
 };
-
-
 
 struct Material
 {
@@ -75,9 +71,8 @@ uniform sampler2D mapMetallic;
 uniform sampler2D mapEmissive;
 uniform sampler2D mapNormal;
 
-in VertexData VertexOutput;
-flat in ivec4 BoneIds;
-out vec4 FragColor;
+layout(location = 0) in VertexData VertexOutput;
+layout(location = 0) out vec4 FragColor;
 
 
 
@@ -86,7 +81,6 @@ uniform vec3 cameraView;
 uniform UBOLight uboLights;
 uniform UniformMaterialData materialProperties;
 
-uniform bool displayBoneWeights;
 
 
 vec3 DeGamma(vec3 color)
@@ -289,18 +283,9 @@ void main()
     material.View = normalize(cameraView - VertexOutput.Position.xyz);
 
     //vec3 finalColor = CalculateLighting(material) + material.Emissive;
-    vec3 finalColor = CalculateLighting(material);
-
-
-    // Displaying Bone Weights
-    for(int index = 0; index < 4; index++)
-    {
-       
-    }
-
+    //vec3 finalColor = CalculateLighting(material);
+    vec3 finalColor = texture(mapAlbedo, VertexOutput.TexCoord).rgb;
     FragColor = vec4(finalColor, 1.0);
-
-    FragColor = vec4(1.0f,1.0f,1.0f,1.0f);
 
 }
 
