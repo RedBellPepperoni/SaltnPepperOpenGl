@@ -46,8 +46,8 @@ namespace SaltnPepperEngine
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugLineShader", FileSystem::GetShaderDir().string() + "DebugLineVert.glsl", FileSystem::GetShaderDir().string() + "DebugLineFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugPointShader", FileSystem::GetShaderDir().string() + "DebugPointVert.glsl", FileSystem::GetShaderDir().string() + "DebugPointFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShader", FileSystem::GetShaderDir().string() + "renderBufferVert.glsl", FileSystem::GetShaderDir().string() + "renderBufferFrag.glsl"));
-			CHECKNULL(GetShaderLibrary()->LoadShader("SkinnedShader", FileSystem::GetShaderDir().string() + "skinnedVert.glsl", FileSystem::GetShaderDir().string() + "skinnedFrag.glsl"));
-			//CHECKNULL(GetShaderLibrary()->LoadShader("SkinnedShader", FileSystem::GetShaderDir().string() + "skinBasicVert.glsl", FileSystem::GetShaderDir().string() + "skinBasicFrag.glsl"));
+			//CHECKNULL(GetShaderLibrary()->LoadShader("SkinnedShader", FileSystem::GetShaderDir().string() + "skinnedVert.glsl", FileSystem::GetShaderDir().string() + "skinnedFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("SkinnedShader", FileSystem::GetShaderDir().string() + "skinBasicVert.glsl", FileSystem::GetShaderDir().string() + "skinBasicFrag.glsl"));
 			
 		}
 
