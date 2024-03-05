@@ -18,7 +18,7 @@ namespace SaltnPepperEngine
 
 		textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 		textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
-		textureLib->LoadTexture("vampire", "Assets\\Textures\\vampire.png", TextureFormat::RGBA);
+		textureLib->LoadTexture("vampire", "Assets\\Textures\\diffuse.png", TextureFormat::RGBA);
 
 
 	}

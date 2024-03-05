@@ -47,6 +47,7 @@ class GraphicRuntime : public Application
         Entity characterEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SkinnedCharacter");
         Transform& transform = characterEntity.GetComponent<Transform>();
         transform.SetPosition(Vector3(0.0f));
+        transform.SetRotation(Vector3(0.0f));
 
         SkinnedModelComponent& modelComp = characterEntity.AddComponent<SkinnedModelComponent>("Assets\\Models\\dancing_vampire.dae");
 
@@ -56,13 +57,14 @@ class GraphicRuntime : public Application
 
         mat->SetAlbedoTexture("vampire");
 
-        Application::GetCurrent().GetRenderManager()->GetRenderer()->animator  = MakeShared<Animator>(animation);
+        Application::GetCurrent().GetRenderManager()->GetRenderer()->animator = MakeShared<Animator>(animation);
+        animator = Application::GetCurrent().GetRenderManager()->GetRenderer()->animator;
 
 	}
 
 	void OnUpdate(float deltaTime)
 	{
-        
+       // animator->UpdateAnimation(deltaTime);
 	}
 
    
@@ -71,7 +73,7 @@ private:
 
     //std::vector<int> availableCameras;
     SharedPtr<SkinnedModel> model;
-   
+    SharedPtr<Animator> animator;
     SharedPtr<SkinAnimation> animation;
 
    
