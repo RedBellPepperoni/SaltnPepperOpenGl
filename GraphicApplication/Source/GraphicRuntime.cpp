@@ -46,8 +46,8 @@ class GraphicRuntime : public Application
 
         Entity characterEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SkinnedCharacter");
         Transform& transform = characterEntity.GetComponent<Transform>();
-        transform.SetPosition(Vector3(0.0f));
-        transform.SetRotation(Vector3(0.0f));
+        transform.SetPosition(Vector3(0.0f,-4.0f,0.0f));
+        transform.SetEularRotation(Vector3(0.0f));
         //Assets\\Models\\dancing_vampire.dae
         SkinnedModelComponent& modelComp = characterEntity.AddComponent<SkinnedModelComponent>("Assets\\Models\\dancing_vampire.dae");
 
@@ -55,16 +55,18 @@ class GraphicRuntime : public Application
 
         SharedPtr<Material>& mat = modelComp.m_handle->meshes[0]->material;
 
-        mat->SetAlbedoTexture("vampire");
+        mat->SetAlbedoTexture("vanguard");
 
         Application::GetCurrent().GetRenderManager()->GetRenderer()->animator = MakeShared<Animator>(animation);
         animator = Application::GetCurrent().GetRenderManager()->GetRenderer()->animator;
+
+        animator->UpdateAnimation(Time::DeltaTime());
 
 	}
 
 	void OnUpdate(float deltaTime)
 	{
-        animator->UpdateAnimation(deltaTime);
+       // animator->UpdateAnimation(deltaTime);
 	}
 
    

@@ -715,7 +715,8 @@ namespace SaltnPepperEngine
 
             shader->SetUniform("mapAlbedo", 0);
 
-            auto transforms = animator->GetFinalBoneMatrices();
+            std::vector<Matrix4>& transforms = animator->GetFinalBoneMatrices();
+
             for (int i = 0; i < transforms.size(); ++i)
             {
                 shader->SetUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);

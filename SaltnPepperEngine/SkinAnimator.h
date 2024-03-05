@@ -68,7 +68,7 @@ namespace SaltnPepperEngine
 				CalculateBoneTransform(&node->children[i], globalTransformation);
 		}
 
-		std::vector<glm::mat4> GetFinalBoneMatrices()
+		std::vector<glm::mat4>& GetFinalBoneMatrices()
 		{
 			return m_FinalBoneMatrices;
 		}

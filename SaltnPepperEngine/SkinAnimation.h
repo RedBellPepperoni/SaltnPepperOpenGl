@@ -83,8 +83,7 @@ namespace SaltnPepperEngine
 					boneInfoMap[boneName].id = boneCount;
 					boneCount++;
 				}
-				m_Bones.push_back(Bone(channel->mNodeName.data,
-					boneInfoMap[channel->mNodeName.data].id, channel));
+				m_Bones.push_back(Bone(channel->mNodeName.data, boneInfoMap[channel->mNodeName.data].id, channel));
 			}
 
 			m_BoneInfoMap = boneInfoMap;
