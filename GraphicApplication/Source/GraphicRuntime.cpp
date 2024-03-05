@@ -48,7 +48,7 @@ class GraphicRuntime : public Application
         Transform& transform = characterEntity.GetComponent<Transform>();
         transform.SetPosition(Vector3(0.0f));
         transform.SetRotation(Vector3(0.0f));
-
+        //Assets\\Models\\dancing_vampire.dae
         SkinnedModelComponent& modelComp = characterEntity.AddComponent<SkinnedModelComponent>("Assets\\Models\\dancing_vampire.dae");
 
         animation = MakeShared<SkinAnimation>("Assets\\Models\\dancing_vampire.dae", modelComp.m_handle);
@@ -64,7 +64,7 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
-       // animator->UpdateAnimation(deltaTime);
+        animator->UpdateAnimation(deltaTime);
 	}
 
    

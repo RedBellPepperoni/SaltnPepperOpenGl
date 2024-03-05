@@ -707,7 +707,8 @@ namespace SaltnPepperEngine
 
             // mat->textureMaps.albedoMap->UnBind();
 
-
+            shader->SetUniform("view", camera.View);
+            shader->SetUniform("projection", camera.Proj);
             shader->SetUniform("model", element.ModelMatrix);
 
             shader->SetUniform("normalMat", element.NormalMatrix);
@@ -822,12 +823,15 @@ namespace SaltnPepperEngine
             // Matrix4 view = (transformMatrix);
             Matrix4 view = Math::Inverse(transformMatrix);
 
+            camera.View = view;
+            
+
             // get the inverse of the Camera transform without any position data (only Rotation0
             Matrix4 staticView = Math::Inverse(Matrix4(Matrix3(transformMatrix)));
 
             // the Projection of the camera
             Matrix4 proj = (cameraRef.GetProjectionMatrix());
-
+            camera.Proj = proj;
             // calculate the vie projection matrix
             Matrix4 projView = proj * (view);
 

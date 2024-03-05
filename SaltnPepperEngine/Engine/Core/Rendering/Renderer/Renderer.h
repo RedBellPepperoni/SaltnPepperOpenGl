@@ -133,6 +133,8 @@ namespace SaltnPepperEngine
 
 			// Static view proj matric for the Skybox rendering
 			Matrix4 staticViewProjectMatrix;
+			Matrix4 View;
+			Matrix4 Proj;
 
 			// the position of the camera
 			Vector3 viewPosition;
