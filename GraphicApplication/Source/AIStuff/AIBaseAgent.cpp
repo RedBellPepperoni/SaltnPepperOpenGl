@@ -1,6 +1,8 @@
 #include "AIBaseAgent.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 #include "Engine/Core/Components/Transform.h"
+#include "Engine/Utils/Time/Time.h"
+#include "Engine/Utils/Maths/Random.h"
 
 namespace SaltnPepperEngine
 {
@@ -8,19 +10,21 @@ namespace SaltnPepperEngine
 	{
 		
 			
+		
 
 		void AIBaseAgent::UpdateState()
 		{
-			 
 		}
 
-		void AIBaseAgent::MoveAgent(const Vector3& playerPosition, const Vector3& forwardDirection)
+		void AIBaseAgent::MoveAgent(const Vector3& playerPosition, const Vector3& forwardDirection, const float deltaTime)
 		{
 			Vector3 ProjectedPosition = playerPosition + forwardDirection * 12.0f;
 			
 			// get the Direction vector
 			Vector3 MoveDirection = Vector3(0.0f);
 			Vector3 position = m_rigidBody->GetPosition();
+			Vector3 forward = Normalize(m_lookTransform->GetForwardVector());
+			float distance = 0;
 
 			switch (m_behavior)
 			{
@@ -60,7 +64,7 @@ namespace SaltnPepperEngine
 
 			case SaltnPepperEngine::AI::Approach:
 				
-				float distance = DistanceSquared(position, playerPosition);
+				 distance = DistanceSquared(position, playerPosition);
 
 				if ( distance> 55.0f)
 				{
@@ -77,7 +81,48 @@ namespace SaltnPepperEngine
 
 
 				break;
+
+
+			case SaltnPepperEngine::AI::Wander:
+
+				// Get the squared distance from the taget point
+				distance = DistanceSquared(position, targetWanderPos);
+
+				// We are close Enough , Do the decision thing
+				if (distance < 0.5f)
+				{
+					// Stop the Agent
+					MoveDirection = Vector3(0.0f);
+					m_rigidBody->SetVelocity(Vector3(0.0f));
+
+					currentTime += deltaTime;
+
+					// Finally Dont with the desition
+					if (currentTime < m_decisionTime) { return; }
+					
+					currentTime = 0.0f;
+
+					Vector3 PrimaryWanderPosition(position + forward * m_primaryWanderRadius);
+
+					//float theta = Random32::Range.GetRandom(0.0f, 2 * PI);
+					int randomIndex = Random32::Range.GetRandom(0,secondaryAngleList.size()-1);
+					float theta = secondaryAngleList[randomIndex];
+
+					//LOG_WARN("Angle : {0}",theta * RADtoDEG);
+
+					Vector3 SecondaryWanderPosition(m_secondaryWanderRadius * Cos(theta), 0.0f, m_secondaryWanderRadius * Sin(theta));
+
+					targetWanderPos = PrimaryWanderPosition + SecondaryWanderPosition;
+
+
+
+				}
+
+				MoveDirection = Normalize(targetWanderPos - position);
+				break;
 			}
+
+			
 
 			m_rigidBody->SetForce(MoveDirection * 50.0f * m_moveSpeed);
 		}
@@ -129,7 +174,7 @@ namespace SaltnPepperEngine
 
 		AIBaseAgent::AIBaseAgent()
 		{
-
+			
 		}
 
 		AIBaseAgent::~AIBaseAgent()
@@ -155,17 +200,65 @@ namespace SaltnPepperEngine
 
 			if (m_currentState == AgentState::Idle) { return; }
 
-			MoveAgent(playerPosition, playerDirection);
+
+			if (m_behavior == BehaviorState::Wander)
+			{
+				MoveAgent(targetWanderPos, Vector3(0.0f,0.0f,0.0f), deltatime);
+			}
+
+			else
+			{
+				MoveAgent(playerPosition, playerDirection, deltatime);
+			}
 
 			if (m_behavior == BehaviorState::Seek || m_behavior == BehaviorState::Pursue || m_behavior == BehaviorState::Approach)
 			{
 				RotateAgent(playerPosition, deltatime);
 			}
 
+			else if (m_behavior == BehaviorState::Wander)
+			{
+				RotateAgent(targetWanderPos, deltatime);
+			}
+
 			else
 			{
 				RotateAgent(playerPosition + (playerDirection + 2.0f),deltatime);
 			}
+
+
+		}
+
+		void AIBaseAgent::SetBehaviour(BehaviorState newState)
+		{
+			 m_behavior = newState; 
+
+			 if (m_behavior == AI::Wander)
+			 {
+				 Vector3 position = m_rigidBody->GetPosition();
+				 Vector3 forward = Normalize(m_lookTransform->GetForwardVector());
+
+				 Vector3 PrimaryWanderPosition(position + forward * m_primaryWanderRadius);
+
+
+
+
+				 float theta = Random32::Range.GetRandom(0.0f , 2*PI);
+
+				 Vector3 SecondaryWanderPosition(m_secondaryWanderRadius * Cos(theta), 0.0f, m_secondaryWanderRadius * Sin(theta));
+
+				 targetWanderPos = PrimaryWanderPosition + SecondaryWanderPosition;
+			 }
+		}
+
+		void AIBaseAgent::SetWanderParams(float primaryRadius, float secondaryRadius, float decisionTime, float turnRate)
+		{
+			m_primaryWanderRadius = primaryRadius;
+			m_secondaryWanderRadius = secondaryRadius;
+
+			m_decisionTime = decisionTime;
+			m_turnRate = turnRate;
+
 		}
 	}
 }

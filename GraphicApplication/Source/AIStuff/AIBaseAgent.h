@@ -1,7 +1,7 @@
 #ifndef AIBASEAGENT_H
 #define AIBASEAGENT_H
 #include "Engine/Utils/Maths/MathDefinitions.h"
-
+#include <vector>
 namespace SaltnPepperEngine
 {
 	namespace Components
@@ -26,7 +26,8 @@ namespace SaltnPepperEngine
 			Flee = 2,	// Continuesly move away from the player until a distance
 			Pursue = 3, // Continuesly move towards a player until a set distance (if player goes near, do the Evade manuaer)
 			Evade = 4,  // Flee from the player till a certain distance,
-			Approach = 5 
+			Approach = 5 ,
+			Wander = 6
 		};
 
 		enum AgentState
@@ -35,6 +36,7 @@ namespace SaltnPepperEngine
 			Moving,
 			Interacting
 		};
+
 
 		class AIBaseAgent
 		{
@@ -54,12 +56,36 @@ namespace SaltnPepperEngine
 			float m_moveSpeed = 2.0f;
 			float m_turnRate = 4.3f;
 
+
+
+
+			float m_primaryWanderRadius = 5.0f;
+			float m_secondaryWanderRadius = 2.0f;
+			float m_decisionTime = 2.0f;
+			float currentTime = 0.0f;
+
+			Vector3 targetWanderPos = Vector3(0.0f);
+
+
+			std::vector<float> secondaryAngleList =
+			{
+				PI / 6,
+				PI / 3,
+				PI / 2,
+				3 * PI / 4,
+				PI,
+				5 * PI / 4,
+				3 * PI / 2,
+				7 * PI / 4,
+				0
+			};
+
 		protected:
 
 			// Called when the state has reached its end
 			void UpdateState();
 
-			void MoveAgent(const Vector3& playerPosition, const Vector3& forwardDirection);
+			void MoveAgent(const Vector3& playerPosition, const Vector3& forwardDirection, const float deltaTime);
 			void RotateAgent(const Vector3& playerPosition, const float deltaTime);
 
 		public:
@@ -70,11 +96,16 @@ namespace SaltnPepperEngine
 		    AIBaseAgent();
 			virtual ~AIBaseAgent();
 
+
+
 			virtual void Init(RigidBody3D* RigidBodyRef, Transform* lookTransformRef);
 
 			virtual void Update(float deltatime, const Vector3& playerPosition, const Vector3& playerDirection);
 
-			virtual void SetBehaviour(BehaviorState newState) { m_behavior = newState; }
+			virtual void SetBehaviour(BehaviorState newState);
+
+			virtual void SetWanderParams(float primaryRadius, float secondaryRadius, float decisionTime, float turnRate = 1.0f);
+
 		};
 
 

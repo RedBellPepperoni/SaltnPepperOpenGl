@@ -12,6 +12,14 @@ struct PlayerLook
 	std::string name = "Hello";
 };
 
+struct WanderPArams
+{
+	float primaryRadius;
+	float secondaryRadius;
+	float decision;
+};
+
+
 enum EnemyModel : uint8_t
 {
 	GOBLIN,
@@ -99,14 +107,14 @@ Entity CreatePlayerCharacter(Entity mainCamera)
 	Hierarchy& hierarchyComp = playerbaseEntity.AddComponent<Hierarchy>();
 	Transform* transform = &playerbaseEntity.GetComponent<Transform>();
 	PlayerCharacter& player = playerbaseEntity.AddComponent<PlayerCharacter>();
-	transform->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	transform->SetPosition(Vector3(-42.0f, 0.0f, 40.0f));
 
 
 	PhysicsProperties properties;
 	properties.collider = MakeShared<SphereCollider>(1.0f);
 	properties.mass = 20.0f;
 	properties.friction = 0.8f;
-	properties.position = Vector3(0.0f);
+	properties.position = Vector3(-42.0f, 0.0f, 40.0f);
 	RigidBody3D* bodyRef = playerbaseEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
 	bodyRef->SetVelocity(Vector3(5.0f, 0.0f, 0.0f));
 
@@ -149,7 +157,7 @@ Entity CreateBaseFloor()
 	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Floor");
 	Transform& transform = floorEntity.GetComponent<Transform>();
 
-	transform.SetScale(Vector3(100.0f, 1.0f, 100.0f));
+	transform.SetScale(Vector3(400.0f, 1.0f, 400.0f));
 	transform.SetPosition(Vector3(0.0f, -0.5f, 0.0f));
 
 	ModelComponent& modelComp = floorEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
@@ -229,6 +237,71 @@ Entity CreateEnemyAI(AI::BehaviorState state, EnemyModel model,Vector3 position 
 
 	return enemyEntity;
 }
+
+
+
+Entity CreateWanderAI(WanderPArams params, EnemyModel model, Vector3 position = Vector3(10.0f, 0.0f, 10.0f))
+{
+	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Wander Enemy");
+	Hierarchy& hierarchyComp = enemyEntity.AddComponent<Hierarchy>();
+	Transform& transform = enemyEntity.GetComponent<Transform>();
+	AI::AIBaseAgent& agent = enemyEntity.AddComponent<AI::AIBaseAgent>();
+
+
+	transform.SetPosition(position);
+
+
+	PhysicsProperties properties;
+	properties.collider = MakeShared<SphereCollider>(1.0f);
+	properties.mass = 20.0f;
+	properties.friction = 0.8f;
+	properties.position = position;
+	RigidBody3D* bodyRef = enemyEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
+
+
+
+
+	Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Enemy Model");
+	Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
+	Transform* childtransform = &childEntity.GetComponent<Transform>();
+
+	agent.Init(bodyRef, childtransform);
+	agent.m_lookTransform = &childEntity.GetComponent<Transform>();
+	agent.SetBehaviour(AI::Wander);
+	agent.SetWanderParams(params.primaryRadius, params.secondaryRadius, params.decision);
+
+	ModelComponent* modelComp = nullptr;
+	SharedPtr<Material> mat = nullptr;
+
+	switch (model)
+	{
+	case GOBLIN: modelComp = &childEntity.AddComponent<ModelComponent>("Goblin");
+		mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+		mat->SetAlbedoTexture("goblin");
+		break;
+
+	case SHEEP:modelComp = &childEntity.AddComponent<ModelComponent>("Sheep");
+		mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+		mat->SetAlbedoTexture("sheep");
+		break;
+
+	case CAT:modelComp = &childEntity.AddComponent<ModelComponent>("Cat");
+		mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+		mat->SetAlbedoTexture("cat");
+		break;
+
+	}
+
+
+
+
+	childEntity.SetParent(enemyEntity);
+
+
+	return enemyEntity;
+}
+
+
 
 
 #endif //  EntitySetup
