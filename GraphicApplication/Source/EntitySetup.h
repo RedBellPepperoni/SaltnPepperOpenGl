@@ -114,6 +114,7 @@ namespace SaltnPepperEngine
 			RigidBody3D* bodyRef = playerbaseEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
 			bodyRef->m_isKinematic = false;
 			bodyRef->SetVelocity(Vector3(5.0f, 0.0f, 0.0f));
+			bodyRef->m_tag = CollisionTag::PLAYER;
 
 			Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerCamera");
 			childEntity.AddComponent<PlayerLook>();

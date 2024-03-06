@@ -30,7 +30,8 @@ namespace SaltnPepperEngine
 		{
 			GROUND,
 			PLATFORM,
-			BOOMERANG
+			BOOMERANG,
+			PLAYER
 			
 
 		};
@@ -208,7 +209,7 @@ namespace SaltnPepperEngine
 			Quaternion m_rotation = Quaternion();
 
 			// If the object's velocity is lower than this it is said to be staionary
-			float m_StationaryVelocityThresholdSquared = 0.005f;
+			float m_StationaryVelocityThresholdSquared = 0.07f;
 
 			float velocitySum = 0.0f;
 

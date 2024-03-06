@@ -41,8 +41,11 @@ namespace SaltnPepperEngine
 	void PlayerCharacter::Update(float deltaTime)
 	{
 		//float velocityDown = m_rigidBodyRef->GetVelocity().y;
-
-
+		
+		/*if (!m_rigidBodyRef->isColliding)
+		{
+			canJump = false;
+		}*/
 		//if (velocityDown >= -0.68 && velocityDown <= 0.68)
 		//{
 		//	canJump = true;
@@ -53,9 +56,20 @@ namespace SaltnPepperEngine
 		//	canJump = false;
 		//	//LOG_WARN("Jumping {0}" ,velocityDown);
 		//}
-
-
 		//m_groundDetector->SetPosition(m_rigidBodyRef->GetPosition());
+
+		if (!canLegCharge)
+		{
+			timeCounter += deltaTime;
+
+			if (timeCounter > doomChargeCooldown)
+			{
+				timeCounter = 0;
+				canLegCharge = true;
+			}
+		}
+
+
 		
 	}
 
@@ -66,6 +80,8 @@ namespace SaltnPepperEngine
 		{
 			return;
 		}
+
+		
 
 		float ForceXAxis = 0.0f;
 		float ForceZAxis = 0.0f;
@@ -184,15 +200,9 @@ namespace SaltnPepperEngine
 		{
 			canJump = true;
 
-			LOG_WARN("Ground Detected");
+			//LOG_WARN("Ground Detected");
 
 		}
-
-		else
-		{
-			LOG_ERROR("Ground LEFT");
-		}
-		
 	
 
 
@@ -204,7 +214,72 @@ namespace SaltnPepperEngine
 
 
 	}
-	void PlayerCharacter::ProcessMouseInput()
+
+	void PlayerCharacter::ProcessMouseInput(Transform& cameratransform,float Deltatime)
 	{
+		static bool mouseHeld = false;
+		
+
+		if (Input::InputSystem::GetInstance().GetMouseBtnClicked(MouseButton::Left))
+		{
+			mouseHeld = true;
+		}
+	
+		
+		if (Input::InputSystem::GetInstance().GetMouseBtnHeld(MouseButton::Left))
+		{
+			ChargeAmount += Deltatime;
+			if (ChargeAmount > maxCharge)
+			{
+				ChargeAmount = maxCharge;
+			}
+		}
+		else
+		{
+			if (mouseHeld)
+			{
+				mouseHeld = false;
+
+				if (ChargeAmount >= 0.01f && canJump)
+				{
+					DoomLegLaunch(cameratransform.GetForwardVector());
+				}
+			}
+
+		}
+		
+	}
+
+	void PlayerCharacter::DoomLegLaunch(Vector3 LookDirection)
+	{
+
+
+		Vector3 velocity = m_rigidBodyRef->GetVelocity();
+		Vector3 direction = Normalize(Normalize(LookDirection) + Vector3(0.0f, 1.0f, 0.0f));
+
+		/*if (LengthSquared(velocity) < 0.2f)
+		{
+			
+			direction = Normalize(Normalize(LookDirection) + Vector3(0.0f, 1.0f, 0.0f));
+
+		}
+		else
+		{
+			direction = Normalize(velocity);
+			if (direction.y < 0.1f)
+			{
+				direction.y = 1.0f;
+			}
+			direction = Normalize(direction);
+		}*/
+
+
+		velocity += direction * ChargeAmount * 30.0f;
+
+		//velocity.y +=  ChargeAmount * 30.0f;
+		m_rigidBodyRef->SetVelocity(velocity);
+		canJump = false;
+		canLegCharge = false;
+
 	}
 }

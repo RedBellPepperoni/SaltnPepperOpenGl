@@ -42,12 +42,14 @@ namespace SaltnPepperEngine
 		void SetAnimators(AnimationComponent* left, AnimationComponent* right);
 		void Update(float deltaTime);
 		void ProcessKeyboardInput(Transform& cameratransform, float deltaTime);
-
+		void ProcessMouseInput(Transform& cameratransform, float Deltatime);
 	private:
 
 		bool DetectGround(RigidBody3D* thisBody ,RigidBody3D* otherBody);
 		void AnimateHands();
-		void ProcessMouseInput();
+		
+		void DoomLegLaunch(Vector3 LookDirection);
+
 
 	private:
 
@@ -59,13 +61,21 @@ namespace SaltnPepperEngine
 		float m_moveSpeed = 2.0f;
 		float m_jumpSpeed = 25.0f;
 		float m_SprintMultiplier = 2.0f;
+		
+		float ChargeAmount = 0.0f;
+		float maxCharge = 2.0f;
+
+		float doomChargeCooldown = 2.0f;
 
 		PlayerState m_currentState = PlayerState::IDLE;
 
 		AnimationComponent* leftHandAnimator = nullptr;
 		AnimationComponent* rightHandAnimator = nullptr;
 		bool canJump = false;
-		
+		bool canLegCharge = false;
+
+		float timeCounter = 0.0f;
+		//bool isJumping = true;
 	};
 
 

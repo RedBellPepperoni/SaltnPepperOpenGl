@@ -84,6 +84,7 @@ class GraphicRuntime : public Application
 
         FPScontroller.MouseInput(transform,mousePosition,deltaTime);
         playerCharacter.ProcessKeyboardInput(transform,deltaTime);
+        playerCharacter.ProcessMouseInput(transform,deltaTime);
 	}
 
 private:

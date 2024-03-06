@@ -325,8 +325,8 @@ namespace SaltnPepperEngine
 						const bool callfirst = pair.firstBody->OnCollisionEvent(pair.secondBody, pair.secondBody);
 						const bool callSecond = pair.secondBody->OnCollisionEvent(pair.firstBody, pair.secondBody);
 
-						//pair.firstBody->isColliding = true;
-						//pair.secondBody->isColliding = true;
+						pair.firstBody->isColliding = true;
+						pair.secondBody->isColliding = true;
 
 
 
