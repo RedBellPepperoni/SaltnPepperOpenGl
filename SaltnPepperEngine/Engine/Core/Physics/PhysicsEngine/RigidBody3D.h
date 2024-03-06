@@ -28,11 +28,10 @@ namespace SaltnPepperEngine
 		//Hardcoding for now
 		enum CollisionTag
 		{
-			STARDESTROYER = 0,
-			XWING = 1,
-			MISSILE = 2,
-			SPHERETEST = 3,
-			GENERATORS = 4
+			GROUND,
+			PLATFORM,
+			BOOMERANG
+			
 
 		};
 
@@ -58,6 +57,8 @@ namespace SaltnPepperEngine
 
 			// Triggers just intersect instead of Colliding
 			bool isTrigger = false;
+
+			bool isKinematic = false;
 
 			// teh actual Collider Type
 			SharedPtr<Collider> collider = nullptr;
@@ -214,6 +215,9 @@ namespace SaltnPepperEngine
 			// Check to see if a object is not acted by forces, so it doesnt need to update
 			bool m_isStationary = true;
 
+
+			bool m_isKinematic = false;
+
 			float m_elasticity = 0.5f;
 
 			Matrix3 m_inverseInertia;
@@ -253,6 +257,7 @@ namespace SaltnPepperEngine
 			CollisionTag m_tag;
 
 			bool isColliding = false;
+
 		};
 
 	}

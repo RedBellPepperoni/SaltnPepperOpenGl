@@ -24,9 +24,11 @@ namespace SaltnPepperEngine
 			, m_friction(properties.friction)
 			, m_tag(properties.tag)
 			,m_elasticity(properties.elasticity)
+			
 		{
 			m_modelboundingBox.Set(Vector3(-0.5f), Vector3(0.5f));
 
+			m_isKinematic = properties.isKinematic;
 			m_invMass = 1.0f/properties.mass;
 
 			if (properties.collider)
@@ -299,6 +301,11 @@ namespace SaltnPepperEngine
 		void RigidBody3D::StationaryCheck()
 		{
 			if (m_StationaryVelocityThresholdSquared < 0.0f)
+			{
+				return;
+			}
+
+			if (m_isKinematic)
 			{
 				return;
 			}

@@ -45,12 +45,14 @@ namespace SaltnPepperEngine
 
 	private:
 
+		bool DetectGround(RigidBody3D* thisBody ,RigidBody3D* otherBody);
 		void AnimateHands();
 		void ProcessMouseInput();
 
 	private:
 
 		RigidBody3D* m_rigidBodyRef = nullptr;
+		RigidBody3D* m_groundDetector = nullptr;
 		
 		Transform* m_cameraRef = nullptr;
 		int m_health = 100;

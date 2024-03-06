@@ -110,7 +110,9 @@ namespace SaltnPepperEngine
 			properties.friction = 0.8f;
 			properties.position = Position;
 			properties.elasticity = 0.1f;
+			properties.isKinematic = false;
 			RigidBody3D* bodyRef = playerbaseEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
+			bodyRef->m_isKinematic = false;
 			bodyRef->SetVelocity(Vector3(5.0f, 0.0f, 0.0f));
 
 			Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerCamera");
@@ -118,6 +120,26 @@ namespace SaltnPepperEngine
 			Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
 			Transform* childTransform = &childEntity.GetComponent<Transform>();
 			childTransform->SetRotation(Vector3(0.0f, 0.0f, 0.0f));
+
+			/*Entity groundDetectorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("GroundDetecttor");
+			groundDetectorEntity.AddComponent<PlayerLook>();
+			Hierarchy& hierarchyGroundComp = groundDetectorEntity.AddComponent<Hierarchy>();
+			Transform* groundTransform = &groundDetectorEntity.GetComponent<Transform>();
+			groundTransform->SetRotation(Vector3(0.0f, 0.0f, 0.0f));
+
+
+			PhysicsProperties propertiesdetector;
+			propertiesdetector.collider = MakeShared<SphereCollider>(1.6f);
+			propertiesdetector.mass = 20.0f;
+			propertiesdetector.friction = 0.8f;
+			propertiesdetector.position = Position;
+			propertiesdetector.elasticity = 0.1f;
+			propertiesdetector.elasticity = 0.1f;
+			propertiesdetector.isKinematic = true;
+			RigidBody3D* detectorbodyRef = groundDetectorEntity.AddComponent<RigidBodyComponent>(propertiesdetector).GetRigidBody().get();
+			bodyRef->SetVelocity(Vector3(0.0f, 0.0f, 0.0f));*/
+
+
 
 			//ModelComponent& modelComp = childEntity.AddComponent<ModelComponent>("PlayerKnight");
 			//SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
@@ -130,6 +152,7 @@ namespace SaltnPepperEngine
 
 
 			childEntity.SetParent(playerbaseEntity);
+			//groundDetectorEntity.SetParent(playerbaseEntity);
 			mainCamera.SetParent(playerbaseEntity);
 
 			leftHand.SetParent(mainCamera);
@@ -233,7 +256,7 @@ namespace SaltnPepperEngine
 			return handEntity;
 		}
 
-		static void CreatePlatform(Vector3 position, Vector3 size, const std::string& texture)
+		static void CreatePlatform(Vector3 position, Vector3 size, const std::string& texture, bool ground = false)
 		{
 			Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Platform_");
 			Transform& transform = floorEntity.GetComponent<Transform>();
@@ -254,7 +277,7 @@ namespace SaltnPepperEngine
 			properties.stationary = true;
 			properties.isStatic = true;
 			properties.position = position;
-
+			properties.tag = ground ? CollisionTag::GROUND : CollisionTag::PLATFORM;
 
 			floorEntity.AddComponent<RigidBodyComponent>(properties);
 

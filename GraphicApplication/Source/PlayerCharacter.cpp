@@ -18,11 +18,14 @@ namespace SaltnPepperEngine
 
 	}
 
-	void PlayerCharacter::Init(RigidBody3D* RigidBodyRef, Transform* cameraTransformRef)
+	void PlayerCharacter::Init(RigidBody3D* RigidBodyRef,Transform* cameraTransformRef)
 	{
 		m_rigidBodyRef = RigidBodyRef;
 		m_cameraRef = cameraTransformRef;
+		//m_groundDetector = groundDetect;
 
+
+		m_rigidBodyRef->m_OnCollisionCallback = std::bind(&PlayerCharacter::DetectGround, this, std::placeholders::_1, std::placeholders::_2);
 		/*m_leftHand = leftHand;
 		m_rightHand = rightHand;*/
 
@@ -51,6 +54,8 @@ namespace SaltnPepperEngine
 		//	//LOG_WARN("Jumping {0}" ,velocityDown);
 		//}
 
+
+		//m_groundDetector->SetPosition(m_rigidBodyRef->GetPosition());
 		
 	}
 
@@ -118,11 +123,16 @@ namespace SaltnPepperEngine
 		
 
 	
-		if(ForceYAxis > 1.0f)
+		if(ForceYAxis > 1.0f && canJump)
 		{
+
 			Vector3 velocity = m_rigidBodyRef->GetVelocity();
 			velocity.y += ForceYAxis;
 			m_rigidBodyRef->SetVelocity(velocity);
+
+			canJump = false;
+
+
 		}
 		//LOG_WARN("{0} {1}", cameratransform.GetForwardVector().x, cameratransform.GetForwardVector().z);
 
@@ -165,6 +175,29 @@ namespace SaltnPepperEngine
 		
 	}
 
+
+	bool PlayerCharacter::DetectGround(RigidBody3D* thisBody, RigidBody3D* otherBody)
+	{
+		
+
+		if (otherBody->m_tag & (CollisionTag::BOOMERANG || CollisionTag::GROUND || CollisionTag::PLATFORM))
+		{
+			canJump = true;
+
+			LOG_WARN("Ground Detected");
+
+		}
+
+		else
+		{
+			LOG_ERROR("Ground LEFT");
+		}
+		
+	
+
+
+		return true;
+	}
 
 	void PlayerCharacter::AnimateHands()
 	{

@@ -119,6 +119,12 @@ namespace SaltnPepperEngine
 					transform.SetPosition(rigidbody.GetRigidBody()->GetPosition());
 					transform.SetRotation(rigidbody.GetRigidBody()->GetRotation());
 				}
+
+				else if (!rigidbody.GetRigidBody()->GetIsStatic() && rigidbody.GetRigidBody()->m_isKinematic)
+				{
+					transform.SetPosition(rigidbody.GetRigidBody()->GetPosition());
+					transform.SetRotation(rigidbody.GetRigidBody()->GetRotation());
+				}
 			}
 		
 
@@ -288,6 +294,7 @@ namespace SaltnPepperEngine
 		
 
 		}
+
 		void PhysicsEngine::NarrowPhaseCollision()
 		{
 			if(m_broadPhasePairs.empty())
@@ -396,16 +403,25 @@ namespace SaltnPepperEngine
 			
 
 
-			if (!body->GetIsStatic() && !body->GetIsStationary())
+			if (!body->GetIsStatic())
 			{
 				
+				if (body->m_isKinematic)
+				{
+					return;
+				}
+
 
 				const float damping = m_dampingFactor;
 
 				// Apply gravity
 				if (body->m_invMass > 0.0f && Length(m_gravity) > 0.2f)
 				{
+
+					
 					body->m_velocity += m_gravity * m_physicsTimeStep;
+					
+					
 				}
 
 				switch (m_velocityIntegrationType)
