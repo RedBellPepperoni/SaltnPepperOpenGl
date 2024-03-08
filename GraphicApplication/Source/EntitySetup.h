@@ -7,6 +7,61 @@
 
 static int cameraCount = 0;
 
+enum class LakeModel : uint8_t
+{
+	BED,
+	BENCH,
+	BOAT,
+	BRANCH,
+	BUCKET,
+	CROW,
+	DOCK,
+	DUCKS,
+	FENCE,
+	FISHSCHOOL,
+	GRASS,
+	GROUND,
+	LAMP,
+	PLANTPOT,
+	PLANTS,
+	ROCK,
+	ROCKS,
+	SHACK,
+	SHROOMS,
+	TREE,
+	WATER
+};
+
+
+static std::array<std::string, 21> LakeModelString =
+
+{
+	"Bed",
+	"Bench",
+	"Boat",
+	"Branch",
+	"Bucket",
+	"Crow",
+	"Dock",
+	"Ducks",
+	"Fence",
+	"FishSchool",
+	"Grass",
+	"Ground",
+	"Lamp",
+	"PlantPot",
+	"Plants",
+	"Rock",
+	"Rocks",
+	"Shack",
+	"Shrooms",
+	"Tree",
+	"Water"
+
+};
+
+
+
 
 void LoadAllModels()
 {
@@ -42,6 +97,7 @@ void LoadAllTextures()
 	SharedPtr<TextureLibrary>& textureLib = Application::GetCurrent().GetTextureLibrary();
 
 	textureLib->LoadTexture("pallet", "Assets\\Textures\\color.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("water", "Assets\\Textures\\water.png", TextureFormat::RGBA);
 	
 	
 }
@@ -143,104 +199,6 @@ Entity CreateMainAsteroid(const Vector3& position = Vector3(0.0f))
 	return asteroidEntity;
 }
 
-Entity CreateIndustrialAsteroid(const Vector3& position = Vector3(0.0f))
-{
-	Entity asteroidEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Asteroid_Industrial_Entity");
-	Transform& asteroidTransform = asteroidEntity.GetComponent<Transform>();
-
-	asteroidTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = asteroidEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = asteroidEntity.AddComponent<ModelComponent>("Asteroid_Industrial");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("asteroid");
-
-	return asteroidEntity;
-}
-
-Entity CreateMiningRig(const Vector3& position = Vector3(0.0f))
-{
-	Entity miningEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Mining_Entity");
-	Transform& miningTransform = miningEntity.GetComponent<Transform>();
-
-	miningTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = miningEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = miningEntity.AddComponent<ModelComponent>("MiningRig");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("metal");
-
-	return miningEntity;
-}
-
-Entity CreateIndustrialMiningRig(const Vector3& position = Vector3(0.0f))
-{
-	Entity miningEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Industrial_Mining_Entity");
-	Transform& miningTransform = miningEntity.GetComponent<Transform>();
-
-	miningTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = miningEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = miningEntity.AddComponent<ModelComponent>("IndustrialMiningRig");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("metal");
-
-	return miningEntity;
-}
-
-Entity CreateSecondaryAsteroid(const Vector3& position = Vector3(0.0f))
-{
-	Entity asteroidEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Asteroid_Other_Entity");
-	Transform& asteroidTransform = asteroidEntity.GetComponent<Transform>();
-
-	asteroidTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = asteroidEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = asteroidEntity.AddComponent<ModelComponent>("Asteroid_Other");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("asteroid");
-
-	return asteroidEntity;
-}
-
-Entity CreateSecondaryMiningRig(const Vector3& position = Vector3(0.0f))
-{
-	Entity miningEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Other_Mining_Entity");
-	Transform& miningTransform = miningEntity.GetComponent<Transform>();
-
-	miningTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = miningEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = miningEntity.AddComponent<ModelComponent>("MiningRig_Other");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("metal");
-
-	return miningEntity;
-}
-
-// Consoles Stuff
-
-Entity CreateConsoleRoom(const Vector3& position = Vector3(0.0f))
-{
-	Entity consoleRoomEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("ConsoleRoom");
-	Hierarchy& hierarchy = consoleRoomEntity.AddComponent<Hierarchy>();
-
-	Transform& roomTransform = consoleRoomEntity.GetComponent<Transform>();
-	roomTransform.SetPosition(position);
-
-	return consoleRoomEntity;
-}
-
 
 Entity CreateWater(const Vector3 position = Vector3(0.0f))
 {
@@ -254,10 +212,67 @@ Entity CreateWater(const Vector3 position = Vector3(0.0f))
 	//mat->m_type = MaterialType::Transparent;
 	mat->m_type = MaterialType::Opaque;
 
-	mat->SetAlbedoTexture("pallet");
+	mat->SetAlbedoTexture("water");
 
 	return waterEntity;
 }
+
+
+Entity CreateGround(const Vector3 position = Vector3(0.0f))
+{
+	Entity groundEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Lake_Ground");
+	Hierarchy& hierarchyComp = groundEntity.AddComponent<Hierarchy>();
+	Transform& transform = groundEntity.GetComponent<Transform>();
+	transform.SetPosition(position);
+
+	ModelComponent* modelComp = &groundEntity.AddComponent<ModelComponent>("Water");
+	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+	//mat->m_type = MaterialType::Transparent;
+	mat->m_type = MaterialType::Opaque;
+
+	mat->SetAlbedoTexture("pallet");
+
+	return groundEntity;
+}
+
+
+Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), const Vector3& scale = Vector3(1.0f))
+{
+	 
+	const std::string Modelname = LakeModelString[(uint8_t)model];
+	std::string name = "Lake_" + Modelname;
+
+
+	Entity entity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name); 
+	Hierarchy& hierarchyComp = entity.AddComponent<Hierarchy>();
+	Transform& transform = entity.GetComponent<Transform>();
+	transform.SetPosition(position);
+	transform.SetEularRotation(rotation);
+	transform.SetScale(scale);
+
+	ModelComponent* modelComp = &entity.AddComponent<ModelComponent>(Modelname);
+
+
+	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+
+	if (model == LakeModel::WATER)
+	{
+		//mat->m_type = MaterialType::Transparent;
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("water");
+	}
+
+	else
+	{
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("pallet");
+	}
+
+	return entity;
+}
+
+
+
 
 
 //Entity CreateCenterScreen(const Vector3& position = Vector3(0.0f), bool isRightScreen = true)

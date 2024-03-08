@@ -38,7 +38,36 @@ class GraphicRuntime : public Application
         CreatePointLight(Vector3(-20.33f, 216.81f, 51.57),16.0f,1.0f);
 
        
-        CreateWater(Vector3(0.0f,-5.79f,0.0f));
+      
+        /// Water Spawn
+        //CreateEntity(LakeModel::WATER, Vector3(0.0f, -5.79f, 0.0f));
+
+        /// Ground Spawn
+        CreateEntity(LakeModel::GROUND, Vector3(-0.138f, -6.274f, 5.625f));
+        CreateEntity(LakeModel::FENCE, Vector3(1.0621f, 3.3896f, -4.5743f));
+
+        /// Grass
+        CreateEntity(LakeModel::GRASS, Vector3(-3.4316f, 1.8853f, -2.1312f), Vector3(0.0f), Vector3(1.0f));
+        /// Treessss
+        CreateEntity(LakeModel::TREE, Vector3(-4.2334f, 2.8829f, -6.1174f),Vector3(0.0f),Vector3(1.0f));
+ 
+
+        /// Dock/Pier
+        CreateEntity(LakeModel::DOCK, Vector3(-0.657f, 2.274f, 2.8f));
+        CreateEntity(LakeModel::BOAT, Vector3(1.64f, 1.664f, 7.275f));
+
+
+        /// Shack Stuff
+        CreateEntity(LakeModel::SHACK, Vector3(-1.356f, 5.166f, 0.936f));
+        CreateEntity(LakeModel::BED, Vector3(-2.96f, 2.70f, -0.914f));
+        CreateEntity(LakeModel::BENCH, Vector3(-2.69f, 2.82f, 1.136f));
+        CreateEntity(LakeModel::BENCH, Vector3(-0.57f, 2.82f, -1.113f), Vector3(0.0f,90.0f,0.0f));
+        CreateEntity(LakeModel::CROW, Vector3(2.589f, 3.45f, 3.43f), Vector3(0.0f,0.0f,0.0f));
+        CreateEntity(LakeModel::CROW, Vector3(2.589f, 3.45f, 3.153f), Vector3(180.0f,38.0f,180.0f));
+        CreateEntity(LakeModel::CROW, Vector3(2.589f, 3.45f, 3.677f), Vector3(180.0f, -40.7f, 180.0f));
+        CreateEntity(LakeModel::CROW, Vector3(-0.6712f, 6.2794f, 1.1263f), Vector3(180.0f, -40.7f, 180.0f),Vector3(1.5f));
+
+
 
 
         //// Camera One {Looking from the Rig Pole to the asetroids}
@@ -68,7 +97,7 @@ class GraphicRuntime : public Application
         cornerScreenRightMat->textureMaps.albedoMap = camOneTexture;
         cornerScreenLeftMat->textureMaps.albedoMap = camThreeTexture;*/
 
-        Entity mainCamera = CreateMainCamera(Vector3(-17.3f,218.02f,56.26f),Vector3(-13.17f,24.86,0.00f));
+        Entity mainCamera = CreateMainCamera(Vector3(-3.0854f, 3.9474f, -0.3572f),Vector3(-5.6068f, -67.3442,0.00f));
 
         Camera* cam = &mainCamera.GetComponent<Camera>();
 
