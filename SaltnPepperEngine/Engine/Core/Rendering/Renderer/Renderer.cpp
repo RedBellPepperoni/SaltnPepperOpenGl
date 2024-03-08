@@ -525,12 +525,13 @@ namespace SaltnPepperEngine
 
                 if (mat->m_type == MaterialType::Transparent)
                 {
-                    mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
-                    shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
+                    //mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
+                    //shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
                 }
+
                 if (mat->m_type == MaterialType::Custom)
                 {
-                    float time = Time::CurrentTime();
+                  /*  float time = Time::CurrentTime();
                     mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
                     shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
                     shader->SetUniform("shaderTime",time);
@@ -542,7 +543,7 @@ namespace SaltnPepperEngine
                     else
                     {
                         shader->SetUniform("distort", false);
-                    }
+                    }*/
                 }
 
                

@@ -194,7 +194,7 @@ namespace SaltnPepperEngine
 				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), m_editorCameraElement, m_renderer->GetPipeLine().transparentElementList);
 				
 				//// ===== Object Pass for Transparent Elements ================ 
-				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
+				//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
 
 
 				m_editorCameraElement.depthTexture->GenerateMipMaps();
@@ -227,7 +227,7 @@ namespace SaltnPepperEngine
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), cameraElement, m_renderer->GetPipeLine().transparentElementList);
 
 					//// ===== Object Pass for Transparent Elements ================ 
-					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), cameraElement, m_renderer->GetPipeLine().customElementList);
+					//m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), cameraElement, m_renderer->GetPipeLine().customElementList);
 
 					// Generate Depth mipmaps
 					cameraElement.depthTexture->GenerateMipMaps();

@@ -12,32 +12,27 @@ void LoadAllModels()
 {
 	SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
 
-	modelLib->LoadModel("Floor", "Assets\\Models\\Floor.fbx");
-	modelLib->LoadModel("Ceiling", "Assets\\Models\\Ceiling.fbx");
-	modelLib->LoadModel("Seat", "Assets\\Models\\Prop_Seat.fbx");
-
-	modelLib->LoadModel("Asteroid","Assets\\Models\\Asteroid.fbx");
-	modelLib->LoadModel("Asteroid_Industrial","Assets\\Models\\Asteroid_Industrial.fbx");
-	modelLib->LoadModel("Asteroid_Other", "Assets\\Models\\Asteroid_Other.fbx");
-	modelLib->LoadModel("MiningRig", "Assets\\Models\\Asteroid_MiningRig.fbx");
-	modelLib->LoadModel("MiningRig_Other","Assets\\Models\\Asteroid_Other_Mine.fbx");
-	modelLib->LoadModel("IndustrialMiningRig","Assets\\Models\\Asteroid_Industrial_Mine.fbx");
-
-	// Consoles
-	modelLib->LoadModel("CenterConsole","Assets\\Models\\CenterConsole.fbx");
-	modelLib->LoadModel("CornerConsoleRight","Assets\\Models\\CornerConsole_Right.fbx");
-	modelLib->LoadModel("CornerConsoleLeft", "Assets\\Models\\CornerConsole_Left.fbx");
-
-	// CenterWindow and Screen
-	modelLib->LoadModel("CenterWindow", "Assets\\Models\\CenterWindow.fbx");
-	modelLib->LoadModel("CenterScreenLeft", "Assets\\Models\\CenterScreenLeft.fbx");
-	modelLib->LoadModel("CenterScreenRight", "Assets\\Models\\CenterScreenRight.fbx");
-
-	modelLib->LoadModel("CornerWindowRight", "Assets\\Models\\CornerWindow_Right.fbx");
-	modelLib->LoadModel("CornerScreenRight", "Assets\\Models\\CornerScreen_Right.fbx");
-
-	modelLib->LoadModel("CornerWindowLeft", "Assets\\Models\\CornerWindow_Left.fbx");
-	modelLib->LoadModel("CornerScreenLeft", "Assets\\Models\\CornerScreen_Left.fbx");
+	modelLib->LoadModel("Bed", "Assets\\Models\\Lake_Bed.fbx");
+	modelLib->LoadModel("Bench", "Assets\\Models\\Lake_Bench.fbx");
+	modelLib->LoadModel("Boat", "Assets\\Models\\Lake_Boat.fbx");
+	modelLib->LoadModel("Branch", "Assets\\Models\\Lake_Branch.fbx");
+	modelLib->LoadModel("Bucket", "Assets\\Models\\Lake_Bucket.fbx");
+	modelLib->LoadModel("Crow", "Assets\\Models\\Lake_Crow.fbx");
+	modelLib->LoadModel("Dock", "Assets\\Models\\Lake_Dock.fbx");
+	modelLib->LoadModel("Ducks", "Assets\\Models\\Lake_Ducks.fbx");
+	modelLib->LoadModel("Fence", "Assets\\Models\\Lake_Fence.fbx");
+	modelLib->LoadModel("FishSchool", "Assets\\Models\\Lake_FishSchool.fbx");
+	modelLib->LoadModel("Grass", "Assets\\Models\\Lake_Grass.fbx");
+	modelLib->LoadModel("Ground", "Assets\\Models\\Lake_Ground.fbx");
+	modelLib->LoadModel("Lamp", "Assets\\Models\\Lake_Lamp.fbx");
+	modelLib->LoadModel("PlantPot", "Assets\\Models\\Lake_PlantPot.fbx");
+	modelLib->LoadModel("Plants", "Assets\\Models\\Lake_Plants.fbx");
+	modelLib->LoadModel("Rock", "Assets\\Models\\Lake_Rock.fbx");
+	modelLib->LoadModel("Rocks", "Assets\\Models\\Lake_Rocks.fbx");
+	modelLib->LoadModel("Shack", "Assets\\Models\\Lake_Shack.fbx");
+	modelLib->LoadModel("Shrooms", "Assets\\Models\\Lake_Shrooms.fbx"); 
+	modelLib->LoadModel("Tree", "Assets\\Models\\Lake_Tree.fbx");
+	modelLib->LoadModel("Water", "Assets\\Models\\Lake_Water.fbx");
 
 
 }
@@ -46,28 +41,8 @@ void LoadAllTextures()
 {
 	SharedPtr<TextureLibrary>& textureLib = Application::GetCurrent().GetTextureLibrary();
 
-	textureLib->LoadTexture("asteroid", "Assets\\Textures\\asteroid.jpg", TextureFormat::RGBA);
-	textureLib->LoadTexture("spaceship", "Assets\\Textures\\spaceship.png", TextureFormat::RGBA);
-
-	SharedPtr<Texture> noise = textureLib->LoadTexture("noise", "Assets\\Textures\\noise.png", TextureFormat::RGBA);
-	noise->SetWarping(TextureWraping::REPEAT);
-
-	textureLib->LoadTexture("leftOne", "Assets\\Textures\\leftOne.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("leftTwo", "Assets\\Textures\\leftTwo.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("leftThree", "Assets\\Textures\\leftThree.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("pallet", "Assets\\Textures\\color.png", TextureFormat::RGBA);
 	
-
-	textureLib->LoadTexture("rightOne", "Assets\\Textures\\rightOne.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("rightTwo", "Assets\\Textures\\rightTwo.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("rightThree", "Assets\\Textures\\rightThree.png", TextureFormat::RGBA);
-
-	textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
-
-	textureLib->LoadTexture("centerwin", "Assets\\Textures\\centerwin.tga", TextureFormat::RGBA);
-	textureLib->LoadTexture("centerwin_f", "Assets\\Textures\\centerwin_F.tga", TextureFormat::RGBA);
-	textureLib->LoadTexture("cornerscratch", "Assets\\Textures\\cornerscratch.tga", TextureFormat::RGBA);
-	textureLib->LoadTexture("cornerdent", "Assets\\Textures\\cornerdent.tga", TextureFormat::RGBA);
 	
 }
 
@@ -266,273 +241,59 @@ Entity CreateConsoleRoom(const Vector3& position = Vector3(0.0f))
 	return consoleRoomEntity;
 }
 
-Entity CreateCenterConsole (const Vector3& position = Vector3(0.0f))
+
+Entity CreateWater(const Vector3 position = Vector3(0.0f))
 {
-	Entity consoleEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CenterConsole");
-	Transform& consoleTransform = consoleEntity.GetComponent<Transform>();
-
-	consoleTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = consoleEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = consoleEntity.AddComponent<ModelComponent>("CenterConsole");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("spaceship");
-
-	return consoleEntity;
-}
-
-Entity CreateCornerConsoleRight(const Vector3& position = Vector3(0.0f))
-{
-	Entity consoleEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CornerConsoleRight");
-	Transform& consoleTransform = consoleEntity.GetComponent<Transform>();
-
-	consoleTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = consoleEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = consoleEntity.AddComponent<ModelComponent>("CornerConsoleRight");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("spaceship");
-
-	return consoleEntity;
-}
-
-Entity CreateCornerConsoleLeft(const Vector3& position = Vector3(0.0f))
-{
-	Entity consoleEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CornerConsoleLeft");
-	Transform& consoleTransform = consoleEntity.GetComponent<Transform>();
-
-	consoleTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = consoleEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = consoleEntity.AddComponent<ModelComponent>("CornerConsoleLeft");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("spaceship");
-
-	return consoleEntity;
-}
-
-Entity CreateCenterWindow(const Vector3& position = Vector3(0.0f))
-{
-	Entity windowEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("CenterWindow");
-	Transform& windowTransform = windowEntity.GetComponent<Transform>();
-
-	windowTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = windowEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = windowEntity.AddComponent<ModelComponent>("CenterWindow");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("centerwin");
-	mat->SetMetallicTexture("centerwin_f");
-	mat->m_type = MaterialType::Transparent;
-
-	return windowEntity;
-}
-
-Entity CreateCornerWindow(const Vector3& position = Vector3(0.0f), bool left = false)
-{
-	Entity windowEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(left? "LeftCornerWindow" : "RightCornerWindow");
-	Transform& windowTransform = windowEntity.GetComponent<Transform>();
-
-	windowTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = windowEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = windowEntity.AddComponent<ModelComponent>(left ? "CornerWindowLeft" : "CornerWindowRight");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture(left? "cornerscratch" : "cornerdent");
-	mat->SetMetallicTexture("centerwin_f");
-	mat->m_type = MaterialType::Transparent;
-
-	return windowEntity;
-}
-
- void CreateFloorCeiling(Entity parent, const Vector3& position)
-{
-	
-
-	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Floor");
-	Transform& floorTransform = floorEntity.GetComponent<Transform>();
-
-	floorTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = floorEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = floorEntity.AddComponent<ModelComponent>("Floor");
-	SharedPtr<Material> mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("spaceship");
-
-	floorEntity.SetParent(parent);
-
-	Entity ceilingEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Ceiling");
-	Transform& cielingTransform = ceilingEntity.GetComponent<Transform>();
-
-	cielingTransform.SetPosition(position + Vector3(0.0f,5.1f,0.0f));
-
-	Hierarchy& hierarchyC = ceilingEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelCompC = ceilingEntity.AddComponent<ModelComponent>("Ceiling");
-	mat = modelCompC.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("spaceship");
-
-	ceilingEntity.SetParent(parent);
-
-}
-
- void CreateWalls(Entity parent)
- {
-
-
-	 Entity wallOne = Application::GetCurrent().GetCurrentScene()->CreateEntity("WallOne");
-	 Transform& wallOneTransform = wallOne.GetComponent<Transform>();
-
-	 wallOneTransform.SetPosition(Vector3(-8.0f,2.53,6.54f));
-	 wallOneTransform.SetScale(Vector3(1.0f,8.0f,5.0f));
-
-	 Hierarchy& hierarchy = wallOne.AddComponent<Hierarchy>();
-
-	 ModelComponent& modelComp = wallOne.AddComponent<ModelComponent>(PrimitiveType::Cube);
-	 
-
-	 wallOne.SetParent(parent);
-
-	 Entity wallTwo = Application::GetCurrent().GetCurrentScene()->CreateEntity("WallTwo");
-	 Transform& wallTwoTransform = wallTwo.GetComponent<Transform>();
-	 wallTwoTransform.SetScale(Vector3(1.0f, 8.0f, 5.0f));
-	 wallTwoTransform.SetPosition(Vector3(8.0f,2.53f,6.54));
-
-	 Hierarchy& hierarchyC = wallTwo.AddComponent<Hierarchy>();
-
-	 ModelComponent& modelCompC = wallTwo.AddComponent<ModelComponent>(PrimitiveType::Cube);
-	
-
-	 wallTwo.SetParent(parent);
-
- }
-
- Entity CreateSeat(const Vector3& position)
- {
-	 Entity seatEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Seat");
-	 Transform& seatTransform = seatEntity.GetComponent<Transform>();
-
-	 seatTransform.SetPosition(position);
-
-	 Hierarchy& hierarchy = seatEntity.AddComponent<Hierarchy>();
-
-	 ModelComponent& modelComp = seatEntity.AddComponent<ModelComponent>("Seat");
-	 SharedPtr<Material> mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	 mat->SetAlbedoTexture("spaceship");
-
-	 return seatEntity;
- }
-
-//SharedPtr<Material> CreateMonitor(const Vector3& position = Vector3(0.0f))
-//{
-//	Entity tvEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
-//	Hierarchy& hierarchyComp = tvEntity.AddComponent<Hierarchy>();
-//	Transform& transform = tvEntity.GetComponent<Transform>();
-//
-//	transform.SetPosition(position);
-//
-//	ModelComponent* modelComp = &tvEntity.AddComponent<ModelComponent>(PrimitiveType::Quad);
-//	
-//	SharedPtr<Material> mat  = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
-//	
-//	return mat;
-//}
-
-//Camera* CreateSecurityCamera(const Vector3& position)
-//{
-//	Entity meshEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SecuritytCamera");
-//	Hierarchy& hierarchyComp = meshEntity.AddComponent<Hierarchy>();
-//	Transform& transform = meshEntity.GetComponent<Transform>();
-//
-//	transform.SetPosition(position);
-//
-//	ModelComponent* modelComp = &meshEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
-//
-//
-//	Entity cameraEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SecondaryCamera");
-//	Hierarchy& camhierarchyComp = cameraEntity.AddComponent<Hierarchy>();
-//    Transform& camtransform = cameraEntity.GetComponent<Transform>();
-//	camtransform.SetPosition(Vector3(0.0f,1.0f,-2.0f));
-//	Camera* camera = &cameraEntity.AddComponent<Camera>();
-//
-//	cameraEntity.SetParent(meshEntity);
-//
-//	return camera;
-//
-//}
-
-Entity CreateCenterScreen(const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
-{
-	std::string name = isRightScreen ? "CenterScreen_Right" : "CenterScreen_Left";
-	Entity screenEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
-	Hierarchy& hierarchyComp = screenEntity.AddComponent<Hierarchy>();
-	Transform& transform = screenEntity.GetComponent<Transform>();
+	Entity waterEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Lake_Water");
+	Hierarchy& hierarchyComp = waterEntity.AddComponent<Hierarchy>();
+	Transform& transform = waterEntity.GetComponent<Transform>();
 	transform.SetPosition(position);
 
-	float switchtime = isRightScreen ? 4.0f : 5.1f;
-
-	ScifiScreen& screen = screenEntity.AddComponent<ScifiScreen>(switchtime);
-
-	
-	std::string modelName = isRightScreen ? "CenterScreenRight" : "CenterScreenLeft";
-	ModelComponent* modelComp = &screenEntity.AddComponent<ModelComponent>(modelName);
-
+	ModelComponent* modelComp = &waterEntity.AddComponent<ModelComponent>("Water");
 	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
-	mat->m_type = MaterialType::Custom;
+	//mat->m_type = MaterialType::Transparent;
+	mat->m_type = MaterialType::Opaque;
 
-	
-	isRightScreen ? mat->SetAlbedoTexture("rightOne") : mat->SetAlbedoTexture("leftOne");
-	mat->SetMetallicTexture("noise");
-	mat->name = isRightScreen ? "Distort" : "Chromatic";
+	mat->SetAlbedoTexture("pallet");
 
-	SharedPtr<TextureLibrary>& textureLib = Application::GetCurrent().GetTextureLibrary();
-
-	screen.SetMaterialRef(mat);
-	
-	if (isRightScreen)
-	{
-		screen.AddTexture(textureLib->GetResource("rightOne"));
-		screen.AddTexture(textureLib->GetResource("rightTwo"));
-		screen.AddTexture(textureLib->GetResource("rightThree"));
-	}
-	else
-	{
-		screen.AddTexture(textureLib->GetResource("leftOne"));
-		screen.AddTexture(textureLib->GetResource("leftTwo"));
-		screen.AddTexture(textureLib->GetResource("leftThree"));
-	}
-
-	return screenEntity;
+	return waterEntity;
 }
 
-SharedPtr<Material> CreateCornerScreen(Entity parentEntity,const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
-{
-	std::string name = isRightScreen ? "CornerScreen_Right" : "CornerScreen_Left";
-	Entity screenEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
-	Hierarchy& hierarchyComp = screenEntity.AddComponent<Hierarchy>();
-	Transform& transform = screenEntity.GetComponent<Transform>();
-	transform.SetPosition(position);
 
-	screenEntity.SetParent(parentEntity);
+//Entity CreateCenterScreen(const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
+//{
+//	std::string name = isRightScreen ? "CenterScreen_Right" : "CenterScreen_Left";
+//	Entity screenEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
+//	Hierarchy& hierarchyComp = screenEntity.AddComponent<Hierarchy>();
+//	Transform& transform = screenEntity.GetComponent<Transform>();
+//	transform.SetPosition(position);
+//
+//	float switchtime = isRightScreen ? 4.0f : 5.1f;
+//
+//	ScifiScreen& screen = screenEntity.AddComponent<ScifiScreen>(switchtime);
+//
+//	
+//	std::string modelName = isRightScreen ? "CenterScreenRight" : "CenterScreenLeft";
+//	ModelComponent* modelComp = &screenEntity.AddComponent<ModelComponent>(modelName);
+//
+//	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+//	mat->m_type = MaterialType::Custom;
+//
+//	
+//	isRightScreen ? mat->SetAlbedoTexture("rightOne") : mat->SetAlbedoTexture("leftOne");
+//	mat->SetMetallicTexture("noise");
+//	mat->name = isRightScreen ? "Distort" : "Chromatic";
+//
+//	SharedPtr<TextureLibrary>& textureLib = Application::GetCurrent().GetTextureLibrary();
+//
+//	screen.SetMaterialRef(mat);
+//	
+//	
+//
+//	return screenEntity;
+//}
 
-	std::string modelName = isRightScreen ? "CornerScreenRight" : "CornerScreenLeft";
-	ModelComponent* modelComp = &screenEntity.AddComponent<ModelComponent>(modelName);
 
-	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
-
-	return mat;
-}
 
 SharedPtr<Texture> CreateSecurityCamera(const Vector3& position = Vector3(0.0f),const Vector3& rotation = Vector3(0.0f))
 {
