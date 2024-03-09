@@ -1,5 +1,6 @@
 
 
+
 struct VertexData
 {
 	vec4 Position;

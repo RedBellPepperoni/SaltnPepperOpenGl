@@ -7,6 +7,11 @@
 
 static int cameraCount = 0;
 
+struct FishSchool
+{
+	bool isMoving = true;;
+};
+
 enum class LakeModel : uint8_t
 {
 	BED,
@@ -172,10 +177,10 @@ Entity CreateDirectionalLight()
 {
 	Entity dirLightEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Directional Light");
 	Transform& transform = dirLightEntity.GetComponent<Transform>();
-	transform.SetEularRotation(Vector3(154.0f, -51.0f, -180.0f));
+	transform.SetEularRotation(Vector3(-11.4192f, 51.3504f, -7.0023f));
 	Light& light = dirLightEntity.AddComponent<Light>();
 	light.type = LightType::DirectionLight;
-	light.intensity = 1.2f;
+	light.intensity = 0.7f;
 
 	return dirLightEntity;
 }
@@ -255,10 +260,18 @@ Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0
 
 	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
 
+	
+
+
+
 	if (model == LakeModel::WATER)
 	{
-		//mat->m_type = MaterialType::Transparent;
-		mat->m_type = MaterialType::Opaque;
+		mat->m_type = MaterialType::Transparent;
+		mat->metallic = 0.9f;
+		mat->roughness = 0.6f;
+		mat->albedoColour = Vector4(0.0f, 0.0f, 0.0f, 0.75f);
+
+		//mat->m_type = MaterialType::Opaque;
 		mat->SetAlbedoTexture("water");
 	}
 
@@ -267,6 +280,32 @@ Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0
 		mat->m_type = MaterialType::Opaque;
 		mat->SetAlbedoTexture("pallet");
 	}
+
+
+	if (model == LakeModel::FISHSCHOOL)
+	{
+		Entity parententity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name + "_Parent");
+		Hierarchy& hierarchy = parententity.AddComponent<Hierarchy>();
+		Transform& parenttransform = parententity.GetComponent<Transform>();
+		parententity.AddComponent<FishSchool>();
+
+
+		parenttransform.SetPosition(position);
+		parenttransform.SetEularRotation(rotation);
+		parenttransform.SetScale(scale);
+
+		transform.SetPosition(Vector3(-0.7956f, 0.0f, 2.9702f));
+		transform.SetEularRotation(Vector3(0.0f, -14.9953f,0.0f));
+		transform.SetScale(Vector3(1.0f));
+
+
+
+		entity.SetParent(parententity);
+
+		return parententity;
+
+	}
+
 
 	return entity;
 }

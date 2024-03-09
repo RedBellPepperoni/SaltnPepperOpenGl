@@ -119,10 +119,8 @@ namespace SaltnPepperEngine
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultTexture", "Engine\\Textures\\DefaultTexture.png", TextureFormat::RGB);
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("Black", "Engine\\Textures\\black.png", TextureFormat::RGBA);
             
-            Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("FieldSkybox", "Engine\\Textures\\fieldRight.png", "Engine\\Textures\\fieldLeft.png", "Engine\\Textures\\fieldTop.png", "Engine\\Textures\\fieldBottom.png", "Engine\\Textures\\fieldFront.png", "Engine\\Textures\\fieldBack.png");
+            Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("DuskSkybox", "Engine\\Textures\\sky_right.png", "Engine\\Textures\\sky_left.png", "Engine\\Textures\\sky_top.png", "Engine\\Textures\\sky_bottom.png", "Engine\\Textures\\sky_front.png", "Engine\\Textures\\sky_back.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
-            Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("GalaxySkybox", "Engine\\Textures\\galaxyLeft.png", "Engine\\Textures\\galaxyRight.png", "Engine\\Textures\\galaxyTop.png", "Engine\\Textures\\galaxyBottom.png", "Engine\\Textures\\galaxyFront.png", "Engine\\Textures\\galaxyBack.png");
-
 
             m_pipeline.defaultTextureMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultTexture");
 
@@ -130,8 +128,8 @@ namespace SaltnPepperEngine
 
 
 
-            m_pipeline.skybox.cubeMap = Application::GetCurrent().GetCubeMapLibrary()->GetResource("GalaxySkybox");
-            m_pipeline.skybox.SetIntensity(3.30f);
+            m_pipeline.skybox.cubeMap = Application::GetCurrent().GetCubeMapLibrary()->GetResource("DuskSkybox");
+            m_pipeline.skybox.SetIntensity(0.62f);
 
 
             m_pipeline.postprocessFrameBuffer = MakeShared<FrameBuffer>();
@@ -525,8 +523,15 @@ namespace SaltnPepperEngine
 
                 if (mat->m_type == MaterialType::Transparent)
                 {
-                    //mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
-                    //shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
+
+                    BindSkyBoxInformation(camera,shader, m_pipeline.textureBindIndex++);
+
+                    shader->SetUniform("materialProperties.Metallic", mat->metallic);
+                    shader->SetUniform("materialProperties.Reflectance", mat->roughness);
+
+                    int skybodId = m_pipeline.skybox.cubeMap->getBoundId();
+                    shader->SetUniform("skybox", skybodId);
+
                 }
 
                 if (mat->m_type == MaterialType::Custom)

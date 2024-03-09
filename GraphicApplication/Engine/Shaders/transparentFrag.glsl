@@ -10,7 +10,7 @@ struct VertexData
 struct Material
 {
     vec4 Albedo;
-    vec4 Metallic;
+    float Metallic;
     float Roughness;
     float PerceptualRoughness;
     float Reflectance;
@@ -98,17 +98,21 @@ vec4 GetAlbedo()
 {
     vec4 param = texture(mapAlbedo, VertexOutput.TexCoord);
     
-   // vec4 finalColor = vec4(param.rgb,param.a +materialProperties.AlbedoColor.a );
-    //vec4 finalColor = (materialProperties.AlbedoColor  + (param));
-    //finalColor.w = materialProperties.AlbedoColor.w;
+
+    vec4 finalColor = (materialProperties.AlbedoColor  + (param));
+    finalColor.w = materialProperties.AlbedoColor.w;
    // return (materialProperties.AlbedoColor * (1.0- materialProperties.AlbedoMapFactor) + (DeGamma(param) * materialProperties.AlbedoMapFactor));
-    return  param;
+    return  finalColor;
 
 }
 
-vec4 GetMetallic()
+vec3 GetMetallic()
 {
-  return texture(mapMetallic, VertexOutput.TexCoord);
+    if(materialProperties.MetallicMapFactor < 0.05)
+    {
+        return vec3(materialProperties.Metallic);
+    }
+    return vec3(materialProperties.Metallic  *(1.0 - materialProperties.MetallicMapFactor ) + (texture(mapMetallic, VertexOutput.TexCoord).rgb * materialProperties.MetallicMapFactor)  );
 }
 
 float GetRoughness()
@@ -173,9 +177,9 @@ vec3 CalculateLighting(Material material)
                 float spec = pow(max(dot(material.View, reflectDir), 0.0), 32);
 
                 // combine results
-                vec3 ambient  = light.intensity  *  (material.Albedo.rgb * material.Metallic.rgb) * 0.12;
-                vec3 diffuse  = light.color  * diff *  (material.Albedo.rgb * material.Metallic.rgb) * light.intensity;
-                vec3 specular = vec3(spec)* (material.Albedo.rgb * material.Metallic.rgb) * 2.0;
+                vec3 ambient  = light.intensity  * material.Albedo.rgb * 0.12;
+                vec3 diffuse  = light.color  * diff * material.Albedo.rgb * light.intensity;
+                vec3 specular = vec3(spec)* material.Albedo.rgb * material.Metallic * 2.0;
                 //vec3 lightContrib = (ambient + diffuse + specular * 0.01);
                 vec3 lightContrib = (diffuse) + (specular) + (ambient);
 
@@ -199,7 +203,7 @@ vec3 CalculateLighting(Material material)
             float finalAttenuation = clamp(1.0 - ((distance * distance)/(light.radius * light.radius)),0.0,1.0);    
             // combine results
 
-            vec3 diffuse  = light.color  * diff * (material.Albedo.rgb * material.Metallic.rgb)*  light.intensity;
+            vec3 diffuse  = light.color  * diff * material.Albedo.rgb *  light.intensity;
             vec3 specular = vec3(light.color) * spec * 0.01;
 
 
@@ -232,8 +236,8 @@ vec3 CalculateLighting(Material material)
             float epsilon = light.innerAngle - light.outerAngle;
             float finalIntensity = clamp((theta - light.outerAngle)/ epsilon, 0.0,1.0);
 
-            vec3 ambient = light.intensity *  (material.Albedo.rgb * material.Metallic.rgb) * 0.6;
-            vec3 diffuse  = light.color  * diff *  (material.Albedo.rgb * material.Metallic.rgb) * light.intensity;
+            vec3 ambient = light.intensity * material.Albedo.rgb * 0.6;
+            vec3 diffuse  = light.color  * diff * material.Albedo.rgb * light.intensity;
             vec3 specular = vec3(light.color) * spec * 0.01 ;
             
           //  ambient *= finalAttenuation * finalIntensity;
@@ -257,8 +261,12 @@ void main()
 {
     // gather the calculated Albedo color
     vec4 texColor = GetAlbedo();
-    vec4 fingercolor = GetMetallic();
-   
+
+    if(texColor.w < 0.2)
+    {
+        discard;
+    }
+
     float metallic = 0.0;
     float roughness = 0.0;
 
@@ -271,22 +279,21 @@ void main()
 
     material.Reflectance = materialProperties.Reflectance;
     material.Albedo = texColor;
-    material.Metallic = fingercolor;
+    material.Metallic = metallic;
     material.Roughness = roughness;
 
     material.Normal = normalize(VertexOutput.Normal);
     material.View = normalize(cameraView - VertexOutput.Position.xyz);
 
-   // vec3 reflectedVector = reflect(-material.View,material.Normal);
+    vec3 reflectedVector = reflect(-material.View,material.Normal);
 
     //vec3 finalColor = CalculateLighting(material) + material.Emissive;
     vec4 lighting = vec4(CalculateLighting(material),1.0);
-   // vec4 reflectedColor = texture(skybox, reflectedVector);
-    
+    vec4 reflectedColor = texture(skybox, reflectedVector);
 
-   // vec4 finalColor = mix(lighting,fingercolor,0.2);
-    vec4 finalColor = lighting;
-    FragColor = vec4(finalColor.xyz, (texColor.a + fingercolor.a));
+    vec4 finalColor = mix(lighting,reflectedColor,material.Reflectance);
+
+    FragColor = vec4(finalColor.xyz, texColor.w);
 
 }
 

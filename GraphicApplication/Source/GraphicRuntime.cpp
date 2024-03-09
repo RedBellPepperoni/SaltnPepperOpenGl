@@ -40,7 +40,15 @@ class GraphicRuntime : public Application
        
       
         /// Water Spawn
-        //CreateEntity(LakeModel::WATER, Vector3(0.0f, -5.79f, 0.0f));
+        CreateEntity(LakeModel::WATER, Vector3(-0.1594f, -5.7900f, 5.7429f));
+
+        CreateEntity(LakeModel::PLANTS, Vector3(0.0f, -3.0028f, 11.977f));
+
+        // Fishes
+        CreateEntity(LakeModel::FISHSCHOOL, Vector3(-1.6167f, -0.8005f, 8.8242f));
+        CreateEntity(LakeModel::SHROOMS, Vector3(-1.6167f, -3.6910f, 11.4818f));
+
+
 
         /// Ground Spawn
         CreateEntity(LakeModel::GROUND, Vector3(-0.138f, -6.274f, 5.625f));
@@ -49,8 +57,18 @@ class GraphicRuntime : public Application
         /// Grass
         CreateEntity(LakeModel::GRASS, Vector3(-3.4316f, 1.8853f, -2.1312f), Vector3(0.0f), Vector3(1.0f));
         /// Treessss
-        CreateEntity(LakeModel::TREE, Vector3(-4.2334f, 2.8829f, -6.1174f),Vector3(0.0f),Vector3(1.0f));
- 
+        CreateEntity(LakeModel::TREE, Vector3(2.3324f, 2.8829f, -4.1809f),Vector3(0.0f),Vector3(0.7f));
+        CreateEntity(LakeModel::TREE, Vector3(3.7187f, 2.8829f, -5.4071f),Vector3(0.0f),Vector3(1.0f));
+        CreateEntity(LakeModel::TREE, Vector3(5.5126f, 2.8829f, -5.0939f),Vector3(0.0f),Vector3(0.6f));
+        CreateEntity(LakeModel::TREE, Vector3(3.5353f, 2.8829f, -3.4358f),Vector3(0.0f),Vector3(0.7f));
+     
+
+        CreateEntity(LakeModel::TREE, Vector3(-4.5897f, 2.8829f, -3.9681f), Vector3(0.0f), Vector3(0.4f));
+        CreateEntity(LakeModel::TREE, Vector3(-3.0532f, 2.8829f, -4.6283f), Vector3(0.0f), Vector3(1.0f));
+        CreateEntity(LakeModel::TREE, Vector3(-4.7217f, 2.8829f, -5.5748f), Vector3(0.0f), Vector3(0.6f));
+        CreateEntity(LakeModel::TREE, Vector3(-2.5809f, 2.8829f, -6.2767f), Vector3(0.0f), Vector3(0.6f));
+
+
 
         /// Dock/Pier
         CreateEntity(LakeModel::DOCK, Vector3(-0.657f, 2.274f, 2.8f));
@@ -106,30 +124,30 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
+        ComponentView school = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<FishSchool>();
+
        
+
+        for (Entity fishEntity : school)
+        {
+            Transform& transform = fishEntity.GetComponent<Transform>();
+            Quaternion currTor = transform.GetRotation();
+
+            Quaternion YawRot = glm::angleAxis(rotation * 0.001f, Vector3(0.0f, 1.0f, 0.0f));
+
+            Quaternion rot = YawRot * currTor;
+
+            transform.SetRotation(rot);
+
+        }
+
 	}
 
   
 
 private:
 
-    //std::vector<int> availableCameras;
-    int rightScreenIndex = 0;
-    int leftScreenIndex = 2;
-
-    float leftScreenCounter = 0.0f;
-    float rightScreenCounter = 0.2f;
-
-    const float leftScreenSwitchTime = 5.0f;
-    const float rightScreenSwitchTime = 4.0f;
-
-    std::vector<SharedPtr<Texture>> ScreenRenders;
-    SharedPtr<Material> cornerScreenRightMat = nullptr;
-    SharedPtr<Material> cornerScreenLeftMat = nullptr;
-
-    bool screenOff = false;
-
-
+    const float rotation = 10.0f * DEGtoRAD;
    
    
 };
