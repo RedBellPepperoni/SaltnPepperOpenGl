@@ -35,9 +35,13 @@ class GraphicRuntime : public Application
         CreateDirectionalLight();
       
         
-        CreatePointLight(Vector3(-2.0284f, 3.7613f, -2.0895f),16.0f,1.0f);
+        CreatePointLight(Vector3(-2.0284f, 3.7613f, -2.0895f),5.0f,1.0f);
 
-       
+        CreatePointLight(Vector3(3.2216f, 1.2797f, 13.7093f), 6.0f, 5.0f,Vector3(1.0f,0.2f,0.2f));
+
+        CreatePointLight(Vector3(4.0946f, 3.7613f, -2.0895f), 5.0f, 1.0f, Vector3(0.0f, 1.0f, 0.2f));
+
+
       
         /// Water Spawn
         CreateEntity(LakeModel::WATER, Vector3(-0.1594f, -5.7900f, 5.7429f));
@@ -68,12 +72,14 @@ class GraphicRuntime : public Application
         CreateEntity(LakeModel::TREE, Vector3(-4.7217f, 2.8829f, -5.5748f), Vector3(0.0f), Vector3(0.6f));
         CreateEntity(LakeModel::TREE, Vector3(-2.5809f, 2.8829f, -6.2767f), Vector3(0.0f), Vector3(0.6f));
 
-
+        /// Poles
+        CreateEntity(LakeModel::POLE, Vector3(5.0394f, -4.7350f, 15.8551f), Vector3(89.9f,0.0f,0.0f), Vector3(1.0f,1.0f,0.85f));
+        CreateEntity(LakeModel::POLE, Vector3(6.4337f, 1.0961f, -4.3310f), Vector3(89.9f,0.0f,0.0f), Vector3(1.0f,1.0f,0.85f));
 
         /// Dock/Pier
         CreateEntity(LakeModel::DOCK, Vector3(-0.657f, 2.274f, 2.8f));
         CreateEntity(LakeModel::BOAT, Vector3(1.64f, 1.664f, 7.275f));
-
+        
 
         /// Shack Stuff
         CreateEntity(LakeModel::SHACK, Vector3(-1.356f, 5.166f, 0.936f));
@@ -86,16 +92,33 @@ class GraphicRuntime : public Application
         CreateEntity(LakeModel::CROW, Vector3(-0.6712f, 6.2794f, 1.1263f), Vector3(180.0f, -40.7f, 180.0f),Vector3(1.5f));
 
         CreateEntity(LakeModel::TABLE, Vector3(-1.3920f, 2.9666f, -1.0738f),Vector3(0.0f,89.0f,0.0f), Vector3(1.4f));
-        SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-2.5003f, 4.7171f, -2.1473f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -20.5682, 0.0f));
 
-        CreateTV(Vector3(-1.2152f, 3.5348f, -1.5055f), Vector3(180.0f, 82.0f, 180.0f), camOneTexture);
 
-        CreateTV(Vector3(-1.3338f, 3.5348f, -0.5282f), Vector3(0.0f, 82.62f, 0.0f), camOneTexture);
+        /// Render One
+        SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-2.5003f, 4.7171f, -2.1473f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -20.5682, 0.0f),true);
+        SharedPtr<Texture> camTwoTexture = CreateSecurityCamera(Vector3(4.9996f, 1.3538f, 15.7607f), Vector3(0.0f, 20.2819f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+        SharedPtr<Texture> camThreeTexture = CreateSecurityCamera(Vector3(6.3439f, 7.1660f, -4.2813f), Vector3(180.0f, 57.819f, 180.0f), Vector3(0.0f, 0.0f, 0.0f), true);
+
+       
+
+        CreateTV(camOneTexture,Vector3(-1.2152f, 3.5348f, -1.5055f), Vector3(180.0f, 82.0f, 180.0f),DistortType::CHROMATIC);
+
+        CreateTV(camTwoTexture,Vector3(-1.3338f, 3.5348f, -0.5282f), Vector3(0.0f, 82.62f, 0.0f));
+
+        CreateTV(camThreeTexture,Vector3(-1.2803f, 4.0532f, -0.9660f), Vector3(0.0f, 82.62f, 0.0f), DistortType::CHROMATIC);
+
+
+        
+        cameraRenders.push_back(camOneTexture);
+        //cameraRenders.push_back(camTwoTexture);
+      
+        //matOne->textureMaps.albedoMap = camTwoTexture;
+        //matTwo->textureMaps.albedoMap = camTwoTexture;
 
 
         Entity mainCamera = CreateMainCamera(Vector3(-3.0854f, 3.9474f, -0.3572f),Vector3(-5.6068f, -67.3442,0.00f));
 
-        Camera* cam = &mainCamera.GetComponent<Camera>();
+        //Camera* cam = &mainCamera.GetComponent<Camera>();
 
 
 	}
@@ -119,6 +142,18 @@ class GraphicRuntime : public Application
 
         }
 
+
+        ComponentView securityView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SecurityCamera>();
+
+        for (Entity entityCam : securityView)
+        {
+            Transform& transform = entityCam.GetComponent<Transform>();
+            SecurityCamera& cam = entityCam.GetComponent<SecurityCamera>();
+
+            cam.Update(transform, deltaTime);
+        }
+
+
 	}
 
   
@@ -127,7 +162,12 @@ private:
 
     const float rotation = 10.0f * DEGtoRAD;
    
+    std::vector<SharedPtr<Texture>> cameraRenders;
    
+
+    SharedPtr<Material> matOne = nullptr;
+    SharedPtr<Material> matTwo = nullptr;
+
 };
 
 

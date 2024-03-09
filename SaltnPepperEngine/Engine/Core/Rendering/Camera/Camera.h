@@ -46,8 +46,12 @@ namespace SaltnPepperEngine
             // Temporary defining the Transforms here until I switch to ECS
             //Transform m_transform;
             std::string m_name;
+            static int cameraCount;
+
 
         public:
+
+
 
             const Matrix4& GetProjectionMatrix();
 
@@ -82,7 +86,7 @@ namespace SaltnPepperEngine
             const Vector3& GetRightVector() const;
             const Vector3& GetForwardVector() const;
 
-            SharedPtr<Texture> GetRenderTexture();
+            SharedPtr<Texture>& GetRenderTexture();
 
             Ray GetRay(float xPos, float yPos, Matrix4 viewMatrix, bool flipY);
             Frustum& GetFrustum(const Matrix4 viewMatrix);
@@ -105,6 +109,7 @@ namespace SaltnPepperEngine
 
         private:
 
+          
             Vector3 m_upVector = Vector3(0.0f, 1.0f, 0.0f);
             Vector3 m_rightVector = Vector3(-1.0f, 0.0f, 0.0f);
             Vector3 m_forwardVector = Vector3(0.0f, 0.0f, 1.0f);

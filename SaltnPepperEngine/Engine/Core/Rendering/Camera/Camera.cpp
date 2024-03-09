@@ -10,6 +10,8 @@ namespace SaltnPepperEngine
     namespace Rendering
     {
 
+        int Camera::cameraCount = 0;
+
         Camera::Camera()
             : m_aspectRatio(16.0f / 10.0f)
             , m_near(0.01f)
@@ -172,7 +174,7 @@ namespace SaltnPepperEngine
         }
 
 
-        SharedPtr<Texture> Camera::GetRenderTexture()
+        SharedPtr<Texture>& Camera::GetRenderTexture()
         {
             //return m_renderTexture;
             return m_cameraBuffers->albedoTexture;
@@ -225,10 +227,11 @@ namespace SaltnPepperEngine
 
         void Camera::InitializeRenderTexture()
         {
-
+            cameraCount++;
             Vector2Int viewport = Application::GetCurrent().GetWindowSize();
 
             m_renderTexture = Factory<Texture>::Create();
+            m_renderTexture->SetFilePath("RenderTex_" + std::to_string(cameraCount));
             m_renderTexture->Load(nullptr, viewport.x, viewport.y, 3, false, TextureFormat::RGB);
             m_renderTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
@@ -270,23 +273,24 @@ namespace SaltnPepperEngine
 
 
         }
+
         void CameraBuffers::Resize(int width, int height)
         {
 
             albedoTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
-            albedoTexture->SetFilePath("camera albedo");
+            albedoTexture->SetFilePath("camera_albedo_" + std::to_string(Camera::cameraCount));
             albedoTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
             normalTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA16);
-            normalTexture->SetFilePath("camera normal");
+            normalTexture->SetFilePath("camera_normal" + std::to_string(Camera::cameraCount));
             normalTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
             materialTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
-            materialTexture->SetFilePath("camera material");
+            materialTexture->SetFilePath("camera_material" + std::to_string(Camera::cameraCount));
             materialTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
             depthTexture->LoadDepth(width, height, TextureFormat::DEPTH32F);
-            depthTexture->SetFilePath("camera depth");
+            depthTexture->SetFilePath("camera_depth" + std::to_string(Camera::cameraCount));
             depthTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
         }

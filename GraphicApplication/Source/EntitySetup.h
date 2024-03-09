@@ -6,6 +6,7 @@
 #include "ScifiScreen.h"
 
 static int cameraCount = 0;
+static int tvCount = 0;
 
 struct FishSchool
 {
@@ -42,11 +43,12 @@ enum class LakeModel : uint8_t
 	TREE,
 	WATER,
 	TABLE,
-	STOOL
+	STOOL,
+	POLE
 };
 
 
-static std::array<std::string, 23> LakeModelString =
+static std::array<std::string, 24> LakeModelString =
 
 {
 	"Bed",
@@ -71,8 +73,8 @@ static std::array<std::string, 23> LakeModelString =
 	"Tree",
 	"Water",
 	"Table",
-	"Stool"
-
+	"Stool",
+	"Pole"
 };
 
 
@@ -103,6 +105,7 @@ void LoadAllModels()
 	modelLib->LoadModel("Shrooms", "Assets\\Models\\Lake_Shrooms.fbx"); 
 	modelLib->LoadModel("Tree", "Assets\\Models\\Lake_Tree.fbx");
 	modelLib->LoadModel("Water", "Assets\\Models\\Lake_Water.fbx");
+	modelLib->LoadModel("Pole", "Assets\\Models\\Lake_Pole.fbx");
 
 	modelLib->LoadModel("Table", "Assets\\Models\\Lake_Table.fbx");
 	modelLib->LoadModel("Stool", "Assets\\Models\\Lake_Stool.fbx");
@@ -279,8 +282,9 @@ Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0
 
 
 
-SharedPtr<Texture> CreateTV(const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), SharedPtr<Texture> cameraTex = nullptr ,const DistortType type = DistortType::DISTORT)
+void CreateTV(SharedPtr<Texture>& camtex,const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f),const DistortType type = DistortType::DISTORT)
 {
+	tvCount++;
 	Entity parententity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
 	Hierarchy& parenthierarchy = parententity.AddComponent<Hierarchy>();
 	Transform& parenttransform = parententity.GetComponent<Transform>();
@@ -298,20 +302,24 @@ SharedPtr<Texture> CreateTV(const Vector3& position = Vector3(0.0f), const Vecto
 	Entity screenentity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
 	Hierarchy& hierarchy = screenentity.AddComponent<Hierarchy>();
 	Transform& screentransform = screenentity.GetComponent<Transform>();
-	screentransform.SetPosition(Vector3(0.0f));
+	screentransform.SetPosition(Vector3(0.0f,0.0f, -0.1705f));
+	screentransform.SetEularRotation(Vector3(179.1376f, -1.6693f, -179.9750f));
+	screentransform.SetScale(Vector3(0.7010f, 0.4835f, 0.9859f));
 
-	ModelComponent& screenModel = screenentity.AddComponent<ModelComponent>("TVScreen");
+	ModelComponent& screenModel = screenentity.AddComponent<ModelComponent>(PrimitiveType::Quad);
 
+	SharedPtr<Material> tvMat = screenModel.m_handle->GetMeshes()[0]->GetMaterial();
+	
+	tvMat->textureMaps.albedoMap = camtex;
+	tvMat->m_type = MaterialType::Custom;
+	tvMat->SetMetallicTexture("noise");
+	tvMat->name = type == DistortType::DISTORT ? "Distort" : "Chromatic";
 
-	SharedPtr<Material> screenmat = screenModel.m_handle->GetMeshes()[0]->GetMaterial();
-	screenmat->textureMaps.albedoMap = cameraTex;
-	//screenmat->m_type = MaterialType::Custom;
-	//mat->SetMetallicTexture("noise");
-	//mat->name = type == DistortType::DISTORT ? "Distort" : "Chromatic";
+	
 
 	screenentity.SetParent(parententity);
 
-	return screenmat->textureMaps.albedoMap;
+
 
 }
 
@@ -351,7 +359,7 @@ SharedPtr<Texture> CreateTV(const Vector3& position = Vector3(0.0f), const Vecto
 
 
 
-SharedPtr<Texture> CreateSecurityCamera(const Vector3& position = Vector3(0.0f),const Vector3& rotation = Vector3(0.0f), const Vector3 camRotation = Vector3(0.0f))
+SharedPtr<Texture>& CreateSecurityCamera(const Vector3& position = Vector3(0.0f),const Vector3& rotation = Vector3(0.0f), const Vector3 camRotation = Vector3(0.0f),bool Moving = false)
 {
 	cameraCount++;
 	std::string name = "Cam_Base_" + std::to_string(cameraCount);
@@ -371,11 +379,19 @@ SharedPtr<Texture> CreateSecurityCamera(const Vector3& position = Vector3(0.0f),
 	Entity rotatorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
 	Hierarchy& rothierarchyComp = rotatorEntity.AddComponent<Hierarchy>();
 	Transform& rottransform = rotatorEntity.GetComponent<Transform>();
-	SecurityCamera& cameraSec = rotatorEntity.AddComponent<SecurityCamera>();
-	rottransform.SetPosition(Vector3(0.0f));
+	rottransform.SetPosition(Vector3(0.0f, 0.0994f, -0.3175f));
 	rottransform.SetEularRotation(camRotation);
 
+	if (Moving)
+	{
+		rotatorEntity.AddComponent<SecurityCamera>();
+	}
+
 	rotatorEntity.SetParent(baseEntity);
+
+
+
+
 
 	name = "Cam_Model_" + std::to_string(cameraCount);
 	Entity meshEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
@@ -391,11 +407,16 @@ SharedPtr<Texture> CreateSecurityCamera(const Vector3& position = Vector3(0.0f),
 	Hierarchy& camhierarchyComp = cameraEntity.AddComponent<Hierarchy>();
 	Transform& camtransform = cameraEntity.GetComponent<Transform>();
 	camtransform.SetPosition(Vector3(0.0f, 0.0f, -0.5f));
-	Camera& camera = cameraEntity.AddComponent<Camera>(16.0f/9.0f,0.01f,1500.0f);
+	Camera* camera = &cameraEntity.AddComponent<Camera>(16.0f/9.0f,0.01f,500.0f);
 
 	cameraEntity.SetParent(meshEntity);
 
-	return camera.GetRenderTexture();
+	camera->m_name = "Camera_" + std::to_string(cameraCount);
+
+
+	//LOG_WARN("Name: {0}", std::to_string((uint64_t)texture.get()));
+
+	return camera->GetRenderTexture();
 
 }
 
