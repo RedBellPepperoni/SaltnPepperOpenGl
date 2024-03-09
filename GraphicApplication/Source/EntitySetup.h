@@ -12,6 +12,12 @@ struct FishSchool
 	bool isMoving = true;;
 };
 
+enum class DistortType : uint8_t
+{
+	CHROMATIC,
+	DISTORT
+};
+
 enum class LakeModel : uint8_t
 {
 	BED,
@@ -34,11 +40,13 @@ enum class LakeModel : uint8_t
 	SHACK,
 	SHROOMS,
 	TREE,
-	WATER
+	WATER,
+	TABLE,
+	STOOL
 };
 
 
-static std::array<std::string, 21> LakeModelString =
+static std::array<std::string, 23> LakeModelString =
 
 {
 	"Bed",
@@ -61,7 +69,9 @@ static std::array<std::string, 21> LakeModelString =
 	"Shack",
 	"Shrooms",
 	"Tree",
-	"Water"
+	"Water",
+	"Table",
+	"Stool"
 
 };
 
@@ -94,6 +104,15 @@ void LoadAllModels()
 	modelLib->LoadModel("Tree", "Assets\\Models\\Lake_Tree.fbx");
 	modelLib->LoadModel("Water", "Assets\\Models\\Lake_Water.fbx");
 
+	modelLib->LoadModel("Table", "Assets\\Models\\Lake_Table.fbx");
+	modelLib->LoadModel("Stool", "Assets\\Models\\Lake_Stool.fbx");
+	modelLib->LoadModel("TV", "Assets\\Models\\TV.fbx");
+	modelLib->LoadModel("TVScreen", "Assets\\Models\\TVScreen.fbx");
+
+	modelLib->LoadModel("Cam", "Assets\\Models\\Cam.fbx");
+	modelLib->LoadModel("CamBase", "Assets\\Models\\CamBase.fbx");
+
+
 
 }
 
@@ -103,6 +122,8 @@ void LoadAllTextures()
 
 	textureLib->LoadTexture("pallet", "Assets\\Textures\\color.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("water", "Assets\\Textures\\water.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("noise", "Assets\\Textures\\noise.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 	
 	
 }
@@ -185,60 +206,6 @@ Entity CreateDirectionalLight()
 	return dirLightEntity;
 }
 
-// Asteroid Stuff
-
-Entity CreateMainAsteroid(const Vector3& position = Vector3(0.0f))
-{
-	Entity asteroidEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Asteroid_Entity");
-	Transform& asteroidTransform = asteroidEntity.GetComponent<Transform>();
-
-	asteroidTransform.SetPosition(position);
-
-	Hierarchy& hierarchy = asteroidEntity.AddComponent<Hierarchy>();
-
-	ModelComponent& modelComp = asteroidEntity.AddComponent<ModelComponent>("Asteroid");
-
-	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	mat->SetAlbedoTexture("asteroid");
-
-	return asteroidEntity;
-}
-
-
-Entity CreateWater(const Vector3 position = Vector3(0.0f))
-{
-	Entity waterEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Lake_Water");
-	Hierarchy& hierarchyComp = waterEntity.AddComponent<Hierarchy>();
-	Transform& transform = waterEntity.GetComponent<Transform>();
-	transform.SetPosition(position);
-
-	ModelComponent* modelComp = &waterEntity.AddComponent<ModelComponent>("Water");
-	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
-	//mat->m_type = MaterialType::Transparent;
-	mat->m_type = MaterialType::Opaque;
-
-	mat->SetAlbedoTexture("water");
-
-	return waterEntity;
-}
-
-
-Entity CreateGround(const Vector3 position = Vector3(0.0f))
-{
-	Entity groundEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Lake_Ground");
-	Hierarchy& hierarchyComp = groundEntity.AddComponent<Hierarchy>();
-	Transform& transform = groundEntity.GetComponent<Transform>();
-	transform.SetPosition(position);
-
-	ModelComponent* modelComp = &groundEntity.AddComponent<ModelComponent>("Water");
-	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
-	//mat->m_type = MaterialType::Transparent;
-	mat->m_type = MaterialType::Opaque;
-
-	mat->SetAlbedoTexture("pallet");
-
-	return groundEntity;
-}
 
 
 Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), const Vector3& scale = Vector3(1.0f))
@@ -312,6 +279,41 @@ Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0
 
 
 
+SharedPtr<Texture> CreateTV(const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), SharedPtr<Texture> cameraTex = nullptr ,const DistortType type = DistortType::DISTORT)
+{
+	Entity parententity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
+	Hierarchy& parenthierarchy = parententity.AddComponent<Hierarchy>();
+	Transform& parenttransform = parententity.GetComponent<Transform>();
+	parenttransform.SetPosition(position);
+	parenttransform.SetEularRotation(rotation);
+	parenttransform.SetScale(Vector3(0.5f,0.4f,0.4f));
+	ModelComponent& parentModel = parententity.AddComponent<ModelComponent>("TV");
+
+
+	SharedPtr<Material> mat = parentModel.m_handle->GetMeshes()[0]->GetMaterial();
+	mat->SetAlbedoTexture("metal");
+	mat->m_type = MaterialType::Opaque;
+
+
+	Entity screenentity = Application::GetCurrent().GetCurrentScene()->CreateEntity("TV");
+	Hierarchy& hierarchy = screenentity.AddComponent<Hierarchy>();
+	Transform& screentransform = screenentity.GetComponent<Transform>();
+	screentransform.SetPosition(Vector3(0.0f));
+
+	ModelComponent& screenModel = screenentity.AddComponent<ModelComponent>("TVScreen");
+
+
+	SharedPtr<Material> screenmat = screenModel.m_handle->GetMeshes()[0]->GetMaterial();
+	screenmat->textureMaps.albedoMap = cameraTex;
+	//screenmat->m_type = MaterialType::Custom;
+	//mat->SetMetallicTexture("noise");
+	//mat->name = type == DistortType::DISTORT ? "Distort" : "Chromatic";
+
+	screenentity.SetParent(parententity);
+
+	return screenmat->textureMaps.albedoMap;
+
+}
 
 
 //Entity CreateCenterScreen(const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
@@ -349,30 +351,38 @@ Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0
 
 
 
-SharedPtr<Texture> CreateSecurityCamera(const Vector3& position = Vector3(0.0f),const Vector3& rotation = Vector3(0.0f))
+SharedPtr<Texture> CreateSecurityCamera(const Vector3& position = Vector3(0.0f),const Vector3& rotation = Vector3(0.0f), const Vector3 camRotation = Vector3(0.0f))
 {
 	cameraCount++;
+	std::string name = "Cam_Base_" + std::to_string(cameraCount);
 
-	std::string name = "SecurityCameraRotator_" + std::to_string(cameraCount);
+	Entity baseEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
+	Hierarchy& basehierarchyComp = baseEntity.AddComponent<Hierarchy>();
+	Transform& basetransform = baseEntity.GetComponent<Transform>();
+	basetransform.SetPosition(position);
+	basetransform.SetEularRotation(rotation);
+	ModelComponent& baseModel = baseEntity.AddComponent<ModelComponent>("CamBase");
+	SharedPtr<Material> basemat = baseModel.m_handle->GetMeshes()[0]->GetMaterial();
+	basemat->SetAlbedoTexture("metal");
+
+
+
+	name = "Cam_Rotator_" + std::to_string(cameraCount);
 	Entity rotatorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
 	Hierarchy& rothierarchyComp = rotatorEntity.AddComponent<Hierarchy>();
 	Transform& rottransform = rotatorEntity.GetComponent<Transform>();
 	SecurityCamera& cameraSec = rotatorEntity.AddComponent<SecurityCamera>();
+	rottransform.SetPosition(Vector3(0.0f));
+	rottransform.SetEularRotation(camRotation);
 
-	rottransform.SetPosition(position);
+	rotatorEntity.SetParent(baseEntity);
 
-	float randomYaw = Random32::Range.GetRandom(-15.0f, 15.0f);
-	
-	rottransform.SetEularRotation(Vector3(0.0f, randomYaw, 0.0f));
-
-	name = "SecurityCameraEntity_" + std::to_string(cameraCount);
+	name = "Cam_Model_" + std::to_string(cameraCount);
 	Entity meshEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
 	Hierarchy& hierarchyComp = meshEntity.AddComponent<Hierarchy>();
 	Transform& transform = meshEntity.GetComponent<Transform>();
-
-	transform.SetEularRotation(rotation);
-
-	ModelComponent* modelComp = &meshEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+	transform.SetEularRotation(Vector3(-16.02f, 0.0f, 0.0f));
+	ModelComponent& modelComp = meshEntity.AddComponent<ModelComponent>("Cam");
 
 	meshEntity.SetParent(rotatorEntity);
 
@@ -380,7 +390,7 @@ SharedPtr<Texture> CreateSecurityCamera(const Vector3& position = Vector3(0.0f),
 	Entity cameraEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
 	Hierarchy& camhierarchyComp = cameraEntity.AddComponent<Hierarchy>();
 	Transform& camtransform = cameraEntity.GetComponent<Transform>();
-	camtransform.SetPosition(Vector3(0.0f, 1.0f, -2.0f));
+	camtransform.SetPosition(Vector3(0.0f, 0.0f, -0.5f));
 	Camera& camera = cameraEntity.AddComponent<Camera>(16.0f/9.0f,0.01f,1500.0f);
 
 	cameraEntity.SetParent(meshEntity);

@@ -35,7 +35,7 @@ class GraphicRuntime : public Application
         CreateDirectionalLight();
       
         
-        CreatePointLight(Vector3(-20.33f, 216.81f, 51.57),16.0f,1.0f);
+        CreatePointLight(Vector3(-2.0284f, 3.7613f, -2.0895f),16.0f,1.0f);
 
        
       
@@ -85,35 +85,13 @@ class GraphicRuntime : public Application
         CreateEntity(LakeModel::CROW, Vector3(2.589f, 3.45f, 3.677f), Vector3(180.0f, -40.7f, 180.0f));
         CreateEntity(LakeModel::CROW, Vector3(-0.6712f, 6.2794f, 1.1263f), Vector3(180.0f, -40.7f, 180.0f),Vector3(1.5f));
 
+        CreateEntity(LakeModel::TABLE, Vector3(-1.3920f, 2.9666f, -1.0738f),Vector3(0.0f,89.0f,0.0f), Vector3(1.4f));
+        SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-2.5003f, 4.7171f, -2.1473f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -20.5682, 0.0f));
 
+        CreateTV(Vector3(-1.2152f, 3.5348f, -1.5055f), Vector3(180.0f, 82.0f, 180.0f), camOneTexture);
 
+        CreateTV(Vector3(-1.3338f, 3.5348f, -0.5282f), Vector3(0.0f, 82.62f, 0.0f), camOneTexture);
 
-        //// Camera One {Looking from the Rig Pole to the asetroids}
-        //SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-1167.13f,-20.78f,537.41f),Vector3(-10.20f,-80.28f,0.0f));
-        //SharedPtr<Texture> camTwoTexture = CreateSecurityCamera(Vector3(0.76f,-152.31f,-110.21f),Vector3(-155.70f,-1.28f,179.99f));
-
-        //SharedPtr<Texture> camThreeTexture = CreateSecurityCamera(Vector3(409.75f,-169.07f,357.07f),Vector3(-119.27f,-31.65f,179.99f));
-        //SharedPtr<Texture> camFourTexture = CreateSecurityCamera(Vector3(-407.96f, -513.03f, 263.41f),Vector3(-134.73f, 52.50, 180.0f));
-        //SharedPtr<Texture> camFiveTexture = CreateSecurityCamera(Vector3(-563.30f, 45.88f, 540.15f),Vector3(-2.52f, 80.84f, 0.0f));
-
-
-        //ScreenRenders.push_back(camOneTexture);
-        //ScreenRenders.push_back(camTwoTexture);
-        //ScreenRenders.push_back(camThreeTexture);
-        //ScreenRenders.push_back(camFourTexture);
-        //ScreenRenders.push_back(camFiveTexture);
-
-        /*cornerScreenLeftMat->m_type = MaterialType::Custom;
-        cornerScreenRightMat->m_type = MaterialType::Custom;
-
-        cornerScreenLeftMat->name = "Chromatic";
-        cornerScreenRightMat->name = "Chromatic";
-
-        cornerScreenLeftMat->SetMetallicTexture("noise");
-        cornerScreenRightMat->SetMetallicTexture("noise");
-
-        cornerScreenRightMat->textureMaps.albedoMap = camOneTexture;
-        cornerScreenLeftMat->textureMaps.albedoMap = camThreeTexture;*/
 
         Entity mainCamera = CreateMainCamera(Vector3(-3.0854f, 3.9474f, -0.3572f),Vector3(-5.6068f, -67.3442,0.00f));
 
