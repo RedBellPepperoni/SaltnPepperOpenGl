@@ -12,7 +12,7 @@
 #include "Engine/Utils/Logging/Log.h"
 #include <cereal/cereal.hpp>
 
-
+#include "Transform.h"
 
 
 namespace SaltnPepperEngine
@@ -323,6 +323,35 @@ namespace SaltnPepperEngine
 			SharedPtr<RigidBody3D> m_rigidBody = nullptr;
 			bool m_ownBody = false;
 			
+		};
+
+
+		struct Ball
+		{
+
+			Vector3 position;
+			float Radius;
+
+
+			void Update(const Transform& ballT)
+			{
+				position = ballT.GetPosition();
+			}
+
+		};
+
+
+		struct BallComponent
+		{
+			BallComponent()
+			{
+				m_ball = MakeShared<Ball>();
+				m_ball->position = Vector3(0.0f);
+				m_ball->Radius = 1.0f;
+			}
+
+
+			SharedPtr<Ball> m_ball;
 		};
 	}
 

@@ -6,6 +6,7 @@
 
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
+#include "Engine/Core/Components/SceneComponents.h"
 #include <vector>
 #include <string>
 
@@ -28,7 +29,7 @@ namespace SaltnPepperEngine
 
 	using Components::Transform;
 
-
+	using Components::Ball;
 	
 
 
@@ -97,6 +98,11 @@ namespace SaltnPepperEngine
 
 			void SetPaused(const bool paused) { isPaused = paused; }
 
+			void SetBallRef(SharedPtr<Ball> ballref)
+			{
+				ballRef = ballref;
+			}
+
 		private:
 
 			//void SyncParticleTransform(const Transform& transform);
@@ -118,7 +124,7 @@ namespace SaltnPepperEngine
 
 			
 			SharedPtr<Mesh> renderMesh = nullptr;
-
+			SharedPtr<Ball> ballRef = nullptr;
 			std::vector<Vector3> vertPositions{};
 			std::vector<Vector3> vertPreviousPositions{};
 			std::vector<Vector3> particleVelocityList{};
@@ -166,9 +172,12 @@ namespace SaltnPepperEngine
 			const bool GetPaused() const { return isPaused; }
 			void OnUpdate(const float& deltaTime);
 			
+			
+			
 		private:
 
 			Vector3 gravity = Vector3(0.0f, -10.0f, 0.0f);
+			
 			std::vector<SharedPtr<SoftBody>> softBodyList;
 
 			float fixedDeltaTime = 1.0f / 60.0f;
@@ -181,6 +190,8 @@ namespace SaltnPepperEngine
 		{	
 			//The actual reference to the body, safer with smart pointer
 			std::vector<SharedPtr<SoftBody>> softBodyHandles;
+
+			SharedPtr<Ball> ballRef = nullptr;
 
 			// the fixed deltatime to use for the simulation
 			float fixedDeltatime = 0;
@@ -211,7 +222,7 @@ namespace SaltnPepperEngine
 
 			
 			// call this function only Once
-			void SetupSoftBodyThreads();
+			void SetupSoftBodyThreads(SharedPtr<Ball> ballRef);
 
 			void OnUpdate(const float deltaTime);
 

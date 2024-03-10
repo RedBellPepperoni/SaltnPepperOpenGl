@@ -169,10 +169,31 @@ namespace SaltnPepperEngine
 				// Apply velocity to the particle
 				vertPositions[index] += particleVelocityList[index] * deltaTime;
 
+				
+
+				Vector3 spherePosition = ballRef->position;
+
+				Vector3 diff = (vertPositions[index]) - spherePosition;
+				float radiusSum = 0.5f + ballRef->Radius;
+
+				// Basic Intesecting logic
+				bool isIntersect = Abs(Dot(diff, diff)) <= radiusSum * radiusSum;
+
+				if (isIntersect)
+				{
+					Vector3 normal = Normalize((vertPositions[index]) - spherePosition);
+					float distance = Abs(Length(spherePosition - (vertPositions[index])));
+					float depth = radiusSum - distance;
+
+					vertPositions[index] += normal * depth;
+				}
+
+
 				if (vertPositions[index].y < 0.0f)
 				{
 					vertPositions[index].y = 0.0f;
-				}	 
+				}
+
 			}
 		}
 
@@ -338,6 +359,8 @@ namespace SaltnPepperEngine
 			
 
 		}
+
+	
 
 		Hash::Hash(int newspacing, uint32_t maxnumObjects)
 		{
@@ -516,7 +539,7 @@ namespace SaltnPepperEngine
 
 
 		// call this function only Once
-		void ThreadedSolver::SetupSoftBodyThreads()
+		void ThreadedSolver::SetupSoftBodyThreads(SharedPtr<Ball> ballRef)
 		{
 			int softBodyCount = (int)softBodies.size();
 
@@ -551,13 +574,16 @@ namespace SaltnPepperEngine
 				info->softBodyHandles;
 				info->run = true;
 				info->isAlive = true;
+				info->ballRef = ballRef;
 
 				for (int j = 0; j < bodyPerThread; j++)
 				{
 					if (bodyCounter < newbodyCount)
 					{
 						SharedPtr<SoftBody> body = softBodies[bodyCounter];
+						body->SetBallRef(ballRef);
 						info->softBodyHandles.push_back(body);
+
 						bodyCounter++;
 					}
 				}

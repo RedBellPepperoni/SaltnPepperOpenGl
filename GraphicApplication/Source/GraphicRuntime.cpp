@@ -3,20 +3,18 @@
 #include "Engine/Core/Physics/SoftBody/Cloth.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
-struct Ball
-{
-    bool ball; 
-};
 
-void CreateCloth(const Vector3 position)
+
+SharedPtr<Ball> CreateCloth(const Vector3 position)
 {
   
 
     Entity ballEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BallEntity");
     Transform* balltransform = &ballEntity.GetComponent<Transform>();
-    ballEntity.AddComponent<Ball>();
+    SharedPtr<Ball> ball = ballEntity.AddComponent<BallComponent>().m_ball;
     Vector3 ballPos = Vector3(5.0f, 1.0f, 5.0f);
     balltransform->SetPosition(ballPos);
+	ball->position = ballPos;
 
 
     SharedPtr<SphereCollider> sphereCollider= MakeShared<SphereCollider>(1.0f);
@@ -36,6 +34,8 @@ void CreateCloth(const Vector3 position)
     ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(16);
     clothComp.clothHandle->OnInit(balltransform,sphereCollider);
     clothComp.clothHandle->clothMesh->GetMaterial()->SetAlbedoTexture("grass");
+
+	return ball;
 
 }
 
@@ -66,6 +66,8 @@ class GraphicRuntime : public Application
 		int yGrid = 12;
 
 
+		SharedPtr<Ball> ballRef = CreateCloth(Vector3(15.0f, 10.0f, 0.0f));
+
 		for (int x = 0; x < XGrid; x++)
 		{
 			for (int y = 0; y < yGrid; y++)
@@ -76,13 +78,10 @@ class GraphicRuntime : public Application
 			}
 		}
 
+		
 
-
-		//CreateBunnyEntity(Vector3(5.0f,10.0f,0.0f));
-		//CreateBunnyEntity(Vector3(0.0f,10.0f,10.0f));
-		//CreateBunnyEntity(Vector3(7.0f,10.0f,0.0f));
-		//CreateBunnyEntity(Vector3(8.0f,10.0f,5.0f));
-		//CreateBunnyEntity(Vector3(5.0f,10.0f,5.0f));
+		//CreateBunnyEntity(Vector3(5.0f, 10.0f, 0.0f), ballRef);
+		
 
 		
 
@@ -99,14 +98,15 @@ class GraphicRuntime : public Application
 		
 
        // CreatePlayerCharacter(mainCamera);
-        CreateCloth(Vector3(15.0f,10.0f,0.0f));
+      
 
 
 		softbodySolver = MakeShared<ThreadedSolver>();
 		//softbodySolver = MakeShared<Solver>();
 
 		softbodySolver->OnInit();
-		softbodySolver->SetupSoftBodyThreads();
+
+		softbodySolver->SetupSoftBodyThreads(ballRef);
 	}
 
 
@@ -118,12 +118,15 @@ class GraphicRuntime : public Application
       
      
        
-        ComponentView ballView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Ball>();
+        ComponentView ballView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<BallComponent>();
         ComponentView clothView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ClothComponent>();
 
         SharedPtr<Cloth>& cloth = clothView[0].GetComponent<ClothComponent>().clothHandle;
 
         Transform& ballTransform = ballView[0].GetComponent<Transform>();
+		SharedPtr<Ball> ballRef = ballView[0].GetComponent<BallComponent>().m_ball;
+		ballRef->Update(ballTransform);
+
         Transform& clothtransform = clothView[0].GetComponent<Transform>();
 
         cloth->OnUpdate(deltaTime, ballTransform, clothtransform);
@@ -729,7 +732,7 @@ class GraphicRuntime : public Application
 
     }
 
-	void CreateBunnyEntity(const Vector3& position = Vector3(0.0f))
+	void CreateBunnyEntity(const Vector3& position = Vector3(0.0f), SharedPtr<Ball> ballRef =nullptr)
 	{
 		Entity softEntity = GetCurrentScene()->CreateEntity("SoftBody_Bunny");
 		Transform& entityTrasfrom = softEntity.GetComponent<Transform>();
@@ -739,6 +742,7 @@ class GraphicRuntime : public Application
 
 		SoftBodyComponent& softComp = softEntity.AddComponent<SoftBodyComponent>(bunnyMesh);
 		softComp.softBodyhandle->OnInit(position);
+		softComp.softBodyhandle->SetBallRef(ballRef);
 	}
 
 private:

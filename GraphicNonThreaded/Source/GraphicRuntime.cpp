@@ -3,10 +3,6 @@
 #include "Engine/Core/Physics/SoftBody/Cloth.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
-struct Ball
-{
-    bool ball; 
-};
 
 using namespace Physics;
 
