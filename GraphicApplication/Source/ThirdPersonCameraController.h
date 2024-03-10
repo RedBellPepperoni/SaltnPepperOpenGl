@@ -34,7 +34,7 @@ namespace SaltnPepperEngine
 			Vector3 m_PositionDelta{};
 
 
-			float m_distance = 22.0f;
+			float m_distance = 5.0f;
 		};
 	}
 

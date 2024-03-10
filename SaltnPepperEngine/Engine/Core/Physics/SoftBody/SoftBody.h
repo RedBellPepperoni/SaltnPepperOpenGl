@@ -194,7 +194,7 @@ namespace SaltnPepperEngine
 			SharedPtr<Ball> ballRef = nullptr;
 
 			// the fixed deltatime to use for the simulation
-			float fixedDeltatime = 0;
+			float fixedDeltatime = 1.0f / 50.0f;
 
 			// The gravitational force
 			Vector3 gravity = Vector3(0.0f, -9.81f, 0.0f);
@@ -213,7 +213,7 @@ namespace SaltnPepperEngine
 		class ThreadedSolver
 		{
 		public:
-			ThreadedSolver(const int maxThreadcount = 16);
+			ThreadedSolver(const int maxThreadcount = 12);
 			~ThreadedSolver();
 
 			void OnInit();
@@ -231,7 +231,7 @@ namespace SaltnPepperEngine
 		private:
 
 
-			int maximumThreadCount = 16;
+			int maximumThreadCount = 12;
 
 			Vector3 gravity = Vector3(0.0f, -10.0f, 0.0f);
 			float fixedDeltaTime = 1.0f / 60.0f;
@@ -239,7 +239,7 @@ namespace SaltnPepperEngine
 			bool isPaused = true;
 			float timestepCounter = 0.0f;
 
-			int bodyPerThread = 10;
+			int bodyPerThread = 12;
 
 			std::vector<SharedPtr<SoftBody>> softBodies;
 			std::vector<SharedPtr<SoftBodyThreadInfo>> threadInfoList;

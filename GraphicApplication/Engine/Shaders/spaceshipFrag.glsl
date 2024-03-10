@@ -99,8 +99,19 @@ vec4 GetAlbedo()
 
     vec4 param = texture(mapAlbedo, VertexOutput.TexCoord);
   
-    return (materialProperties.AlbedoColor  + (param ));
 
+    if(materialProperties.AlbedoMapFactor > 0.5f)
+    {
+        return param;
+    }
+
+    else
+    {
+     return materialProperties.AlbedoColor;
+    }
+    
+   // return (materialProperties.AlbedoColor  + (param ));
+  
 }
 
 vec3 GetMetallic()

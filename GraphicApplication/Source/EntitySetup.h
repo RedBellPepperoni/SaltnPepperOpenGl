@@ -24,12 +24,8 @@ void LoadAllModels()
 {
 	SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
 
-	modelLib->LoadModel("PlayerKnight","Assets\\Models\\PlayerKnight.fbx");
-	modelLib->LoadModel("Goblin","Assets\\Models\\Goblin.fbx");
-	modelLib->LoadModel("Cat","Assets\\Models\\Cat.fbx");
-	modelLib->LoadModel("Spider","Assets\\Models\\Spider.fbx");
-	modelLib->LoadModel("Deer","Assets\\Models\\Deer.fbx");
-	modelLib->LoadModel("Sheep","Assets\\Models\\Sheep.fbx");
+	modelLib->LoadModel("IcoSphere","Assets\\Models\\IcoSphere.fbx");
+	
 
 }
 
@@ -37,14 +33,13 @@ void LoadAllTextures()
 {
 	SharedPtr<TextureLibrary>& textureLib = Application::GetCurrent().GetTextureLibrary();
 
-	textureLib->LoadTexture("player", "Assets\\Textures\\player.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("goblin", "Assets\\Textures\\goblin.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("cat", "Assets\\Textures\\cat.png", TextureFormat::RGBA);
+
 	textureLib->LoadTexture("grass", "Assets\\Textures\\grass.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("chain", "Assets\\Textures\\chain.tga", TextureFormat::RGBA);
+	textureLib->LoadTexture("flannel", "Assets\\Textures\\flannel.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("puffer", "Assets\\Textures\\puffer.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("snow", "Assets\\Textures\\snow.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("spider", "Assets\\Textures\\spider.jpg", TextureFormat::RGBA);
-	textureLib->LoadTexture("deer", "Assets\\Textures\\deer.jpeg", TextureFormat::RGBA);
-	textureLib->LoadTexture("sheep", "Assets\\Textures\\sheep.png", TextureFormat::RGBA);
+
 }
 
 Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vector3{0.0f})
@@ -58,8 +53,8 @@ Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vec
 	// Cache the transform Reference
 	Transform& transform = cameraEntity.GetComponent<Transform>();
 
-	//ThirdPersonCameraController& controller = cameraEntity.AddComponent<ThirdPersonCameraController>();
-	FlyCameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
+	ThirdPersonCameraController& controller = cameraEntity.AddComponent<ThirdPersonCameraController>();
+	//FlyCameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
 
 	controller.SetCamera(&camera);
 
@@ -115,7 +110,7 @@ Entity CreatePlayerCharacter(Entity mainCamera)
 	Transform* childTransform = &childEntity.GetComponent<Transform>();
 	childTransform->SetRotation(Vector3(0.0f, 0.0f, 0.0f));
 
-	ModelComponent& modelComp = childEntity.AddComponent<ModelComponent>("PlayerKnight");
+	ModelComponent& modelComp = childEntity.AddComponent<ModelComponent>("IcoSphere");
 	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
 
 	mat->SetAlbedoTexture("player.png");
@@ -138,7 +133,7 @@ Entity CreateDirectionalLight()
 	transform.SetEularRotation(Vector3(-36.0f, 0.0f, 0.0f));
 	Light& light = dirLightEntity.AddComponent<Light>();
 	light.type = LightType::DirectionLight;
-	light.intensity = 1.2f;
+	light.intensity = 1.0f;
 
 	return dirLightEntity;
 }

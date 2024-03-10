@@ -114,11 +114,17 @@ namespace SaltnPepperEngine
 
 
 			ComponentView clothView = scene->GetEntityManager()->GetComponentsOfType<SaltnPepperEngine::Physics::ClothComponent>();
-			Transform& clothtransform = clothView[0].GetComponent<Transform>();
-			SharedPtr<Mesh> clothMesh = clothView[0].GetComponent<SaltnPepperEngine::Physics::ClothComponent>().clothHandle->clothMesh;
+			
+			for (Entity clothEntity : clothView)
+			{
+				Transform& clothtransform = clothEntity.GetComponent<Transform>();
+				SharedPtr<Mesh> clothMesh = clothEntity.GetComponent<SaltnPepperEngine::Physics::ClothComponent>().clothHandle->clothMesh;
 
-			m_renderer->ProcessRenderElement(clothMesh, clothMesh->GetMaterial(), clothtransform);
+				m_renderer->ProcessRenderElement(clothMesh, clothMesh->GetMaterial(), clothtransform);
 
+			}
+			
+		
 
 			ComponentView softView = scene->GetEntityManager()->GetComponentsOfType<Physics::SoftBodyComponent>();
 			

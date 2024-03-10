@@ -3,39 +3,98 @@
 #include "Engine/Core/Physics/SoftBody/Cloth.h"
 #include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
+//struct PlayerLook
+//{
+//	std::string name = "PlayerLook";
+//};
 
 
-SharedPtr<Ball> CreateCloth(const Vector3 position)
+enum class ClothTexture
 {
-  
+	CHAIN,
+	FLANNEL,
+	PUFFER
+};
 
-    Entity ballEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BallEntity");
-    Transform* balltransform = &ballEntity.GetComponent<Transform>();
-    SharedPtr<Ball> ball = ballEntity.AddComponent<BallComponent>().m_ball;
-    Vector3 ballPos = Vector3(5.0f, 1.0f, 5.0f);
-    balltransform->SetPosition(ballPos);
-	ball->position = ballPos;
+std::string clothTextureName[3] =
+{
+	"Chain",
+	"Flannel",
+	"Puffer"
+};
+
+SharedPtr<Ball> CreatePlayer(const Vector3 position, Entity mainCamera)
+{
+	Entity ballEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BallEntity");
+	Transform* balltransform = &ballEntity.GetComponent<Transform>();
+	SharedPtr<Ball> ball = ballEntity.AddComponent<BallComponent>().m_ball;
+	PlayerCharacter& player = ballEntity.AddComponent<PlayerCharacter>();
+	balltransform->SetPosition(position);
+	ball->position = position;
+
+	SharedPtr<SphereCollider> sphereCollider = MakeShared<SphereCollider>(1.0f);
+	PhysicsProperties properties;
+	properties.collider = sphereCollider;
+	properties.mass = 20.0f;
+	properties.friction = 0.8f;
+	properties.position = Vector3(position);
+	RigidBody3D* bodyRef = ballEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
+	bodyRef->SetVelocity(Vector3(5.0f, 0.0f, 0.0f));
+
+	mainCamera.AddComponent<Hierarchy>();
+	mainCamera.SetParent(ballEntity);
+
+	Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerModel");
+	childEntity.AddComponent<PlayerLook>();
+	Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
+	Transform* childTransform = &childEntity.GetComponent<Transform>();	
+	childTransform->SetEularRotation(Vector3(0.0f, 0.0f, 0.0f));
+	ModelComponent& modelComp = childEntity.AddComponent<ModelComponent>("IcoSphere");
+	modelComp.m_handle->GetMeshes()[0]->GetMaterial()->SetAlbedoTexture("grass");
+
+	childEntity.SetParent(ballEntity);
+	Transform* cameraTransform = &mainCamera.GetComponent<Transform>();
+	cameraTransform->SetPosition(Vector3(0.0f, 2.0f, 2.0f));
+	player.Init(bodyRef, childTransform, cameraTransform);
+
+	return ball;
+}
 
 
-    SharedPtr<SphereCollider> sphereCollider= MakeShared<SphereCollider>(1.0f);
-    PhysicsProperties properties;
-    properties.collider = sphereCollider;
-    properties.mass = 20.0f;
-    properties.friction = 0.8f;
-    properties.position = Vector3(ballPos);
-    RigidBody3D* bodyRef = ballEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
-    bodyRef->SetVelocity(Vector3(5.0f, 0.0f, 0.0f));
+SharedPtr<Cloth> CreateCloth(const ClothTexture texture = ClothTexture::CHAIN,const Vector3 position = Vector3(0.0f))
+{
+ 
 
-
-    Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("ClothEntity");
+    Entity clothEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("ClothEntity_" + clothTextureName[(int)texture]) ;
     Transform& clothtransform = clothEntity.GetComponent<Transform>();
     clothtransform.SetPosition(position);
 
     ClothComponent& clothComp = clothEntity.AddComponent<ClothComponent>(16);
-    clothComp.clothHandle->OnInit(balltransform,sphereCollider);
-    clothComp.clothHandle->clothMesh->GetMaterial()->SetAlbedoTexture("grass");
+   
+	clothComp.clothHandle->clothMesh->GetMaterial()->albedoMapFactor = 1.0f;
 
-	return ball;
+	switch (texture)
+	{
+	case ClothTexture::CHAIN: clothComp.clothHandle->clothMesh->GetMaterial()->SetAlbedoTexture("chain");
+		clothComp.clothHandle->clothMesh->GetMaterial()->name = "ChainMat";
+		
+		clothComp.clothHandle->clothMesh->SetName("ChainCloth");
+		break;
+	case ClothTexture::FLANNEL: clothComp.clothHandle->clothMesh->GetMaterial()->SetAlbedoTexture("flannel");
+		clothComp.clothHandle->clothMesh->GetMaterial()->name = "FlannelMat";
+		clothComp.clothHandle->clothMesh->SetName("FlannelCloth");
+		break;
+	case ClothTexture::PUFFER: clothComp.clothHandle->clothMesh->GetMaterial()->SetAlbedoTexture("puffer");
+		clothComp.clothHandle->clothMesh->GetMaterial()->name = "PufferMat";
+		clothComp.clothHandle->clothMesh->SetName("PUFFERCloth");
+		break;
+	default:
+		break;
+	}
+   
+	clothComp.clothHandle->OnInit(clothtransform);
+
+	return clothComp.clothHandle;
 
 }
 
@@ -65,8 +124,27 @@ class GraphicRuntime : public Application
 		int XGrid = 12;
 		int yGrid = 12;
 
+		Entity mainCamera = CreateMainCamera(Vector3(-7.60f, 13.02f, 26.80f), Vector3(-31.05f, -51.40f, 0.0f));
+		Camera* cam = &mainCamera.GetComponent<Camera>();
 
-		SharedPtr<Ball> ballRef = CreateCloth(Vector3(15.0f, 10.0f, 0.0f));
+
+
+		SharedPtr<Ball> ballRef = CreatePlayer(Vector3(0.0f,1.0f,0.0f), mainCamera);
+
+		CreateCloth(ClothTexture::CHAIN,Vector3(15.0f, 8.1f, -2.0f));
+
+		CreateCloth(ClothTexture::FLANNEL, Vector3(5.0f, 8.1f, -2.0f));
+
+		CreateCloth(ClothTexture::PUFFER, Vector3(-5.0f, 8.1f, -2.0f));
+
+
+
+		CreateCloth(ClothTexture::FLANNEL, Vector3(15.0f, 8.1f, 28.0f));
+
+		CreateCloth(ClothTexture::PUFFER, Vector3(5.0f, 8.1f, 28.0f));
+
+		CreateCloth(ClothTexture::CHAIN, Vector3(-5.0f, 8.1f, 28.0f));
+
 
 		for (int x = 0; x < XGrid; x++)
 		{
@@ -85,9 +163,7 @@ class GraphicRuntime : public Application
 
 		
 
-        Entity mainCamera = CreateMainCamera(Vector3(-7.60f,13.02f,26.80f), Vector3(-31.05f,-51.40f,0.0f));
-        Camera* cam = &mainCamera.GetComponent<Camera>();
-
+      
        
 
         CreateDirectionalLight();
@@ -102,11 +178,14 @@ class GraphicRuntime : public Application
 
 
 		softbodySolver = MakeShared<ThreadedSolver>();
+		clothSolver = MakeShared<ThreadedClothSolver>();
 		//softbodySolver = MakeShared<Solver>();
 
 		softbodySolver->OnInit();
+		clothSolver->OnInit();
 
 		softbodySolver->SetupSoftBodyThreads(ballRef);
+		clothSolver->SetupClothThreads(ballRef);
 	}
 
 
@@ -116,26 +195,26 @@ class GraphicRuntime : public Application
 	void OnUpdate(float deltaTime)
 	{
       
-     
+	
        
         ComponentView ballView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<BallComponent>();
-        ComponentView clothView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ClothComponent>();
-
-        SharedPtr<Cloth>& cloth = clothView[0].GetComponent<ClothComponent>().clothHandle;
-
+      
         Transform& ballTransform = ballView[0].GetComponent<Transform>();
 		SharedPtr<Ball> ballRef = ballView[0].GetComponent<BallComponent>().m_ball;
 		ballRef->Update(ballTransform);
 
-        Transform& clothtransform = clothView[0].GetComponent<Transform>();
-
-        cloth->OnUpdate(deltaTime, ballTransform, clothtransform);
+      
+       
 		softbodySolver->OnUpdate(deltaTime);
+		clothSolver->OnUpdate(deltaTime);
 
+
+		
 
 		if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Space))
 		{
 			softbodySolver->SetPaused(!softbodySolver->GetPaused());
+			clothSolver->SetPaused(!clothSolver->GetPaused());
 		}
 
 
@@ -144,7 +223,32 @@ class GraphicRuntime : public Application
             return;
         }
 
-       
+		ComponentView PlayerView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerCharacter>();
+
+		Entity player = PlayerView[0];
+		Transform* playerTransform = &player.GetComponent<Transform>();
+		PlayerCharacter& playerCharacter = player.GetComponent<PlayerCharacter>();
+		playerCharacter.Update(deltaTime);
+
+		ComponentView PlayerLookView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerLook>();
+
+		Transform* lookTransform = &PlayerLookView[0].GetComponent<Transform>();
+
+
+
+		ComponentView TPSCameraView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ThirdPersonCameraController>();
+
+
+
+
+		Entity controller = TPSCameraView[0];
+		Transform& transform = controller.GetComponent<Transform>();
+		ThirdPersonCameraController& TPScontroller = controller.GetComponent<ThirdPersonCameraController>();
+
+		Vector2 mousePosition = Input::InputSystem::GetInstance().GetMousePosition();
+
+		TPScontroller.MouseInput(transform, mousePosition, deltaTime);
+		playerCharacter.ProcessKeyboardInput(transform, deltaTime);
 
 
 	}
@@ -750,7 +854,7 @@ private:
    
 	//SharedPtr<Solver> softbodySolver = nullptr;
 	SharedPtr<ThreadedSolver> softbodySolver = nullptr;
-
+	SharedPtr<ThreadedClothSolver> clothSolver = nullptr;
 };
 
 

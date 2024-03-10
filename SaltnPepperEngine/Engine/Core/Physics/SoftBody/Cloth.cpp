@@ -3,6 +3,10 @@
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
+#include "Engine/Core/EntitySystem/EntityManager.h"
+#include "Engine/Core/EntitySystem/Entity.h"
+#include "Engine/Core/System/Application/Application.h"
+#include "Engine/Core/Scene/Scene.h"
 
 namespace SaltnPepperEngine
 {
@@ -66,26 +70,38 @@ namespace SaltnPepperEngine
 
 	
 
-		void Cloth::OnInit(Transform* Transform, SharedPtr<SphereCollider>& collider)
+		void Cloth::OnInit(Transform& clothTransform)
 		{
-			sphereTransform = Transform;
-			sphere = collider;
+			
+			InitPosition = clothTransform.GetPosition();
+			LOG_CRITICAL("Material : {0} :[{1}]", clothMesh->GetMaterial()->name, (uint64_t)clothMesh->GetMaterial().get());
+
 		}
 
-		void Cloth::OnUpdate(float deltaTime, const Transform& ballTransform, const Transform& clothTransform)
+		void Cloth::SetBallRef(SharedPtr<Ball> ball)
 		{
-			for (int i = 0; i < substeps; ++i)
-			{
-				Simulate(deltaTime/(float)substeps, ballTransform,clothTransform);
-				//UpdateMesh();
-			}
+			ballRef = ball;
+		}
+
+		void Cloth::OnUpdate(float deltaTime)
+		{
+			//for (int i = 0; i < substeps; ++i)
+			//{
+			//	Simulate(deltaTime/(float)substeps);
+			//	//UpdateMesh();
+			//}
 			// Only Updating the Render mesh once per update
+
+			if (paused) { return; }
+
 			UpdateMesh();
 
 		}
 
-		void Cloth::Simulate(float deltaTime, const Transform& ballTransform, const Transform& clothTransform)
+		void Cloth::Simulate(float deltaTime)
 		{
+			if (paused) { return; }
+
 			timeStepCounter += deltaTime;
 			if (timeStepCounter < fixedDeltaTime)
 			{
@@ -119,7 +135,31 @@ namespace SaltnPepperEngine
 					int index1 = IndexFrom2D(j + 1, i);
 					int index2 = IndexFrom2D(j, i + 1);
 
-					SphereClothCollision(particles[index0], ballTransform,clothTransform);
+					//SphereClothCollision(particles[index0]);
+
+					SoftBodyParticle& particle = particles[index0];
+
+					Vector3 spherePosition = ballRef->position;
+
+					Vector3 diff = (particle.position + InitPosition) - spherePosition;
+					float radiusSum = particle.radius + 1.0f;
+
+					// Basic Intesecting logic
+					bool isIntersect = Abs(Dot(diff, diff)) <= radiusSum * radiusSum;
+
+					if (isIntersect)
+					{
+						Vector3 normal = Normalize((particle.position + InitPosition) - spherePosition);
+						float distance = Abs(Length(spherePosition - (particle.position + InitPosition)));
+						float depth = radiusSum - distance;
+
+						particle.position += normal * depth;
+					}
+
+					/*if (particle.position.y < 0.0f)
+					{
+						particle.position.y = 0.0f;
+					}*/
 
 					Vector3 stickCenter;
 					Vector3 stickDir;
@@ -195,11 +235,11 @@ namespace SaltnPepperEngine
 		}
 
 
-		void Cloth::SphereClothCollision(SoftBodyParticle& particle,const Transform& ballTransform, const Transform& clothTransform )
+		void Cloth::SphereClothCollision(SoftBodyParticle& particle)
 		{
-			Vector3 spherePosition = ballTransform.GetPosition();
+			Vector3 spherePosition = ballRef->position;
 
-			Vector3 diff = (particle.position + clothTransform.GetPosition()) - spherePosition;
+			Vector3 diff = (particle.position + InitPosition) - spherePosition;
 			float radiusSum = particle.radius + sphere->GetRadius();
 
 			// Basic Intesecting logic
@@ -207,8 +247,8 @@ namespace SaltnPepperEngine
 
 			if (isIntersect) 
 			{
-				Vector3 normal = Normalize((particle.position + clothTransform.GetPosition()) - spherePosition);
-				float distance = Abs(Length(spherePosition - (particle.position + clothTransform.GetPosition())));
+				Vector3 normal = Normalize((particle.position + InitPosition) - spherePosition);
+				float distance = Abs(Length(spherePosition - (particle.position + InitPosition)));
 				float depth = radiusSum - distance;
 
 				particle.position += normal * depth;
@@ -220,5 +260,175 @@ namespace SaltnPepperEngine
 		{
 			return y * numberofSegments + x;
 		}
-	}
+
+
+		DWORD __stdcall UpdateThreadedCloth(LPVOID lpParameter)
+		{
+			ClothThreadInfo* threadInfo = (ClothThreadInfo*)lpParameter;
+
+
+
+			double lastFrameTime = glfwGetTime();
+			double counter = 0.0f;
+
+			while (threadInfo->isAlive)
+			{
+				if (threadInfo->run)
+				{
+					// Adjust sleep time based on actual framerate
+					//float delta = Time::DeltaTime();
+
+					double currentTime = glfwGetTime();
+					float deltaTime = (float)(currentTime - lastFrameTime);
+					lastFrameTime = currentTime;
+
+					counter += deltaTime;
+
+					if (counter > threadInfo->fixedDeltatime)
+					{
+						counter = 0.0f;
+
+						float substepDelta = threadInfo->fixedDeltatime / threadInfo->numberofSubsetps;
+
+						for (int i = 0; i < threadInfo->numberofSubsetps; i++)
+						{
+							for (SharedPtr<Cloth>& body : threadInfo->ClothHandles)
+							{	
+								body->Simulate(substepDelta);
+							}
+
+						}
+
+
+					}
+
+
+					//Sleep(threadInfo->sleepTime);
+					Sleep(0);
+
+
+				}
+			}
+
+			return 0;
+		}
+
+		ThreadedClothSolver::ThreadedClothSolver(const int maxThreadcount)
+		{
+			maximumThreadCount = maxThreadcount;
+		}
+
+		ThreadedClothSolver::~ThreadedClothSolver()
+		{
+
+		}
+
+		void ThreadedClothSolver::OnInit()
+		{
+			ComponentView clothView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ClothComponent>();
+
+			for (Entity clothComp : clothView)
+			{
+				// Get the softbody handle from the compoenet
+				SharedPtr<Cloth> bodyref = clothComp.GetComponent<ClothComponent>().clothHandle;
+				// Store the reference for faster access
+				clothRefs.push_back(bodyref);
+
+				bodyref->SetPaused(isPaused);
+			}
+
+
+		}
+
+		void ThreadedClothSolver::SetupClothThreads(SharedPtr<Ball> ballRef)
+		{
+			int clothCount = (int)clothRefs.size();
+
+			//int bodyPerThread = softBodyCount / maximumThreadCount;
+
+			if (clothCount > maximumThreadCount * bodyPerThread)
+			{
+				int difference = (maximumThreadCount * bodyPerThread) - clothCount;
+
+				LOG_CRITICAL("Large Number of SoftBodies : deleting {0} out of {1}", difference, clothCount);
+
+
+				clothRefs.resize(maximumThreadCount * bodyPerThread);
+			}
+
+
+
+
+			int newbodyCount = (int)(clothRefs).size();
+
+			int threadstouse = newbodyCount % bodyPerThread == 0 ? newbodyCount / bodyPerThread : newbodyCount / bodyPerThread + 1;
+			int bodyCounter = 0;
+
+			for (int i = 0; i < threadstouse; i++)
+			{
+				// Create a new thread Info
+				SharedPtr<ClothThreadInfo> info = MakeShared<ClothThreadInfo>();
+
+				info->fixedDeltatime = 1.0f / 60.0f;
+				info->gravity = Vector3(0.0f, -9.81f, 0.0f);
+				info->sleepTime = 1;
+				info->ClothHandles;
+				info->numberofSubsetps = 16;
+				info->run = true;
+				info->isAlive = true;
+
+				for (int j = 0; j < bodyPerThread; j++)
+				{
+					if (bodyCounter < newbodyCount)
+					{
+						SharedPtr<Cloth> body = clothRefs[bodyCounter];
+						body->SetBallRef(ballRef);
+						info->ClothHandles.push_back(body);
+
+						bodyCounter++;
+					}
+				}
+
+
+
+				ClothThreadInfo* tsInfo = info.get();
+
+				DWORD ThreadId = 0;
+				HANDLE threadHandle = 0;
+				threadHandle = CreateThread(
+					NULL,					// lpThreadAttributes,
+					0,						// dwStackSize,
+					UpdateThreadedCloth,		// lpStartAddress,
+					(void*)tsInfo,				//  lpParameter,
+					0,						// dwCreationFlags (0 or CREATE_SUSPENDED)
+					&ThreadId); // lpThreadId
+
+
+				ThreadId++;
+
+				threadInfoList.push_back(info);
+			}
+
+		}
+
+		void ThreadedClothSolver::OnUpdate(const float deltaTime)
+		{
+			timestepCounter += deltaTime;
+			if (timestepCounter < fixedDeltaTime) { return; }
+
+			timestepCounter = 0.0f;
+			for (SharedPtr<Cloth>& body : clothRefs)
+			{
+				body->OnUpdate(deltaTime);
+			}
+		}
+
+		void ThreadedClothSolver::SetPaused(bool paused)
+		{
+			for (SharedPtr<Cloth>& body : clothRefs)
+			{
+				body->SetPaused(paused);
+			}
+		}
+}
 }

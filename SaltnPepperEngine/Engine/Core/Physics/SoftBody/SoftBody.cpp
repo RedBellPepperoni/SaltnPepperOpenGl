@@ -6,6 +6,7 @@
 #include "Engine/Core/EntitySystem/Entity.h"
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Scene/Scene.h"
+#include "Engine/Utils/Maths/Random.h"
 
 namespace SaltnPepperEngine
 {
@@ -13,6 +14,8 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
+		
+
 
 		void SetDiffVector()
 		{
@@ -65,6 +68,17 @@ namespace SaltnPepperEngine
 			
 			// Generate the actual render Mesh
 			renderMesh = MakeShared<Mesh>(renderVertices,tetmesh->TetSurfaceTriIds);
+
+			renderMesh->GetMaterial()->albedoMapFactor = 0.0f;
+
+			int RandomRed = Random32::Range.GetRandom(0, 10);
+			int RandomGreen = Random32::Range.GetRandom(0, 10);
+			int RandomBlue = Random32::Range.GetRandom(0, 10);
+			
+
+
+			renderMesh->GetMaterial()->albedoColour = Vector4(RandomRed/10.0f,RandomGreen/10.0f,RandomBlue/10.0f,1.0f);
+
 			
 			for (int index = 0; index < numTets; index++)
 			{
@@ -189,10 +203,39 @@ namespace SaltnPepperEngine
 				}
 
 
+				if (vertPositions[index].x > 25.0f)
+				{
+					vertPositions[index].x = 25.0f;
+				}
+
+				else if (vertPositions[index].x < -5.0f)
+				{
+					vertPositions[index].x = -5.0f;
+				}
+
+
+				if (vertPositions[index].z > 25.0f)
+				{
+					vertPositions[index].z = 25.0f;
+				}
+
+				else if (vertPositions[index].z < -5.0f)
+				{
+					vertPositions[index].z = -5.0f;
+				}
+
+
 				if (vertPositions[index].y < 0.0f)
 				{
 					vertPositions[index].y = 0.0f;
 				}
+
+				else if (vertPositions[index].y > 20.0f)
+				{
+					vertPositions[index].y = 20.0f;
+				}
+
+
 
 			}
 		}
@@ -512,7 +555,7 @@ namespace SaltnPepperEngine
 
 						float substepDelta = threadInfo->fixedDeltatime / threadInfo->numberofSubsetps;
 
-						for (int i = 0; i < 12; i++)
+						for (int i = 0; i < threadInfo->numberofSubsetps; i++)
 						{
 							for (SharedPtr<SoftBody>& body : threadInfo->softBodyHandles)
 							{
@@ -536,6 +579,9 @@ namespace SaltnPepperEngine
 
 			return 0;
 		}
+
+
+
 
 
 		// call this function only Once
@@ -568,7 +614,7 @@ namespace SaltnPepperEngine
 				// Create a new thread Info
 				SharedPtr<SoftBodyThreadInfo> info = MakeShared<SoftBodyThreadInfo>();
 
-				info->fixedDeltatime = 1.0f / 60.0f;
+				info->fixedDeltatime = 1.0f / 50.0f;
 				info->gravity = Vector3(0.0f, -9.81f, 0.0f);
 				info->sleepTime = 1;
 				info->softBodyHandles;

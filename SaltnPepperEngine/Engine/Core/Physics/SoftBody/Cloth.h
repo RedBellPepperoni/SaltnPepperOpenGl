@@ -2,6 +2,7 @@
 #define CLOTH_H
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
+#include "Engine/Core/Components/SceneComponents.h"
 #include <vector>
 
 namespace SaltnPepperEngine
@@ -22,6 +23,7 @@ namespace SaltnPepperEngine
 
 	using Rendering::Mesh;
 	using Components::Transform;
+	using Components::Ball;
 
 	namespace Physics
 	{
@@ -66,21 +68,25 @@ namespace SaltnPepperEngine
 			Cloth();
 			Cloth(int n, float RangeBetweenPoints);
 
-			void OnInit(Transform* Transform, SharedPtr<SphereCollider>& collider);
-			void OnUpdate(float deltaTime,const Transform& ballTransform,const Transform& clothTransform);
+			void OnInit(Transform& clothTransform);
+			void SetBallRef(SharedPtr<Ball> ball);
+			void OnUpdate(float deltaTime);
 
-			void Simulate(float deltaTime,const Transform& ballTransform, const Transform& clothTransform);
+			void Simulate(float deltaTime);
 			void UpdateMesh();
 
 			SharedPtr<Mesh> clothMesh = nullptr;
 
 			~Cloth();
 
+			const bool GetPaused() const { return paused; }
+			void SetPaused(bool value) { paused = value; }
+
 		private:
 		
-
-
-			void SphereClothCollision(SoftBodyParticle& particle,  const Transform& ballTransform, const Transform& clothTransform);
+			Vector3 InitPosition = Vector3(0.0f);
+			SharedPtr<Ball> ballRef = nullptr;
+			void SphereClothCollision(SoftBodyParticle& particle);
 
 			int numberofSegments = 0;
 			float rangeBetweenPoints = 0.0f;
@@ -91,10 +97,12 @@ namespace SaltnPepperEngine
 
 			inline int IndexFrom2D(int x, int y);
 
-			const float substeps = 32;
+			const float substeps = 12;
 
 			static constexpr float fixedDeltaTime = 1.0f / 60.0f;
 			float timeStepCounter = 0.0f;
+
+			bool paused = false;
 		};
 
 
@@ -102,9 +110,66 @@ namespace SaltnPepperEngine
 		{
 			ClothComponent(uint32_t numberSegments = 8) { clothHandle = MakeShared<Cloth>(numberSegments, 0.5f); }
 
-			SharedPtr<Cloth> clothHandle;
+			SharedPtr<Cloth> clothHandle = nullptr;
 		};
 
+
+		struct ClothThreadInfo
+		{
+			//The actual reference to the body, safer with smart pointer
+			std::vector<SharedPtr<Cloth>> ClothHandles;
+
+			// the fixed deltatime to use for the simulation
+			float fixedDeltatime = 1 / 50.0f;
+
+			// The gravitational force
+			Vector3 gravity = Vector3(0.0f, -9.81f, 0.0f);
+
+			//Thread run and alive info and sleep duration
+
+			bool run = false;
+			bool isAlive = false;
+			DWORD sleepTime = 1;
+			int numberofSubsetps = 12;
+
+		};
+
+		DWORD WINAPI UpdateThreadedCloth(LPVOID lpParameter);
+
+		class ThreadedClothSolver
+		{
+		public:
+			ThreadedClothSolver(const int maxThreadcount = 4);
+			~ThreadedClothSolver();
+
+			void OnInit();
+
+
+
+
+			// call this function only Once
+			void SetupClothThreads(SharedPtr<Ball> ballRef);
+
+			void OnUpdate(const float deltaTime);
+
+			void SetPaused(bool paused);
+			const bool GetPaused() const { return isPaused; }
+		private:
+
+
+			int maximumThreadCount = 16;
+
+			Vector3 gravity = Vector3(0.0f, -10.0f, 0.0f);
+			float fixedDeltaTime = 1.0f / 60.0f;
+			int numSubsteps = 16;
+			bool isPaused = true;
+			float timestepCounter = 0.0f;
+
+			int bodyPerThread = 10;
+
+			std::vector<SharedPtr<Cloth>> clothRefs;
+			std::vector<SharedPtr<ClothThreadInfo>> threadInfoList;
+		};
 
 	}
 }
