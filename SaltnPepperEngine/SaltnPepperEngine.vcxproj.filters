@@ -339,6 +339,9 @@
     <ClInclude Include="Engine\Core\Rendering\Textures\ColoredTextures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowMapManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SaltnPepperEngine.h">
@@ -621,6 +624,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Rendering\Lights\LightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMapManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

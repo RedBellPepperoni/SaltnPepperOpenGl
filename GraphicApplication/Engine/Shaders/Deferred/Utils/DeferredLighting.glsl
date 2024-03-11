@@ -39,8 +39,9 @@ vec3 calculateLighting(FragmentInfo fragment, vec3 viewDirection, vec3 lightDire
 
     GGXCookTorranceSampled(fragment.normal, normalize(lightDirection), viewDirection, roughness, metallic, fragment.albedo, specularColor, diffuseColor);
 
-
     vec3 ambientColor = diffuseColor * ambientFactor;
+
+    return ambientColor;
 
     float NL = clamp(dot(fragment.normal, lightDirection), 0.0, 1.0);
 

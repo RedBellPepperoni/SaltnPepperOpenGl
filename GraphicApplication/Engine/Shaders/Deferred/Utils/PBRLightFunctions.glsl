@@ -93,12 +93,12 @@ void GGXCookTorranceSampled(vec3 normal, vec3 lightDirection, vec3 viewDirection
     float NH = dot(normal, H);
     float HV = dot(H, viewDirection);
 
-   /* if (NV < 0.0 || NL < 0.0)
+    if (NV < 0.0 || NL < 0.0)
     {
-        specular = vec3(0.0);
-        diffuse = vec3(0.0);
+        specular = vec3(0.0,0.0,0.0);
+        diffuse = vec3(0.0,0.0,0.0);
         return;
-    }*/
+    }
 
     vec3 F0 = mix(vec3(0.04), albedo, metallic);
 

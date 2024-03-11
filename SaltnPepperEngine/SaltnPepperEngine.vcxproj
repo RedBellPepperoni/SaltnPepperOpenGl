@@ -196,6 +196,7 @@
     <ClInclude Include="Engine\Core\Rendering\Buffers\ShaderStorageBuffer.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\ShaderPreprocessor.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h" />
+    <ClInclude Include="ShadowMapManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\Rendering\Lights\DirectionalLight.cpp" />
@@ -292,6 +293,7 @@
     <ClCompile Include="Engine\Core\Rendering\Buffers\ShaderStorageBuffer.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Shader\ShaderPreprocessor.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Shader\Shader.cpp" />
+    <ClCompile Include="ShadowMapManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
