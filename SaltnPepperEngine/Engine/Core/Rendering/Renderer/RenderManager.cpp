@@ -182,7 +182,7 @@ namespace SaltnPepperEngine
 			// Initializing Shader Library to store all the Loaded Shaders
 			m_ShaderLibrary = MakeShared<ShaderLibrary>();
 
-			m_MaterialLibrary = MakeShared<MaterialLibrary>();
+			
 
 			// Loading all the shaders that are default to the engine
 			LoadEngineShaders();
@@ -276,17 +276,19 @@ namespace SaltnPepperEngine
 					SharedPtr<Shader> iblShader = m_ShaderLibrary->GetResource("IBLDeferred");
 					SharedPtr<Shader> dirLightShader = m_ShaderLibrary->GetResource("DirLightDeferred");
 
-					// ======= Light Pass =====================
+					//// ======= Light Pass =====================
 					m_renderer->ImagedBasedLightPass(iblShader,cameraElement,cameraElement.postProcessTexture);
 					RenderToTexture(cameraElement.postProcessTexture,iblShader);
 
-					
+					//
 					m_renderer->DirectionalLightPass(dirLightShader, cameraElement, cameraElement.postProcessTexture);
 					RenderToTextureNoClear(cameraElement.postProcessTexture, dirLightShader);
 
 					//ProcessImage()
 
 					CopyTexture(cameraElement.postProcessTexture,cameraElement.outputTexture);
+					//CopyTexture(cameraElement.albedoTexture,cameraElement.outputTexture);
+				
 				
 				}
 

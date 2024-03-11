@@ -84,8 +84,7 @@ vec2 sampleHammersley(uint i, float invSampleCount)
     return vec2(i * invSampleCount, radicalInverseVDC(i));
 }
 
-void GGXCookTorranceSampled(vec3 normal, vec3 lightDirection, vec3 viewDirection, float roughness, float metallic, vec3 albedo, 
-    out vec3 specular, out vec3 diffuse)
+void GGXCookTorranceSampled(vec3 normal, vec3 lightDirection, vec3 viewDirection, float roughness, float metallic, vec3 albedo, out vec3 specular, out vec3 diffuse)
 {
     vec3 H = normalize(viewDirection + lightDirection);
     float LV = dot(lightDirection, viewDirection);
@@ -94,12 +93,12 @@ void GGXCookTorranceSampled(vec3 normal, vec3 lightDirection, vec3 viewDirection
     float NH = dot(normal, H);
     float HV = dot(H, viewDirection);
 
-    if (NV < 0.0 || NL < 0.0)
+   /* if (NV < 0.0 || NL < 0.0)
     {
         specular = vec3(0.0);
         diffuse = vec3(0.0);
         return;
-    }
+    }*/
 
     vec3 F0 = mix(vec3(0.04), albedo, metallic);
 

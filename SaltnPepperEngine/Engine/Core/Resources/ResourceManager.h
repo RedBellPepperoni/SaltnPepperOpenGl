@@ -184,6 +184,7 @@ namespace SaltnPepperEngine
 
 		}
 
+		
 		SharedPtr<Material> CreateMaterial(const std::string& friendlyName);
 	};
 
@@ -219,6 +220,8 @@ namespace SaltnPepperEngine
 
 		SharedPtr<CubeMap> LoadCubeMap(const std::string& friendlyName, const std::string& right, const std::string& left, const std::string& top, const std::string& bottom, const std::string& front, const std::string& back);
 	};
+
+
 
 	/*class AudioLibrary : public ResourceLibrary<AudioClip>
 	{

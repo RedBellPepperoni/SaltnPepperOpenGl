@@ -132,11 +132,9 @@ void main()
     //TexCoord = applyParallaxMapping(TexCoord, fsin.TBN * viewDirection, map_height, displacement, parallaxOcclusion);
 
     vec3 normal = normalize(fsin.Normal);
-
-    if(materialProperties.NormalMapFactor > 0.04)
-    {
-        normal = calcNormal(TexCoord, fsin.WorldNormal, mapNormal);
-    }
+ 
+    normal = calcNormal(TexCoord, fsin.WorldNormal, mapNormal);
+    
 
     vec3 albedo = GetAlbedo().rgb;
     float occlusion = GetAO();

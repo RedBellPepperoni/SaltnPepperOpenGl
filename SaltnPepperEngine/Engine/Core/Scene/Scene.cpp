@@ -127,7 +127,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		/*if (!Application::GetCurrent().GetEditorActive())
+		if (!Application::GetCurrent().GetEditorActive())
 		{
 			if (!cameraControllerView.IsEmpty())
 			{
@@ -155,7 +155,7 @@ namespace SaltnPepperEngine
 
 
 			}
-		}*/
+		}
 
 
 		

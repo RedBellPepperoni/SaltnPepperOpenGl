@@ -36,8 +36,9 @@ vec3 calculateLighting(FragmentInfo fragment, vec3 viewDirection, vec3 lightDire
 
     vec3 specularColor = vec3(0.0);
     vec3 diffuseColor = vec3(0.0);
-    GGXCookTorranceSampled(fragment.normal, normalize(lightDirection), viewDirection, roughness, metallic, fragment.albedo, 
-        specularColor, diffuseColor);
+
+    GGXCookTorranceSampled(fragment.normal, normalize(lightDirection), viewDirection, roughness, metallic, fragment.albedo, specularColor, diffuseColor);
+
 
     vec3 ambientColor = diffuseColor * ambientFactor;
 
@@ -46,7 +47,10 @@ vec3 calculateLighting(FragmentInfo fragment, vec3 viewDirection, vec3 lightDire
     float shadowCoef = NL * shadowFactor;
 
     vec3 totalColor = (ambientColor + (diffuseColor + specularColor) * shadowCoef) * lightColor;
+
     return totalColor * fragment.ambientOcclusion;
 }
+
+
 
 

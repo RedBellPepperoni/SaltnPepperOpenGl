@@ -56,8 +56,11 @@ void main()
 
     vec3 totalColor = vec3(0.0);
     vec4 pos = vec4(fragment.position, 1.0);
-    float shadowFactor = calcShadowFactorCascade(pos, dirlight, lightDepthMap);
-    totalColor += calculateLighting(fragment, viewDirection, dirlight.direction, dirlight.color.rgb, dirlight.color.a, shadowFactor);
+   // float shadowFactor = calcShadowFactorCascade(pos, dirlight, lightDepthMap);
+    float shadowFactor = 0.4;
 
+    totalColor += calculateLighting(fragment, viewDirection, dirlight.direction, dirlight.color.rgb, 2.0f, shadowFactor);
+    
     OutColor = vec4(totalColor, 1.0);
+   
 }

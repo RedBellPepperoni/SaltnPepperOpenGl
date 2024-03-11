@@ -20,14 +20,23 @@ class GraphicRuntime : public Application
 
         Entity mainCamera = CreateMainCamera();
         CreateDirectionalLight();
-        CreateParentedEntity();
-        CreateBaseFloor();
+       
+        
+
+        CreateModel(EnemyModel::CAT,Vector3(0.0f,0.0f,0.0f));
+        CreateModel(EnemyModel::CAT,Vector3(2.0f,0.0f,0.0f));
+        CreateModel(EnemyModel::CAT,Vector3(4.0f,0.0f,0.0f));
 
 
-        aiManager = MakeShared<AI::AIManager>();
+        CreateModel(EnemyModel::GOBLIN, Vector3(0.0f, 0.0f, 3.0f));
+        CreateModel(EnemyModel::GOBLIN, Vector3(2.0f, 0.0f, 3.0f));
+        CreateModel(EnemyModel::GOBLIN, Vector3(4.0f, 0.0f, 3.0f));
 
+        CreateModel(EnemyModel::CAT, Vector3(0.0f, 0.0f, 6.0f));
+        CreateModel(EnemyModel::CAT, Vector3(2.0f, 0.0f, 6.0f));
+        CreateModel(EnemyModel::CAT, Vector3(4.0f, 0.0f, 6.0f));
 
-        CreatePlayerCharacter(mainCamera);
+        //CreatePlayerCharacter(mainCamera);
       /*  CreateEnemyAI(AI::BehaviorState::Seek,EnemyModel::GOBLIN,Vector3(10.0f,0.0f,10.0f));
         CreateEnemyAI(AI::BehaviorState::Approach,EnemyModel::CAT,Vector3(-10.0f,0.0f,-10.0f));
         CreateEnemyAI(AI::BehaviorState::Pursue,EnemyModel::SPIDER,Vector3(20.0f,0.0f,10.0f));
@@ -45,36 +54,36 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
-        ComponentView PlayerView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerCharacter>();
+       // ComponentView PlayerView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerCharacter>();
 
-        Entity player = PlayerView[0];
-        Transform* playerTransform = &player.GetComponent<Transform>();
-        PlayerCharacter& playerCharacter = player.GetComponent<PlayerCharacter>();
-        playerCharacter.Update(deltaTime);
+       ///* Entity player = PlayerView[0];
+       // Transform* playerTransform = &player.GetComponent<Transform>();
+       // PlayerCharacter& playerCharacter = player.GetComponent<PlayerCharacter>();
+       // playerCharacter.Update(deltaTime);*/
 
-        ComponentView PlayerLookView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerLook>();
+       // ComponentView PlayerLookView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerLook>();
 
-        Transform* lookTransform = &PlayerLookView[0].GetComponent<Transform>();
+       // Transform* lookTransform = &PlayerLookView[0].GetComponent<Transform>();
 
-        aiManager->Update(deltaTime, playerTransform, lookTransform);
+       // aiManager->Update(deltaTime, playerTransform, lookTransform);
 
         if (Application::GetCurrent().GetEditorActive())
         {
             return;
         }
 
-        ComponentView TPSCameraView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ThirdPersonCameraController>();
+      /*  ComponentView TPSCameraView = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<ThirdPersonCameraController>();
 
         Entity controller = TPSCameraView[0];
         Transform& transform = controller.GetComponent<Transform>();
-        ThirdPersonCameraController& TPScontroller = controller.GetComponent<ThirdPersonCameraController>();
+        ThirdPersonCameraController& TPScontroller = controller.GetComponent<ThirdPersonCameraController>();*/
       
-        GetCurrentScene()->SetMainCamera(&TPScontroller,&transform);
+      /*  GetCurrentScene()->SetMainCamera(&TPScontroller,&transform);
 
         Vector2 mousePosition = Input::InputSystem::GetInstance().GetMousePosition();
 
         TPScontroller.MouseInput(transform,mousePosition,deltaTime);
-        playerCharacter.ProcessKeyboardInput(transform,deltaTime);
+        playerCharacter.ProcessKeyboardInput(transform,deltaTime);*/
 	}
 
 private:

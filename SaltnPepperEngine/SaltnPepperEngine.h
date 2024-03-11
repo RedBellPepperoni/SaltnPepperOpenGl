@@ -36,6 +36,12 @@
 #include "Engine/Core/Rendering/Lights/DirectionalLight.h"
 #include "Engine/Core/Rendering/Lights/LightComponent.h"
 
+// ========== Camera Controllers =============
+#include "Engine/Core/Rendering/Camera/CameraController.h"
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+
+
+
 // ========= SCENE and ECS STUFF ===================
 #include "Engine/Core/Scene/Scene.h" 
 #include "Engine/Core/Scene/SceneGraph.h"

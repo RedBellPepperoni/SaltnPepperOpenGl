@@ -47,6 +47,8 @@ namespace SaltnPepperEngine
 		m_modelLibrary = MakeShared<ModelLibrary>();
 		m_textureLibrary = MakeShared<TextureLibrary>();
 		m_cubeMapLibrary = MakeShared<CubeMapLibrary>();
+		m_materialLibrary = MakeShared<MaterialLibrary>();
+
 		//m_audioLibrary = MakeShared<AudioLibrary>();
 
 

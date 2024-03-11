@@ -61,9 +61,11 @@ Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vec
 	// Cache the transform Reference
 	Transform& transform = cameraEntity.GetComponent<Transform>();
 
-	ThirdPersonCameraController& controller = cameraEntity.AddComponent<ThirdPersonCameraController>();
-
+	//ThirdPersonCameraController& controller = cameraEntity.AddComponent<ThirdPersonCameraController>();
+	FlyCameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
 	controller.SetCamera(camera);
+	Application::GetCurrent().GetCurrentScene()->SetMainCamera(&controller, &transform);
+
 
 	// Set the tranasform Values
 	transform.SetPosition(Position);
@@ -167,71 +169,48 @@ Entity CreateBaseFloor()
 }
 
 
-Entity CreateEnemyAI(AI::BehaviorState state, EnemyModel model,Vector3 position = Vector3(10.0f, 0.0f, 10.0f))
+Entity CreateModel(EnemyModel model,Vector3 position = Vector3(10.0f, 0.0f, 10.0f))
 {
-	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Seek Enemy");
+	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Enemy");
 	Hierarchy& hierarchyComp = enemyEntity.AddComponent<Hierarchy>();
 	Transform& transform = enemyEntity.GetComponent<Transform>();
-	AI::AIBaseAgent& agent = enemyEntity.AddComponent<AI::AIBaseAgent>();
 
-	
 	transform.SetPosition(position);
 
 
-	PhysicsProperties properties;
-	properties.collider = MakeShared<SphereCollider>(1.0f);
-	properties.mass = 20.0f;
-	properties.friction = 0.8f;
-	properties.position = position;
-	RigidBody3D* bodyRef = enemyEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
-
-
 	
-
-	Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Enemy Model");
-	Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
-	Transform* childtransform = &childEntity.GetComponent<Transform>();
-
-	agent.Init(bodyRef, childtransform);
-	agent.m_lookTransform = &childEntity.GetComponent<Transform>();
-	agent.SetBehaviour(state);
-
 	ModelComponent* modelComp = nullptr;
 	SharedPtr<Material> mat = nullptr;
 	switch (model)
 	{
-	case GOBLIN: modelComp = &childEntity.AddComponent<ModelComponent>("Goblin");
+	case GOBLIN: modelComp = &enemyEntity.AddComponent<ModelComponent>("Goblin");
 		mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
 		mat->SetAlbedoTexture("goblin");
 		break;
 
-	case SHEEP:modelComp = &childEntity.AddComponent<ModelComponent>("Sheep");
+	case SHEEP:modelComp = &enemyEntity.AddComponent<ModelComponent>("Sheep");
 		 mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
 		mat->SetAlbedoTexture("sheep");
 		break;
 
-	case DEER:modelComp = &childEntity.AddComponent<ModelComponent>("Deer");
+	case DEER:modelComp = &enemyEntity.AddComponent<ModelComponent>("Deer");
 		 mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
 		mat->SetAlbedoTexture("deer");
 		break;
 
-	case SPIDER:modelComp = &childEntity.AddComponent<ModelComponent>("Spider");
+	case SPIDER:modelComp = &enemyEntity.AddComponent<ModelComponent>("Spider");
 		 mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
 		mat->SetAlbedoTexture("spider");
 		break;
 
-	case CAT:modelComp = &childEntity.AddComponent<ModelComponent>("Cat");
+	case CAT:modelComp = &enemyEntity.AddComponent<ModelComponent>("Cat");
 		 mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
 		mat->SetAlbedoTexture("cat");
 		break;
 
 	}
 	
-	
 
-
-	childEntity.SetParent(enemyEntity);
-	
 
 	return enemyEntity;
 }

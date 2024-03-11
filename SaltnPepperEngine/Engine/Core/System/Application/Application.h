@@ -21,6 +21,7 @@ namespace SaltnPepperEngine
 	class ModelLibrary;
 	class TextureLibrary;
 	class CubeMapLibrary;
+	class MaterialLibrary;
 	class AudioLibrary;
 	class GameObjectRegistry;
 	class Scene;
@@ -109,6 +110,9 @@ namespace SaltnPepperEngine
 
 		// The Container for all Loaded Cubemaps
 		SharedPtr<CubeMapLibrary> m_cubeMapLibrary;
+		
+		// The Container for all Loaded Materials
+		SharedPtr<MaterialLibrary> m_materialLibrary;
 
 		// The container for all loaded sounds
 		SharedPtr<AudioLibrary> m_audioLibrary;
