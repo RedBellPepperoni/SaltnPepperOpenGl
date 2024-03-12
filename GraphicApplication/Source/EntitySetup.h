@@ -249,6 +249,7 @@ Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0
 	{
 		mat->m_type = MaterialType::Opaque;
 		mat->SetAlbedoTexture("pallet");
+		mat->albedoMapFactor = 1.0f;
 	}
 
 

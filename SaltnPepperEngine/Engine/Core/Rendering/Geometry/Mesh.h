@@ -5,13 +5,13 @@
 #include "Engine/Core/Rendering/Buffers/IndexBuffer.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 
-
 #include "Engine/Core/Rendering/RenderDefinitions.h"
 #include <vector>
 #include <string>
 
 namespace SaltnPepperEngine
 {
+	class BoundingBox;
 
     namespace Rendering
     {
@@ -40,7 +40,7 @@ namespace SaltnPepperEngine
 
 
 			SharedPtr<Material> m_material;
-
+			SharedPtr<BoundingBox> m_boundingBox;
 
 		public:
 
@@ -76,6 +76,8 @@ namespace SaltnPepperEngine
 			void SetMaterial(const SharedPtr<Material>& newMaterial);
 			SharedPtr<Material>& GetMaterial();
  
+			const SharedPtr<BoundingBox>& GetBoundingBox();
+
 			static void RecalculateNormals(std::vector<Vertex>& vertices,const std::vector<uint32_t>& indices);
 
 		};

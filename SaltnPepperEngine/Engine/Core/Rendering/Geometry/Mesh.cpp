@@ -1,7 +1,7 @@
 #include "Mesh.h"
 #include "Engine/Core/Resources/ResourceManager.h"
 #include "Engine/Core/Rendering/Material/Material.h"
-
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 
 namespace SaltnPepperEngine
 {
@@ -15,6 +15,7 @@ namespace SaltnPepperEngine
 			, m_VBO(nullptr)
 			, m_IBO(nullptr)
 			, m_meshName("empty")
+			, m_boundingBox(nullptr)
 		{
 			m_material = MakeShared<Material>();
 		}
@@ -38,6 +39,15 @@ namespace SaltnPepperEngine
 			m_vertexCount = (uint32_t)m_vertices.size();
 			m_indiciesCount = (uint32_t)m_indicies.size();
 
+
+
+			m_boundingBox = MakeShared<BoundingBox>();
+
+			for (Vertex& vert : m_vertices)
+			{
+				m_boundingBox->Merge(vert.position);
+			}
+
 			// Creating a new Index buffer with the processed data
 			m_IBO = Factory<IndexBuffer>::Create(m_indiciesCount, m_indicies.data(), UsageType::STATIC_COPY);
 
@@ -45,6 +55,7 @@ namespace SaltnPepperEngine
 			m_VBO = Factory<VertexBuffer>::Create(sizeof(Vertex) * m_vertexCount, m_vertices.data(), UsageType::STATIC_COPY);
 
 			m_material = MakeShared<Material>();
+
 		}
 
 		// Default Constructor
@@ -102,6 +113,11 @@ namespace SaltnPepperEngine
 		SharedPtr<Material>& Mesh::GetMaterial() 
 		{
 			return m_material;
+		}
+
+		const SharedPtr<BoundingBox>& Mesh::GetBoundingBox()
+		{
+			return m_boundingBox;
 		}
 
 		void Mesh::RecalculateNormals(std::vector<Vertex>& vertices,const std::vector<uint32_t>& indices)

@@ -37,7 +37,7 @@ namespace SaltnPepperEngine
 			// Loading the Default Shader 
 			// Add other Defaultr Shaders below <----
 
-			CHECKNULL(GetShaderLibrary()->LoadShader("StandardShader", FileSystem::GetShaderDir().string() + "spaceshipVert.glsl", FileSystem::GetShaderDir().string() + "spaceshipFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueForward", FileSystem::GetShaderDir().string() + "Opaque_Forward_Vert.glsl", FileSystem::GetShaderDir().string() + "Opaque_Forward_Frag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("TransparentShader", FileSystem::GetShaderDir().string() + "transparentVert.glsl", FileSystem::GetShaderDir().string() + "transparentFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShaderOne", FileSystem::GetShaderDir().string() + "chromaticShaderVert.glsl", FileSystem::GetShaderDir().string() + "chromaticShaderFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxShader", FileSystem::GetShaderDir().string() + "skyboxVert.glsl", FileSystem::GetShaderDir().string() + "skyboxFrag.glsl"));
@@ -188,7 +188,7 @@ namespace SaltnPepperEngine
 				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
 
 				//// ===== Object Pass for Opaque Elements ================ 
-				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
+				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueForward"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
 
 				//// ===== Object Pass for Transparent Elements ================ 
 				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), m_editorCameraElement, m_renderer->GetPipeLine().transparentElementList);
@@ -221,7 +221,7 @@ namespace SaltnPepperEngine
 					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
 
 					// ===== Forward Pass for Opaque Elements ================ 
-					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueForward"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
 
 					//// ===== Object Pass for Transparent Elements ================ 
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), cameraElement, m_renderer->GetPipeLine().transparentElementList);

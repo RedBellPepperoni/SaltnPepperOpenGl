@@ -551,9 +551,10 @@ namespace SaltnPepperEngine
                     }
                 }
 
-               
-                //shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedomapFactor);
+                // Opaque Shader
+                shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedoMapFactor);
                 shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
+
                 shader->SetUniform("materialProperties.Metallic", mat->metallic);
 
             }

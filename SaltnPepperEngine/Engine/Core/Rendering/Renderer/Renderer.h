@@ -246,6 +246,11 @@ namespace SaltnPepperEngine
 
 		};
 
+		struct ShadowInformation
+		{
+
+		};
+
 
 
 		class Renderer

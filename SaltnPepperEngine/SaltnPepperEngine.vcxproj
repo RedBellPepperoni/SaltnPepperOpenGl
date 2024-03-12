@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Rendering\Textures\DepthTextureArray.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\Cloth.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\BaseShader.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\Compute.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Engine\Core\Physics\SoftBody\VerletCloth.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Rendering\Textures\DepthTextureArray.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\Cloth.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\VerletConstraint.h" />
     <ClCompile Include="Engine\Core\Rendering\Shader\BaseShader.cpp" />
