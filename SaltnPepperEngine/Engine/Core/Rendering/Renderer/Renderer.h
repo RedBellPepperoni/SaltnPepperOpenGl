@@ -38,6 +38,7 @@ namespace SaltnPepperEngine
 		class Shader;
 		class Camera;
 		class Texture;
+		class DepthTextureArray;
 		struct Light;
 		class ComputeShader;
 
@@ -248,7 +249,22 @@ namespace SaltnPepperEngine
 
 		struct ShadowInformation
 		{
+			SharedPtr<DepthTextureArray> shadowMap;
+			int numShadowMaps = 4;
+			int shadowMapSize = 1024;
+			bool shadowMapInvalidated = true;
+			float cascadeSplitLambda = 0.92f;
+			float lightSize = 1.5f;
+			float maxShadowDistance = 500.0f;
+			float shadowFade = 40.0f;
+			float cascadeFade = 3.0f;
+			float initialBias = 0.0f;
 
+			Matrix4 biasMatrix = Matrix4(
+				0.5, 0.0, 0.0, 0.0,
+				0.0, 0.5, 0.0, 0.0,
+				0.0, 0.0, 1.0, 0.0,
+				0.5, 0.5, 0.0, 1.0);
 		};
 
 
@@ -273,9 +289,6 @@ namespace SaltnPepperEngine
 			std::vector<LineVertexElement*> m_LineBufferBase;
 			std::vector<PointVertexElement*> m_PointBufferBase;
 
-			
-			
-			
 
 			unsigned int clearMask = 0;
 
@@ -311,7 +324,7 @@ namespace SaltnPepperEngine
 			void SetSkyboxIntensity(float intensity);
 			const float GetSkyboxIntensity() const;
 
-			void BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId);
+			void BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int& textureBindId);
 			void BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader);
 			//const PipeLine& GetPipeLine() const;
 			PipeLine& GetPipeLine();

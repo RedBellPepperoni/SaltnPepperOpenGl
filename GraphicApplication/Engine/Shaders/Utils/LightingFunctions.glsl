@@ -78,3 +78,8 @@ vec3 CalculateSpotLight(Light light, Material material,vec3 normal,vec3 position
 
     return lightContrib;
 }
+
+vec3 ImageBasedLighting(vec3 albedo, vec3 lightReflection, Material material)
+{
+    return vec3(1.0f);
+}

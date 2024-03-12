@@ -24,6 +24,8 @@ struct UniformMaterialData
     float NormalMapFactor;
     float EmissiveMapFactor;
     float AOMapFactor;
+
+
     
 };
 
@@ -34,18 +36,18 @@ struct UBOLight
 {
     Light lights[MAX_LIGHT_COUNT];
 
-   // mat4 ShadowTransform[4];
-    //mat4 ViewMatrix;
-   // mat4 LightMatrix;
-    //mat4 BiasMatrix;
-    //float LightSize;
+    mat4 ShadowTransform[4];
+    mat4 ViewMatrix;
+    mat4 LightMatrix;
+    mat4 BiasMatrix;
+    float LightSize;
 
-    //float ShadowFade;
-   // float CascadeFade;
+    float ShadowFade;
+    float CascadeFade;
 
-    //float InitialBias;
-   // float Width;
-    //float Height;
+    float InitialBias;
+    float Width;
+    float Height;
 
     int lightCount;
 
@@ -67,12 +69,13 @@ uniform sampler2D mapNormal;
 uniform sampler2DArray mapShadow;
 
 
-
+uniform int renderMode = 0;
 uniform vec3 cameraView;
 uniform UBOLight uboLights;
 uniform UniformMaterialData materialProperties;
-
-
+uniform SkyboxInfo skyboxProperties;
+// The golden Ratio
+const float PHI = 1.6180339;
 
 vec3 DeGamma(vec3 color)
 {
@@ -200,25 +203,78 @@ void main()
     float metallic = 0.0;
     float roughness = 0.0;
 
-    // Can add different work flows here
-
+    
+    // Can add differnt Map layout stuff
     metallic = GetMetallic().r;
     roughness = GetRoughness();
-    
+
+
+
+    // Create a material var
     Material material;
 
 
     material.Albedo = texColor;
     material.Metallic = metallic;
-    material.Roughness = roughness;
 
+    // Roughness Calculations
+    material.FinalRoughness = roughness;
+    material.FinalRoughness = clamp(material.FinalRoughness,0.045,1.0);
+
+    
+
+    // Normal Stuff
     material.Normal = normalize(VertexOutput.Normal);
+
+    if(materialProperties.NormalMapFactor > 0.05)
+    {
+        material.Normal = normalize((texture(mapNormal, VertexOutput.TexCoord).xyz * 2.0) - vec3(1.0));
+        material.Normal = normalize(VertexOutput.WorldNormal * material.Normal);
+        material.Normal = normalize(material.Normal);
+    }
+
     material.View = normalize(cameraView - VertexOutput.Position.xyz);
 
-    //vec3 finalColor = CalculateLighting(material) + material.Emissive;
+    // Gather the Ambient occlusion
+    material.AO  = GetAO();
+
+    material.Emissive = GetEmissive(material.Albedo.xyz);
+
+    
     vec3 finalColor = CalculateLighting(material);
 
-    FragColor = vec4(finalColor, 1.0);
+
+    if(renderMode == 0)
+    {
+        FragColor = vec4(finalColor, 1.0);
+    }
+
+    else
+    {
+        switch(renderMode)
+        {
+            // Pure Albedo
+            case 1:
+            {
+                FragColor = material.Albedo;
+                break;
+            }
+
+            // Pure Metallic
+            case 2 :
+            {
+                FragColor = vec4(vec3(material.Metallic),1.0f);
+                break;
+            }
+
+            // Pure RoughNess
+            case 3 :
+            {
+                FragColor = vec4(vec3(material.FinalRoughness),1.0f);
+            }
+
+        }
+    }
     
 
 }

@@ -160,7 +160,7 @@ namespace SaltnPepperEngine
 
         void Renderer::BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId)
         {
-            m_pipeline.skybox.cubeMap->Bind(textureBindId++);
+            m_pipeline.skybox.cubeMap->Bind(textureBindId);
             shader->SetUniform("skybox", m_pipeline.skybox.cubeMap->getBoundId());
             shader->SetUniform("Rotation", Matrix3(1.0f));
 
@@ -412,12 +412,15 @@ namespace SaltnPepperEngine
             // Bind and set Shader Unifroms
             shader->Bind();
             shader->SetUniform("StaticViewProjection", camera.staticViewProjectMatrix);
-            shader->SetUniform("Rotation", Matrix3(1.0f));
-            shader->SetUniform("gamma", 2.2f);
-            shader->SetUniform("luminance", skyluminance);
+            //shader->SetUniform("Rotation", Matrix3(1.0f));
+            //shader->SetUniform("gamma", 2.2f);
+            //shader->SetUniform("luminance", skyluminance);
 
-            // Bind the skybox texture
-            m_pipeline.skybox.cubeMap->Bind();
+            //// Bind the skybox texture
+            //m_pipeline.skybox.cubeMap->Bind();
+
+            BindSkyBoxInformation(camera, shader,0);
+
 
             // Bind the Skybox Object VAO
             SkyObject.GetVAO().Bind();
