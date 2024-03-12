@@ -24,9 +24,7 @@ struct UniformMaterialData
     float NormalMapFactor;
     float EmissiveMapFactor;
     float AOMapFactor;
-
-
-    
+  
 };
 
 
@@ -163,6 +161,11 @@ vec3 CalculateLighting(Material material)
         //vec3 normal = texture(mapNormal, VertexOutput.TexCoord).rgb;
         vec3 normal = (VertexOutput.Normal.xyz);
         vec3 position = VertexOutput.Position.xyz;
+
+
+        result = ForwardLighting(light, material, normal, position);
+
+       /* 
         // Directional Light
         if(light.type == 0)
         {
@@ -179,6 +182,7 @@ vec3 CalculateLighting(Material material)
         {
             result += CalculateSpotLight(light, material, normal,position);
         }
+        */
         
     }
 
