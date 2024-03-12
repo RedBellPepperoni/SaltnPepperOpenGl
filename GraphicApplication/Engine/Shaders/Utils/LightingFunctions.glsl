@@ -1,5 +1,7 @@
 #include "Utils/ShaderUtils.glsl"
 
+
+
 vec3 CalculateDirectionalLight(Light light,Material material,vec3 normal)
 {
     vec3 lightDir = normalize(-light.direction);
@@ -40,7 +42,7 @@ vec3 CalculatePointLight(Light light, Material material,vec3 normal, vec3 positi
     vec3 diffuse  = light.color  * diff * material.Albedo.rgb *  light.intensity;
     vec3 specular = vec3(light.color) * spec * 0.01;
 
-
+    light.direction = vec3(lightDir);
     vec3 lightContrib = (diffuse + specular) * finalAttenuation * finalAttenuation;
 
     return lightContrib;
@@ -80,27 +82,32 @@ vec3 CalculateSpotLight(Light light, Material material,vec3 normal,vec3 position
 }
 
 
+
+
+
+
+
 vec3 ForwardLighting(Light light, Material material,vec3 normal, vec3 position)
 {
-    vec3 result = vec3(0.0f);
+    vec3 value = vec3(0.0f);
 
         if(light.type == 0)
         {
-           result += CalculateDirectionalLight(light, material, normal);
+           value = CalculateDirectionalLight(light, material, normal);
         }
 
         // PointLight
         else if(light.type == 2)
         {
-           result += CalculatePointLight(light, material, normal,position);
+           value = CalculatePointLight(light, material, normal,position);
         }
         // spotlight
         else if(light.type == 1)
         {
-            result += CalculateSpotLight(light, material, normal,position);
+            value = CalculateSpotLight(light, material, normal,position);
         }
 
-        return result;
+        return value;
 }
 
 

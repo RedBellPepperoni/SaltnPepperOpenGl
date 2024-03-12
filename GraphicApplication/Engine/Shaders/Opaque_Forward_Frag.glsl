@@ -140,6 +140,19 @@ vec3 GetEmissive(vec3 albedo)
 }
 
 
+vec3 CalculateTestDirectionalLight(Light light, Material material, vec3 normal)
+{
+    //Shadow Functions
+    if(uboLights.castShadow > 0)
+    {
+        return vec3(0.0f);
+    }
+    else
+    {
+        return CalculateDirectionalLight(light, material,normal);
+    }
+}
+
 
 vec3 CalculateLighting(Material material)
 {
@@ -163,13 +176,13 @@ vec3 CalculateLighting(Material material)
         vec3 position = VertexOutput.Position.xyz;
 
 
-        result = ForwardLighting(light, material, normal, position);
+        //result = ForwardLighting(light, material, normal, position);
 
-       /* 
+       
         // Directional Light
         if(light.type == 0)
         {
-           result += CalculateDirectionalLight(light, material, normal);
+           result += CalculateTestDirectionalLight(light,material,normal);
         }
 
         // PointLight
@@ -182,7 +195,7 @@ vec3 CalculateLighting(Material material)
         {
             result += CalculateSpotLight(light, material, normal,position);
         }
-        */
+        
         
     }
 
