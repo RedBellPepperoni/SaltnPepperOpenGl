@@ -226,6 +226,7 @@ namespace SaltnPepperEngine
 					// ===== Post Render Skybox Pass =================
 					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
 
+
 					// ===== Forward Pass for Opaque Elements ================ 
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueForward"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
 

@@ -295,6 +295,8 @@ namespace SaltnPepperEngine
 		private:
 
 
+			LightElement dirElement;
+
 			PipeLine m_pipeline;
 
 			ShadowInformation shadowData;

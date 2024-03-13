@@ -145,7 +145,8 @@ vec3 CalculateTestDirectionalLight(Light light, Material material, vec3 normal)
     //Shadow Functions
     if(uboLights.castShadow > 0)
     {
-        return vec3(0.0f);
+        //return vec3(0.0f);
+         return CalculateDirectionalLight(light, material,normal);
     }
     else
     {
@@ -260,8 +261,9 @@ void main()
     
     vec3 finalColor = CalculateLighting(material);
 
+     FragColor = vec4(finalColor, 1.0);
 
-    if(renderMode == 0)
+    /*if(renderMode == 0)
     {
         FragColor = vec4(finalColor, 1.0);
     }
@@ -291,7 +293,7 @@ void main()
             }
 
         }
-    }
+    }*/
     
 
 }

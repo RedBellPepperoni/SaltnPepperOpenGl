@@ -341,6 +341,8 @@ namespace SaltnPepperEngine
             m_pipeline.lightElementList.clear();
             m_pipeline.textureBindIndex = 0;
 
+            dirElement.type = LightType::SpotLight;
+
         }
 
         void Renderer::SetViewport(int x, int y, int width, int height) const
@@ -383,6 +385,11 @@ namespace SaltnPepperEngine
         {
             //m_pipeline.textureBindIndex = 0;
 
+
+
+            LightElement dirElement;
+            dirElement.type = LightType::SpotLight;
+
             if (shader == nullptr) { LOG_CRITICAL("Object PASS :  Shader not loaded"); }
 
             // Nothing to draw
@@ -400,6 +407,10 @@ namespace SaltnPepperEngine
             {
                 // get the Elements by index from the Render Element List
                 RenderElement& elementToDraw = m_pipeline.renderElementList[elementList[index]];
+
+
+
+
 
                 // Send the Data to Draw that element
                 DrawElement(camera, shader, elementToDraw);
@@ -729,6 +740,9 @@ namespace SaltnPepperEngine
             shadowData.shadowMap->Bind(m_pipeline.textureBindIndex++);
             shader->SetUniform("mapShadow", shadowData.shadowMap->GetBoundId());
 
+
+
+
             //Always Bind the Buffer Array before adding Attributes 
             mesh->GetVBO()->Bind();
 
@@ -758,19 +772,17 @@ namespace SaltnPepperEngine
 
         void Renderer::SetLightUniform(const CameraElement& camera,SharedPtr<Shader>& shader)
         {
-
+            dirElement.type = LightType::SpotLight;
            
             int lightCount = 0;
 
-            LightElement dirElement;
-            dirElement.type = LightType::SpotLight;
 
             for (LightElement& element : m_pipeline.lightElementList)
             {
-                if (element.type != LightType::DirectionLight)
+              /*  if (element.type != LightType::DirectionLight)
                 {
                     bool insideFrustum = camera.frustum.Intersects(BoundingSphere(Vector3(element.position), element.radius*100.0f));
-                }
+                }*/
 
                 std::string name = "uboLights.lights[" + std::to_string(lightCount) + "]";
 
@@ -873,8 +885,12 @@ namespace SaltnPepperEngine
             shader->SetUniform("uboLights.Height", &height);
 
             shader->SetUniform("uboLights.castShadow", &shadowEnabled);
+            shader->SetUniform("uboLights.ShadowCount", &shadowData.numShadowMaps);
+            
 
-           
+            const int renderMode = 0;
+            shader->SetUniform("renderMode", &renderMode);
+            
         }
 
 
