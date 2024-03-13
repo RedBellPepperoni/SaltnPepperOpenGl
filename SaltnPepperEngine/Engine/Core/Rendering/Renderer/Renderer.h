@@ -11,11 +11,14 @@
 #include "Engine/Core/Rendering/Skybox/SkyboxObject.h"
 #include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
 #include "Engine/Core/Rendering/Buffers/ShaderStorageBuffer.h"
-
+#include "Engine/Utils/Frustum.h"
 #include "Engine/Core/Rendering/Geometry/RectangleObject.h"
 
 namespace SaltnPepperEngine
 {
+
+	static constexpr uint8_t SHADOWMAP_MAX = 16;
+
 	namespace Components
 	{
 		// Forward Decalrartions for better compile times
@@ -250,9 +253,13 @@ namespace SaltnPepperEngine
 		struct ShadowInformation
 		{
 			SharedPtr<DepthTextureArray> shadowMap;
-			int numShadowMaps = 4;
+			uint32_t numShadowMaps = 4;
 			int shadowMapSize = 1024;
 			bool shadowMapInvalidated = true;
+
+			float cascadeFarPlaneOffset = 50.0f;
+			float cascadeNearPlaneOffset = -50.0f;
+
 			float cascadeSplitLambda = 0.92f;
 			float lightSize = 1.5f;
 			float maxShadowDistance = 500.0f;
@@ -265,6 +272,12 @@ namespace SaltnPepperEngine
 				0.0, 0.5, 0.0, 0.0,
 				0.0, 0.0, 1.0, 0.0,
 				0.5, 0.5, 0.0, 1.0);
+
+			Matrix4 shadowProjView[SHADOWMAP_MAX];
+			Vector4 splitDepth[SHADOWMAP_MAX];
+			Matrix4 lightMatrix;
+
+			Frustum cascadeFrustums[SHADOWMAP_MAX];
 		};
 
 
@@ -313,6 +326,8 @@ namespace SaltnPepperEngine
 
 			void SetLightUniform(SharedPtr<Shader>& shader);
 
+
+			void CalculateShadowCascades(const CameraElement& camera, LightElement& directioanlLightElement);
 
 		public:
 

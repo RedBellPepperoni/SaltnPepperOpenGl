@@ -45,7 +45,7 @@ namespace SaltnPepperEngine
 
             // Temporary defining the Transforms here until I switch to ECS
             //Transform m_transform;
-            std::string m_name;
+            std::string m_name = "defaultcam";
             static int cameraCount;
 
 

@@ -8,6 +8,7 @@ namespace SaltnPepperEngine
 	{
 		class DepthTextureArray
 		{
+		public:
 			DepthTextureArray();
 			DepthTextureArray(const size_t width, const size_t height, const size_t count, const TextureFormat format = TextureFormat::DEPTH32F);
 			~DepthTextureArray();

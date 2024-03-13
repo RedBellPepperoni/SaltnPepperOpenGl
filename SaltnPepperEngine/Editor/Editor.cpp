@@ -60,6 +60,7 @@ namespace SaltnPepperEngine
 
 			// Create a new Editor camera
 			m_editorCamera = MakeShared<Camera>((16.0f / 10.0f), 0.01f, 1000.0f);
+			m_editorCamera->m_name = "Editor_Camera";
 			m_currentCamera = m_editorCamera.get();
 			// Set the initial  postion
 			m_editorCameraTransform.SetPosition(Vector3(0.0f,0.0f,-40.0f));

@@ -25,6 +25,8 @@
 namespace SaltnPepperEngine
 {
 
+  
+
 	namespace Rendering
 	{
         static const uint32_t MaxPoints = 10000;
@@ -435,6 +437,136 @@ namespace SaltnPepperEngine
 
 
 
+        }
+
+        void Renderer::CalculateShadowCascades(const CameraElement& camera, LightElement& directioanlLightElement)
+        {
+            //float cascadeSplits[SHADOWMAP_MAX];
+            //float cascadeRadius[SHADOWMAP_MAX];
+
+            //float nearClip = camera.camNear;
+            //float farClip = shadowData.maxShadowDistance * 1.2f;
+            //float clipRange = farClip - nearClip;
+
+            //float minZ = nearClip;
+            //float maxZ = nearClip + clipRange;
+            //float range = maxZ - minZ;
+            //float ratio = maxZ / minZ;
+
+            //// Calculate split depths based on view camera frustum
+            //// Based on method presented in https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
+            //for (uint32_t i = 0; i < shadowData.numShadowMaps; i++)
+            //{
+            //    float p = static_cast<float>(i + 1) / static_cast<float>(shadowData.numShadowMaps);
+            //    float log = minZ * std::pow(ratio, p);
+            //    float uniform = minZ + range * p;
+            //    float d = shadowData.cascadeSplitLambda * (log - uniform) + uniform;
+            //    cascadeSplits[i] = (d - nearClip) / clipRange;
+            //}
+
+            //cascadeSplits[3] = 0.35f;
+            //float lastSplitDist = 0.0f;
+            //Matrix4 CameraProj = glm::perspective(glm::radians(camera.FOV), camera.aspectRatio, nearClip, farClip);
+
+            //const Matrix4 invCam = Inverse(CameraProj * Inverse(camera.worldMatrix));
+
+            //for (uint32_t i = 0; i < shadowData.numShadowMaps; i++)
+            //{
+            //    float splitDist = cascadeSplits[i];
+
+            //    Vector3 frustumCorners[8] = {
+            //        Vector3(-1.0f, 1.0f, 0.0f),
+            //        Vector3(1.0f, 1.0f, 0.0f),
+            //        Vector3(1.0f, -1.0f, 0.0f),
+            //        Vector3(-1.0f, -1.0f, 0.0f),
+            //        Vector3(-1.0f, 1.0f, 1.0f),
+            //        Vector3(1.0f, 1.0f, 1.0f),
+            //        Vector3(1.0f, -1.0f, 1.0f),
+            //        Vector3(-1.0f, -1.0f, 1.0f),
+            //    };
+
+            //    // Project frustum corners into world space
+            //    for (uint32_t j = 0; j < 8; j++)
+            //    {
+            //        Vector4 invCorner = invCam * Vector4(frustumCorners[j], 1.0f);
+            //        frustumCorners[j] = (invCorner / invCorner.w);
+            //    }
+
+            //    for (uint32_t j = 0; j < 4; j++)
+            //    {
+            //        Vector3 dist = frustumCorners[j + 4] - frustumCorners[j];
+            //        frustumCorners[j + 4] = frustumCorners[j] + (dist * splitDist);
+            //        frustumCorners[j] = frustumCorners[j] + (dist * lastSplitDist);
+            //    }
+
+            //    lastSplitDist = cascadeSplits[i];
+
+            //    // Get frustum center
+            //    Vector3 frustumCenter = Vector3(0.0f);
+            //    for (uint32_t j = 0; j < 8; j++)
+            //    {
+            //        frustumCenter += frustumCorners[j];
+            //    }
+            //    frustumCenter /= 8.0f;
+
+            //    float radius = 0.0f;
+            //    for (uint32_t j = 0; j < 8; j++)
+            //    {
+            //        float distance = Distance(frustumCorners[j], frustumCenter);
+            //        radius = Max(radius, distance);
+            //    }
+
+            //    // Temp work around to flickering when rotating camera
+            //    // Sphere radius for lightOrthoMatrix should fix this
+            //    // But radius changes as the camera is rotated which causes flickering
+            //    // const float value = 16.0f;
+            //    // radius = std::ceil(radius *value) / value;
+
+            //    static const float roundTo[8] = { 5.0f, 5.0f, 20.0f, 200.0f, 400.0f, 400.0f, 400.0f, 400.0f };
+
+            //    int roundedValue = static_cast<int>(std::ceil(radius / 5.0));
+            //    // Multiply the rounded value by 5 to get the nearest multiple of 5
+            //    radius = roundedValue * 5.0f;
+
+
+
+            //    cascadeRadius[i] = radius;
+
+            //    Vector3 maxExtents = Vector3(radius);
+            //    Vector3 minExtents = -maxExtents;
+
+            //    Vector3 lightDir = Normalize(-directioanlLightElement.direction);
+            //    Matrix4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, shadowData.cascadeFarPlaneOffset, maxExtents.z - minExtents.z + shadowData.cascadeFarPlaneOffset);
+            //    Matrix4 LightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, Vector3(0.0f, 0.0f, 1.0f));
+
+            //    auto shadowProj = lightOrthoMatrix * LightViewMatrix;
+
+            //    const bool StabilizeCascades = true;
+            //    if (StabilizeCascades)
+            //    {
+            //        // Create the rounding matrix, by projecting the world-space origin and determining
+            //        // the fractional offset in texel space
+            //        Vector4 shadowOrigin = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            //        shadowOrigin = shadowProj * shadowOrigin;
+            //        shadowOrigin *= (shadowData.shadowMapSize * 0.5f);
+
+            //        Vector4 roundedOrigin = glm::round(shadowOrigin);
+            //        Vector4 roundOffset = roundedOrigin - shadowOrigin;
+            //        roundOffset = roundOffset * (2.0f / shadowData.shadowMapSize);
+            //        roundOffset.z = 0.0f;
+            //        roundOffset.w = 0.0f;
+
+            //        lightOrthoMatrix[3] += roundOffset;
+            //    }
+            //    // Store split distance and matrix in cascade
+            //    shadowData.splitDepth[i] = Vector4((camera.camNear + splitDist * clipRange) * -1.0f);
+            //    shadowData.shadowProjView[i] = lightOrthoMatrix * LightViewMatrix;
+
+            //    if (i == 0)
+            //    {
+            //        shadowData.lightMatrix = glm::inverse(LightViewMatrix);
+            //    }
+            //}
         }
 
         void Renderer::DebugPassInternal(const CameraElement& camera, bool depthtest)
