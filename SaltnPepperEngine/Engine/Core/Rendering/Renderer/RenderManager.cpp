@@ -38,6 +38,7 @@ namespace SaltnPepperEngine
 			// Add other Defaultr Shaders below <----
 
 			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueForward", FileSystem::GetShaderDir().string() + "Opaque_Forward_Vert.glsl", FileSystem::GetShaderDir().string() + "Opaque_Forward_Frag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueShadowed", FileSystem::GetShaderDir().string() + "Opaque_Forward_Vert.glsl", FileSystem::GetShaderDir().string() + "Opaque_FShadow_Frag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("TransparentShader", FileSystem::GetShaderDir().string() + "transparentVert.glsl", FileSystem::GetShaderDir().string() + "transparentFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShaderOne", FileSystem::GetShaderDir().string() + "chromaticShaderVert.glsl", FileSystem::GetShaderDir().string() + "chromaticShaderFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxShader", FileSystem::GetShaderDir().string() + "skyboxVert.glsl", FileSystem::GetShaderDir().string() + "skyboxFrag.glsl"));
@@ -228,7 +229,7 @@ namespace SaltnPepperEngine
 
 
 					// ===== Forward Pass for Opaque Elements ================ 
-					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueForward"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueShadowed"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
 
 					//// ===== Object Pass for Transparent Elements ================ 
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), cameraElement, m_renderer->GetPipeLine().transparentElementList);
