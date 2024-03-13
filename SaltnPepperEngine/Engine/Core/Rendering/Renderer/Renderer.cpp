@@ -5,6 +5,7 @@
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
+#include "Engine/Core/Rendering/Textures/DepthTextureArray.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Shader/Shader.h"
 
@@ -16,6 +17,7 @@
 #include "Engine/Core/Resources/ResourceManager.h"
 #include "Engine/Core/Components/Transform.h"
 
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h" 
 
 #include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
@@ -139,6 +141,27 @@ namespace SaltnPepperEngine
             m_pipeline.bloomFrameBuffer = MakeShared<FrameBuffer>();
 
             m_pipeline.rectangularObject.Init(1.0f);
+
+
+
+            shadowData.numShadowMaps = 4;
+            shadowData.shadowMapSize = 1024;
+            shadowData.shadowMapInvalidated = true;
+
+            shadowData.cascadeFarPlaneOffset = 50.0f;
+            shadowData.cascadeNearPlaneOffset = -50.0f;
+
+            shadowData.cascadeSplitLambda = 0.92f;
+            shadowData.lightSize = 1.5f;
+            shadowData.maxShadowDistance = 500.0f;
+            shadowData.shadowFade = 40.0f;
+            shadowData.cascadeFade = 3.0f;
+            shadowData.initialBias = 0.0f;
+
+
+            shadowData.shadowMap = MakeShared<DepthTextureArray>(shadowData.shadowMapSize, shadowData.shadowMapSize, shadowData.numShadowMaps);
+        
+        
         }
 
 
@@ -358,6 +381,7 @@ namespace SaltnPepperEngine
 
         void Renderer::ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList)
         {
+            //m_pipeline.textureBindIndex = 0;
 
             if (shader == nullptr) { LOG_CRITICAL("Object PASS :  Shader not loaded"); }
 
@@ -369,7 +393,7 @@ namespace SaltnPepperEngine
 
             BindCameraInformation(camera, shader);
 
-            SetLightUniform(shader);
+            SetLightUniform(camera,shader);
 
            
             for (int index = 0; index < elementList.size(); index++)
@@ -441,132 +465,132 @@ namespace SaltnPepperEngine
 
         void Renderer::CalculateShadowCascades(const CameraElement& camera, LightElement& directioanlLightElement)
         {
-            //float cascadeSplits[SHADOWMAP_MAX];
-            //float cascadeRadius[SHADOWMAP_MAX];
+            float cascadeSplits[SHADOWMAP_MAX];
+            float cascadeRadius[SHADOWMAP_MAX];
 
-            //float nearClip = camera.camNear;
-            //float farClip = shadowData.maxShadowDistance * 1.2f;
-            //float clipRange = farClip - nearClip;
+            float nearClip = camera.camNear;
+            float farClip = shadowData.maxShadowDistance * 1.2f;
+            float clipRange = farClip - nearClip;
 
-            //float minZ = nearClip;
-            //float maxZ = nearClip + clipRange;
-            //float range = maxZ - minZ;
-            //float ratio = maxZ / minZ;
+            float minZ = nearClip;
+            float maxZ = nearClip + clipRange;
+            float range = maxZ - minZ;
+            float ratio = maxZ / minZ;
 
-            //// Calculate split depths based on view camera frustum
-            //// Based on method presented in https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
-            //for (uint32_t i = 0; i < shadowData.numShadowMaps; i++)
-            //{
-            //    float p = static_cast<float>(i + 1) / static_cast<float>(shadowData.numShadowMaps);
-            //    float log = minZ * std::pow(ratio, p);
-            //    float uniform = minZ + range * p;
-            //    float d = shadowData.cascadeSplitLambda * (log - uniform) + uniform;
-            //    cascadeSplits[i] = (d - nearClip) / clipRange;
-            //}
+            // Calculate split depths based on view camera frustum
+            // Based on method presented in https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
+            for (uint32_t i = 0; i < shadowData.numShadowMaps; i++)
+            {
+                float p = static_cast<float>(i + 1) / static_cast<float>(shadowData.numShadowMaps);
+                float log = minZ * std::pow(ratio, p);
+                float uniform = minZ + range * p;
+                float d = shadowData.cascadeSplitLambda * (log - uniform) + uniform;
+                cascadeSplits[i] = (d - nearClip) / clipRange;
+            }
 
-            //cascadeSplits[3] = 0.35f;
-            //float lastSplitDist = 0.0f;
-            //Matrix4 CameraProj = glm::perspective(glm::radians(camera.FOV), camera.aspectRatio, nearClip, farClip);
+            cascadeSplits[3] = 0.35f;
+            float lastSplitDist = 0.0f;
+            Matrix4 CameraProj = glm::perspective(glm::radians(camera.FOV), camera.aspectRatio, nearClip, farClip);
 
-            //const Matrix4 invCam = Inverse(CameraProj * Inverse(camera.worldMatrix));
+            const Matrix4 invCam = Inverse(CameraProj * Inverse(camera.worldMatrix));
 
-            //for (uint32_t i = 0; i < shadowData.numShadowMaps; i++)
-            //{
-            //    float splitDist = cascadeSplits[i];
+            for (uint32_t i = 0; i < shadowData.numShadowMaps; i++)
+            {
+                float splitDist = cascadeSplits[i];
 
-            //    Vector3 frustumCorners[8] = {
-            //        Vector3(-1.0f, 1.0f, 0.0f),
-            //        Vector3(1.0f, 1.0f, 0.0f),
-            //        Vector3(1.0f, -1.0f, 0.0f),
-            //        Vector3(-1.0f, -1.0f, 0.0f),
-            //        Vector3(-1.0f, 1.0f, 1.0f),
-            //        Vector3(1.0f, 1.0f, 1.0f),
-            //        Vector3(1.0f, -1.0f, 1.0f),
-            //        Vector3(-1.0f, -1.0f, 1.0f),
-            //    };
+                Vector3 frustumCorners[8] = {
+                    Vector3(-1.0f, 1.0f, 0.0f),
+                    Vector3(1.0f, 1.0f, 0.0f),
+                    Vector3(1.0f, -1.0f, 0.0f),
+                    Vector3(-1.0f, -1.0f, 0.0f),
+                    Vector3(-1.0f, 1.0f, 1.0f),
+                    Vector3(1.0f, 1.0f, 1.0f),
+                    Vector3(1.0f, -1.0f, 1.0f),
+                    Vector3(-1.0f, -1.0f, 1.0f),
+                };
 
-            //    // Project frustum corners into world space
-            //    for (uint32_t j = 0; j < 8; j++)
-            //    {
-            //        Vector4 invCorner = invCam * Vector4(frustumCorners[j], 1.0f);
-            //        frustumCorners[j] = (invCorner / invCorner.w);
-            //    }
+                // Project frustum corners into world space
+                for (uint32_t j = 0; j < 8; j++)
+                {
+                    Vector4 invCorner = invCam * Vector4(frustumCorners[j], 1.0f);
+                    frustumCorners[j] = (invCorner / invCorner.w);
+                }
 
-            //    for (uint32_t j = 0; j < 4; j++)
-            //    {
-            //        Vector3 dist = frustumCorners[j + 4] - frustumCorners[j];
-            //        frustumCorners[j + 4] = frustumCorners[j] + (dist * splitDist);
-            //        frustumCorners[j] = frustumCorners[j] + (dist * lastSplitDist);
-            //    }
+                for (uint32_t j = 0; j < 4; j++)
+                {
+                    Vector3 dist = frustumCorners[j + 4] - frustumCorners[j];
+                    frustumCorners[j + 4] = frustumCorners[j] + (dist * splitDist);
+                    frustumCorners[j] = frustumCorners[j] + (dist * lastSplitDist);
+                }
 
-            //    lastSplitDist = cascadeSplits[i];
+                lastSplitDist = cascadeSplits[i];
 
-            //    // Get frustum center
-            //    Vector3 frustumCenter = Vector3(0.0f);
-            //    for (uint32_t j = 0; j < 8; j++)
-            //    {
-            //        frustumCenter += frustumCorners[j];
-            //    }
-            //    frustumCenter /= 8.0f;
+                // Get frustum center
+                Vector3 frustumCenter = Vector3(0.0f);
+                for (uint32_t j = 0; j < 8; j++)
+                {
+                    frustumCenter += frustumCorners[j];
+                }
+                frustumCenter /= 8.0f;
 
-            //    float radius = 0.0f;
-            //    for (uint32_t j = 0; j < 8; j++)
-            //    {
-            //        float distance = Distance(frustumCorners[j], frustumCenter);
-            //        radius = Max(radius, distance);
-            //    }
+                float radius = 0.0f;
+                for (uint32_t j = 0; j < 8; j++)
+                {
+                    float distance = Distance(frustumCorners[j], frustumCenter);
+                    radius = Max(radius, distance);
+                }
 
-            //    // Temp work around to flickering when rotating camera
-            //    // Sphere radius for lightOrthoMatrix should fix this
-            //    // But radius changes as the camera is rotated which causes flickering
-            //    // const float value = 16.0f;
-            //    // radius = std::ceil(radius *value) / value;
+                // Temp work around to flickering when rotating camera
+                // Sphere radius for lightOrthoMatrix should fix this
+                // But radius changes as the camera is rotated which causes flickering
+                // const float value = 16.0f;
+                // radius = std::ceil(radius *value) / value;
 
-            //    static const float roundTo[8] = { 5.0f, 5.0f, 20.0f, 200.0f, 400.0f, 400.0f, 400.0f, 400.0f };
+                static const float roundTo[8] = { 5.0f, 5.0f, 20.0f, 200.0f, 400.0f, 400.0f, 400.0f, 400.0f };
 
-            //    int roundedValue = static_cast<int>(std::ceil(radius / 5.0));
-            //    // Multiply the rounded value by 5 to get the nearest multiple of 5
-            //    radius = roundedValue * 5.0f;
+                int roundedValue = static_cast<int>(std::ceil(radius / 5.0));
+                // Multiply the rounded value by 5 to get the nearest multiple of 5
+                radius = roundedValue * 5.0f;
 
 
 
-            //    cascadeRadius[i] = radius;
+                cascadeRadius[i] = radius;
 
-            //    Vector3 maxExtents = Vector3(radius);
-            //    Vector3 minExtents = -maxExtents;
+                Vector3 maxExtents = Vector3(radius);
+                Vector3 minExtents = -maxExtents;
 
-            //    Vector3 lightDir = Normalize(-directioanlLightElement.direction);
-            //    Matrix4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, shadowData.cascadeFarPlaneOffset, maxExtents.z - minExtents.z + shadowData.cascadeFarPlaneOffset);
-            //    Matrix4 LightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, Vector3(0.0f, 0.0f, 1.0f));
+                Vector3 lightDir = Normalize(-directioanlLightElement.direction);
+                Matrix4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, shadowData.cascadeFarPlaneOffset, maxExtents.z - minExtents.z + shadowData.cascadeFarPlaneOffset);
+                Matrix4 LightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, Vector3(0.0f, 0.0f, 1.0f));
 
-            //    auto shadowProj = lightOrthoMatrix * LightViewMatrix;
+                auto shadowProj = lightOrthoMatrix * LightViewMatrix;
 
-            //    const bool StabilizeCascades = true;
-            //    if (StabilizeCascades)
-            //    {
-            //        // Create the rounding matrix, by projecting the world-space origin and determining
-            //        // the fractional offset in texel space
-            //        Vector4 shadowOrigin = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-            //        shadowOrigin = shadowProj * shadowOrigin;
-            //        shadowOrigin *= (shadowData.shadowMapSize * 0.5f);
+                const bool StabilizeCascades = true;
+                if (StabilizeCascades)
+                {
+                    // Create the rounding matrix, by projecting the world-space origin and determining
+                    // the fractional offset in texel space
+                    Vector4 shadowOrigin = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+                    shadowOrigin = shadowProj * shadowOrigin;
+                    shadowOrigin *= (shadowData.shadowMapSize * 0.5f);
 
-            //        Vector4 roundedOrigin = glm::round(shadowOrigin);
-            //        Vector4 roundOffset = roundedOrigin - shadowOrigin;
-            //        roundOffset = roundOffset * (2.0f / shadowData.shadowMapSize);
-            //        roundOffset.z = 0.0f;
-            //        roundOffset.w = 0.0f;
+                    Vector4 roundedOrigin = glm::round(shadowOrigin);
+                    Vector4 roundOffset = roundedOrigin - shadowOrigin;
+                    roundOffset = roundOffset * (2.0f / shadowData.shadowMapSize);
+                    roundOffset.z = 0.0f;
+                    roundOffset.w = 0.0f;
 
-            //        lightOrthoMatrix[3] += roundOffset;
-            //    }
-            //    // Store split distance and matrix in cascade
-            //    shadowData.splitDepth[i] = Vector4((camera.camNear + splitDist * clipRange) * -1.0f);
-            //    shadowData.shadowProjView[i] = lightOrthoMatrix * LightViewMatrix;
+                    lightOrthoMatrix[3] += roundOffset;
+                }
+                // Store split distance and matrix in cascade
+                shadowData.splitDepth[i] = Vector4((camera.camNear + splitDist * clipRange) * -1.0f);
+                shadowData.shadowProjView[i] = lightOrthoMatrix * LightViewMatrix;
 
-            //    if (i == 0)
-            //    {
-            //        shadowData.lightMatrix = glm::inverse(LightViewMatrix);
-            //    }
-            //}
+                if (i == 0)
+                {
+                    shadowData.lightMatrix = glm::inverse(LightViewMatrix);
+                }
+            }
         }
 
         void Renderer::DebugPassInternal(const CameraElement& camera, bool depthtest)
@@ -702,6 +726,8 @@ namespace SaltnPepperEngine
 
             shader->SetUniform("normalMat", element.NormalMatrix);
 
+            shadowData.shadowMap->Bind(m_pipeline.textureBindIndex++);
+            shader->SetUniform("mapShadow", shadowData.shadowMap->GetBoundId());
 
             //Always Bind the Buffer Array before adding Attributes 
             mesh->GetVBO()->Bind();
@@ -730,25 +756,34 @@ namespace SaltnPepperEngine
 
         }
 
-        void Renderer::SetLightUniform(SharedPtr<Shader>& shader)
+        void Renderer::SetLightUniform(const CameraElement& camera,SharedPtr<Shader>& shader)
         {
 
-            shader->SetUniform("uboLights.lightCount", (int)m_pipeline.lightElementList.size());
+           
+            int lightCount = 0;
 
+            LightElement dirElement;
+            dirElement.type = LightType::SpotLight;
 
-            for (LightElement element : m_pipeline.lightElementList)
+            for (LightElement& element : m_pipeline.lightElementList)
             {
+                if (element.type != LightType::DirectionLight)
+                {
+                    bool insideFrustum = camera.frustum.Intersects(BoundingSphere(Vector3(element.position), element.radius*100.0f));
+                }
 
-                const std::string colorUniform = element.uniformName + ".color";
-                const std::string positionUniform = element.uniformName + ".position";
-                const std::string directionUniform = element.uniformName + ".direction";
-                const std::string intensityUniform = element.uniformName + ".intensity";
-                const std::string radiusUniform = element.uniformName + ".radius";
-                const std::string typeUniform = element.uniformName + ".type";
+                std::string name = "uboLights.lights[" + std::to_string(lightCount) + "]";
+
+                const std::string colorUniform = name + ".color";
+                const std::string positionUniform = name + ".position";
+                const std::string directionUniform = name + ".direction";
+                const std::string intensityUniform = name + ".intensity";
+                const std::string radiusUniform = name + ".radius";
+                const std::string typeUniform = name + ".type";
 
 
-                const std::string innerAngleUniform = element.uniformName + ".innerAngle";
-                const std::string outerAngleUniform = element.uniformName + ".outerAngle";
+                const std::string innerAngleUniform = name + ".innerAngle";
+                const std::string outerAngleUniform = name + ".outerAngle";
 
 
                 shader->SetUniform(colorUniform, element.color);
@@ -764,6 +799,8 @@ namespace SaltnPepperEngine
                 {
                 case LightType::DirectionLight:
                     shader->SetUniform(directionUniform, element.direction);
+
+                    dirElement = element;
 
                     break;
 
@@ -781,10 +818,63 @@ namespace SaltnPepperEngine
                 default:
                     break;
                 }
+
+                lightCount++;
+            }
+
+            shader->SetUniform("uboLights.lightCount",lightCount);
+
+            if (dirElement.type != LightType::DirectionLight)
+            {
+                LOG_ERROR("No Directional Light Found");
+                return;
             }
 
 
+            shadowData.shadowProjView;
+            shadowData.splitDepth;
 
+            Matrix4 lightView = shadowData.lightMatrix;
+
+            float width = (float)camera.outputTexture->GetWidth();
+            float height = (float)camera.outputTexture->GetHeight();
+            Matrix4 view = Inverse(camera.worldMatrix);
+
+            // true for now
+            int shadowEnabled = 1;
+
+
+            shader->SetUniform("uboLights.ViewMatrix", &view);
+            shader->SetUniform("uboLights.LightView", &lightView);
+
+            std::string uniformname;
+            for (int i = 0; i < shadowData.shadowProjView.size(); i++)
+            {
+                uniformname = "uboLights.ShadowTransform[" + std::to_string(i) + "]";
+                shader->SetUniform(uniformname, shadowData.shadowProjView[i]);
+            }
+           
+            for (int i = 0; i < shadowData.splitDepth.size(); i++)
+            {
+                uniformname = "uboLights.SplitDepths[" + std::to_string(i) + "]";
+                shader->SetUniform(uniformname, shadowData.splitDepth[i]);
+            }
+           
+            shader->SetUniform("uboLights.BiasMatrix", &shadowData.biasMatrix);
+            shader->SetUniform("uboLights.LightSize", &shadowData.lightSize);
+
+            shader->SetUniform("uboLights.ShadowFade", &shadowData.shadowFade);
+            shader->SetUniform("uboLights.CascadeFade", &shadowData.cascadeFade);
+
+            shader->SetUniform("uboLights.MaxShadowDist", &shadowData.maxShadowDistance);
+            shader->SetUniform("uboLights.InitialBias", &shadowData.initialBias);
+
+            shader->SetUniform("uboLights.Width", &width);
+            shader->SetUniform("uboLights.Height", &height);
+
+            shader->SetUniform("uboLights.castShadow", &shadowEnabled);
+
+           
         }
 
 
@@ -857,7 +947,7 @@ namespace SaltnPepperEngine
             camera.FOV = cameraRef.GetFOV();
             camera.camNear = cameraRef.GetZNear();
             camera.camFar = cameraRef.GetZFar();
-
+            camera.frustum = cameraRef.GetFrustum(view);
             return camera;
         }
 
@@ -878,7 +968,7 @@ namespace SaltnPepperEngine
 
         void Renderer::ProcessLightElement(Light& light, Transform& transform)
         {
-            size_t currentIndex = m_pipeline.lightElementList.size();
+            //size_t currentIndex = m_pipeline.lightElementList.size();  
 
             // Create anew Light Element;
             LightElement& lightElement = m_pipeline.lightElementList.emplace_back();
@@ -894,7 +984,10 @@ namespace SaltnPepperEngine
             lightElement.radius = light.radius;
             lightElement.type = light.type;
 
-            lightElement.uniformName = "uboLights.lights[" + std::to_string(currentIndex) + "]";
+            //lightElement.uniformName = "uboLights.lights[" + std::to_string(currentIndex) + "]";
+
+
+
 
 
 

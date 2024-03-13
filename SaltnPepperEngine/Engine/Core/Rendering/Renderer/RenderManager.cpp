@@ -118,9 +118,15 @@ namespace SaltnPepperEngine
 
 			for (Entity lightObject : lightView)
 			{
+				
+
 				Light& lightComponent = lightObject.GetComponent<Light>(); 
 				Transform* transform = &lightObject.GetComponent<Transform>(); 
-				m_renderer->ProcessLightElement(lightComponent, *transform);
+						
+				if (lightObject.IsActive())
+				{
+					m_renderer->ProcessLightElement(lightComponent, *transform);
+				}
 			}
 
 

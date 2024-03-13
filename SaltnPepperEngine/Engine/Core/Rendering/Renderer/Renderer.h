@@ -131,6 +131,8 @@ namespace SaltnPepperEngine
 			float camFar;
 
 			float FOV;
+
+			Frustum frustum;
 		};
 
 
@@ -275,11 +277,11 @@ namespace SaltnPepperEngine
 				0.0, 0.0, 1.0, 0.0,
 				0.5, 0.5, 0.0, 1.0);
 
-			Matrix4 shadowProjView[SHADOWMAP_MAX];
-			Vector4 splitDepth[SHADOWMAP_MAX];
+			std::array<Matrix4, SHADOWMAP_MAX> shadowProjView;
+			std::array<Vector4, SHADOWMAP_MAX> splitDepth;
 			Matrix4 lightMatrix;
 
-			Frustum cascadeFrustums[SHADOWMAP_MAX];
+			std::array<Frustum, SHADOWMAP_MAX> cascadeFrustums;
 		};
 
 
@@ -294,6 +296,8 @@ namespace SaltnPepperEngine
 
 
 			PipeLine m_pipeline;
+
+			ShadowInformation shadowData;
 
 			Vector2Int viewPort;
 			DebugDrawData m_debugDrawData;
@@ -326,7 +330,7 @@ namespace SaltnPepperEngine
 			void DrawElement(const CameraElement& camera, SharedPtr<Shader>& shader, const RenderElement& element);
 
 
-			void SetLightUniform(SharedPtr<Shader>& shader);
+			void SetLightUniform(const CameraElement& camera, SharedPtr<Shader>& shader);
 
 
 			void CalculateShadowCascades(const CameraElement& camera, LightElement& directioanlLightElement);
