@@ -133,7 +133,7 @@ namespace SaltnPepperEngine
 
             Frustum m_frustum;
             bool m_shouldUpdateFrustum = true;
-            Matrix4 m_projection{ 1.0f };
+            mutable Matrix4 m_projection{ 1.0f };
 
 
             float m_fov = 60.0f;

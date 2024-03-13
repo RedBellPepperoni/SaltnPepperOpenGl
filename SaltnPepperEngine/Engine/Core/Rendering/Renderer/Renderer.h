@@ -107,13 +107,10 @@ namespace SaltnPepperEngine
 			SharedPtr<Texture> materialTexture;
 			SharedPtr<Texture> depthTexture;
 
-			// Buffer Textures
-			SharedPtr<Texture> swapTextureOne;
-			SharedPtr<Texture> swapTextureTwo;
-
 			// the premultiplied View ProjectionMatrix
 			Matrix4 viewProjMatrix;
 
+			Matrix4 worldMatrix;
 			// Static view proj matric for the Skybox rendering
 			Matrix4 staticViewProjectMatrix;
 
@@ -129,6 +126,11 @@ namespace SaltnPepperEngine
 			// Camera Details
 			float aspectRatio;
 			bool isOrtho;
+
+			float camNear;
+			float camFar;
+
+			float FOV;
 		};
 
 

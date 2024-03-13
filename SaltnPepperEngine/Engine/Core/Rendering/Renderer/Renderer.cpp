@@ -840,6 +840,8 @@ namespace SaltnPepperEngine
             Matrix4 staticProjView = proj * (staticView);
 
             // Store the camera values
+
+            camera.worldMatrix = transformMatrix;
             camera.viewProjMatrix = projView;
             camera.staticViewProjectMatrix = staticProjView;
 
@@ -851,6 +853,10 @@ namespace SaltnPepperEngine
             camera.materialTexture = cameraRef.GetBuffers()->materialTexture;
             camera.depthTexture = cameraRef.GetBuffers()->depthTexture;
 
+
+            camera.FOV = cameraRef.GetFOV();
+            camera.camNear = cameraRef.GetZNear();
+            camera.camFar = cameraRef.GetZFar();
 
             return camera;
         }
