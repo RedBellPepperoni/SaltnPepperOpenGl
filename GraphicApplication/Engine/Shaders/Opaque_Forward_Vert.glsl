@@ -13,6 +13,8 @@ layout (location = 2) in vec3 vNormal;
 layout (location = 3) in vec3 vTangent;
 layout (location = 4) in vec3 vBitangent;
 
+layout (location = 5) in ivec4 vboneIds;
+layout (location = 6) in vec4 vboneWeights;
 
 
 

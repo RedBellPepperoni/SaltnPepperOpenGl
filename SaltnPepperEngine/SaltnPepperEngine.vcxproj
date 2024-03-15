@@ -88,6 +88,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Animation\Bone.h" />
+    <ClInclude Include="Engine\Core\Animation\Interpolation.h" />
+    <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
     <ClInclude Include="Engine\Core\Rendering\Textures\DepthTextureArray.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\Cloth.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\BaseShader.h" />
@@ -197,8 +200,10 @@
     <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\SoftBody.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\VerletCloth.h" />
+    <ClInclude Include="SkinnedMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Textures\DepthTextureArray.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\Cloth.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\VerletConstraint.h" />
@@ -296,6 +301,7 @@
     <ClCompile Include="Engine\Core\Rendering\Shader\Shader.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\SoftBody.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\VerletCloth.cpp" />
+    <ClCompile Include="SkinnedMesh.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
