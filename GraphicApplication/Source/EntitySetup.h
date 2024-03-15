@@ -83,6 +83,7 @@ static std::array<std::string, 24> LakeModelString =
 void LoadAllModels()
 {
 	SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
+	SharedPtr<SkinnedModelLibrary>& skinnedmodelLib = Application::GetCurrent().GetSkinnedModelLibrary();
 
 	modelLib->LoadModel("Bed", "Assets\\Models\\Lake_Bed.fbx");
 	modelLib->LoadModel("Bench", "Assets\\Models\\Lake_Bench.fbx");
@@ -114,6 +115,9 @@ void LoadAllModels()
 
 	modelLib->LoadModel("Cam", "Assets\\Models\\Cam.fbx");
 	modelLib->LoadModel("CamBase", "Assets\\Models\\CamBase.fbx");
+
+
+	skinnedmodelLib->LoadModel("SCharacter", "Assets\\Models\\aj.dae");
 
 
 
@@ -418,6 +422,21 @@ SharedPtr<Texture>& CreateSecurityCamera(const Vector3& position = Vector3(0.0f)
 	//LOG_WARN("Name: {0}", std::to_string((uint64_t)texture.get()));
 
 	return camera->GetRenderTexture();
+
+}
+
+
+Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{0.0f})
+{
+	Entity skinnedEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SkinnedMesh");
+	Transform& transform = skinnedEntity.GetComponent<Transform>();
+
+	transform.SetPosition(position);
+
+
+	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("SCharacter");
+
+	return skinnedEntity;
 
 }
 

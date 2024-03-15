@@ -89,6 +89,7 @@ namespace SaltnPepperEngine
 		ModelComponent::ModelComponent()
 			:m_handle(MakeShared<Model>(PrimitiveType::Cube))
 		{
+
 		}
 
 		ModelComponent::ModelComponent(const std::string& filePath)	
@@ -199,6 +200,28 @@ namespace SaltnPepperEngine
 		SharedPtr<RigidBody3D> RigidBodyComponent::GetRigidBody()
 		{
 			return m_rigidBody;
+		}
+
+		SkinnedModelComponent::SkinnedModelComponent()
+		{
+			LOG_ERROR("Skinned Model Not loaded since filepath wasnt specified");
+		}
+
+		SkinnedModelComponent::SkinnedModelComponent(const std::string& filePath)
+		{
+			std::string clampedname = FileSystem::GetFileName(filePath);
+
+			m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->GetResource(clampedname);
+
+
+			if (m_handle == nullptr)
+			{
+				m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->LoadModel(clampedname, filePath);
+			}
+		}
+
+		SkinnedModelComponent::~SkinnedModelComponent()
+		{
 		}
 
 }

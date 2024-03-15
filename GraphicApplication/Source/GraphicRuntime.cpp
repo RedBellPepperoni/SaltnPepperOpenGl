@@ -120,7 +120,7 @@ class GraphicRuntime : public Application
 
         //Camera* cam = &mainCamera.GetComponent<Camera>();
 
-
+        CreateSkinnedCharatcer();
 	}
 
 	void OnUpdate(float deltaTime)

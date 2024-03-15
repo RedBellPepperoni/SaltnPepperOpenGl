@@ -19,6 +19,7 @@ namespace SaltnPepperEngine
 
 
 	class ModelLibrary;
+	class SkinnedModelLibrary;
 	class TextureLibrary;
 	class CubeMapLibrary;
 	class AudioLibrary;
@@ -103,6 +104,7 @@ namespace SaltnPepperEngine
 
 		// The  containers for the loaded models 
 		SharedPtr<ModelLibrary> m_modelLibrary;
+		SharedPtr<SkinnedModelLibrary> m_skinnedmodelLibrary;
 
 		// The container for all teh loaded texures
 		SharedPtr<TextureLibrary> m_textureLibrary;
@@ -188,6 +190,7 @@ namespace SaltnPepperEngine
 
 		// Reference getter to teh Model Library
 		SharedPtr<ModelLibrary>& GetModelLibrary();
+		SharedPtr<SkinnedModelLibrary>& GetSkinnedModelLibrary();
 
 		// Reference getter to the Textue Library
 		SharedPtr<TextureLibrary>& GetTextureLibrary();

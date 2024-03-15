@@ -41,6 +41,7 @@ namespace SaltnPepperEngine
 			
 			~SkinnedModel() = default;
 
+			inline std::vector<SharedPtr<Mesh>>& GetMeshes() { return m_meshes; }
 
 		private:
 
