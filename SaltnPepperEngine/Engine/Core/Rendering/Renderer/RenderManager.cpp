@@ -19,6 +19,7 @@
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
 
 
 #include "Engine/Core/Physics/SoftBody/Cloth.h"
@@ -113,6 +114,43 @@ namespace SaltnPepperEngine
 
 				// Sending the mesh data for processing
 				
+			}
+
+
+			ComponentView skinnedmodelView = scene->GetEntityManager()->GetComponentsOfType<SkinnedModelComponent>();
+
+			// Looping through all the entities that have a mesh component
+			for (Entity skinnedmodelObject : skinnedmodelView)
+			{
+
+				//if (!modelObject.TryGetComponent<ActiveComponent>()->active)
+				if (!skinnedmodelObject.IsActive())
+				{
+					//The mesh is not visible , so dont need to render it
+					continue;
+				}
+
+				// Cache the model ref and trasnfrom for later use
+				SkinnedModelComponent& modelComp = skinnedmodelObject.GetComponent<SkinnedModelComponent>();
+				Transform& transform = skinnedmodelObject.GetComponent<Transform>();
+
+				const std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
+
+				for (SharedPtr<Mesh> mesh : meshes)
+				{
+					Matrix4& worldTransform = transform.GetMatrix();
+
+					// Check for frustum Optimization later
+					// Might need to add bound boxes to each mesh for this
+
+					const SharedPtr<Material>& material = mesh->GetMaterial();
+
+					m_renderer->ProcessRenderElement(mesh, material, transform);
+
+				}
+
+				// Sending the mesh data for processing
+
 			}
 
 			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();
