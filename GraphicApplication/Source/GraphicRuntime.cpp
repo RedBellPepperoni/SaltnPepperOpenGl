@@ -121,6 +121,8 @@ class GraphicRuntime : public Application
         //Camera* cam = &mainCamera.GetComponent<Camera>();
 
         CreateSkinnedCharatcer();
+
+        idleAnim = Application::GetCurrent().GetAnimationLibrary()->GetResource("AJidle");
 	}
 
 	void OnUpdate(float deltaTime)
@@ -154,6 +156,22 @@ class GraphicRuntime : public Application
         }
 
 
+        ComponentView animaView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AnimatorComponent>();
+
+        idle = true;
+
+      
+
+        for (Entity entityAnim : animaView)
+        {
+            AnimatorComponent& comp = entityAnim.GetComponent<AnimatorComponent>();
+
+            if (idle == true)
+            { 
+                comp.GetAnimator()->PlayAnimation(idleAnim);
+            }
+            comp.GetAnimator()->OnUpdate(deltaTime);
+        }
 	}
 
   
@@ -161,9 +179,11 @@ class GraphicRuntime : public Application
 private:
 
     const float rotation = 10.0f * DEGtoRAD;
+
+    bool idle = true;
    
     std::vector<SharedPtr<Texture>> cameraRenders;
-   
+    SharedPtr<SkinnedAnimation> idleAnim;
 
     SharedPtr<Material> matOne = nullptr;
     SharedPtr<Material> matTwo = nullptr;

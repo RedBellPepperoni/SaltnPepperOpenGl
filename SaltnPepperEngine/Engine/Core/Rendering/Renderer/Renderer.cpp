@@ -89,8 +89,6 @@ namespace SaltnPepperEngine
             m_debugDrawData.VBO = Factory<VertexBuffer>::Create(UsageType::DYNAMIC_DRAW);
 
 
-
-
             // Hard coding for now
             // Realistically this should be set up for each shader when the shader gets compiled , probably?
             m_pipeline.vertexLayout =
@@ -181,6 +179,18 @@ namespace SaltnPepperEngine
             m_pipeline.skybox.SetIntensity(intensity);
         }
 
+        void Renderer::SetBoneMatricesUniform(SharedPtr<Shader>& shader, const std::vector<Matrix4>& boneTs)
+        {
+            const std::string uniformName = "boneTransforms[";
+
+            for (size_t index = 0; index < boneTs.size(); index++)
+            {
+                std::string finalName = uniformName + std::to_string(index) + "]";
+                shader->SetUniform(finalName, boneTs[index]);
+
+            }
+        }
+
         const float Renderer::GetSkyboxIntensity() const
         {
             return m_pipeline.skybox.GetIntensity();
@@ -226,7 +236,7 @@ namespace SaltnPepperEngine
             m_pipeline.skybox.cubeMap = cubemap;
         }
 
-        void Renderer::ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform)
+        void Renderer::ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform, const std::vector<Matrix4>& boneTs)
         {
             if (material->albedoColour.a <= 0.0f)
             {
@@ -244,6 +254,11 @@ namespace SaltnPepperEngine
             {
                 newElement.meshIndex = m_pipeline.MeshList.size();
                 m_pipeline.MeshList.push_back(mesh);
+            }
+
+            if (mesh->GetSkinned())
+            {
+                newElement.boneMatrices = boneTs;
             }
 
             if (material != nullptr)
@@ -684,11 +699,19 @@ namespace SaltnPepperEngine
             SharedPtr<Mesh>& mesh = m_pipeline.MeshList[element.meshIndex];
             SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
 
-
             shader->SetUniform("isSkinned", mesh->GetSkinned());
+
+
+
+            if (mesh->GetSkinned())
+            {
+                SetBoneMatricesUniform(shader, element.boneMatrices);
+            }
+
 
             if (mat != nullptr)
             {
+
                 mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
                 shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
 

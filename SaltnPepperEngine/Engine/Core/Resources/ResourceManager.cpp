@@ -1,12 +1,14 @@
 #include "ResourceManager.h"
 #include "Engine/Utils/Logging/Log.h"
 
+
 #include "Engine/Core/Rendering/Shader/Shader.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
 #include "Engine/Core/Rendering/Textures/CubeMap.h"
+#include "Engine/Core/Animation/SkinnedAnimation.h"
 
 
 
@@ -125,6 +127,19 @@ namespace SaltnPepperEngine
 
 		// Returning the model if created successfuly , nullptr otherwise
 		return newModel;
+	}
+
+	SharedPtr<SkinnedAnimation> AnimationLibrary::LoadAnimation(const std::string& friendlyName, const std::string& filePath, SharedPtr<SkinnedModel>& modelRef)
+	{
+		SharedPtr<SkinnedAnimation> newAnim = MakeShared<SkinnedAnimation>(filePath, modelRef);
+
+		if (newAnim != nullptr)
+		{
+			AnimationLibrary::CreateResource(friendlyName, newAnim);
+		}
+
+		return newAnim;
+
 	}
 
 }

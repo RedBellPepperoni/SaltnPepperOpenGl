@@ -64,6 +64,9 @@ namespace SaltnPepperEngine
 
 			// Defines the Normal matrix : used for calculating lights			
 			Matrix4 NormalMatrix;
+
+			// Defines the BoneTransforms : if its a Skinned Mesh
+			std::vector<Matrix4> boneMatrices;
 		};
 
 		struct LightElement
@@ -337,6 +340,9 @@ namespace SaltnPepperEngine
 
 			void CalculateShadowCascades(const CameraElement& camera, LightElement& directioanlLightElement);
 
+			void SetBoneMatricesUniform(SharedPtr<Shader>& shader, const std::vector<Matrix4>& boneTs);
+
+
 		public:
 
 			void Init();
@@ -366,7 +372,7 @@ namespace SaltnPepperEngine
 			CameraElement GenerateCameraElement(Camera& cameraRef, Transform& transform);
 
 			// Adds a Render Element to the Queue
-			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform);
+			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform, const std::vector<Matrix4>& boneTs);
 			void ProcessLightElement(Light& light, Transform& transform);
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 

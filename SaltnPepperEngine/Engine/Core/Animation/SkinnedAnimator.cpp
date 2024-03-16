@@ -1,4 +1,5 @@
 #include "SkinnedAnimator.h"
+#include "Engine/Utils/Logging/Log.h"
 
 namespace SaltnPepperEngine
 {
@@ -83,6 +84,36 @@ namespace SaltnPepperEngine
 				m_interTime = 0.0;
 			}
 		}
+	}
+
+	void SkinnedAnimator::AddAnimation(const std::string& name, SharedPtr<SkinnedAnimation> animref)
+	{
+		auto itr = m_animationMap.find(name);
+
+		if (itr == m_animationMap.end())
+		{
+			LOG_WARN("Overwriting animation data for : {0}",name);
+			
+			m_animationMap[name] = animref;
+			return;
+		}
+
+		m_animationMap.emplace(name, animref);
+
+	}
+
+	SharedPtr<SkinnedAnimation> SkinnedAnimator::GetAnimationByName(const std::string& name)
+	{
+		auto itr = m_animationMap.find(name);
+
+		if (itr == m_animationMap.end())
+		{
+			LOG_WARN("No animation found with name : {0}", name);
+
+			return nullptr;
+		}
+
+		return itr->second;
 	}
 
 	void SkinnedAnimator::CalculateBoneTranslation(const AssimpNodeData* curNode, Matrix4 parentTransform, SharedPtr<SkinnedAnimation>& prevAnimation, SharedPtr<SkinnedAnimation>& nextAnimation, float haltTime, float currentTime, float transitionTime)

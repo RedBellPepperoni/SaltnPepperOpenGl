@@ -665,5 +665,8 @@
     <ClCompile Include="Engine\Core\Animation\SkinnedAnimator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\Animation\Interpolation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

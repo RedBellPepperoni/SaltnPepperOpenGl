@@ -99,6 +99,8 @@ namespace SaltnPepperEngine
 
 				const std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
 
+				std::vector<Matrix4> nullTransform;
+
 				for (SharedPtr<Mesh> mesh : meshes)
 				{
 					Matrix4& worldTransform = transform.GetMatrix();
@@ -108,7 +110,7 @@ namespace SaltnPepperEngine
 				
 					const SharedPtr<Material>& material = mesh->GetMaterial();
 				    
-					m_renderer->ProcessRenderElement(mesh, material, transform);
+					m_renderer->ProcessRenderElement(mesh, material, transform, nullTransform);
 
 				}
 
@@ -133,6 +135,7 @@ namespace SaltnPepperEngine
 				// Cache the model ref and trasnfrom for later use
 				SkinnedModelComponent& modelComp = skinnedmodelObject.GetComponent<SkinnedModelComponent>();
 				Transform& transform = skinnedmodelObject.GetComponent<Transform>();
+				AnimatorComponent& animComp = skinnedmodelObject.GetComponent<AnimatorComponent>();
 
 				const std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
 
@@ -143,9 +146,14 @@ namespace SaltnPepperEngine
 					// Check for frustum Optimization later
 					// Might need to add bound boxes to each mesh for this
 
+					std::vector<Matrix4>& boneMatriceList = animComp.GetAnimator()->GetFinalBoneMatrices();
+
+					mesh->SetSkinned(true);
+
 					const SharedPtr<Material>& material = mesh->GetMaterial();
 
-					m_renderer->ProcessRenderElement(mesh, material, transform);
+
+					m_renderer->ProcessRenderElement(mesh, material, transform, boneMatriceList);
 
 				}
 

@@ -222,6 +222,21 @@ namespace SaltnPepperEngine
 
 		SkinnedModelComponent::~SkinnedModelComponent()
 		{
+
+		}
+
+		AnimatorComponent::AnimatorComponent()
+		{
+			m_animator = MakeShared<SkinnedAnimator>();
+		}
+
+		AnimatorComponent::~AnimatorComponent()
+		{
+		}
+
+		SharedPtr<SkinnedAnimator>& AnimatorComponent::GetAnimator()
+		{
+			return m_animator;
 		}
 
 }

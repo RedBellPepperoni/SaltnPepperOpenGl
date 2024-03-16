@@ -48,6 +48,7 @@ namespace SaltnPepperEngine
 		m_skinnedmodelLibrary = MakeShared<SkinnedModelLibrary>();
 		m_textureLibrary = MakeShared<TextureLibrary>();
 		m_cubeMapLibrary = MakeShared<CubeMapLibrary>();
+		m_animationLibrary = MakeShared<AnimationLibrary>();
 		//m_audioLibrary = MakeShared<AudioLibrary>();
 
 
@@ -346,6 +347,11 @@ namespace SaltnPepperEngine
 	SharedPtr<CubeMapLibrary>& Application::GetCubeMapLibrary()
 	{
 		return m_cubeMapLibrary;
+	}
+
+	SharedPtr<AnimationLibrary>& Application::GetAnimationLibrary()
+	{
+		return m_animationLibrary;
 	}
 
 	SharedPtr<AudioLibrary>& Application::GetAudioLibrary()

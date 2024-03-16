@@ -1,5 +1,6 @@
 #ifndef SKINNEDANIMATOR_H
 #define SKINNEDANIMATOR_H
+#include <unordered_map>
 
 #include "SkinnedAnimation.h"
 
@@ -16,7 +17,10 @@ namespace SaltnPepperEngine
 
 		void PlayAnimation(SharedPtr<SkinnedAnimation>& animation, bool repeat = true);
 	
-	
+		void AddAnimation(const std::string& name, SharedPtr<SkinnedAnimation> animref);
+
+		SharedPtr<SkinnedAnimation> GetAnimationByName(const std::string& name);
+
 		void CalculateBoneTranslation(const AssimpNodeData* curNode, Matrix4 parentTransform, SharedPtr<SkinnedAnimation>& prevAnimation, SharedPtr<SkinnedAnimation>& nextAnimation, float haltTime, float currentTime, float transitionTime);
 	
 		void CalculateBoneTransform(const AssimpNodeData* node, Matrix4 parentTransform, SharedPtr<SkinnedAnimation>& animation, float currentTime);
@@ -32,6 +36,9 @@ namespace SaltnPepperEngine
 		bool m_interpolating;
 		float m_haltTime;
 		float m_interTime;
+
+
+		std::unordered_map<std::string ,SharedPtr<SkinnedAnimation>> m_animationMap;
 	};
 }
 

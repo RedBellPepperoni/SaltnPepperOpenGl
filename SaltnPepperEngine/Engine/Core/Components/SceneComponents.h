@@ -5,6 +5,7 @@
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+#include "Engine/Core/Animation/SkinnedAnimator.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
 
@@ -104,7 +105,7 @@ namespace SaltnPepperEngine
 			const SharedPtr<Mesh>& GetMesh();
 			
 
-			SharedPtr<Mesh> m_handle;
+			SharedPtr<Mesh> m_handle = nullptr;
 			bool isVisible = true;
 			bool castsShadow = true;
 
@@ -116,9 +117,19 @@ namespace SaltnPepperEngine
 			SkinnedModelComponent(const std::string& filePath);
 			~SkinnedModelComponent();
 
-			SharedPtr<SkinnedModel> m_handle;
+			SharedPtr<SkinnedModel> m_handle = nullptr;
 
 
+		};
+
+		struct AnimatorComponent
+		{
+			AnimatorComponent();
+			~AnimatorComponent();
+
+			SharedPtr<SkinnedAnimator>& GetAnimator();
+
+			SharedPtr<SkinnedAnimator> m_animator = nullptr;
 		};
 
 		struct ModelComponent

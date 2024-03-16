@@ -136,6 +136,8 @@ void LoadAllTextures()
 	
 }
 
+
+
 Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vector3{0.0f})
 {	
 	// Create a new Entity and add it to the ECS
@@ -437,10 +439,17 @@ Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{0.0f})
 
 	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("SCharacter");
 
+	SharedPtr<SkinnedAnimation> anim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("AJidle","Assets\\Models\\walking.dae",modelComp.m_handle);
+
+	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
+	animComp.GetAnimator()->AddAnimation("Idle", anim);
+
 	for (SharedPtr<Mesh>& mesh : modelComp.m_handle->GetMeshes())
 	{
 		mesh->GetMaterial()->SetAlbedoTexture("skinned");
 	}
+
+	animComp.GetAnimator()->PlayAnimation(anim);
 
 	return skinnedEntity;
 

@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Engine/Core/Memory/MemoryDefinitions.h"
+
 #include <unordered_map>
 
 namespace SaltnPepperEngine
@@ -13,6 +14,7 @@ namespace SaltnPepperEngine
 		class AudioManager;
 	}
 
+	class SkinnedAnimation;
 
 	namespace Rendering
 	{
@@ -232,6 +234,14 @@ namespace SaltnPepperEngine
 		SharedPtr<SkinnedModel> LoadModel(const std::string& friendlyName,const std::string& filePath);
 	};
 
+	class AnimationLibrary : public ResourceLibrary<SkinnedAnimation>
+	{
+	public:
+		AnimationLibrary() = default;
+		virtual ~AnimationLibrary() = default;
+
+		SharedPtr<SkinnedAnimation> LoadAnimation(const std::string& friendlyName, const std::string& filePath, SharedPtr<SkinnedModel>& modelRef);
+	};
 	/*class AudioLibrary : public ResourceLibrary<AudioClip>
 	{
 	public:

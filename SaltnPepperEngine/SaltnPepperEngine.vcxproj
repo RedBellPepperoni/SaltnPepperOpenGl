@@ -205,6 +205,7 @@
     <ClInclude Include="SkinnedMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Animation\Interpolation.cpp" />
     <ClCompile Include="Engine\Core\Animation\SkinnedAnimation.cpp" />
     <ClCompile Include="Engine\Core\Animation\SkinnedAnimator.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp" />
