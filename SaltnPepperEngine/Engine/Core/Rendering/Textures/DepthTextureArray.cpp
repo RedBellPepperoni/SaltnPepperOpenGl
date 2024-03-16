@@ -54,7 +54,7 @@ namespace SaltnPepperEngine
 			m_textureId = newHeight;
 			m_count = newCount;
 
-			GLDEBUG(glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, m_width, m_height, m_count, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr));
+			GLDEBUG(glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, static_cast<GLuint>(m_width), m_height, m_count, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr));
 			
 			GLDEBUG(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT));
 			GLDEBUG(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT));

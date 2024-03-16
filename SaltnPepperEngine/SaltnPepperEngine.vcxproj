@@ -90,6 +90,8 @@
   <ItemGroup>
     <ClInclude Include="Engine\Core\Animation\Bone.h" />
     <ClInclude Include="Engine\Core\Animation\Interpolation.h" />
+    <ClInclude Include="Engine\Core\Animation\SkinnedAnimation.h" />
+    <ClInclude Include="Engine\Core\Animation\SkinnedAnimator.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
     <ClInclude Include="Engine\Core\Rendering\Textures\DepthTextureArray.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\Cloth.h" />
@@ -203,6 +205,8 @@
     <ClInclude Include="SkinnedMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Animation\SkinnedAnimation.cpp" />
+    <ClCompile Include="Engine\Core\Animation\SkinnedAnimator.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Textures\DepthTextureArray.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\Cloth.cpp" />

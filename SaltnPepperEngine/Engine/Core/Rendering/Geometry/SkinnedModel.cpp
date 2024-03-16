@@ -3,6 +3,8 @@
 
 namespace SaltnPepperEngine
 {
+
+
 	namespace Rendering
 	{
 		SkinnedModel::SkinnedModel(const std::string& filePath)
@@ -55,7 +57,7 @@ namespace SaltnPepperEngine
 				unsigned int numWeights = mesh->mBones[boneIndex]->mNumWeights;
 
 				// For each weight at vertex x for current bone
-				for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+				for (int weightIndex = 0; weightIndex < static_cast<int>(numWeights); ++weightIndex)
 				{
 					unsigned int vertexId = weights[weightIndex].mVertexId;
 					float weight = weights[weightIndex].mWeight;
@@ -88,17 +90,6 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		
-
-		Matrix4 SkinnedModel::aiMatrix4x4ToGlm(const aiMatrix4x4* from)
-		{
-			Matrix4 to;
-			to[0][0] = from->a1; to[1][0] = from->a2; to[2][0] = from->a3; to[3][0] = from->a4;
-			to[0][1] = from->b1; to[1][1] = from->b2; to[2][1] = from->b3; to[3][1] = from->b4;
-			to[0][2] = from->c1; to[1][2] = from->c2; to[2][2] = from->c3; to[3][2] = from->c4;
-			to[0][3] = from->d1; to[1][3] = from->d2; to[2][3] = from->d3; to[3][3] = from->d4;
-			return to;
-		}
 
 
 		SharedPtr<Mesh> SkinnedModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
@@ -197,5 +188,12 @@ namespace SaltnPepperEngine
 
 			return rendermesh;
 		}
+
+
+		
+		
+
 	}
+
+	
 }

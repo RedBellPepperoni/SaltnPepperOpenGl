@@ -22,9 +22,23 @@ namespace SaltnPepperEngine
 		Matrix4 offset;
 	};
 
+
+	static Matrix4 aiMatrix4x4ToGlm(const aiMatrix4x4* from)
+	{
+		Matrix4 to;
+		to[0][0] = from->a1; to[1][0] = from->a2; to[2][0] = from->a3; to[3][0] = from->a4;
+		to[0][1] = from->b1; to[1][1] = from->b2; to[2][1] = from->b3; to[3][1] = from->b4;
+		to[0][2] = from->c1; to[1][2] = from->c2; to[2][2] = from->c3; to[3][2] = from->c4;
+		to[0][3] = from->d1; to[1][3] = from->d2; to[2][3] = from->d3; to[3][3] = from->d4;
+		return to;
+		
+	}
 	
 	namespace Rendering
 	{
+
+		
+
 		class SkinnedModel
 		{
 			std::vector<SharedPtr<Mesh>> m_meshes;
@@ -43,13 +57,15 @@ namespace SaltnPepperEngine
 
 			inline std::vector<SharedPtr<Mesh>>& GetMeshes() { return m_meshes; }
 
+			inline std::vector<BoneProps>& GetBoneProps() { return m_boneProps; }
+
 		private:
 
 			void ExtractBoneWeightForVertices(std::vector<Vector4Int>& boneIDs_all, std::vector<Vector4>& weights_all, aiMesh* mesh, const aiScene* scene);
 			
 			void ProcessNode(aiNode* node, const aiScene* scene);
 		
-			static Matrix4 aiMatrix4x4ToGlm(const aiMatrix4x4* from);
+			
 
 			SharedPtr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
