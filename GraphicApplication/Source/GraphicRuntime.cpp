@@ -170,6 +170,7 @@ class GraphicRuntime : public Application
             { 
                 comp.GetAnimator()->PlayAnimation(idleAnim);
             }
+
             comp.GetAnimator()->OnUpdate(deltaTime);
         }
 	}

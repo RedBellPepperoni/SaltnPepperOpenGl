@@ -53,6 +53,7 @@ void main()
             // Set pos
             vec4 localPosition = boneTransforms[vboneIds[i]] * vec4(vPosition,1.0f);
             updatedPosition += localPosition * vboneWeights[i];
+			
             // Set normal
             vec3 localNormal = mat3(boneTransforms[vboneIds[i]]) * vNormal;
             updatedNormal += localNormal * vboneWeights[i];

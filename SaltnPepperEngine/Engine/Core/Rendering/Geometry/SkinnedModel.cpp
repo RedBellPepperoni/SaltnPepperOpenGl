@@ -97,11 +97,23 @@ namespace SaltnPepperEngine
 			// Mesh to fill with data
 			std::vector<Vertex> vertices;
 
+			size_t vertexCount = mesh->mNumVertices;
+
 			std::vector<Vector4Int> boneIdList;
 			std::vector<Vector4> boneWeightList;
 
+			boneIdList.resize(vertexCount,Vector4Int(-1));
+			boneWeightList.resize(vertexCount, Vector4(0.0f));
+
+			// Load boneIDs and weights for each vertex
+			ExtractBoneWeightForVertices(boneIdList, boneWeightList, mesh, scene);
+
+
+			bool useBoneIds = boneIdList.size() == vertexCount;
+			bool useBoneWeights = boneWeightList.size() == vertexCount;
+
 			// Loop all vertices in loaded mesh
-			for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+			for (unsigned int i = 0; i < vertexCount; i++)
 			{
 				Vertex vertex;
 
@@ -163,6 +175,16 @@ namespace SaltnPepperEngine
 					}
 				}
 
+				if (useBoneIds)
+				{
+					vertex.boneIds = boneIdList[i];
+				}
+
+				if (useBoneWeights)
+				{
+					vertex.boneWeights = boneWeightList[i];
+				}
+
 				vertices.push_back(vertex);
 				
 			}
@@ -177,14 +199,16 @@ namespace SaltnPepperEngine
 					indicies.push_back(face.mIndices[j]);
 			}
 
-			SharedPtr<Mesh> rendermesh = MakeShared<Mesh>(vertices, indicies);
+			
 			
 
-			// Load boneIDs and weights for each vertex
-			ExtractBoneWeightForVertices(boneIdList, boneWeightList, mesh, scene); 
+			
 
-			LOG_INFO("Processed: {0} Bones || Triangle count : {1}", mesh->mNumBones, boneIdList.size());
 
+			LOG_TRACE("Processed: {0} Bones || Triangle count : {1}", mesh->mNumBones, boneIdList.size());
+
+
+			SharedPtr<Mesh> rendermesh = MakeShared<Mesh>(vertices, indicies);
 
 			return rendermesh;
 		}

@@ -139,6 +139,10 @@ namespace SaltnPepperEngine
 
 				const std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
 
+
+				std::vector<Matrix4>& boneMatriceList = animComp.GetAnimator()->GetFinalBoneMatrices();
+
+
 				for (SharedPtr<Mesh> mesh : meshes)
 				{
 					Matrix4& worldTransform = transform.GetMatrix();
@@ -146,7 +150,9 @@ namespace SaltnPepperEngine
 					// Check for frustum Optimization later
 					// Might need to add bound boxes to each mesh for this
 
-					std::vector<Matrix4>& boneMatriceList = animComp.GetAnimator()->GetFinalBoneMatrices();
+					
+
+
 
 					mesh->SetSkinned(true);
 

@@ -29,6 +29,8 @@ namespace SaltnPepperEngine
 
 	void SkinnedAnimator::OnUpdate(const float& deltatime)
 	{
+		
+
 		if (m_currentAnimation) {
 			m_currentTime = fmod(m_currentTime + m_currentAnimation->GetTicksPerSecond() * deltatime, m_currentAnimation->GetDuration());
 
@@ -90,7 +92,7 @@ namespace SaltnPepperEngine
 	{
 		auto itr = m_animationMap.find(name);
 
-		if (itr == m_animationMap.end())
+		if (itr != m_animationMap.end())
 		{
 			LOG_WARN("Overwriting animation data for : {0}",name);
 			
