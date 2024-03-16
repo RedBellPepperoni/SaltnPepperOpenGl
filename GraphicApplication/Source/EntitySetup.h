@@ -131,6 +131,7 @@ void LoadAllTextures()
 	textureLib->LoadTexture("water", "Assets\\Textures\\water.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("noise", "Assets\\Textures\\noise.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
+	textureLib->LoadTexture("skinned", "Assets\\Textures\\aj.png", TextureFormat::RGBA);
 	
 	
 }
@@ -435,6 +436,11 @@ Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{0.0f})
 
 
 	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("SCharacter");
+
+	for (SharedPtr<Mesh>& mesh : modelComp.m_handle->GetMeshes())
+	{
+		mesh->GetMaterial()->SetAlbedoTexture("skinned");
+	}
 
 	return skinnedEntity;
 

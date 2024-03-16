@@ -38,6 +38,7 @@ namespace SaltnPepperEngine
 
 			// Material Stuuff
 
+			bool m_isSkinned = false;
 
 			SharedPtr<Material> m_material;
 			SharedPtr<BoundingBox> m_boundingBox;
@@ -56,6 +57,8 @@ namespace SaltnPepperEngine
 			// Getter for accessing the mesh's name
 			const std::string& GetName() const;
 
+			const bool GetSkinned() const { return m_isSkinned; }
+			void SetSkinned(const bool value) { m_isSkinned = value; }
 
 			// Getters for Vertex and Index data
 			const std::vector<Vertex>& GetVertexData();

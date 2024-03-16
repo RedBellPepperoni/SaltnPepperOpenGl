@@ -152,7 +152,7 @@ namespace SaltnPepperEngine
 				if (mesh->mTextureCoords[0])
 				{
 					// Set texture coords
-					glm::vec2 vec;
+					Vector2 vec;
 					vec.x = mesh->mTextureCoords[0][i].x;
 					vec.y = mesh->mTextureCoords[0][i].y;
 					vertex.texCoord = (vec);

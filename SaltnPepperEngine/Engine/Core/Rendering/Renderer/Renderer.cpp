@@ -410,11 +410,6 @@ namespace SaltnPepperEngine
             {
                 // get the Elements by index from the Render Element List
                 RenderElement& elementToDraw = m_pipeline.renderElementList[elementList[index]];
-
-
-
-
-
                 // Send the Data to Draw that element
                 DrawElement(camera, shader, elementToDraw);
             }
@@ -688,6 +683,9 @@ namespace SaltnPepperEngine
 
             SharedPtr<Mesh>& mesh = m_pipeline.MeshList[element.meshIndex];
             SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
+
+
+            shader->SetUniform("isSkinned", mesh->GetSkinned());
 
             if (mat != nullptr)
             {
