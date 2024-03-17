@@ -90,6 +90,16 @@ namespace SaltnPepperEngine
 		}
 	}
 
+	void SkinnedAnimator::PlayAnimationbyName(const std::string& name, bool repeat)
+	{
+		SharedPtr<SkinnedAnimation> animRef = GetAnimationByName(name);
+
+		if (animRef != nullptr)
+		{
+			PlayAnimation(animRef, repeat);
+		}
+	}
+
 	void SkinnedAnimator::AddAnimation(const std::string& name, SharedPtr<SkinnedAnimation> animref)
 	{
 		auto itr = m_animationMap.find(name);

@@ -122,7 +122,7 @@ class GraphicRuntime : public Application
 
         CreateSkinnedCharatcer();
 
-        idleAnim = Application::GetCurrent().GetAnimationLibrary()->GetResource("AJidle");
+        //idleAnim = Application::GetCurrent().GetAnimationLibrary()->GetResource("AJidle");
 	}
 
 	void OnUpdate(float deltaTime)
@@ -166,10 +166,37 @@ class GraphicRuntime : public Application
         {
             AnimatorComponent& comp = entityAnim.GetComponent<AnimatorComponent>();
 
+
+            if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::Up))
+            {
+                idle = false;
+                comp.GetAnimator()->PlayAnimationbyName("Walk");
+            }
+
+            if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::Left))
+            {
+                idle = false;
+                comp.GetAnimator()->PlayAnimationbyName("StrafeLeft");
+            }
+
+            if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::Right))
+            {
+                idle = false;
+                comp.GetAnimator()->PlayAnimationbyName("StrafeRight");
+            }
+
+            if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::Down))
+            {
+                idle = false;
+                comp.GetAnimator()->PlayAnimationbyName("Dance");
+            }
+
             if (idle == true)
             { 
-                comp.GetAnimator()->PlayAnimation(idleAnim);
+                comp.GetAnimator()->PlayAnimationbyName("Idle");
             }
+
+
 
             comp.GetAnimator()->OnUpdate(deltaTime);
         }

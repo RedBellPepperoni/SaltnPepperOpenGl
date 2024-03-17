@@ -16,6 +16,7 @@ namespace SaltnPepperEngine
 		void OnUpdate(const float& deltatime);
 
 		void PlayAnimation(SharedPtr<SkinnedAnimation>& animation, bool repeat = true);
+		void PlayAnimationbyName(const std::string& name, bool repeat = true);
 	
 		void AddAnimation(const std::string& name, SharedPtr<SkinnedAnimation> animref);
 

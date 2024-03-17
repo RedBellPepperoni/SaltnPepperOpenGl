@@ -118,6 +118,7 @@ void LoadAllModels()
 
 
 	skinnedmodelLib->LoadModel("SCharacter", "Assets\\Models\\aj.dae");
+	skinnedmodelLib->LoadModel("RacerCharacter", "Assets\\Models\\racer.dae");
 
 
 
@@ -132,6 +133,7 @@ void LoadAllTextures()
 	textureLib->LoadTexture("noise", "Assets\\Textures\\noise.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 	textureLib->LoadTexture("skinned", "Assets\\Textures\\aj.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("racer", "Assets\\Textures\\racer.png", TextureFormat::RGBA);
 	
 	
 }
@@ -429,7 +431,7 @@ SharedPtr<Texture>& CreateSecurityCamera(const Vector3& position = Vector3(0.0f)
 }
 
 
-Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{0.0f})
+Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{ 0.0f }, const Vector3& scale = Vector3{ 1.0f })
 {
 	Entity skinnedEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("SkinnedMesh");
 	Transform& transform = skinnedEntity.GetComponent<Transform>();
@@ -437,19 +439,30 @@ Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{0.0f})
 	transform.SetPosition(position);
 
 
-	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("SCharacter");
+	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("RacerCharacter");
 
-	SharedPtr<SkinnedAnimation> anim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("AJidle","Assets\\Models\\jump.dae",modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_Idle","Assets\\Models\\raceridle.dae",modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> walkanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_Walk","Assets\\Models\\racerwalk.dae",modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> rightanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_RightStrafe","Assets\\Models\\racerrightwalk.dae",modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> leftanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_LeftStrafe","Assets\\Models\\racerleftwalk.dae",modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> danceanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_LeftStrafe","Assets\\Models\\racerdance.dae",modelComp.m_handle);
 
 	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
-	animComp.GetAnimator()->AddAnimation("Idle", anim);
+	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
+	animComp.GetAnimator()->AddAnimation("Walk", walkanim);
+	animComp.GetAnimator()->AddAnimation("StrafeRight", rightanim);
+	animComp.GetAnimator()->AddAnimation("StrafeLeft", leftanim);
+	animComp.GetAnimator()->AddAnimation("Dance", danceanim);
+
+
+
 
 	for (SharedPtr<Mesh>& mesh : modelComp.m_handle->GetMeshes())
 	{
-		mesh->GetMaterial()->SetAlbedoTexture("skinned");
+		mesh->GetMaterial()->SetAlbedoTexture("racer");
 	}
 
-	animComp.GetAnimator()->PlayAnimation(anim);
+	animComp.GetAnimator()->PlayAnimation(idleanim);
 
 	return skinnedEntity;
 
