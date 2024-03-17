@@ -4,17 +4,30 @@
 #include <string>
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+#include "Engine/Core/Animation/SkinnedAnimator.h"
 #include "Engine/Core/Rendering/Material/Material.h"
+#include "Engine/Core/Rendering/Camera/CameraController.h"
+
 #include "Engine/Utils/UniqueId/UniqueId.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Logging/Log.h"
 #include <cereal/cereal.hpp>
 
 
+
+
 namespace SaltnPepperEngine
 {
 
+	namespace Physics
+	{
+		struct PhysicsProperties;
+		class RigidBody3D;
+	}
 
+	using Physics::RigidBody3D;
+	using Physics::PhysicsProperties;
 
 	namespace Components
 	{
@@ -92,12 +105,32 @@ namespace SaltnPepperEngine
 			const SharedPtr<Mesh>& GetMesh();
 			
 
-			SharedPtr<Mesh> m_handle;
+			SharedPtr<Mesh> m_handle = nullptr;
 			bool isVisible = true;
 			bool castsShadow = true;
 
 		};
 
+		struct SkinnedModelComponent
+		{
+			SkinnedModelComponent();
+			SkinnedModelComponent(const std::string& filePath);
+			~SkinnedModelComponent();
+
+			SharedPtr<SkinnedModel> m_handle = nullptr;
+
+
+		};
+
+		struct AnimatorComponent
+		{
+			AnimatorComponent();
+			~AnimatorComponent();
+
+			SharedPtr<SkinnedAnimator>& GetAnimator();
+
+			SharedPtr<SkinnedAnimator> m_animator = nullptr;
+		};
 
 		struct ModelComponent
 		{
@@ -198,8 +231,121 @@ namespace SaltnPepperEngine
 			
 		};
 
+		struct CameraControllerComponent
+		{
+			enum class ControllerType : uint8_t
+			{
+				FLYCAM,
+				THIRDPERSON,
+				FIRSTPERSON,
+				CUSTOM
+			};
 
 
+			CameraControllerComponent();
+			CameraControllerComponent(ControllerType type);
+		
+
+			void SetControllerType(ControllerType type);
+
+			SharedPtr<CameraController>& GetController();
+			const ControllerType& GetControllerType();
+
+			static std::string CameraControllerTypeToString(ControllerType type)
+			{
+				switch (type)
+				{
+				case ControllerType::FLYCAM: return "Fly";
+					break;
+				case ControllerType::THIRDPERSON: return "ThirdPerson";
+					break;
+				case ControllerType::FIRSTPERSON: return "FirstPerson";
+					break;
+				case ControllerType::CUSTOM: return "Custom";
+					break;
+				}
+				
+				return "Custom";
+			}
+
+			static ControllerType StringToControllerType(const std::string& type)
+			{
+				if(type == "Fly")
+				{
+					return ControllerType::FLYCAM; 
+				}
+				else if (type == "ThirdPerson")
+				{
+					return ControllerType::THIRDPERSON;
+				}
+				else if (type == "FirstPerson")
+				{
+					return ControllerType::FIRSTPERSON;
+				}
+
+
+				LOG_ERROR("Unsupported Camera controller {0}", type);
+				return ControllerType::CUSTOM;
+			}
+
+			template <typename Archive>
+			void save(Archive& archive) const
+			{
+				archive(cereal::make_nvp("ControllerType", m_type));
+			}
+
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				ControllerType controllertype;
+				archive(cereal::make_nvp("ControllerType", controllertype));
+				SetControllerType(controllertype);
+			}
+
+		
+		private:
+
+			ControllerType m_type = ControllerType::CUSTOM;
+			SharedPtr<CameraController> m_controllerRef;
+
+
+		};
+
+
+		class RigidBodyComponent
+		{
+		public:
+			RigidBodyComponent();
+			RigidBodyComponent(const RigidBodyComponent& other);
+			RigidBodyComponent(const PhysicsProperties& properties);
+			~RigidBodyComponent();
+
+			void OnImgui();
+
+			SharedPtr<RigidBody3D> GetRigidBody();
+
+
+			template <typename Archive>
+			void save(Archive& archive) const
+			{
+				archive(*(m_rigidBody)); 
+				//archive(cereal::make_nvp("Body",m_rigidBody));
+			}
+
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				m_rigidBody = MakeShared<RigidBody3D>();
+				archive(*(m_rigidBody));
+				//archive(cereal::make_nvp("Body", m_rigidBody));
+			}
+
+		private:
+
+			SharedPtr<RigidBody3D> m_rigidBody = nullptr;
+			bool m_ownBody = false;
+			
+		};
 	}
 
 }

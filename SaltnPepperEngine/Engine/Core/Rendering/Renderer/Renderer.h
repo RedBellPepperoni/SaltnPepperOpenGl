@@ -10,11 +10,15 @@
 #include "Engine/Core/Rendering/Skybox/Skybox.h"
 #include "Engine/Core/Rendering/Skybox/SkyboxObject.h"
 #include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
-
+#include "Engine/Core/Rendering/Buffers/ShaderStorageBuffer.h"
+#include "Engine/Utils/Frustum.h"
 #include "Engine/Core/Rendering/Geometry/RectangleObject.h"
 
 namespace SaltnPepperEngine
 {
+
+	static constexpr uint8_t SHADOWMAP_MAX = 16;
+
 	namespace Components
 	{
 		// Forward Decalrartions for better compile times
@@ -37,7 +41,9 @@ namespace SaltnPepperEngine
 		class Shader;
 		class Camera;
 		class Texture;
+		class DepthTextureArray;
 		struct Light;
+		class ComputeShader;
 
 		enum class LightType : uint8_t;
 		enum class MaterialType;
@@ -58,18 +64,35 @@ namespace SaltnPepperEngine
 
 			// Defines the Normal matrix : used for calculating lights			
 			Matrix4 NormalMatrix;
+
+			// Defines the BoneTransforms : if its a Skinned Mesh
+			std::vector<Matrix4> boneMatrices;
 		};
 
 		struct LightElement
 		{
+			// The Shader Uniform name
 			std::string uniformName;
+
+			// Color of the Light 
 			Vector3 color;
+
+			// POsition of the transform component
 			Vector3 position;
+
+			// Incase of directional/spot light, the forwward vector
 			Vector3 direction;
 
+			// How bright the light is
 			float intensity;
+
+			// Incase of Point light , the light effective radius
 			float radius;
+
+			// the actual type of light
 			LightType type;
+
+			// Spot light inner and outer angles
 			float innerAngle;
 			float outerAngle;
 		};
@@ -78,20 +101,56 @@ namespace SaltnPepperEngine
 		// Data Structure to define main camera properties
 		struct CameraElement
 		{
-
+			// The frame buffer of the particluar camera
 			SharedPtr<FrameBuffer> gBuffer;
 
+			// Rendering Textures
+			SharedPtr<Texture> albedoTexture;
+			SharedPtr<Texture> normalTexture;
+			SharedPtr<Texture> materialTexture;
+			SharedPtr<Texture> depthTexture;
+
+			// the premultiplied View ProjectionMatrix
 			Matrix4 viewProjMatrix;
+
+			Matrix4 worldMatrix;
+			// Static view proj matric for the Skybox rendering
 			Matrix4 staticViewProjectMatrix;
 
+			// the position of the camera
 			Vector3 viewPosition;
+
+			// The final render Texture
 			SharedPtr<Texture> outputTexture;
 
-
+			// Defines if the camera should render at all
 			bool shouldRenderToTexture;
+
+			// Camera Details
 			float aspectRatio;
 			bool isOrtho;
+
+			float camNear;
+			float camFar;
+
+			float FOV;
+
+			Frustum frustum;
 		};
+
+
+		struct ParticleElement
+		{
+			
+			Matrix4 transform;
+			float particleLifetime;
+			float fading;
+			size_t invocationCount;
+			size_t materialIndex;
+			bool isRelative;
+			SharedPtr<ShaderStorageBuffer> SSBO;
+		};
+
 
 		// ================ DEBUG RENDERING ELEMENTS
 
@@ -173,8 +232,11 @@ namespace SaltnPepperEngine
 			// The indices of all the Opaque Shader Elements
 			std::vector<size_t> opaqueElementList;
 
-			// The indices of all the Opaque Shader Elements
-			std::vector<size_t>transparentElementList;
+			// The indices of all the Transparent Shader Elements
+			std::vector<size_t> transparentElementList;
+
+			// The indices of all the Custom Shader Elements
+			std::vector<size_t> customElementList;
 
 			// properties of all the Cameras that are in the scene
 			std::vector<CameraElement> cameraList;
@@ -183,6 +245,7 @@ namespace SaltnPepperEngine
 			int textureBindIndex = 0;
 
 			SharedPtr<Texture> defaultTextureMap;
+			SharedPtr<Texture> defaultNormalMap;
 
 			SkyboxObject SkyboxCubeObject;
 			Skybox skybox;
@@ -193,6 +256,36 @@ namespace SaltnPepperEngine
 			SharedPtr<FrameBuffer> depthFrameBuffer;
 			SharedPtr<FrameBuffer> bloomFrameBuffer;
 
+		};
+
+		struct ShadowInformation
+		{
+			SharedPtr<DepthTextureArray> shadowMap;
+			uint32_t numShadowMaps = 4;
+			int shadowMapSize = 1024;
+			bool shadowMapInvalidated = true;
+
+			float cascadeFarPlaneOffset = 50.0f;
+			float cascadeNearPlaneOffset = -50.0f;
+
+			float cascadeSplitLambda = 0.92f;
+			float lightSize = 1.5f;
+			float maxShadowDistance = 500.0f;
+			float shadowFade = 40.0f;
+			float cascadeFade = 3.0f;
+			float initialBias = 0.0f;
+
+			Matrix4 biasMatrix = Matrix4(
+				0.5, 0.0, 0.0, 0.0,
+				0.0, 0.5, 0.0, 0.0,
+				0.0, 0.0, 1.0, 0.0,
+				0.5, 0.5, 0.0, 1.0);
+
+			std::array<Matrix4, SHADOWMAP_MAX> shadowProjView;
+			std::array<Vector4, SHADOWMAP_MAX> splitDepth;
+			Matrix4 lightMatrix;
+
+			std::array<Frustum, SHADOWMAP_MAX> cascadeFrustums;
 		};
 
 
@@ -206,7 +299,11 @@ namespace SaltnPepperEngine
 		private:
 
 
+			LightElement dirElement;
+
 			PipeLine m_pipeline;
+
+			ShadowInformation shadowData;
 
 			Vector2Int viewPort;
 			DebugDrawData m_debugDrawData;
@@ -217,18 +314,15 @@ namespace SaltnPepperEngine
 			std::vector<LineVertexElement*> m_LineBufferBase;
 			std::vector<PointVertexElement*> m_PointBufferBase;
 
-			
-			
-			
 
 			unsigned int clearMask = 0;
 
 
 		public:
 
-			SharedPtr<FrameBuffer> SecondaryFrameBuffer;
-			SharedPtr<Texture> SecondaryTexture;
-			unsigned int rbo;
+			/*SharedPtr<FrameBuffer> SecondaryFrameBuffer;
+			SharedPtr<Texture> SecondaryTexture;*/
+			//unsigned int rbo;
 
 		private:
 
@@ -242,7 +336,12 @@ namespace SaltnPepperEngine
 			void DrawElement(const CameraElement& camera, SharedPtr<Shader>& shader, const RenderElement& element);
 
 
-			void SetLightUniform(SharedPtr<Shader>& shader);
+			void SetLightUniform(const CameraElement& camera, SharedPtr<Shader>& shader);
+
+
+			void CalculateShadowCascades(const CameraElement& camera, LightElement& directioanlLightElement);
+
+			void SetBoneMatricesUniform(SharedPtr<Shader>& shader, const std::vector<Matrix4>& boneTs);
 
 
 		public:
@@ -255,11 +354,18 @@ namespace SaltnPepperEngine
 			void SetSkyboxIntensity(float intensity);
 			const float GetSkyboxIntensity() const;
 
-			const PipeLine& GetPipeLine() const;
-			//PipeLine& GetPipeLine();
+			void BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId);
+			void BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader);
+			//const PipeLine& GetPipeLine() const;
+			PipeLine& GetPipeLine();
 
 			// Draws the provided Elements with the provided shader
-			void ForwardPass(SharedPtr<Shader> shader, const CameraElement& camera, const MaterialType type);
+
+
+			void ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList);
+
+
+
 			void SkyBoxPass(SharedPtr<Shader> shader, const CameraElement& camera);
 			void DebugPass(const CameraElement& camera);
 
@@ -267,10 +373,15 @@ namespace SaltnPepperEngine
 			CameraElement GenerateCameraElement(Camera& cameraRef, Transform& transform);
 
 			// Adds a Render Element to the Queue
-			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform);
+			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform, const std::vector<Matrix4>& boneTs);
 			void ProcessLightElement(Light& light, Transform& transform);
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 
+
+			// Particle Stuff
+			void ComputeParticles(std::vector<ParticleElement>& particleList, SharedPtr<ComputeShader>& computeShader);
+			void SortParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList);
+			void DrawParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList, SharedPtr<Shader> shader);
 
 			SharedPtr<FrameBuffer>& GetPostProcessFrameBuffer();
 
@@ -279,7 +390,7 @@ namespace SaltnPepperEngine
 			void RenderToAttachedFrameBuffer(const SharedPtr<Shader>& shader);
 
 
-			void Clear();
+			void Clear(bool clearDepth = false);
 			void ClearRenderCache();
 
 			void SetViewport(int x, int y, int width, int height) const;

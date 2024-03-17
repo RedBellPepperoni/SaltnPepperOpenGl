@@ -1,56 +1,19 @@
 {
     "value0": {},
-    "value1": 4,
-    "value2": 4,
+    "value1": 5,
+    "value2": 3,
     "value3": 1048576,
     "value4": 1048577,
-    "value5": 2,
-    "value6": 3,
-    "value7": 4,
-    "value8": 1048576,
-    "value9": {
+    "value5": 3,
+    "value6": 1048578,
+    "value7": 1048580,
+    "value8": 3,
+    "value9": 1048576,
+    "value10": {
         "Position": {
-            "value0": 0.0,
+            "value0": -0.16537511348724366,
             "value1": 0.0,
-            "value2": 0.0
-        },
-        "Rotation": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 0.0
-        },
-        "Scale": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0
-        }
-    },
-    "value10": 1048577,
-    "value11": {
-        "Position": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0
-        },
-        "Rotation": {
-            "value0": 0.0,
-            "value1": 0.0,
-            "value2": 0.0,
-            "value3": 0.0
-        },
-        "Scale": {
-            "value0": 1.0,
-            "value1": 1.0,
-            "value2": 1.0
-        }
-    },
-    "value12": 2,
-    "value13": {
-        "Position": {
-            "value0": 0.0,
-            "value1": 1.5129272937774659,
-            "value2": -2.2223429679870607
+            "value2": 2.467482566833496
         },
         "Rotation": {
             "value0": 0.0,
@@ -64,89 +27,96 @@
             "value2": 1.0
         }
     },
-    "value14": 3,
-    "value15": {
+    "value11": 3,
+    "value12": {
         "Position": {
-            "value0": -1.0605297088623047,
+            "value0": -5.050986295884741e-10,
             "value1": 0.0,
-            "value2": -2.2223429679870607
+            "value2": -0.13558638095855714
         },
         "Rotation": {
             "value0": 0.0,
-            "value1": 0.0,
+            "value1": 1.862645149230957e-9,
             "value2": 0.0,
             "value3": 1.0
         },
         "Scale": {
             "value0": 1.0,
-            "value1": 1.0,
+            "value1": 1.0000053644180298,
             "value2": 1.0
         }
     },
-    "value16": 4,
-    "value17": 1048576,
-    "value18": {
+    "value13": 1048577,
+    "value14": {
+        "Position": {
+            "value0": 0.0,
+            "value1": 0.0,
+            "value2": 0.0
+        },
+        "Rotation": {
+            "value0": -0.17631569504737855,
+            "value1": 0.3475351333618164,
+            "value2": 0.06671107560396195,
+            "value3": 0.918521523475647
+        },
+        "Scale": {
+            "value0": 1.0,
+            "value1": 1.0,
+            "value2": 0.9999998807907105
+        }
+    },
+    "value15": 3,
+    "value16": 1048576,
+    "value17": {
         "value0": 12027419739054640569
     },
-    "value19": 1048577,
-    "value20": {
+    "value18": 1048577,
+    "value19": {
         "value0": 17469970600051877933
     },
-    "value21": 2,
-    "value22": {
-        "value0": 11758346955497839872
-    },
-    "value23": 3,
-    "value24": {
+    "value20": 3,
+    "value21": {
         "value0": 12997631924487157076
     },
-    "value25": 4,
-    "value26": 1048576,
-    "value27": {
+    "value22": 3,
+    "value23": 1048576,
+    "value24": {
         "Name": "Camera"
     },
-    "value28": 1048577,
-    "value29": {
+    "value25": 1048577,
+    "value26": {
         "Name": "Light"
     },
-    "value30": 2,
+    "value27": 3,
+    "value28": {
+        "Name": "SphereTest"
+    },
+    "value29": 3,
+    "value30": 1048576,
     "value31": {
-        "Name": "Yeeeeet"
+        "Active": true
     },
-    "value32": 3,
+    "value32": 1048577,
     "value33": {
-        "Name": "Yeeeeet"
-    },
-    "value34": 4,
-    "value35": 1048576,
-    "value36": {
         "Active": true
     },
-    "value37": 1048577,
-    "value38": {
+    "value34": 3,
+    "value35": {
         "Active": true
     },
-    "value39": 2,
-    "value40": {
-        "Active": true
-    },
-    "value41": 3,
-    "value42": {
-        "Active": true
-    },
-    "value43": 0,
-    "value44": 1,
-    "value45": 1048576,
-    "value46": {
+    "value36": 0,
+    "value37": 1,
+    "value38": 1048576,
+    "value39": {
         "OrthoScale": 1.0,
         "Aspect": 1.7777777910232545,
         "FOV": 60.0,
         "Near": 0.009999999776482582,
         "Far": 1000.0
     },
-    "value47": 1,
-    "value48": 1048577,
-    "value49": {
+    "value40": 1,
+    "value41": 1048577,
+    "value42": {
         "value0": {
             "value0": 0.0,
             "value1": 0.0,
@@ -161,21 +131,17 @@
         "value3": 0.0,
         "value4": 0.0,
         "value5": {
-            "value0": 1.0,
-            "value1": 0.0,
-            "value2": 0.0
+            "value0": -0.6149125695228577,
+            "value1": -0.37026840448379519,
+            "value2": -0.6962642073631287
         },
-        "value6": 2.0,
+        "value6": 1.0,
         "value7": 10.0
     },
-    "value50": 2,
-    "value51": 2,
-    "value52": {
-        "PrimitiveType": 4,
-        "FilePath": "Primitive"
-    },
-    "value53": 3,
-    "value54": {
+    "value43": 0,
+    "value44": 1,
+    "value45": 3,
+    "value46": {
         "PrimitiveType": 3,
         "FilePath": "Primitive"
     }

@@ -28,20 +28,39 @@
 #include "Engine/Core/Rendering/Geometry/Model.h"
 
 // ============= RENDERING ESSENTAILS ================
-#include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Image.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
+#include "Engine/Core/Rendering/Lights/Light.h"
+
+//=============== CAMERA STUFF ===============
+#include "Engine/Core/Rendering/Camera/Camera.h"
+#include "Engine/Core/Rendering/Camera/CameraController.h"
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+#include "Engine/Core/Rendering/Camera/EditorCameraController.h"
 
 // ========= SCENE and ECS STUFF ===================
+
+#include "Engine/Core/Components/SceneComponents.h"
+#include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Scene/Scene.h" 
 #include "Engine/Core/Scene/SceneGraph.h"
 #include "Engine/Core/EntitySystem/Entity.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
-#include "Engine/Core/Components/SceneComponents.h"
-#include "Engine/Core/Components/Transform.h"
 
-#include "Engine/Core/Rendering/Lights/Light.h"
+
+
+// ============= PHYSICS SYSTEM ==============
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
+#include "Engine/Core/Physics/Collision/BroadPhase/OctreeBroadPhase.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
+
+#include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+#include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
+
 
 
 using namespace SaltnPepperEngine;

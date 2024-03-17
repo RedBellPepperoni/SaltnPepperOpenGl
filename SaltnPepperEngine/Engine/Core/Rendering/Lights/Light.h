@@ -56,7 +56,7 @@ namespace SaltnPepperEngine
 					return LightType::PointLight;
 				}
 
-				LOG_ERROR("UNsupportedLight Type String");
+				LOG_ERROR("UnSupportedLight Type String");
 				return LightType::DirectionLight;
 			}
 

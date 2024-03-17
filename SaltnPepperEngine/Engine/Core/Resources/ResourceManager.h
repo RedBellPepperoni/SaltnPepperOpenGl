@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Engine/Core/Memory/MemoryDefinitions.h"
+
 #include <unordered_map>
 
 namespace SaltnPepperEngine
@@ -13,6 +14,7 @@ namespace SaltnPepperEngine
 		class AudioManager;
 	}
 
+	class SkinnedAnimation;
 
 	namespace Rendering
 	{
@@ -22,14 +24,16 @@ namespace SaltnPepperEngine
 
 		enum class TextureFormat : uint8_t;
 		class Texture;
-
+		class SkinnedModel;
 	}
 
 	class Model;
+	
 
 	using Rendering::Shader;
 
 	using Rendering::Material;
+	using Rendering::SkinnedModel;
 
 	using Rendering::Texture;
 	using Rendering::TextureFormat;
@@ -220,6 +224,24 @@ namespace SaltnPepperEngine
 		SharedPtr<CubeMap> LoadCubeMap(const std::string& friendlyName, const std::string& right, const std::string& left, const std::string& top, const std::string& bottom, const std::string& front, const std::string& back);
 	};
 
+	class SkinnedModelLibrary : public ResourceLibrary<SkinnedModel>
+	{
+	public:
+
+		SkinnedModelLibrary() = default;
+		virtual ~SkinnedModelLibrary() = default;
+
+		SharedPtr<SkinnedModel> LoadModel(const std::string& friendlyName,const std::string& filePath);
+	};
+
+	class AnimationLibrary : public ResourceLibrary<SkinnedAnimation>
+	{
+	public:
+		AnimationLibrary() = default;
+		virtual ~AnimationLibrary() = default;
+
+		SharedPtr<SkinnedAnimation> LoadAnimation(const std::string& friendlyName, const std::string& filePath, SharedPtr<SkinnedModel>& modelRef);
+	};
 	/*class AudioLibrary : public ResourceLibrary<AudioClip>
 	{
 	public:

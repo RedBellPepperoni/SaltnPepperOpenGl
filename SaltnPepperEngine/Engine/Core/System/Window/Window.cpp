@@ -378,6 +378,7 @@ namespace SaltnPepperEngine
                 glfwSetInputMode(windowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
         }
+
         void Window::ToggleWireframe()
         {
             wireFrame = !wireFrame;
@@ -388,7 +389,7 @@ namespace SaltnPepperEngine
             }
             else
             {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                glPolygonMode(GL_FRONT, GL_FILL);
             }
 
         }

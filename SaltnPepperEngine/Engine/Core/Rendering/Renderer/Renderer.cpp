@@ -5,8 +5,11 @@
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Textures/Texture.h"
+#include "Engine/Core/Rendering/Textures/DepthTextureArray.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Shader/Shader.h"
+
+#include "Engine/Core/Rendering/Shader/Compute.h"
 #include "Engine/Core/Rendering/Buffers/VertexArray.h"
 #include "Engine/Core/Rendering/RenderDefinitions.h"
 #include "Engine/Core/Rendering/Camera/Camera.h"
@@ -14,6 +17,7 @@
 #include "Engine/Core/Resources/ResourceManager.h"
 #include "Engine/Core/Components/Transform.h"
 
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h" 
 
 #include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
@@ -22,6 +26,8 @@
 
 namespace SaltnPepperEngine
 {
+
+  
 
 	namespace Rendering
 	{
@@ -83,8 +89,6 @@ namespace SaltnPepperEngine
             m_debugDrawData.VBO = Factory<VertexBuffer>::Create(UsageType::DYNAMIC_DRAW);
 
 
-
-
             // Hard coding for now
             // Realistically this should be set up for each shader when the shader gets compiled , probably?
             m_pipeline.vertexLayout =
@@ -94,6 +98,9 @@ namespace SaltnPepperEngine
                 VertexAttribute::Attribute<Vector3>(), // normal
                 VertexAttribute::Attribute<Vector3>(), // tangent
                 VertexAttribute::Attribute<Vector3>(), // bitangent
+
+                VertexAttribute::Attribute<Vector4>(), // boneId
+                VertexAttribute::Attribute<Vector4>(), // boneWeight
             };
 
 
@@ -115,18 +122,21 @@ namespace SaltnPepperEngine
             // ============== LOADING TEXTURES =======================
             // Loading default Albedo texture
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultTexture", "Engine\\Textures\\DefaultTexture.png", TextureFormat::RGB);
-            Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("FieldSkybox", "Engine\\Textures\\fieldRight.png", "Engine\\Textures\\fieldLeft.png", "Engine\\Textures\\fieldTop.png", "Engine\\Textures\\fieldBottom.png", "Engine\\Textures\\fieldFront.png", "Engine\\Textures\\fieldBack.png");
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("Black", "Engine\\Textures\\black.png", TextureFormat::RGBA);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultNormal", "Engine\\Textures\\defaultnormalmap.png", TextureFormat::RGBA);
+            
+            Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("DuskSkybox", "Engine\\Textures\\sky_right.png", "Engine\\Textures\\sky_left.png", "Engine\\Textures\\sky_top.png", "Engine\\Textures\\sky_bottom.png", "Engine\\Textures\\sky_front.png", "Engine\\Textures\\sky_back.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
 
-
             m_pipeline.defaultTextureMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultTexture");
+            m_pipeline.defaultNormalMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultNormal");
 
             m_pipeline.SkyboxCubeObject.Init();
 
 
 
-            m_pipeline.skybox.cubeMap = Application::GetCurrent().GetCubeMapLibrary()->GetResource("SpaceSkybox");
-            m_pipeline.skybox.SetIntensity(1.20f);
+            m_pipeline.skybox.cubeMap = Application::GetCurrent().GetCubeMapLibrary()->GetResource("DuskSkybox");
+            m_pipeline.skybox.SetIntensity(0.62f);
 
 
             m_pipeline.postprocessFrameBuffer = MakeShared<FrameBuffer>();
@@ -135,27 +145,26 @@ namespace SaltnPepperEngine
 
             m_pipeline.rectangularObject.Init(1.0f);
 
-            SecondaryFrameBuffer = MakeShared<FrameBuffer>();
-            SecondaryTexture = MakeShared<Texture>();
 
-            Vector2Int viewport = Application::GetCurrent().GetWindowSize();
 
-            SecondaryTexture->Load(nullptr, viewport.x, viewport.y, 3, false, TextureFormat::RGB);
-            SecondaryTexture->SetFilePath("RenderTexture");
-            SecondaryTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            shadowData.numShadowMaps = 4;
+            shadowData.shadowMapSize = 1024;
+            shadowData.shadowMapInvalidated = true;
 
-            SecondaryFrameBuffer->AttachTexture(SecondaryTexture);
-            
+            shadowData.cascadeFarPlaneOffset = 50.0f;
+            shadowData.cascadeNearPlaneOffset = -50.0f;
 
-            
-            glGenRenderbuffers(1, &rbo);
-            glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, viewport.x, viewport.y); // use a single renderbuffer object for both a depth AND stencil buffer.
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
+            shadowData.cascadeSplitLambda = 0.92f;
+            shadowData.lightSize = 1.5f;
+            shadowData.maxShadowDistance = 500.0f;
+            shadowData.shadowFade = 40.0f;
+            shadowData.cascadeFade = 3.0f;
+            shadowData.initialBias = 0.0f;
 
-           
-            SecondaryFrameBuffer->Validate();
-            SecondaryFrameBuffer->UnBind();
+
+            shadowData.shadowMap = MakeShared<DepthTextureArray>(shadowData.shadowMapSize, shadowData.shadowMapSize, shadowData.numShadowMaps);
+        
+        
         }
 
 
@@ -172,9 +181,43 @@ namespace SaltnPepperEngine
             m_pipeline.skybox.SetIntensity(intensity);
         }
 
+        void Renderer::SetBoneMatricesUniform(SharedPtr<Shader>& shader, const std::vector<Matrix4>& boneTs)
+        {
+            const std::string uniformName = "boneTransforms[";
+
+            for (size_t index = 0; index < boneTs.size(); index++)
+            {
+                std::string finalName = uniformName + std::to_string(index) + "]";
+                shader->SetUniform(finalName, boneTs[index]);
+
+            }
+        }
+
         const float Renderer::GetSkyboxIntensity() const
         {
             return m_pipeline.skybox.GetIntensity();
+        }
+
+        void Renderer::BindSkyBoxInformation(const CameraElement& camera, SharedPtr<Shader>& shader, int textureBindId)
+        {
+            m_pipeline.skybox.cubeMap->Bind(textureBindId);
+            shader->SetUniform("skybox", m_pipeline.skybox.cubeMap->getBoundId());
+            shader->SetUniform("Rotation", Matrix3(1.0f));
+
+
+            // get the intensity from the pipeline
+            float skyluminance = m_pipeline.skybox.GetIntensity();
+
+            skyluminance = skyluminance < 0.0f ? Skybox::Defaultintensity : skyluminance;
+
+            shader->SetUniform("luminance", skyluminance);
+
+        }
+
+        void Renderer::BindCameraInformation(const CameraElement& camera, SharedPtr<Shader>& shader)
+        {
+            shader->SetUniform("viewProj", camera.viewProjMatrix);
+            shader->SetUniform("cameraView", camera.viewPosition);
         }
 
 
@@ -195,7 +238,7 @@ namespace SaltnPepperEngine
             m_pipeline.skybox.cubeMap = cubemap;
         }
 
-        void Renderer::ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform)
+        void Renderer::ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform, const std::vector<Matrix4>& boneTs)
         {
             if (material->albedoColour.a <= 0.0f)
             {
@@ -215,6 +258,11 @@ namespace SaltnPepperEngine
                 m_pipeline.MeshList.push_back(mesh);
             }
 
+            if (mesh->GetSkinned())
+            {
+                newElement.boneMatrices = boneTs;
+            }
+
             if (material != nullptr)
             {
                 newElement.materialIndex = m_pipeline.MaterialList.size();
@@ -224,6 +272,11 @@ namespace SaltnPepperEngine
                 {
                     material->textureMaps.albedoMap = m_pipeline.defaultTextureMap;
                 }
+
+               /* if (material->textureMaps.normalMap == nullptr)
+                {
+                    material->textureMaps.normalMap = m_pipeline.defaultNormalMap;
+                }*/
 
                 m_pipeline.MaterialList.push_back(material);
             }
@@ -254,9 +307,14 @@ namespace SaltnPepperEngine
                 break;
 
             case MaterialType::Transparent:
+                m_pipeline.transparentElementList.push_back(elementIndex);
                 break;
 
             case MaterialType::Masked:
+
+            case MaterialType::Custom:
+                m_pipeline.customElementList.push_back(elementIndex);
+                break;
 
                 break;
 
@@ -283,11 +341,17 @@ namespace SaltnPepperEngine
             DrawIndices(DrawType::TRIANGLES, rectObject.IndexCount, 0);
         }
 
-        void Renderer::Clear()
+        void Renderer::Clear(bool clearDepth)
         {
-            GLDEBUG(glClearColor(0.5f, 0.1f, 0.1f, 1.0f));
-            //GLDEBUG(glClear(clearMask));
-            GLDEBUG(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+            GLDEBUG(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
+            if (clearDepth)
+            {
+                GLDEBUG(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+            }
+            else
+            {
+                GLDEBUG(glClear(GL_COLOR_BUFFER_BIT));
+            }
         }
 
         void Renderer::ClearRenderCache()
@@ -296,9 +360,13 @@ namespace SaltnPepperEngine
             m_pipeline.MaterialList.clear();
             m_pipeline.MeshList.clear();
             m_pipeline.opaqueElementList.clear();
+            m_pipeline.transparentElementList.clear();
+            m_pipeline.customElementList.clear();
             m_pipeline.renderElementList.clear();
             m_pipeline.lightElementList.clear();
             m_pipeline.textureBindIndex = 0;
+
+            dirElement.type = LightType::SpotLight;
 
         }
 
@@ -322,13 +390,9 @@ namespace SaltnPepperEngine
         {
             // Unbinding any framebuffer will revert thback to the default frame buffer ,(the one at 0)
              // doing this allows us to render to application window
-            //m_pipeline.postprocessFrameBuffer->UnBind();
-
-            SecondaryFrameBuffer->UnBind();
+            m_pipeline.postprocessFrameBuffer->UnBind();
 
             SetViewport(0, 0, GetViewport().x, GetViewport().y);
-
-            //GLDEBUG(glClear(GL_COLOR_BUFFER_BIT));
             Clear();
 
         }
@@ -342,49 +406,32 @@ namespace SaltnPepperEngine
 
 
 
-        void Renderer::ForwardPass(SharedPtr<Shader> shader, const CameraElement& camera, const MaterialType type)
+        void Renderer::ObjectPass(SharedPtr<Shader> shader, const CameraElement& camera, std::vector<size_t>& elementList)
         {
-
-            if (shader == nullptr)
-            {
-                LOG_CRITICAL("FORWARD PASS : Material type :[{0}] : Shader not loaded", (int)type);
-            }
+            //m_pipeline.textureBindIndex = 0;
 
 
+
+            LightElement dirElement;
+            dirElement.type = LightType::SpotLight;
+
+            if (shader == nullptr) { LOG_CRITICAL("Object PASS :  Shader not loaded"); }
+
+            // Nothing to draw
+            if (elementList.empty()) { return; }
+        
             // ============Set Shader Unifroms here ==================
             shader->Bind();
 
+            BindCameraInformation(camera, shader);
 
-            // Setting teh View Projection Matrix from the camera
-            shader->SetUniform("viewProj", camera.viewProjMatrix);
+            SetLightUniform(camera,shader);
 
-
-            SetLightUniform(shader);
-
-
-            std::vector<size_t> elementList;
-
-            switch (type)
-            {
-            case MaterialType::Opaque: elementList = m_pipeline.opaqueElementList;
-
-                break;
-            default:
-                break;
-            }
-
-
-            if (elementList.empty())
-            {
-                //LOG_ERROR("No Eleemnts to Draw");
-                return;
-            }
-
+           
             for (int index = 0; index < elementList.size(); index++)
             {
                 // get the Elements by index from the Render Element List
-                RenderElement elementToDraw = m_pipeline.renderElementList[elementList[index]];
-
+                RenderElement& elementToDraw = m_pipeline.renderElementList[elementList[index]];
                 // Send the Data to Draw that element
                 DrawElement(camera, shader, elementToDraw);
             }
@@ -422,12 +469,15 @@ namespace SaltnPepperEngine
             // Bind and set Shader Unifroms
             shader->Bind();
             shader->SetUniform("StaticViewProjection", camera.staticViewProjectMatrix);
-            shader->SetUniform("Rotation", Matrix3(1.0f));
-            shader->SetUniform("gamma", 2.2f);
-            shader->SetUniform("luminance", skyluminance);
+            //shader->SetUniform("Rotation", Matrix3(1.0f));
+            //shader->SetUniform("gamma", 2.2f);
+            //shader->SetUniform("luminance", skyluminance);
 
-            // Bind the skybox texture
-            m_pipeline.skybox.cubeMap->Bind();
+            //// Bind the skybox texture
+            //m_pipeline.skybox.cubeMap->Bind();
+
+            BindSkyBoxInformation(camera, shader,0);
+
 
             // Bind the Skybox Object VAO
             SkyObject.GetVAO().Bind();
@@ -442,6 +492,136 @@ namespace SaltnPepperEngine
 
 
 
+        }
+
+        void Renderer::CalculateShadowCascades(const CameraElement& camera, LightElement& directioanlLightElement)
+        {
+            float cascadeSplits[SHADOWMAP_MAX];
+            float cascadeRadius[SHADOWMAP_MAX];
+
+            float nearClip = camera.camNear;
+            float farClip = shadowData.maxShadowDistance * 1.2f;
+            float clipRange = farClip - nearClip;
+
+            float minZ = nearClip;
+            float maxZ = nearClip + clipRange;
+            float range = maxZ - minZ;
+            float ratio = maxZ / minZ;
+
+            // Calculate split depths based on view camera frustum
+            // Based on method presented in https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch10.html
+            for (uint32_t i = 0; i < shadowData.numShadowMaps; i++)
+            {
+                float p = static_cast<float>(i + 1) / static_cast<float>(shadowData.numShadowMaps);
+                float log = minZ * std::pow(ratio, p);
+                float uniform = minZ + range * p;
+                float d = shadowData.cascadeSplitLambda * (log - uniform) + uniform;
+                cascadeSplits[i] = (d - nearClip) / clipRange;
+            }
+
+            cascadeSplits[3] = 0.35f;
+            float lastSplitDist = 0.0f;
+            Matrix4 CameraProj = glm::perspective(glm::radians(camera.FOV), camera.aspectRatio, nearClip, farClip);
+
+            const Matrix4 invCam = Inverse(CameraProj * Inverse(camera.worldMatrix));
+
+            for (uint32_t i = 0; i < shadowData.numShadowMaps; i++)
+            {
+                float splitDist = cascadeSplits[i];
+
+                Vector3 frustumCorners[8] = {
+                    Vector3(-1.0f, 1.0f, 0.0f),
+                    Vector3(1.0f, 1.0f, 0.0f),
+                    Vector3(1.0f, -1.0f, 0.0f),
+                    Vector3(-1.0f, -1.0f, 0.0f),
+                    Vector3(-1.0f, 1.0f, 1.0f),
+                    Vector3(1.0f, 1.0f, 1.0f),
+                    Vector3(1.0f, -1.0f, 1.0f),
+                    Vector3(-1.0f, -1.0f, 1.0f),
+                };
+
+                // Project frustum corners into world space
+                for (uint32_t j = 0; j < 8; j++)
+                {
+                    Vector4 invCorner = invCam * Vector4(frustumCorners[j], 1.0f);
+                    frustumCorners[j] = (invCorner / invCorner.w);
+                }
+
+                for (uint32_t j = 0; j < 4; j++)
+                {
+                    Vector3 dist = frustumCorners[j + 4] - frustumCorners[j];
+                    frustumCorners[j + 4] = frustumCorners[j] + (dist * splitDist);
+                    frustumCorners[j] = frustumCorners[j] + (dist * lastSplitDist);
+                }
+
+                lastSplitDist = cascadeSplits[i];
+
+                // Get frustum center
+                Vector3 frustumCenter = Vector3(0.0f);
+                for (uint32_t j = 0; j < 8; j++)
+                {
+                    frustumCenter += frustumCorners[j];
+                }
+                frustumCenter /= 8.0f;
+
+                float radius = 0.0f;
+                for (uint32_t j = 0; j < 8; j++)
+                {
+                    float distance = Distance(frustumCorners[j], frustumCenter);
+                    radius = Max(radius, distance);
+                }
+
+                // Temp work around to flickering when rotating camera
+                // Sphere radius for lightOrthoMatrix should fix this
+                // But radius changes as the camera is rotated which causes flickering
+                // const float value = 16.0f;
+                // radius = std::ceil(radius *value) / value;
+
+                static const float roundTo[8] = { 5.0f, 5.0f, 20.0f, 200.0f, 400.0f, 400.0f, 400.0f, 400.0f };
+
+                int roundedValue = static_cast<int>(std::ceil(radius / 5.0));
+                // Multiply the rounded value by 5 to get the nearest multiple of 5
+                radius = roundedValue * 5.0f;
+
+
+
+                cascadeRadius[i] = radius;
+
+                Vector3 maxExtents = Vector3(radius);
+                Vector3 minExtents = -maxExtents;
+
+                Vector3 lightDir = Normalize(-directioanlLightElement.direction);
+                Matrix4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, shadowData.cascadeFarPlaneOffset, maxExtents.z - minExtents.z + shadowData.cascadeFarPlaneOffset);
+                Matrix4 LightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, Vector3(0.0f, 0.0f, 1.0f));
+
+                auto shadowProj = lightOrthoMatrix * LightViewMatrix;
+
+                const bool StabilizeCascades = true;
+                if (StabilizeCascades)
+                {
+                    // Create the rounding matrix, by projecting the world-space origin and determining
+                    // the fractional offset in texel space
+                    Vector4 shadowOrigin = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+                    shadowOrigin = shadowProj * shadowOrigin;
+                    shadowOrigin *= (shadowData.shadowMapSize * 0.5f);
+
+                    Vector4 roundedOrigin = glm::round(shadowOrigin);
+                    Vector4 roundOffset = roundedOrigin - shadowOrigin;
+                    roundOffset = roundOffset * (2.0f / shadowData.shadowMapSize);
+                    roundOffset.z = 0.0f;
+                    roundOffset.w = 0.0f;
+
+                    lightOrthoMatrix[3] += roundOffset;
+                }
+                // Store split distance and matrix in cascade
+                shadowData.splitDepth[i] = Vector4((camera.camNear + splitDist * clipRange) * -1.0f);
+                shadowData.shadowProjView[i] = lightOrthoMatrix * LightViewMatrix;
+
+                if (i == 0)
+                {
+                    shadowData.lightMatrix = glm::inverse(LightViewMatrix);
+                }
+            }
         }
 
         void Renderer::DebugPassInternal(const CameraElement& camera, bool depthtest)
@@ -520,18 +700,71 @@ namespace SaltnPepperEngine
         {
             m_pipeline.textureBindIndex = 0;
 
-            uint32_t shaderId = shader->GetProgramId();
+            uint32_t shaderId = shader->GetNativeHandle();
 
 
             SharedPtr<Mesh>& mesh = m_pipeline.MeshList[element.meshIndex];
-            SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
+           // SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
+            SharedPtr<Material>& mat = mesh->GetMaterial();
+
+            shader->SetUniform("isSkinned", mesh->GetSkinned());
+
+
+
+            if (mesh->GetSkinned())
+            {
+                SetBoneMatricesUniform(shader, element.boneMatrices);
+            }
+
 
             if (mat != nullptr)
             {
+
                 mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
                 shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
-                //shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedomapFactor);
+
+                if (mat->textureMaps.normalMap != nullptr)
+                {
+                    mat->textureMaps.normalMap->Bind(m_pipeline.textureBindIndex++);
+                    shader->SetUniform("mapNormal", mat->textureMaps.normalMap->GetBoundId());
+                }
+
+                if (mat->m_type == MaterialType::Transparent)
+                {
+
+                    BindSkyBoxInformation(camera,shader, m_pipeline.textureBindIndex++);
+
+                    shader->SetUniform("materialProperties.Metallic", mat->metallic);
+                    shader->SetUniform("materialProperties.Reflectance", mat->roughness);
+
+                    int skybodId = m_pipeline.skybox.cubeMap->getBoundId();
+                    shader->SetUniform("skybox", skybodId);
+
+                }
+
+                if (mat->m_type == MaterialType::Custom)
+                {
+                    float time = Time::CurrentTime();
+                    mat->textureMaps.metallicMap->Bind(m_pipeline.textureBindIndex++);
+                    shader->SetUniform("mapMetallic", mat->textureMaps.metallicMap->GetBoundId());
+                    shader->SetUniform("shaderTime",time);
+
+                    if (mat->name == "Distort")
+                    {
+                        shader->SetUniform("distort",true);
+                    }
+                    else
+                    {
+                        shader->SetUniform("distort", false);
+                    }
+                }
+
+                // Opaque Shader
+                shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedoMapFactor);
                 shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
+
+                shader->SetUniform("materialProperties.NormalMapFactor", mat->normalMapFactor);
+
                 shader->SetUniform("materialProperties.Metallic", mat->metallic);
 
             }
@@ -544,8 +777,8 @@ namespace SaltnPepperEngine
 
             shader->SetUniform("normalMat", element.NormalMatrix);
 
-            shader->SetUniform("cameraView", camera.viewPosition);
-
+            shadowData.shadowMap->Bind(m_pipeline.textureBindIndex++);
+            shader->SetUniform("mapShadow", shadowData.shadowMap->GetBoundId());
 
 
 
@@ -577,25 +810,32 @@ namespace SaltnPepperEngine
 
         }
 
-        void Renderer::SetLightUniform(SharedPtr<Shader>& shader)
+        void Renderer::SetLightUniform(const CameraElement& camera,SharedPtr<Shader>& shader)
         {
+            dirElement.type = LightType::SpotLight;
+           
+            int lightCount = 0;
 
-            shader->SetUniform("uboLights.lightCount", (int)m_pipeline.lightElementList.size());
 
-
-            for (LightElement element : m_pipeline.lightElementList)
+            for (LightElement& element : m_pipeline.lightElementList)
             {
+              /*  if (element.type != LightType::DirectionLight)
+                {
+                    bool insideFrustum = camera.frustum.Intersects(BoundingSphere(Vector3(element.position), element.radius*100.0f));
+                }*/
 
-                const std::string colorUniform = element.uniformName + ".color";
-                const std::string positionUniform = element.uniformName + ".position";
-                const std::string directionUniform = element.uniformName + ".direction";
-                const std::string intensityUniform = element.uniformName + ".intensity";
-                const std::string radiusUniform = element.uniformName + ".radius";
-                const std::string typeUniform = element.uniformName + ".type";
+                std::string name = "uboLights.lights[" + std::to_string(lightCount) + "]";
+
+                const std::string colorUniform = name + ".color";
+                const std::string positionUniform = name + ".position";
+                const std::string directionUniform = name + ".direction";
+                const std::string intensityUniform = name + ".intensity";
+                const std::string radiusUniform = name + ".radius";
+                const std::string typeUniform = name + ".type";
 
 
-                const std::string innerAngleUniform = element.uniformName + ".innerAngle";
-                const std::string outerAngleUniform = element.uniformName + ".outerAngle";
+                const std::string innerAngleUniform = name + ".innerAngle";
+                const std::string outerAngleUniform = name + ".outerAngle";
 
 
                 shader->SetUniform(colorUniform, element.color);
@@ -611,6 +851,8 @@ namespace SaltnPepperEngine
                 {
                 case LightType::DirectionLight:
                     shader->SetUniform(directionUniform, element.direction);
+
+                    dirElement = element;
 
                     break;
 
@@ -628,10 +870,67 @@ namespace SaltnPepperEngine
                 default:
                     break;
                 }
+
+                lightCount++;
+            }
+
+            shader->SetUniform("uboLights.lightCount",lightCount);
+
+            if (dirElement.type != LightType::DirectionLight)
+            {
+                LOG_ERROR("No Directional Light Found");
+                return;
             }
 
 
+            shadowData.shadowProjView;
+            shadowData.splitDepth;
 
+            Matrix4 lightView = shadowData.lightMatrix;
+
+            float width = (float)camera.outputTexture->GetWidth();
+            float height = (float)camera.outputTexture->GetHeight();
+            Matrix4 view = Inverse(camera.worldMatrix);
+
+            // true for now
+            int shadowEnabled = 1;
+
+
+            shader->SetUniform("uboLights.ViewMatrix", &view);
+            shader->SetUniform("uboLights.LightView", &lightView);
+
+            std::string uniformname;
+            for (int i = 0; i < shadowData.shadowProjView.size(); i++)
+            {
+                uniformname = "uboLights.ShadowTransform[" + std::to_string(i) + "]";
+                shader->SetUniform(uniformname, shadowData.shadowProjView[i]);
+            }
+           
+            for (int i = 0; i < shadowData.splitDepth.size(); i++)
+            {
+                uniformname = "uboLights.SplitDepths[" + std::to_string(i) + "]";
+                shader->SetUniform(uniformname, shadowData.splitDepth[i]);
+            }
+           
+            shader->SetUniform("uboLights.BiasMatrix", &shadowData.biasMatrix);
+            shader->SetUniform("uboLights.LightSize", &shadowData.lightSize);
+
+            shader->SetUniform("uboLights.ShadowFade", &shadowData.shadowFade);
+            shader->SetUniform("uboLights.CascadeFade", &shadowData.cascadeFade);
+
+            shader->SetUniform("uboLights.MaxShadowDist", &shadowData.maxShadowDistance);
+            shader->SetUniform("uboLights.InitialBias", &shadowData.initialBias);
+
+            shader->SetUniform("uboLights.Width", &width);
+            shader->SetUniform("uboLights.Height", &height);
+
+            shader->SetUniform("uboLights.castShadow", &shadowEnabled);
+            shader->SetUniform("uboLights.ShadowCount", &shadowData.numShadowMaps);
+            
+
+            const int renderMode = 0;
+            shader->SetUniform("renderMode", &renderMode);
+            
         }
 
 
@@ -671,7 +970,7 @@ namespace SaltnPepperEngine
             // Matrix4 transformMatrix = transform.GetLocalMatrix();
 
              // get the inverse of the Camera trasfrom
-            // Matrix4 view = Math::Inverse(transformMatrix);
+            // Matrix4 view = (transformMatrix);
             Matrix4 view = Math::Inverse(transformMatrix);
 
             // get the inverse of the Camera transform without any position data (only Rotation0
@@ -686,26 +985,38 @@ namespace SaltnPepperEngine
             //calculate the view projection of the static view (no positional data)
             Matrix4 staticProjView = proj * (staticView);
 
-            // Store the values
+            // Store the camera values
+
+            camera.worldMatrix = transformMatrix;
             camera.viewProjMatrix = projView;
             camera.staticViewProjectMatrix = staticProjView;
+
             camera.outputTexture = cameraRef.GetRenderTexture();
 
             camera.gBuffer = cameraRef.GetBuffers()->gBuffer;
+            camera.albedoTexture = cameraRef.GetBuffers()->albedoTexture;
+            camera.normalTexture = cameraRef.GetBuffers()->normalTexture;
+            camera.materialTexture = cameraRef.GetBuffers()->materialTexture;
+            camera.depthTexture = cameraRef.GetBuffers()->depthTexture;
 
+
+            camera.FOV = cameraRef.GetFOV();
+            camera.camNear = cameraRef.GetZNear();
+            camera.camFar = cameraRef.GetZFar();
+            camera.frustum = cameraRef.GetFrustum(view);
             return camera;
         }
 
 
-        const PipeLine& Renderer::GetPipeLine() const
-        {
-            return m_pipeline;
-        }
-
-      /*  PipeLine& Renderer::GetPipeLine()
+       /* const PipeLine& Renderer::GetPipeLine() const
         {
             return m_pipeline;
         }*/
+
+        PipeLine& Renderer::GetPipeLine()
+        {
+            return m_pipeline;
+        }
 
        
 
@@ -713,14 +1024,14 @@ namespace SaltnPepperEngine
 
         void Renderer::ProcessLightElement(Light& light, Transform& transform)
         {
-            size_t currentIndex = m_pipeline.lightElementList.size();
+            //size_t currentIndex = m_pipeline.lightElementList.size();  
 
             // Create anew Light Element;
             LightElement& lightElement = m_pipeline.lightElementList.emplace_back();
 
 
             lightElement.color = light.color;
-            lightElement.direction = light.direction;
+            lightElement.direction = light.direction = Normalize(transform.GetForwardVector());
             lightElement.innerAngle = light.innerAngle;
             lightElement.outerAngle = light.outerAngle;
             lightElement.intensity = light.intensity;
@@ -729,7 +1040,10 @@ namespace SaltnPepperEngine
             lightElement.radius = light.radius;
             lightElement.type = light.type;
 
-            lightElement.uniformName = "uboLights.lights[" + std::to_string(currentIndex) + "]";
+            //lightElement.uniformName = "uboLights.lights[" + std::to_string(currentIndex) + "]";
+
+
+
 
 
 
@@ -738,9 +1052,8 @@ namespace SaltnPepperEngine
         void Renderer::RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod)
         {
     
-            texture->Bind();
-            //int boundId = texture->GetBoundId();
-            int boundId = texture->GetHandle();
+            texture->Bind(0);
+            int boundId = texture->GetBoundId();
             shader->Bind();
             shader->SetUniform("tex", boundId);
             shader->SetUniform("lod", lod);
@@ -748,6 +1061,68 @@ namespace SaltnPepperEngine
             m_pipeline.rectangularObject.GetVAO()->Bind();
             DrawIndices(DrawType::TRIANGLES,  m_pipeline.rectangularObject.IndexCount, 0);
 
+            m_pipeline.rectangularObject.GetVAO()->UnBind();
+            //DrawVertices(DrawType::TRIANGLES, 0, 6);
+
+        }
+
+        void Renderer::ComputeParticles(std::vector<ParticleElement>& particleList, SharedPtr<ComputeShader>& computeShader)
+        {
+            if (particleList.empty())
+            {
+                return;
+            }
+
+            computeShader->Bind();
+            computeShader->SetUniform("dt", Min(Time::DeltaTime(), 1.0f / 60.0f));
+
+            for (ParticleElement& particleSystem : particleList)
+            {
+                particleSystem.SSBO->BindBase(0);
+
+                //computeShader->SetUniform("bufferOffset", (int)particleSystem.ParticleBufferOffset);
+                computeShader->SetUniform("lifetime", particleSystem.particleLifetime);
+                computeShader->SetUniform("spawnpoint", particleSystem.isRelative ? Vector3(0.0f) : Vector3(particleSystem.transform[3]));
+            
+                Compute::Dispatch(computeShader, particleSystem.invocationCount, 1, 1);
+            }
+            
+        }
+
+        void Renderer::SortParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList)
+        {
+            std::sort(particleList.begin(), particleList.end(),
+                [&camera](const ParticleElement& p1, const ParticleElement& p2)
+                {
+                    auto dist1 = camera.viewPosition - Vector3(p1.transform[3]);
+                    auto dist2 = camera.viewPosition - Vector3(p2.transform[3]);
+                    return Dot(dist1, dist1) > Dot(dist2, dist2);
+                });
+        }
+
+        void Renderer::DrawParticles(const CameraElement& camera, std::vector<ParticleElement>& particleList, SharedPtr<Shader> shader)
+        {
+            if (particleList.empty()){ return;}
+            
+            // Sort the particles
+            SortParticles(camera,particleList);
+
+            shader->Bind();
+            shader->IgnoreNonExistingUniform("viewportSize");
+            shader->IgnoreNonExistingUniform("depthTex");
+            shader->IgnoreNonExistingUniform("light");
+            shader->IgnoreNonExistingUniform("light");
+            shader->IgnoreNonExistingUniform("fading");
+            shader->IgnoreNonExistingUniform("lifetime");
+            shader->IgnoreNonExistingUniform("skybox");
+            shader->IgnoreNonExistingUniform("irradiance");
+            shader->IgnoreNonExistingUniform("skyboxRotation");
+            shader->IgnoreNonExistingUniform("intensity");
+
+
+            Vector2 viewportSize = Vector2((float)camera.outputTexture->GetWidth(), (float)camera.outputTexture->GetHeight());
+
+           
         }
 
         SharedPtr<FrameBuffer>& Renderer::GetPostProcessFrameBuffer()

@@ -121,7 +121,7 @@ namespace SaltnPepperEngine
 
 		void FrameBuffer::UseDrawBuffers(std::vector<Attachment> attachments) const 
 		{
-			std::vector<GLenum> attachmentTypes(20);
+			std::array<GLenum, 20> attachmentTypes{};
 
 			size_t size = attachments.size();
 
@@ -129,6 +129,13 @@ namespace SaltnPepperEngine
 			{
 				LOG_ERROR("FrameBuffer : More attachments than possible");
 				return;
+			}
+
+			Bind();
+
+			for (size_t i = 0; i < attachments.size(); i++)
+			{
+				attachmentTypes[i] = OpenGLAttachment[(int)attachments[i]];
 			}
 
 			GLDEBUG(glDrawBuffers((GLsizei)size, attachmentTypes.data()));

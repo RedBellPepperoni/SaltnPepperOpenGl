@@ -10,8 +10,10 @@ namespace SaltnPepperEngine
     namespace Rendering
     {
 
+        int Camera::cameraCount = 0;
+
         Camera::Camera()
-            : m_aspectRatio(16.0f / 9.0f)
+            : m_aspectRatio(16.0f / 10.0f)
             , m_near(0.01f)
             , m_far(1000.0f)
             , m_fov(60.0f)
@@ -174,7 +176,8 @@ namespace SaltnPepperEngine
 
         SharedPtr<Texture>& Camera::GetRenderTexture()
         {
-            return m_renderTexture;
+            //return m_renderTexture;
+            return m_cameraBuffers->albedoTexture;
         }
 
         Ray Camera::GetRay(float xPos, float yPos, Matrix4 viewMatrix, bool flipY)
@@ -224,10 +227,11 @@ namespace SaltnPepperEngine
 
         void Camera::InitializeRenderTexture()
         {
-
+            cameraCount++;
             Vector2Int viewport = Application::GetCurrent().GetWindowSize();
 
             m_renderTexture = Factory<Texture>::Create();
+            m_renderTexture->SetFilePath("RenderTex_" + std::to_string(cameraCount));
             m_renderTexture->Load(nullptr, viewport.x, viewport.y, 3, false, TextureFormat::RGB);
             m_renderTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
@@ -256,35 +260,38 @@ namespace SaltnPepperEngine
             gBuffer->AttachTextureExtra(materialTexture, Attachment::COLOR_ATTACH_2);
             gBuffer->AttachTextureExtra(depthTexture, Attachment::DEPTH_ATTACH);
 
+         
             std::vector attachments = {
                  Attachment::COLOR_ATTACH_0,
                  Attachment::COLOR_ATTACH_1,
                  Attachment::COLOR_ATTACH_2,
             };
 
+            
             gBuffer->UseDrawBuffers(attachments);
             gBuffer->Validate();
 
 
         }
+
         void CameraBuffers::Resize(int width, int height)
         {
 
-            this->albedoTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
-            this->albedoTexture->SetFilePath("camera albedo");
-            this->albedoTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            albedoTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
+            albedoTexture->SetFilePath("camera_albedo_" + std::to_string(Camera::cameraCount));
+            albedoTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
-            this->normalTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA16);
-            this->normalTexture->SetFilePath("camera normal");
-            this->normalTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            normalTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA16);
+            normalTexture->SetFilePath("camera_normal" + std::to_string(Camera::cameraCount));
+            normalTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
-            this->materialTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
-            this->materialTexture->SetFilePath("camera material");
-            this->materialTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            materialTexture->Load(nullptr, width, height, 3, false, TextureFormat::RGBA);
+            materialTexture->SetFilePath("camera_material" + std::to_string(Camera::cameraCount));
+            materialTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
-            this->depthTexture->LoadDepth(width, height, TextureFormat::DEPTH32F);
-            this->depthTexture->SetFilePath("camera depth");
-            this->depthTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
+            depthTexture->LoadDepth(width, height, TextureFormat::DEPTH32F);
+            depthTexture->SetFilePath("camera_depth" + std::to_string(Camera::cameraCount));
+            depthTexture->SetWarping(TextureWraping::CLAMP_TO_EDGE);
 
         }
     }

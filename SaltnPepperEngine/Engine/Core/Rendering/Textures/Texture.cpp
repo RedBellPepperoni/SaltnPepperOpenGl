@@ -105,15 +105,15 @@ namespace SaltnPepperEngine
 
 		Texture& Texture::operator=(Texture&& texture) noexcept
 		{
-			this->DeleteTexture();
+			DeleteTexture();
 
-			this->m_width = texture.m_width;
-			this->m_height = texture.m_height;
-			this->m_textureType = texture.m_textureType;
-			this->m_filePath = std::move(texture.m_filePath);
-			this->m_samples = texture.m_samples;
-			this->m_format = texture.m_format;
-			this->m_textureId = texture.m_textureId;
+			m_width = texture.m_width;
+			m_height = texture.m_height;
+			m_textureType = texture.m_textureType;
+			m_filePath = std::move(texture.m_filePath);
+			m_samples = texture.m_samples;
+			m_format = texture.m_format;
+			m_textureId = texture.m_textureId;
 
 			texture.m_textureId = 0;
 			texture.m_activeId = 0;

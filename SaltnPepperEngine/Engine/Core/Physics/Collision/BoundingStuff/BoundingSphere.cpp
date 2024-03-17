@@ -47,14 +47,14 @@ namespace SaltnPepperEngine
 	{
 		// Faster than Calculating the square Root
 		// Useless Optimisation, but its fine :(
-		return LengthSquared(otherSphere.m_center - this->m_center) <= Square(this->m_radius + otherSphere.m_radius);
+		return LengthSquared(otherSphere.m_center - m_center) <= Square(m_radius + otherSphere.m_radius);
 	}
 
 	
 
 	bool BoundingSphere::Intersects(const BoundingSphere& otherSphere) const
 	{
-		return DistanceSquared(otherSphere.m_center,this->m_center) <= Square(this->m_radius + otherSphere.m_radius);
+		return DistanceSquared(otherSphere.m_center,m_center) <= Square(m_radius + otherSphere.m_radius);
 	}
 	const float BoundingSphere::GetRadius() const
 	{

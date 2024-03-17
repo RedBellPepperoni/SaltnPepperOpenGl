@@ -111,7 +111,7 @@ namespace SaltnPepperEngine
 			return std::string();
 		}
 
-
+		
 		// Opening a string stream
 		std::ifstream stream(path);
 

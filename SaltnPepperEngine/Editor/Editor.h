@@ -19,7 +19,7 @@
 namespace SaltnPepperEngine
 {
 #define BIND_FILEBROWSER_FN(fn) [this](auto&&... args) -> decltype(auto) { \
-    return this->fn(std::forward<decltype(args)>(args)...);                \
+    return fn(std::forward<decltype(args)>(args)...);                \
 }
 
 	class Scene;

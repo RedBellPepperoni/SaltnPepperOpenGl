@@ -6,6 +6,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/matrix_decompose.inl>
 #include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/vector_angle.hpp>
 #include <cmath>
 #include <array>
 #include <algorithm>
@@ -389,6 +390,7 @@ namespace SaltnPepperEngine
         {
             return glm::abs(value);
         }
+
       
 		
 	}

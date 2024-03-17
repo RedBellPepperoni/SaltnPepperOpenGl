@@ -26,7 +26,7 @@ namespace SaltnPepperEngine
 
 			virtual ~BroadPhase() = default;
 
-			virtual void FindCollisionPairs(RigidBody3D** bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs) = 0;
+			virtual void FindCollisionPairs(SharedPtr<RigidBody3D>*, uint32_t count, std::vector<CollisionPair>& collisionPairs) = 0;
 
 			virtual void DebugDraw() = 0;
 

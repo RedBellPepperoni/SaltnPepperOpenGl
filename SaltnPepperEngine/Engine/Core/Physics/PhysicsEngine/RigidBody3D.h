@@ -7,7 +7,9 @@
 #include "Engine/Utils/UniqueId/UniqueId.h"
 #include "Engine/Core/Physics/Collision/NarrowPhase/Manifold.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
+#include "Engine/Core/Physics/Collision/Colliders/Collider.h"
 #include <functional>
+#include <cereal/cereal.hpp>
 
 namespace SaltnPepperEngine
 {
@@ -15,9 +17,11 @@ namespace SaltnPepperEngine
 	namespace Physics
 	{
 
-		class Collider;
+		//class Collider;
 		enum ColliderType : uint8_t;
 		class RigidBody3D;
+		class PhysicsEngine;
+		class Manifold;
 
 		//typedef  PhysicsCollisionCallback;
 
@@ -38,13 +42,13 @@ namespace SaltnPepperEngine
 			// World Transform stuff
 			Vector3 position = Vector3(0.0f);
 			Vector3 velocity = Vector3(0.0f);
-			Vector3 force = Vector3(0.0f);
+			Vector3 force = Vector3{ 0.0f };
 			
-			Quaternion rotation = Quaternion(0.0f,0.0,0.0f,1.0f);
+			Quaternion rotation = Quaternion(Vector3(0.0f));
 
 			float mass = 10.0f;
 
-			bool stationary = false;
+			bool stationary = true;
 
 			// Stic collider are easier to query
 			bool isStatic = false;
@@ -67,7 +71,7 @@ namespace SaltnPepperEngine
 
 		
 		// Callback for Trigger Checks
-		typedef std::function<bool(RigidBody3D* ,Vector3)> PhysicsCollisionCallback;
+		typedef std::function<bool(RigidBody3D* this_obj, RigidBody3D* colliding_obj)> PhysicsCollisionCallback;
 
 		// Callback for Colision response check
 		typedef std::function<void(RigidBody3D*, RigidBody3D*, Manifold*)> ManifoldCollisionCallback;
@@ -79,7 +83,7 @@ namespace SaltnPepperEngine
 
 		public:
 
-			RigidBody3D(const PhysicsProperties& properties = PhysicsProperties());
+			RigidBody3D(const PhysicsProperties& properties = PhysicsProperties{});
 			~RigidBody3D();
 
 			const Vector3& GetPosition() const;
@@ -87,7 +91,6 @@ namespace SaltnPepperEngine
 			const Vector3& GetForce() const;
 
 			const Quaternion& GetRotation() const;
-
 			const Matrix4& GetTransform() const;
 
 			const BoundingBox GetAABB();
@@ -104,13 +107,13 @@ namespace SaltnPepperEngine
 			void SetForce(const Vector3& newForce);
 			void SetRotation(const Quaternion& newRot);
 			
-			//void SetOnCollisionCallback(PhysicsCollisionCallback& callback) { m_OnCollisionCallback = callback; }
-			bool OnCollisionEvent(RigidBody3D* bodyFirst, const Vector3& contactPoint);
+			void SetOnCollisionCallback(PhysicsCollisionCallback& callback) { m_OnCollisionCallback = callback; }
+			bool OnCollisionEvent(RigidBody3D* bodyFirst, RigidBody3D* bodySecond);
 
 			void OnCollisionManifoldCallback(RigidBody3D* bodyFirst, RigidBody3D* bodySecond, Manifold* manifold);
 
 
-			void SetCollider(const SharedPtr<Collider>& collider);
+			void SetCollider( SharedPtr<Collider> collider);
 			void SetCollider(ColliderType type);
 			SharedPtr<Collider> GetCollider();
 
@@ -140,8 +143,39 @@ namespace SaltnPepperEngine
 			void SetStationaryThreshold(float value);
 			const float GetStaionaryThresholdSquared() const;
 
+			float GetInverseMass() const;
+			void SetInverseMass(float mass);
 
 			void DebugDraw(uint64_t flags);
+
+			//PhysicsProperties properties
+
+			template <typename Archive>
+			void save(Archive& archive) const
+			{
+				//auto shape = UniquePtr<Collider>(m_collider.get());
+
+				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("InvMass", m_invMass),  cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity),  cereal::make_nvp("Trigger", isTrigger));
+				//archive(cereal::make_nvp("Collider", shape));
+
+				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
+				//shape.release();
+			}
+
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				//auto shape = UniquePtr<Collider>(m_collider.get());
+
+				archive(cereal::make_nvp("Position", m_position), cereal::make_nvp("Rotation", m_rotation), cereal::make_nvp("Velocity", m_velocity), cereal::make_nvp("Force", m_force), cereal::make_nvp("InvMass",  m_invMass), cereal::make_nvp("Static", m_isStatic), cereal::make_nvp("Friction", m_friction), cereal::make_nvp("Elasticity", m_elasticity),  cereal::make_nvp("Trigger", isTrigger));
+				//archive(cereal::make_nvp("Collider", shape));
+				//m_collider = MakeShared<Collider>(shape.get());
+
+			   // ColliderUpdated();
+				//shape.release();
+
+				archive(cereal::make_nvp("UniqueId", (uint64_t)m_Id));
+			}
 
 		protected:
 
@@ -151,6 +185,7 @@ namespace SaltnPepperEngine
 			UniqueId m_Id;
 
 			// Changing to public for easier access
+		
 
 		public:
 
@@ -216,7 +251,6 @@ namespace SaltnPepperEngine
 			bool m_AABBDirty = true;
 
 			CollisionTag m_tag;
-
 
 			bool isColliding = false;
 		};

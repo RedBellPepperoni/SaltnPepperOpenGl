@@ -11,17 +11,32 @@
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+
 
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Utils/Serialization/GLMSerialization.h"
 
 #include <entt/entity/snapshot.hpp>
 // Cereal Stuff
+#include <cereal/types/memory.hpp>
 //#include <cereal/types/polymorphic.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 
+
+
+
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::SphereCollider);
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::BoxCollider);
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::CapsuleCollider);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::SphereCollider);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::BoxCollider);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::CapsuleCollider);
 
 
 
@@ -34,7 +49,7 @@ namespace SaltnPepperEngine
 	using namespace Physics;
 
 
-#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light, RigidBody3D 
+#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light, RigidBodyComponent 
 
 #define ALL_ENTTCOMPONENTS(input) get<Transform>(input). \
 	get<IdComponent>(input).		\
@@ -43,6 +58,7 @@ namespace SaltnPepperEngine
 	get<Hierarchy>(input).			\
 	get<Camera>(input).				\
     get<Light>(input).				\
+	get<RigidBodyComponent>(input). \
 	get<ModelComponent>(input)	
 	
 	Scene::Scene(const std::string& name)
@@ -71,23 +87,6 @@ namespace SaltnPepperEngine
 
 	void Scene::Init()
 	{
-		//Entity cameraEntity = GetEntityManager()->Create("MainCamera");
-		//Camera* camera = &cameraEntity.AddComponent<Camera>();
-		//Transform* transform = &cameraEntity.AddComponent<Transform>();
-
-		//
-
-		//////AudioListener* listener = &cameraEntity.AddComponent<Audio::AudioListener>(transform);
-
-
-		//transform->SetPosition(Vector3(2.2f, 0.97f, 0.65f));
-		//transform->SetEularRotation(Vector3(-45.0f, 3.6f, 0.0f));
-
-		//CameraController& controller = cameraEntity.AddComponent<FlyCameraController>();
-		//controller.SetCamera(camera);
-
-		//cameraEntity.AddComponent<DefaultCameraController>(DefaultCameraController::CameraType::Orbital);
-
 
 		//LuaManager::GetInstance().OnInit(this);
 
@@ -127,7 +126,6 @@ namespace SaltnPepperEngine
 
 
 		if (!Application::GetCurrent().GetEditorActive())
-
 		{
 			if (!cameraControllerView.IsEmpty())
 			{
@@ -146,9 +144,9 @@ namespace SaltnPepperEngine
 
 					string fps = std::to_string(Application::GetCurrent().GetFPS());
 
-					std::string position = "Position X : " + std::to_string(pos.x) + " Y : " + std::to_string(pos.y) + " Z : " + std::to_string(pos.z) + "Rotation X : " + std::to_string(rot.x) + " Y : " + std::to_string(rot.y) + " Z : " + std::to_string(rot.z);
+					std::string display = "SaltnPepperEngine : OpenGL [FPS: " + fps + " ]";
 
-					Application::GetCurrent().SetWindowTitle(position);
+					Application::GetCurrent().SetWindowTitle(display);
 
 				}
 
@@ -214,6 +212,7 @@ namespace SaltnPepperEngine
 
 		CopyEntity<ALL_COMPONENTS>(newEntity.GetHandle(), entity.GetHandle(), m_EntityManager->GetRegistry());
 		newEntity.GetComponent<IdComponent>().ID = UniqueId().GetId();
+		//newEntity.GetComponent<RigidBodyComponent>().GetRigidBody()
 
 		Hierarchy* hierarchyComponent = newEntity.TryGetComponent<Hierarchy>();
 		if (hierarchyComponent)

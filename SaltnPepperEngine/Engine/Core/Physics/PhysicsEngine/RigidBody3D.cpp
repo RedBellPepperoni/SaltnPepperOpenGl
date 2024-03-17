@@ -1,5 +1,8 @@
 #include "RigidBody3D.h"
-#include "Engine/Core/Physics/Collision/Colliders/Collider.h"
+
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
 #include "Engine/Utils/Logging/Log.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
@@ -30,7 +33,10 @@ namespace SaltnPepperEngine
 			{
 				SetCollider(properties.collider);
 			}
-
+			/*else
+			{
+				SetCollider(ColliderType::SPHERE);
+			}*/
 
 			m_Id = UniqueId();
 
@@ -178,11 +184,11 @@ namespace SaltnPepperEngine
 			m_transformDirty = true;
 			m_isStationary = false;
 		}
-		bool RigidBody3D::OnCollisionEvent(RigidBody3D* bodyFirst, const Vector3& contactPoint)
+		bool RigidBody3D::OnCollisionEvent(RigidBody3D* bodyFirst, RigidBody3D* bodySecond)
 		{
 			// Work on this
 
-			const bool handleCollision = (m_OnCollisionCallback) ? m_OnCollisionCallback(bodyFirst, contactPoint) : true;
+			const bool handleCollision = (m_OnCollisionCallback) ? m_OnCollisionCallback(bodyFirst, bodySecond) : true;
 
 			if (handleCollision)
 			{
@@ -195,15 +201,20 @@ namespace SaltnPepperEngine
 
 		void RigidBody3D::OnCollisionManifoldCallback(RigidBody3D* bodyFirst, RigidBody3D* bodySecond, Manifold* manifold)
 		{
-			// Send a callback for each manifold
+			//// Send a callback for each manifold
 			for (ManifoldCollisionCallback callback : m_onCollisionManifoldCallbacks)
 			{
 				callback(bodyFirst, bodySecond, manifold);
 			}
 
+			/*for (auto it = m_onCollisionManifoldCallbacks.begin(); it != m_onCollisionManifoldCallbacks.end(); ++it)
+			{
+				it->operator()(bodyFirst, bodySecond, manifold);
+			}*/
+
 		}
 
-		void RigidBody3D::SetCollider(const SharedPtr<Collider>& collider)
+		void RigidBody3D::SetCollider(SharedPtr<Collider> collider)
 		{
 			m_collider = collider;
 			ColliderUpdated();
@@ -213,6 +224,17 @@ namespace SaltnPepperEngine
 		
 		void RigidBody3D::SetCollider(ColliderType type)
 		{
+			switch (type)
+			{
+			case Physics::BOX: SetCollider(MakeShared<BoxCollider>());
+				break;
+			case Physics::SPHERE:SetCollider(MakeShared<SphereCollider>());
+				break;
+			case Physics::CAPSULE:SetCollider(MakeShared<CapsuleCollider>());
+				break;
+			default: LOG_ERROR("Unsupported Collider");
+				break;
+			}
 		}
 
 
@@ -220,6 +242,7 @@ namespace SaltnPepperEngine
 		{
 			return m_collider;
 		}
+
 		uint64_t RigidBody3D::GetUniqueId() const
 		{
 			return m_Id.GetId();
@@ -318,6 +341,16 @@ namespace SaltnPepperEngine
 		const float RigidBody3D::GetStaionaryThresholdSquared() const
 		{
 			return m_StationaryVelocityThresholdSquared;
+		}
+
+		float RigidBody3D::GetInverseMass() const
+		{
+			return m_invMass;
+		}
+
+		void RigidBody3D::SetInverseMass(float mass)
+		{
+			m_invMass = mass;
 		}
 
 		void RigidBody3D::DebugDraw(uint64_t flags)

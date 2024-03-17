@@ -65,8 +65,23 @@ namespace SaltnPepperEngine
 			Vector3 normal{ 0.0f };
 			Vector3 tangent{ 0.0f };
 			Vector3 bitangent{ 0.0f };
+			Vector4Int boneIds{ 0,0,0,0 };
+			Vector4 boneWeights{ 0.0f };
 
-			static const size_t Size = 3 + 2 + 3 + 3 + 3;
+			static const size_t Size = 3 + 2 + 3 + 3 + 3 + 4 + 4;
+		};
+
+		struct SkinnedVertex
+		{
+			Vector3 position{ 0.0f };
+			Vector2 texCoord{ 0.0f };
+			Vector3 normal{ 0.0f };
+			Vector3 tangent{ 0.0f };
+			Vector3 bitangent{ 0.0f };
+			Vector4Int boneIds{ 0 };
+			Vector4 boneWeights{ 0.0f };
+
+			static const size_t Size = 3 + 2 + 3 + 3 + 3 + 4 +4;
 		};
 
 		struct Triangle

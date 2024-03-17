@@ -19,6 +19,9 @@ namespace SaltnPepperEngine
 
 		~UniqueId() = default;
 
+		operator uint64_t() { return m_uniqueId; }
+		operator const uint64_t() const { return m_uniqueId; }
+
 		const uint64_t GetId() const
 		{
 			return m_uniqueId;

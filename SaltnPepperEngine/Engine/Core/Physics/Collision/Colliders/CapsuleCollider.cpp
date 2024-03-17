@@ -31,16 +31,20 @@ namespace SaltnPepperEngine
 		void CapsuleCollider::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
 		{
 			Matrix4 transform = body ? body->GetTransform() * m_transform : m_transform;
-			Vector3 position = transform[3];
+			Vector3 pos = transform[3];
 
-			if (outMin)
-			{
-				*outMin = position - (axis * m_radius);
-			}
-			if (outMax)
-			{
-				*outMax = position - (axis * m_radius);
-			}
+			Vector3 topPosition = Vector3(transform * Vector4(0.0f, m_height * 0.5f, 0.0f, 1.0f));
+			Vector3 bottomPosition = Vector3(transform * Vector4(0.0f, -m_height * 0.5f, 0.0f, 1.0f));
+
+			// Transform the axis into the local coordinate space of the capsule
+			Matrix4 inverseTransform = glm::affineInverse(transform);
+			Vector3 localAxis = Vector3(inverseTransform * Vector4(axis, 1.0f));
+
+			float minProj = Dot(topPosition, localAxis) - m_radius;
+			float maxProj = Dot(bottomPosition, localAxis) + m_radius;
+
+			*outMin = topPosition + minProj * localAxis;
+			*outMax = bottomPosition + maxProj * localAxis;
 		}
 
 		void CapsuleCollider::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const

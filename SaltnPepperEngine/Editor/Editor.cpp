@@ -27,6 +27,7 @@
 namespace SaltnPepperEngine
 {
 	using namespace Physics;
+	using namespace Components;
 
 	namespace Editor
 	{
@@ -59,6 +60,7 @@ namespace SaltnPepperEngine
 
 			// Create a new Editor camera
 			m_editorCamera = MakeShared<Camera>((16.0f / 10.0f), 0.01f, 1000.0f);
+			m_editorCamera->m_name = "Editor_Camera";
 			m_currentCamera = m_editorCamera.get();
 			// Set the initial  postion
 			m_editorCameraTransform.SetPosition(Vector3(0.0f,0.0f,-40.0f));
@@ -225,11 +227,11 @@ namespace SaltnPepperEngine
 							{
 								transform->SetLocalMatrix(model);
 
-								RigidBody3D* rigidBody3DComponent = registry.try_get<RigidBody3D>(m_SelectedEntity);
-								if (rigidBody3DComponent)
+								RigidBodyComponent* rigidBodyComponent = registry.try_get<RigidBodyComponent>(m_SelectedEntity);
+								if (rigidBodyComponent)
 								{
-									rigidBody3DComponent->SetPosition(model[3]);
-									rigidBody3DComponent->SetRotation(GetRotationFromMatrix(model));
+									rigidBodyComponent->GetRigidBody()->SetPosition(model[3]);
+									rigidBodyComponent->GetRigidBody()->SetRotation(GetRotationFromMatrix(model));
 								}		
 								
 							}

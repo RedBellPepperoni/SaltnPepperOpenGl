@@ -1,7 +1,9 @@
 #pragma once
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Utils/Plane.h"
+#include "Engine/Utils/Logging/Log.h"
 #include <vector>
+#include <cereal/cereal.hpp>
 
 namespace SaltnPepperEngine
 {
@@ -78,6 +80,20 @@ namespace SaltnPepperEngine
 			ColliderType GetType() const;
 
 			virtual void DebugDraw(const RigidBody3D* currentBody) const = 0;
+
+
+			template <class Archive>
+			void load(Archive& archive)
+			{
+				LOG_ERROR("Loading abstract CollisionShape");
+			}
+
+			template <class Archive>
+			void save(Archive& archive) const
+			{
+				LOG_ERROR("Serialising abstract CollisionShape");
+			}
+
 
 		protected:
 

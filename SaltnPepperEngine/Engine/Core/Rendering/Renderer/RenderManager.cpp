@@ -19,6 +19,11 @@
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Buffers/FrameBuffer.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+
+
+#include "Engine/Core/Physics/SoftBody/Cloth.h"
+#include "Engine/Core/Physics/SoftBody/SoftBody.h"
 
 
 namespace SaltnPepperEngine
@@ -33,7 +38,10 @@ namespace SaltnPepperEngine
 			// Loading the Default Shader 
 			// Add other Defaultr Shaders below <----
 
-			CHECKNULL(GetShaderLibrary()->LoadShader("StandardShader", FileSystem::GetShaderDir().string() + "spaceshipVert.glsl", FileSystem::GetShaderDir().string() + "spaceshipFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueForward", FileSystem::GetShaderDir().string() + "Opaque_Forward_Vert.glsl", FileSystem::GetShaderDir().string() + "Opaque_Forward_Frag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueShadowed", FileSystem::GetShaderDir().string() + "Opaque_Forward_Vert.glsl", FileSystem::GetShaderDir().string() + "Opaque_FShadow_Frag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("TransparentShader", FileSystem::GetShaderDir().string() + "transparentVert.glsl", FileSystem::GetShaderDir().string() + "transparentFrag.glsl"));
+			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShaderOne", FileSystem::GetShaderDir().string() + "chromaticShaderVert.glsl", FileSystem::GetShaderDir().string() + "chromaticShaderFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxShader", FileSystem::GetShaderDir().string() + "skyboxVert.glsl", FileSystem::GetShaderDir().string() + "skyboxFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugLineShader", FileSystem::GetShaderDir().string() + "DebugLineVert.glsl", FileSystem::GetShaderDir().string() + "DebugLineFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("DebugPointShader", FileSystem::GetShaderDir().string() + "DebugPointVert.glsl", FileSystem::GetShaderDir().string() + "DebugPointFrag.glsl"));
@@ -72,35 +80,6 @@ namespace SaltnPepperEngine
 				m_renderer->SetUpCameraElement(camera, transform);
 			}
 
-
-
-			// Getting a view of all the Objects which have a "mesh" componenet
-			//ComponentView meshView = scene->GetEntityManager()->GetComponentsOfType<MeshComponent>();
-
-			//// Looping through all the entities that have a mesh component
-			//for (Entity meshObject : meshView)
-			//{
-
-			//	if (!meshObject.TryGetComponent<ActiveComponent>()->active)
-			//	{
-			//		//The mesh is not visible , so dont need to render it
-			//		continue;
-			//	}
-
-			//	MeshComponent& meshComp = meshObject.GetComponent<MeshComponent>();
-
-			//	// getting the required components
-			//	MeshRenderer& materialComp = meshObject.GetComponent<MeshRenderer>();
-			//	Transform& transform = meshObject.GetComponent<Transform>();
-
-
-			//	
-			//	// Sending the mesh data for processing
-			//	 m_renderer->ProcessRenderElement(meshComp.GetMesh(), materialComp.GetMaterial(), transform);
-
-			//}
-
-
 			ComponentView modelView = scene->GetEntityManager()->GetComponentsOfType<ModelComponent>();
 
 			// Looping through all the entities that have a mesh component
@@ -120,6 +99,8 @@ namespace SaltnPepperEngine
 
 				const std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
 
+				std::vector<Matrix4> nullTransform;
+
 				for (SharedPtr<Mesh> mesh : meshes)
 				{
 					Matrix4& worldTransform = transform.GetMatrix();
@@ -129,26 +110,72 @@ namespace SaltnPepperEngine
 				
 					const SharedPtr<Material>& material = mesh->GetMaterial();
 				    
-					m_renderer->ProcessRenderElement(mesh, material, transform);
+					m_renderer->ProcessRenderElement(mesh, material, transform, nullTransform);
 
 				}
 
-				
-				
-
-
-				
 				// Sending the mesh data for processing
 				
+			}
+
+
+			ComponentView skinnedmodelView = scene->GetEntityManager()->GetComponentsOfType<SkinnedModelComponent>();
+
+			// Looping through all the entities that have a mesh component
+			for (Entity skinnedmodelObject : skinnedmodelView)
+			{
+
+				//if (!modelObject.TryGetComponent<ActiveComponent>()->active)
+				if (!skinnedmodelObject.IsActive())
+				{
+					//The mesh is not visible , so dont need to render it
+					continue;
+				}
+
+				// Cache the model ref and trasnfrom for later use
+				SkinnedModelComponent& modelComp = skinnedmodelObject.GetComponent<SkinnedModelComponent>();
+				Transform& transform = skinnedmodelObject.GetComponent<Transform>();
+				AnimatorComponent& animComp = skinnedmodelObject.GetComponent<AnimatorComponent>();
+
+				std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
+
+
+				const std::vector<Matrix4>& boneMatriceList = animComp.GetAnimator()->GetFinalBoneMatrices();
+
+
+				for (SharedPtr<Mesh> mesh : meshes)
+				{
+					Matrix4& worldTransform = transform.GetMatrix();
+
+					// Check for frustum Optimization later
+					// Might need to add bound boxes to each mesh for this
+
+					mesh->SetSkinned(true);
+
+					const SharedPtr<Material>& material = mesh->GetMaterial();
+
+
+					m_renderer->ProcessRenderElement(mesh, material, transform, boneMatriceList);
+
+				}
+
+				// Sending the mesh data for processing
+
 			}
 
 			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();
 
 			for (Entity lightObject : lightView)
 			{
+				
+
 				Light& lightComponent = lightObject.GetComponent<Light>(); 
 				Transform* transform = &lightObject.GetComponent<Transform>(); 
-				m_renderer->ProcessLightElement(lightComponent, *transform);
+						
+				if (lightObject.IsActive())
+				{
+					m_renderer->ProcessLightElement(lightComponent, *transform);
+				}
 			}
 
 
@@ -193,96 +220,89 @@ namespace SaltnPepperEngine
 		void RenderManager::RenderFrame()
 		{
 			
-			int cameraIndex = Application::GetCurrent().GetMainCameraIndex();
+			mainCameraIndex = Application::GetCurrent().GetMainCameraIndex();
 
-			if (cameraIndex < 0)
+			if (mainCameraIndex < 0)
 			{
 				LOG_WARN("No Rendering Cameras");
 				return;
 			}
 
-			//m_renderer->AttachDefaultFrameBuffer();
+			
+			
 
-			// Second Render Pass for Editor
-			 //Make a bool here to not render scene view when the editor is turned off
 
 			if (Application::GetCurrent().GetEditorActive())
 			{
-				Camera* editorCameraRef = Application::GetCurrent().GetEditorCamera();
+				AttachFrameBuffer(m_editorCameraElement.gBuffer);
 
-				SharedPtr<FrameBuffer>& buffer = m_renderer->SecondaryFrameBuffer;
-				SharedPtr<Texture>& texture = m_renderer->SecondaryTexture;
-				AttachFrameBuffer(buffer);
-				//buffer->AttachTexture(texture);
-
-				buffer->Validate();
-
-
-				m_renderer->Clear();
+				GLDEBUG(glEnable(GL_DEPTH_TEST));
+				m_renderer->Clear(true);
 
 				//// ===== Post Render Skybox Pass =================
 				m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
 
-				//// ===== Forward Pass for Opaque Elements ================ 
-				m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, MaterialType::Opaque);
-				m_renderer->DebugPass(m_editorCameraElement);
-				
+				//// ===== Object Pass for Opaque Elements ================ 
+				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueForward"), m_editorCameraElement, m_renderer->GetPipeLine().opaqueElementList);
 
-				EndFrame();
+				//// ===== Object Pass for Transparent Elements ================ 
+				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), m_editorCameraElement, m_renderer->GetPipeLine().transparentElementList);
+				
+				//// ===== Object Pass for Transparent Elements ================ 
+				m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), m_editorCameraElement, m_renderer->GetPipeLine().customElementList);
+
+
+				m_editorCameraElement.depthTexture->GenerateMipMaps();
+
+				m_renderer->DebugPass(m_editorCameraElement);
+
+				m_renderer->AttachDefaultFrameBuffer();
 			}
+
 			else
 			{
-				m_renderer->Clear();
 
-				// Multiple Camera Rendering for actual Game View
 				for (const CameraElement& cameraElement : m_renderer->GetPipeLine().cameraList)
 				{
+
 					
-				// ===== Post Render Skybox Pass =================
+
+					AttachFrameBuffer(cameraElement.gBuffer);
+
+					GLDEBUG(glEnable(GL_DEPTH_TEST));
+					m_renderer->Clear(true);
+
+					// ===== Post Render Skybox Pass =================
 					m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), cameraElement);
 
-				// ===== Forward Pass for Opaque Elements ================ 
-					m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), cameraElement, MaterialType::Opaque);
 
-				//m_renderer->DebugPass(cameraElement);
+					// ===== Forward Pass for Opaque Elements ================ 
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueForward"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
+
+					//// ===== Object Pass for Transparent Elements ================ 
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), cameraElement, m_renderer->GetPipeLine().transparentElementList);
+
+					//// ===== Object Pass for Transparent Elements ================ 
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("ScreenShaderOne"), cameraElement, m_renderer->GetPipeLine().customElementList);
+
+					// Generate Depth mipmaps
+					cameraElement.depthTexture->GenerateMipMaps();
+
+					//ProcessImage()
+
+					//CopyTexture(cameraElement.albedoTexture,cameraElement.outputTexture);
+				
 				}
+
+				EndFrame();
+
 			}
-			//	
-			//AttachFrameBuffer(m_editorCameraElement.gBuffer);
-			//m_editorCameraElement.gBuffer->AttachTexture(m_editorCameraElement.outputTexture);
-
-			//// ===== Post Render Skybox Pass =================
-			//m_renderer->SkyBoxPass(m_ShaderLibrary->GetResource("SkyboxShader"), m_editorCameraElement);
-
-			//// ===== Forward Pass for Opaque Elements ================ 
-			//m_renderer->ForwardPass(m_ShaderLibrary->GetResource("StandardShader"), m_editorCameraElement, MaterialType::Opaque);
-
-			//RenderToTextureNoClear(m_editorCameraElement.outputTexture, m_ShaderLibrary->GetResource("StandardShader"));
-			//RenderToTexture(m_editorCameraElement.outputTexture, m_ShaderLibrary->GetResource("StandardShader"));
-
-			//
-			//
-
+			
+			
 			
 
-			//const CameraElement & cameraElement = m_renderer->GetPipeLine().cameraList[cameraIndex];
 
-			//m_renderer->AttachDefaultFrameBuffer();
-
-			//if (!texture)
-			//{
-			//	LOG_ERROR("Invalid output camera texture");
-			//}
-
-			//GLDEBUG(glDisable(GL_DEPTH_TEST));
-		 //  // glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
-			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			//m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), texture);
-
-			//m_renderer->ClearRectangleObjectVAO();
-
-			//EndFrame();
+	
 
 		}
 
@@ -290,13 +310,23 @@ namespace SaltnPepperEngine
 		{
 			m_renderer->AttachDefaultFrameBuffer();
 
-			if (!m_editorCameraElement.outputTexture)
-			{
-				LOG_ERROR("Invalid output camera texture");
+			if (mainCameraIndex < m_renderer->GetPipeLine().cameraList.size()) {
+
+				CameraElement& mainCamera = m_renderer->GetPipeLine().cameraList[mainCameraIndex];
+
+				if (!mainCamera.outputTexture)
+				{
+					LOG_ERROR("Invalid output camera texture");
+				}
+
+
+				glDisable(GL_DEPTH_TEST);
+				m_renderer->Clear();
+				ProcessImage(mainCamera.outputTexture);
+
+			
 			}
-
-			m_renderer->RenderScreenQuad(m_ShaderLibrary->GetResource("ScreenShader"), m_renderer->SecondaryTexture);
-
+			
 			m_renderer->ClearRectangleObjectVAO();
 		}
 
@@ -319,6 +349,7 @@ namespace SaltnPepperEngine
 			SetViewPort(0, 0, width, height);
 			
 		}
+
 
 		
 
@@ -352,6 +383,13 @@ namespace SaltnPepperEngine
 			RenderToFrameBufferNoClear(m_renderer->GetPostProcessFrameBuffer(), shader);
 		}
 
+		void RenderManager::CopyTexture(SharedPtr<Texture> inputTexture, SharedPtr<Texture> outputTexture)
+		{
+			m_renderer->GetPostProcessFrameBuffer()->AttachTexture(outputTexture);
+			AttachFrameBuffer(m_renderer->GetPostProcessFrameBuffer());
+			ProcessImage(inputTexture);
+		}
+
 		void RenderManager::SetViewPort(int x, int y, int width, int height)
 		{
 			m_renderer->SetViewport(x, y, width, height);
@@ -360,7 +398,7 @@ namespace SaltnPepperEngine
 		void RenderManager::ProcessImage(const SharedPtr<Texture>& texture, int lod)
 		{
 			SharedPtr<Shader> screenRectShader = m_ShaderLibrary->GetResource("ScreenShader");
-
+			m_renderer->RenderScreenQuad(screenRectShader,texture);
 		}
 
 		void RenderManager::SetWindowSize(Vector2Int size)

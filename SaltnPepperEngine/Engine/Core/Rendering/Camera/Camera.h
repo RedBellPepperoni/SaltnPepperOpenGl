@@ -28,6 +28,8 @@ namespace SaltnPepperEngine
             void Init(int width, int height);
             void Resize(int width, int height);
 
+            unsigned int rbo;
+
         };
 
         class Camera
@@ -43,9 +45,13 @@ namespace SaltnPepperEngine
 
             // Temporary defining the Transforms here until I switch to ECS
             //Transform m_transform;
-            std::string m_name;
+            std::string m_name = "defaultcam";
+            static int cameraCount;
+
 
         public:
+
+
 
             const Matrix4& GetProjectionMatrix();
 
@@ -103,6 +109,7 @@ namespace SaltnPepperEngine
 
         private:
 
+          
             Vector3 m_upVector = Vector3(0.0f, 1.0f, 0.0f);
             Vector3 m_rightVector = Vector3(-1.0f, 0.0f, 0.0f);
             Vector3 m_forwardVector = Vector3(0.0f, 0.0f, 1.0f);
@@ -126,7 +133,7 @@ namespace SaltnPepperEngine
 
             Frustum m_frustum;
             bool m_shouldUpdateFrustum = true;
-            Matrix4 m_projection{ 1.0f };
+            mutable Matrix4 m_projection{ 1.0f };
 
 
             float m_fov = 60.0f;

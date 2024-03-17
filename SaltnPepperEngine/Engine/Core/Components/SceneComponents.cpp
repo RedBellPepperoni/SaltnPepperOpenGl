@@ -3,9 +3,15 @@
 #include "Engine/Core/Resources/ResourceManager.h"
 #include "Engine/Core/Rendering/Geometry/Primitives.h"
 #include "Engine/Core/System/Application/Application.h"
+#include "Engine/Core/Rendering/Camera/FlyCameraController.h"
+#include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
+#include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+
 
 namespace SaltnPepperEngine
 {
+	//using namespace Physics;
+
 	namespace Components
 	{
 
@@ -83,6 +89,7 @@ namespace SaltnPepperEngine
 		ModelComponent::ModelComponent()
 			:m_handle(MakeShared<Model>(PrimitiveType::Cube))
 		{
+
 		}
 
 		ModelComponent::ModelComponent(const std::string& filePath)	
@@ -120,6 +127,118 @@ namespace SaltnPepperEngine
 			//m_handle = Factory<Model>::Create(type);
 		}
 
-	}
+		CameraControllerComponent::CameraControllerComponent()
+			: m_type(ControllerType::CUSTOM)
+		{
+		}
+
+		CameraControllerComponent::CameraControllerComponent(ControllerType type)
+		{
+			SetControllerType(type);
+		}
+
+		void CameraControllerComponent::SetControllerType(ControllerType type)
+		{
+			m_type = type;
+
+			switch (type)
+			{
+			case ControllerType::FLYCAM: m_controllerRef = MakeShared<FlyCameraController>(); 
+				break;
+			case ControllerType::THIRDPERSON:
+				break;
+			case ControllerType::FIRSTPERSON:
+				break;
+			case ControllerType::CUSTOM:
+				break;
+			default:
+				break;
+			}
+		}
+
+		SharedPtr<CameraController>& CameraControllerComponent::GetController()
+		{
+			return m_controllerRef;
+		}
+
+		const CameraControllerComponent::ControllerType& CameraControllerComponent::GetControllerType()
+		{
+			return m_type;
+		}
+
+		RigidBodyComponent::RigidBodyComponent()
+		{
+			/*PhysicsProperties properties;
+			properties.position = Vector3(0.0f);
+			properties.rotation = Quaternion();
+			properties.mass = 10.f;
+			properties.elasticity = */
+
+			m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->CreateRigidBody();
+		}
+
+		RigidBodyComponent::RigidBodyComponent(const RigidBodyComponent& other)
+		{
+			m_rigidBody = other.m_rigidBody;
+			m_ownBody = other.m_ownBody;
+		}
+
+		RigidBodyComponent::RigidBodyComponent(const PhysicsProperties& properties)
+		{
+			m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->CreateRigidBody(properties);
+		}
+
+
+		RigidBodyComponent::~RigidBodyComponent()
+		{
+		}
+
+		void RigidBodyComponent::OnImgui()
+		{
+		}
+
+		SharedPtr<RigidBody3D> RigidBodyComponent::GetRigidBody()
+		{
+			return m_rigidBody;
+		}
+
+		SkinnedModelComponent::SkinnedModelComponent()
+		{
+			LOG_ERROR("Skinned Model Not loaded since filepath wasnt specified");
+		}
+
+		SkinnedModelComponent::SkinnedModelComponent(const std::string& filePath)
+		{
+			std::string clampedname = FileSystem::GetFileName(filePath);
+
+			m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->GetResource(clampedname);
+
+
+			if (m_handle == nullptr)
+			{
+				m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->LoadModel(clampedname, filePath);
+			}
+		}
+
+		SkinnedModelComponent::~SkinnedModelComponent()
+		{
+
+		}
+
+		AnimatorComponent::AnimatorComponent()
+		{
+			m_animator = MakeShared<SkinnedAnimator>();
+		}
+
+		AnimatorComponent::~AnimatorComponent()
+		{
+		}
+
+		SharedPtr<SkinnedAnimator>& AnimatorComponent::GetAnimator()
+		{
+			return m_animator;
+		}
+
+}
 }
 

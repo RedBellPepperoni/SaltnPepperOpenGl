@@ -37,7 +37,7 @@ namespace SaltnPepperEngine
 				uint32_t ChildCount = 0;
 				uint32_t PhysicsObjectCount = 0;
 				uint32_t ChildNodeIndicies[8] = { 0 };
-				RigidBody3D* PhysicsObjects[MAX_OBJECTS_PER_NODE];
+				SharedPtr<RigidBody3D> PhysicsObjects[MAX_OBJECTS_PER_NODE];
 
 				BoundingBox boundingBox;
 
@@ -49,7 +49,7 @@ namespace SaltnPepperEngine
 			OctreeBroadPhase(size_t maxObjectsPerPartition, size_t maxPartitionDepth, const SharedPtr<BroadPhase>& secondaryBroadphase);
 			virtual ~OctreeBroadPhase();
 
-			void FindCollisionPairs(RigidBody3D** bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs) override;
+			void FindCollisionPairs(SharedPtr<RigidBody3D>* bodies, uint32_t count, std::vector<CollisionPair>& collisionPairs) override;
 			
 			void DebugDraw() override;
 

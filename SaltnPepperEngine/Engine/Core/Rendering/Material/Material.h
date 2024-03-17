@@ -21,7 +21,9 @@ namespace SaltnPepperEngine
         {
             Opaque,
             Transparent,
-            Masked
+            Masked,
+            Custom,
+            MaxNum
 
         };
 
@@ -82,7 +84,7 @@ namespace SaltnPepperEngine
             float roughnessMapFactor = 1.0f;
             float metallicMapFactor = 1.0f;
             float aoMapFactor = 1.0f;
-            float normalMapFactor = 1.0f;
+            float normalMapFactor = 0.0f;
             float emissiveMapFactor = 1.0f;
 
 
@@ -101,6 +103,7 @@ namespace SaltnPepperEngine
 
 
             void SetAlbedoTexture(const std::string& filePath);
+            void SetAlbedoRef(SharedPtr<Texture>& texture);
             void SetNormalTexture(const std::string& filePath);
             void SetMetallicTexture(const std::string& filePath);
             void SetAOTexture(const std::string& filePath);

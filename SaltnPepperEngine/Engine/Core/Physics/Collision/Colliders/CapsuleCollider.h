@@ -36,6 +36,20 @@ namespace SaltnPepperEngine
 			void SetHeight(float height);
 			float GetHeight() const;
 
+			template <typename Archive>
+			void save(Archive& archive) const
+			{
+				archive(m_radius, m_height);
+			}
+
+			template <typename Archive>
+			void load(Archive& archive)
+			{
+				archive(m_radius, m_height);
+				m_transform = Matrix4(1.0);
+				m_type = ColliderType::CAPSULE;
+			}
+
 		protected:
 
 			float m_radius = 1.0f;
