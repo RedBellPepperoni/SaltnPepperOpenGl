@@ -134,6 +134,7 @@ void LoadAllTextures()
 	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 	textureLib->LoadTexture("skinned", "Assets\\Textures\\aj.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("racer", "Assets\\Textures\\racer.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("racerNormal", "Assets\\Textures\\racerNormal.png", TextureFormat::RGBA);
 	
 	
 }
@@ -437,7 +438,7 @@ Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{ 0.0f }, const V
 	Transform& transform = skinnedEntity.GetComponent<Transform>();
 
 	transform.SetPosition(position);
-
+	transform.SetScale(scale);
 
 	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("RacerCharacter");
 
@@ -460,6 +461,8 @@ Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{ 0.0f }, const V
 	for (SharedPtr<Mesh>& mesh : modelComp.m_handle->GetMeshes())
 	{
 		mesh->GetMaterial()->SetAlbedoTexture("racer");
+		mesh->GetMaterial()->SetNormalTexture("racerNormal");
+		mesh->GetMaterial()->normalMapFactor = 1.0f;
 	}
 
 	animComp.GetAnimator()->PlayAnimation(idleanim);

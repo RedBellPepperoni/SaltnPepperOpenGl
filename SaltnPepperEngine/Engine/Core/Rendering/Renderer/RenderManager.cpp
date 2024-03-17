@@ -277,7 +277,7 @@ namespace SaltnPepperEngine
 
 
 					// ===== Forward Pass for Opaque Elements ================ 
-					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueShadowed"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
+					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("OpaqueForward"), cameraElement, m_renderer->GetPipeLine().opaqueElementList);
 
 					//// ===== Object Pass for Transparent Elements ================ 
 					m_renderer->ObjectPass(m_ShaderLibrary->GetResource("TransparentShader"), cameraElement, m_renderer->GetPipeLine().transparentElementList);

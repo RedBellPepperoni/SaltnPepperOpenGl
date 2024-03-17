@@ -146,6 +146,9 @@ vec3 CalculateLighting(Material material)
     vec3 result = vec3(0.0);
     Light light;
     int actualcount = MAX_LIGHT_COUNT > uboLights.lightCount ? uboLights.lightCount : MAX_LIGHT_COUNT;
+
+    vec3 normal = material.Normal;
+    vec3 position = VertexOutput.Position.xyz;
     
     for (int index = 0; index < actualcount; index++)
     {
@@ -159,10 +162,9 @@ vec3 CalculateLighting(Material material)
         light.radius = uboLights.lights[index].radius;
 
         //vec3 normal = texture(mapNormal, VertexOutput.TexCoord).rgb;
-        vec3 normal = (VertexOutput.Normal.xyz);
-        vec3 position = VertexOutput.Position.xyz;
+        // vec3 normal = (VertexOutput.Normal.xyz);
 
-
+    
         //result = ForwardLighting(light, material, normal, position);
 
        
@@ -230,13 +232,15 @@ void main()
     // Normal Stuff
     material.Normal = normalize(VertexOutput.Normal);
 
-    if(materialProperties.NormalMapFactor > 0.05)
+    if(materialProperties.NormalMapFactor > 0.1)
     {
         material.Normal = normalize((texture(mapNormal, VertexOutput.TexCoord).xyz * 2.0) - vec3(1.0));
         material.Normal = normalize(VertexOutput.WorldNormal * material.Normal);
         material.Normal = normalize(material.Normal);
+        //FragColor = vec4(1.0);    
     }
 
+   
     material.View = normalize(cameraView - VertexOutput.Position.xyz);
 
     // Gather the Ambient occlusion
@@ -247,7 +251,8 @@ void main()
     
     vec3 finalColor = CalculateLighting(material);
 
-     FragColor = vec4(finalColor, 1.0);
+    FragColor = vec4(finalColor, 1.0);
+
 
     /*if(renderMode == 0)
     {

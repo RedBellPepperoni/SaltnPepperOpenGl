@@ -120,7 +120,7 @@ class GraphicRuntime : public Application
 
         //Camera* cam = &mainCamera.GetComponent<Camera>();
 
-        CreateSkinnedCharatcer();
+        CreateSkinnedCharatcer(Vector3(1.27f,2.6f,0.0f),Vector3(0.01f));
 
         //idleAnim = Application::GetCurrent().GetAnimationLibrary()->GetResource("AJidle");
 	}

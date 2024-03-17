@@ -123,11 +123,13 @@ namespace SaltnPepperEngine
             // Loading default Albedo texture
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultTexture", "Engine\\Textures\\DefaultTexture.png", TextureFormat::RGB);
             Application::GetCurrent().GetTextureLibrary()->LoadTexture("Black", "Engine\\Textures\\black.png", TextureFormat::RGBA);
+            Application::GetCurrent().GetTextureLibrary()->LoadTexture("DefaultNormal", "Engine\\Textures\\defaultnormalmap.png", TextureFormat::RGBA);
             
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("DuskSkybox", "Engine\\Textures\\sky_right.png", "Engine\\Textures\\sky_left.png", "Engine\\Textures\\sky_top.png", "Engine\\Textures\\sky_bottom.png", "Engine\\Textures\\sky_front.png", "Engine\\Textures\\sky_back.png");
             Application::GetCurrent().GetCubeMapLibrary()->LoadCubeMap("SpaceSkybox", "Engine\\Textures\\spaceright.png", "Engine\\Textures\\spaceleft.png", "Engine\\Textures\\spacetop.png", "Engine\\Textures\\spacebottom.png", "Engine\\Textures\\spacefront.png", "Engine\\Textures\\spaceback.png");
 
             m_pipeline.defaultTextureMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultTexture");
+            m_pipeline.defaultNormalMap = Application::GetCurrent().GetTextureLibrary()->GetResource("DefaultNormal");
 
             m_pipeline.SkyboxCubeObject.Init();
 
@@ -270,6 +272,11 @@ namespace SaltnPepperEngine
                 {
                     material->textureMaps.albedoMap = m_pipeline.defaultTextureMap;
                 }
+
+               /* if (material->textureMaps.normalMap == nullptr)
+                {
+                    material->textureMaps.normalMap = m_pipeline.defaultNormalMap;
+                }*/
 
                 m_pipeline.MaterialList.push_back(material);
             }
@@ -697,7 +704,8 @@ namespace SaltnPepperEngine
 
 
             SharedPtr<Mesh>& mesh = m_pipeline.MeshList[element.meshIndex];
-            SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
+           // SharedPtr<Material>& mat = m_pipeline.MaterialList[element.materialIndex];
+            SharedPtr<Material>& mat = mesh->GetMaterial();
 
             shader->SetUniform("isSkinned", mesh->GetSkinned());
 
@@ -714,6 +722,12 @@ namespace SaltnPepperEngine
 
                 mat->textureMaps.albedoMap->Bind(m_pipeline.textureBindIndex++);
                 shader->SetUniform("mapAlbedo", mat->textureMaps.albedoMap->GetBoundId());
+
+                if (mat->textureMaps.normalMap != nullptr)
+                {
+                    mat->textureMaps.normalMap->Bind(m_pipeline.textureBindIndex++);
+                    shader->SetUniform("mapNormal", mat->textureMaps.normalMap->GetBoundId());
+                }
 
                 if (mat->m_type == MaterialType::Transparent)
                 {
@@ -748,6 +762,8 @@ namespace SaltnPepperEngine
                 // Opaque Shader
                 shader->SetUniform("materialProperties.AlbedoMapFactor", mat->albedoMapFactor);
                 shader->SetUniform("materialProperties.AlbedoColor", mat->albedoColour);
+
+                shader->SetUniform("materialProperties.NormalMapFactor", mat->normalMapFactor);
 
                 shader->SetUniform("materialProperties.Metallic", mat->metallic);
 

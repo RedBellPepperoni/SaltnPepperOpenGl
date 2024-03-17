@@ -84,7 +84,7 @@ namespace SaltnPepperEngine
             float roughnessMapFactor = 1.0f;
             float metallicMapFactor = 1.0f;
             float aoMapFactor = 1.0f;
-            float normalMapFactor = 1.0f;
+            float normalMapFactor = 0.0f;
             float emissiveMapFactor = 1.0f;
 
 

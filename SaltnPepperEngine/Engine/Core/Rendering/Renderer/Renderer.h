@@ -245,6 +245,7 @@ namespace SaltnPepperEngine
 			int textureBindIndex = 0;
 
 			SharedPtr<Texture> defaultTextureMap;
+			SharedPtr<Texture> defaultNormalMap;
 
 			SkyboxObject SkyboxCubeObject;
 			Skybox skybox;
