@@ -30,7 +30,7 @@ namespace SaltnPepperEngine
 	{
 	public:
 
-		SkinnedAnimation(const std::string& animationPath, SharedPtr<SkinnedModel> model);
+		SkinnedAnimation(const std::string& animationPath, SharedPtr<SkinnedModel>& model);
 		~SkinnedAnimation();
 	
 		Bone* FindBone(const std::string& BoneName);

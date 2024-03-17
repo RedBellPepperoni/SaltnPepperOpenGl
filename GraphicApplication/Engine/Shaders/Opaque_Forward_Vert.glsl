@@ -38,7 +38,7 @@ void main()
 
 	if(isSkinned == true)
 	{
-		 for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++)
+		for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++)
         {
             // Current bone-weight pair is non-existing
             if(vboneIds[i] == -1) 
@@ -48,15 +48,19 @@ void main()
             if(vboneIds[i] >= MAX_BONES) 
             {
                 updatedPosition = vec4(vPosition,1.0f);
+
+				
                 break;
             }
             // Set pos
-            vec4 localPosition = boneTransforms[vboneIds[i]] * vec4(vPosition,1.0f);
-            updatedPosition += localPosition * vboneWeights[i];
-			
+           
             // Set normal
             vec3 localNormal = mat3(boneTransforms[vboneIds[i]]) * vNormal;
             updatedNormal += localNormal * vboneWeights[i];
+
+			vec4 localPosition = boneTransforms[vboneIds[i]] * vec4(vPosition,1.0f);
+            updatedPosition += localPosition * vboneWeights[i];
+			
         }
 	}
 

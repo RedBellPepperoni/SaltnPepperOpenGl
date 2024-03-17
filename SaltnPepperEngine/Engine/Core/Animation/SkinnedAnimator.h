@@ -29,9 +29,9 @@ namespace SaltnPepperEngine
 
 	private:
 		std::vector<glm::mat4> m_finalBoneMatrices;
-		SharedPtr<SkinnedAnimation> m_currentAnimation;
-		SharedPtr<SkinnedAnimation> m_nextAnimation;
-		SharedPtr<SkinnedAnimation> m_queueAnimation;
+		SharedPtr<SkinnedAnimation> m_currentAnimation = nullptr;
+		SharedPtr<SkinnedAnimation> m_nextAnimation = nullptr;
+		SharedPtr<SkinnedAnimation> m_queueAnimation = nullptr;
 		float m_currentTime;
 		bool m_interpolating;
 		float m_haltTime;

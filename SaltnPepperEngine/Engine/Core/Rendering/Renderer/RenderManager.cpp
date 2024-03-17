@@ -137,10 +137,10 @@ namespace SaltnPepperEngine
 				Transform& transform = skinnedmodelObject.GetComponent<Transform>();
 				AnimatorComponent& animComp = skinnedmodelObject.GetComponent<AnimatorComponent>();
 
-				const std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
+				std::vector<SharedPtr<Mesh>>& meshes = modelComp.m_handle->GetMeshes();
 
 
-				std::vector<Matrix4>& boneMatriceList = animComp.GetAnimator()->GetFinalBoneMatrices();
+				const std::vector<Matrix4>& boneMatriceList = animComp.GetAnimator()->GetFinalBoneMatrices();
 
 
 				for (SharedPtr<Mesh> mesh : meshes)
@@ -149,10 +149,6 @@ namespace SaltnPepperEngine
 
 					// Check for frustum Optimization later
 					// Might need to add bound boxes to each mesh for this
-
-					
-
-
 
 					mesh->SetSkinned(true);
 

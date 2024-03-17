@@ -2,7 +2,7 @@
 
 namespace SaltnPepperEngine
 {
-	SkinnedAnimation::SkinnedAnimation(const std::string& animationPath, SharedPtr<SkinnedModel> model)
+	SkinnedAnimation::SkinnedAnimation(const std::string& animationPath, SharedPtr<SkinnedModel>& model)
 	{
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);

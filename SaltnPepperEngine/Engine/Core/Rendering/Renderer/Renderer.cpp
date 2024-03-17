@@ -99,7 +99,7 @@ namespace SaltnPepperEngine
                 VertexAttribute::Attribute<Vector3>(), // tangent
                 VertexAttribute::Attribute<Vector3>(), // bitangent
 
-                VertexAttribute::Attribute<Vector4Int>(), // boneId
+                VertexAttribute::Attribute<Vector4>(), // boneId
                 VertexAttribute::Attribute<Vector4>(), // boneWeight
             };
 

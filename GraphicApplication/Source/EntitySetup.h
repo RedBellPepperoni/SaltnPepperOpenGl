@@ -439,7 +439,7 @@ Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{0.0f})
 
 	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("SCharacter");
 
-	SharedPtr<SkinnedAnimation> anim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("AJidle","Assets\\Models\\walking.dae",modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> anim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("AJidle","Assets\\Models\\jump.dae",modelComp.m_handle);
 
 	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
 	animComp.GetAnimator()->AddAnimation("Idle", anim);

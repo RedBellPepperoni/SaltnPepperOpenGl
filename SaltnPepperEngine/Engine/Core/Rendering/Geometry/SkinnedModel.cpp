@@ -102,12 +102,20 @@ namespace SaltnPepperEngine
 			std::vector<Vector4Int> boneIdList;
 			std::vector<Vector4> boneWeightList;
 
-			boneIdList.resize(vertexCount,Vector4Int(-1));
-			boneWeightList.resize(vertexCount, Vector4(0.0f));
+			boneIdList.resize(vertexCount,Vector4Int(-1,-1,-1,-1));
+			boneWeightList.resize(vertexCount, Vector4(0.0f,0.0f,0.0f,0.0f));
 
 			// Load boneIDs and weights for each vertex
 			ExtractBoneWeightForVertices(boneIdList, boneWeightList, mesh, scene);
 
+
+			for (Vector4Int vec : boneIdList)
+			{
+				if (vec.x >= 100) { LOG_CRITICAL("YEET"); }
+				if (vec.y >= 100) { LOG_CRITICAL("YEET"); }
+				if (vec.z >= 100) { LOG_CRITICAL("YEET"); }
+				if (vec.w >= 100) { LOG_CRITICAL("YEET"); }
+			}
 
 			bool useBoneIds = boneIdList.size() == vertexCount;
 			bool useBoneWeights = boneWeightList.size() == vertexCount;
@@ -117,21 +125,21 @@ namespace SaltnPepperEngine
 			{
 				Vertex vertex;
 
-				Vector4Int boneIDs;
-				Vector4 weights;
+			/*	Vector4Int boneIDs;
+				Vector4 weights;*/
 
-				// Set default values
-				for (int i = 0; i < 4; i++)
-				{
-					boneIDs[i] = -1;
-					weights[i] = 0.0f;
-				}
+				//// Set default values
+				//for (int i = 0; i < 4; i++)
+				//{
+				//	boneIDs[i] = -1;
+				//	weights[i] = 0.0f;
+				//}
 
-				vertex.boneIds = boneIDs;
-				boneIdList.push_back(boneIDs);
-				
-				vertex.boneWeights = weights;
-				boneWeightList.push_back(weights);
+				//vertex.boneIds = boneIDs;
+				//boneIdList.push_back(boneIDs);
+				//
+				//vertex.boneWeights = weights;
+				//boneWeightList.push_back(weights);
 
 
 				Vector3 vector;
@@ -178,6 +186,7 @@ namespace SaltnPepperEngine
 				if (useBoneIds)
 				{
 					vertex.boneIds = boneIdList[i];
+				
 				}
 
 				if (useBoneWeights)

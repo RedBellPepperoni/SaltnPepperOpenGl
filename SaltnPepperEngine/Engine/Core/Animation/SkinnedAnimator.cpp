@@ -14,12 +14,14 @@ namespace SaltnPepperEngine
 		m_nextAnimation = nullptr;
 		m_queueAnimation = nullptr;
 
-		m_finalBoneMatrices.reserve(100);
+		m_finalBoneMatrices.resize(100, Matrix4(1.0f));
 
-		for (int i = 0; i < 100; i++)
+		//m_finalBoneMatrices.reserve(100);
+
+		/*for (int i = 0; i < 100; i++)
 		{
 			m_finalBoneMatrices.push_back(glm::mat4(1.0f));
-		}
+		}*/
 	}
 
 	SkinnedAnimator::~SkinnedAnimator()
