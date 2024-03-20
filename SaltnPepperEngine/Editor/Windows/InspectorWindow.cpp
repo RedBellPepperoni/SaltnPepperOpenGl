@@ -755,7 +755,7 @@ namespace MM
         if (ImGui::DragFloat3("##CollisionShapeHalfDims", glm::value_ptr(size), 1.0f, 0.0f, 10000.0f, "%.2f"))
         {
             collider->SetHalfDimensions(size);
-            phys.GetRigidBody()->ColliderUpdated();
+           // phys.GetRigidBody()->ColliderUpdated();
         }
         ImGui::NextColumn();
         ImGui::PushItemWidth(-1);
@@ -773,7 +773,7 @@ namespace MM
         if (ImGui::DragFloat("##CollisionShapeRadius", &radius, 1.0f, 0.0f, 10000.0f))
         {
             collider->SetRadius(radius);
-            phys.GetRigidBody()->ColliderUpdated();
+          //  phys.GetRigidBody()->ColliderUpdated();
         }
         ImGui::NextColumn();
         ImGui::PushItemWidth(-1);
@@ -791,14 +791,14 @@ namespace MM
         if (ImGui::DragFloat("##CollisionShapeRadius", &radius, 1.0f, 0.0f, 10000.0f, "%.2f"))
         {
             collider->SetRadius(radius);
-            phys.GetRigidBody()->ColliderUpdated();
+          //  phys.GetRigidBody()->ColliderUpdated();
         }
 
         float height = collider->GetHeight();
         if (ImGui::DragFloat("##CollisionShapeHeight", &height, 1.0f, 0.0f, 10000.0f, "%.2f"))
         {
             collider->SetHeight(height);
-            phys.GetRigidBody()->ColliderUpdated();
+          //  phys.GetRigidBody()->ColliderUpdated();
         }
         ImGui::NextColumn();
         ImGui::PushItemWidth(-1);
@@ -821,57 +821,57 @@ namespace MM
         ImGui::Separator();
         RigidBodyComponent& phys = reg.get<RigidBodyComponent>(e);
 
-        Vector3 pos = phys.GetRigidBody()->GetPosition();
-        Vector3 force = phys.GetRigidBody()->GetForce();
-        Vector3 rotation = glm::eulerAngles(phys.GetRigidBody()->GetRotation());
-        
-        float friction = phys.GetRigidBody()->GetFriction();
-        bool isStatic = phys.GetRigidBody()->GetIsStatic();
-        bool isStationary = phys.GetRigidBody()->GetIsStationary();
-        float mass = 1.0f / phys.GetRigidBody()->GetInverseMass();
-        Vector3 velocity = phys.GetRigidBody()->GetVelocity();
-        float elasticity = phys.GetRigidBody()->GetElasticity();
-        SharedPtr<Collider> collisionShape = phys.GetRigidBody()->GetCollider();
-        auto UUID = phys.GetRigidBody()->GetUniqueId();
+        //Vector3 pos = phys.GetRigidBody()->GetPosition();
+        //Vector3 force = phys.GetRigidBody()->GetForce();
+        //Vector3 rotation = glm::eulerAngles(phys.GetRigidBody()->GetRotation());
+        //
+        //float friction = phys.GetRigidBody()->GetFriction();
+        //bool isStatic = phys.GetRigidBody()->GetIsStatic();
+        //bool isStationary = phys.GetRigidBody()->GetIsStationary();
+        //float mass = 1.0f / phys.GetRigidBody()->GetInverseMass();
+        //Vector3 velocity = phys.GetRigidBody()->GetVelocity();
+        //float elasticity = phys.GetRigidBody()->GetElasticity();
+        //SharedPtr<Collider> collisionShape = phys.GetRigidBody()->GetCollider();
+        //auto UUID = phys.GetRigidBody()->GetUniqueId();
 
-        ImGuiUtils::Property("UniqueId", (uint32_t&)UUID, ImGuiUtils::PropertyFlag::ReadOnly);
+        //ImGuiUtils::Property("UniqueId", (uint32_t&)UUID, ImGuiUtils::PropertyFlag::ReadOnly);
 
-        if (ImGuiUtils::Property("Position", pos))
-            phys.GetRigidBody()->SetPosition(pos);
+        //if (ImGuiUtils::Property("Position", pos))
+        //    phys.GetRigidBody()->SetPosition(pos);
 
-        if (ImGuiUtils::Property("Velocity", velocity))
-            phys.GetRigidBody()->SetVelocity(velocity);
+        //if (ImGuiUtils::Property("Velocity", velocity))
+        //    phys.GetRigidBody()->SetVelocity(velocity);
 
        
-        if (ImGuiUtils::Property("Rotation", rotation))
-            phys.GetRigidBody()->SetRotation(Quaternion(rotation));
+        //if (ImGuiUtils::Property("Rotation", rotation))
+        //    phys.GetRigidBody()->SetRotation(Quaternion(rotation));
 
-        if (ImGuiUtils::Property("Force", force))
-            phys.GetRigidBody()->SetForce(force);
+        //if (ImGuiUtils::Property("Force", force))
+        //    phys.GetRigidBody()->SetForce(force);
 
-        if (ImGuiUtils::Property("Friction", friction, 0.0f, 1.0f))
-            phys.GetRigidBody()->SetFriction(friction);
+        //if (ImGuiUtils::Property("Friction", friction, 0.0f, 1.0f))
+        //    phys.GetRigidBody()->SetFriction(friction);
 
-        if (ImGuiUtils::Property("Mass", mass))
-        {
-            mass = Max(mass, 0.0001f);
-            phys.GetRigidBody()->SetInverseMass(1.0f / mass);
-        }
+        //if (ImGuiUtils::Property("Mass", mass))
+        //{
+        //    mass = Max(mass, 0.0001f);
+        //    phys.GetRigidBody()->SetInverseMass(1.0f / mass);
+        //}
 
-        if (ImGuiUtils::Property("Elasticity", elasticity))
-            phys.GetRigidBody()->SetElasticity(elasticity);
+        //if (ImGuiUtils::Property("Elasticity", elasticity))
+        //    phys.GetRigidBody()->SetElasticity(elasticity);
 
-        if (ImGuiUtils::Property("Static", isStatic))
-            phys.GetRigidBody()->SetStatic(isStatic);
+        //if (ImGuiUtils::Property("Static", isStatic))
+        //    phys.GetRigidBody()->SetStatic(isStatic);
 
-        if (ImGuiUtils::Property("Stationary", isStationary))
-            phys.GetRigidBody()->SetIsStationary(isStationary);
+        //if (ImGuiUtils::Property("Stationary", isStationary))
+        //    phys.GetRigidBody()->SetIsStationary(isStationary);
 
         ImGui::Columns(1);
         ImGui::Separator();
         ImGui::PopStyleVar();
 
-        const char* shapes[4] = { "Box", "Sphere", "Capsule", "Mesh (Broken)" };
+       /* const char* shapes[4] = { "Box", "Sphere", "Capsule", "Mesh (Broken)" };
         int selectedIndex = 0;
         const char* shape_current = collisionShape ? CollisionShapeTypeToString(collisionShape->GetType()) : "";
         int index = 0;
@@ -885,12 +885,12 @@ namespace MM
             index++;
         }
 
-        bool updated = ImGuiUtils::PropertyDropdown("Collision Shape", shapes, 4, &selectedIndex);
+        bool updated = ImGuiUtils::PropertyDropdown("Collision Shape", shapes, 4, &selectedIndex);*/
 
-        if (updated)
-            phys.GetRigidBody()->SetCollider(StringToCollisionShapeType(shapes[selectedIndex])); 
+       // if (updated)
+           // phys.GetRigidBody()->SetCollider(StringToCollisionShapeType(shapes[selectedIndex])); 
 
-        if (collisionShape)
+    /*    if (collisionShape)
         {
             switch (collisionShape->GetType())
             {
@@ -917,7 +917,7 @@ namespace MM
         {
             ImGui::NextColumn();
             ImGui::PushItemWidth(-1);
-        }
+        }*/
 
         ImGui::PopItemWidth();
         ImGui::Columns(1);

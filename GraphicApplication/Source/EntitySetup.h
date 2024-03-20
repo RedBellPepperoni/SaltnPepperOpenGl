@@ -214,7 +214,7 @@ Entity CreateDirectionalLight()
 	transform.SetEularRotation(Vector3(-11.4192f, 51.3504f, -7.0023f));
 	Light& light = dirLightEntity.AddComponent<Light>();
 	light.type = LightType::DirectionLight;
-	light.intensity = 0.7f;
+	light.intensity = 1.7f;
 
 	return dirLightEntity;
 }

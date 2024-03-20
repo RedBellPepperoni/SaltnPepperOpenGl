@@ -9,6 +9,8 @@
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
 
+#include "Engine/Core/Physics/PhysicsSystem/RigidBody.h"
+
 #include "Engine/Utils/UniqueId/UniqueId.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Utils/Logging/Log.h"
@@ -312,39 +314,57 @@ namespace SaltnPepperEngine
 		};
 
 
+		//class RigidBodyComponent
+		//{
+		//public:
+		//	RigidBodyComponent();
+		//	RigidBodyComponent(const RigidBodyComponent& other);
+		//	RigidBodyComponent(const PhysicsProperties& properties);
+		//	~RigidBodyComponent();
+
+		//	void OnImgui();
+
+		//	SharedPtr<RigidBody3D> GetRigidBody();
+
+
+		//	template <typename Archive>
+		//	void save(Archive& archive) const
+		//	{
+		//		archive(*(m_rigidBody)); 
+		//		//archive(cereal::make_nvp("Body",m_rigidBody));
+		//	}
+
+		//	template <typename Archive>
+		//	void load(Archive& archive)
+		//	{
+		//		m_rigidBody = MakeShared<RigidBody3D>();
+		//		archive(*(m_rigidBody));
+		//		//archive(cereal::make_nvp("Body", m_rigidBody));
+		//	}
+
+		//private:
+
+		//	SharedPtr<RigidBody3D> m_rigidBody = nullptr;
+		//	bool m_ownBody = false;
+		//	
+		//};
+
+
+		using Physics::RigidBody;
+
 		class RigidBodyComponent
 		{
 		public:
+
 			RigidBodyComponent();
-			RigidBodyComponent(const RigidBodyComponent& other);
-			RigidBodyComponent(const PhysicsProperties& properties);
-			~RigidBodyComponent();
+			~RigidBodyComponent() = default;
 
-			void OnImgui();
-
-			SharedPtr<RigidBody3D> GetRigidBody();
-
-
-			template <typename Archive>
-			void save(Archive& archive) const
-			{
-				archive(*(m_rigidBody)); 
-				//archive(cereal::make_nvp("Body",m_rigidBody));
-			}
-
-			template <typename Archive>
-			void load(Archive& archive)
-			{
-				m_rigidBody = MakeShared<RigidBody3D>();
-				archive(*(m_rigidBody));
-				//archive(cereal::make_nvp("Body", m_rigidBody));
-			}
+			SharedPtr<RigidBody>& GetRigidBody();
 
 		private:
 
-			SharedPtr<RigidBody3D> m_rigidBody = nullptr;
-			bool m_ownBody = false;
-			
+			SharedPtr<RigidBody> m_rigidBody = nullptr;
+
 		};
 	}
 

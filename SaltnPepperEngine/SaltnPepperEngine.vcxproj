@@ -45,7 +45,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ProjectDir)\Externals\Bullet3\include\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
@@ -92,18 +92,18 @@
     <ClInclude Include="Engine\Core\Animation\Interpolation.h" />
     <ClInclude Include="Engine\Core\Animation\SkinnedAnimation.h" />
     <ClInclude Include="Engine\Core\Animation\SkinnedAnimator.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsAPI.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
     <ClInclude Include="Engine\Core\Rendering\Textures\DepthTextureArray.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\Cloth.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\BaseShader.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\Compute.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\ComputeShader.h" />
-    <ClInclude Include="ContentBrowserWindow.h" />
     <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Editor\MDIcons.h" />
     <ClInclude Include="Editor\ImGuiRenderer.h" />
-    <ClInclude Include="EngineEditor.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\EditorCameraController.h" />
@@ -202,12 +202,16 @@
     <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\SoftBody.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\VerletCloth.h" />
-    <ClInclude Include="SkinnedMesh.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\BulletRigidBody.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\Animation\Interpolation.cpp" />
     <ClCompile Include="Engine\Core\Animation\SkinnedAnimation.cpp" />
     <ClCompile Include="Engine\Core\Animation\SkinnedAnimator.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Bullet3Bindings.h" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Textures\DepthTextureArray.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\Cloth.cpp" />
@@ -215,11 +219,9 @@
     <ClCompile Include="Engine\Core\Rendering\Shader\BaseShader.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Shader\Compute.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Shader\ComputeShader.cpp" />
-    <ClCompile Include="ContentBrowserWindow.cpp" />
     <ClCompile Include="Editor\Editor.cpp" />
     <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Editor\ImGuiRenderer.cpp" />
-    <ClCompile Include="EngineEditor.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Camera\EditorCameraController.cpp" />
@@ -284,6 +286,9 @@
     <ClCompile Include="Engine\Utils\Frustum.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\RectangleObject.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Particles\ParticleSystem.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\BulletRigidBody.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />
@@ -306,7 +311,6 @@
     <ClCompile Include="Engine\Core\Rendering\Shader\Shader.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\SoftBody.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\VerletCloth.cpp" />
-    <ClCompile Include="SkinnedMesh.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

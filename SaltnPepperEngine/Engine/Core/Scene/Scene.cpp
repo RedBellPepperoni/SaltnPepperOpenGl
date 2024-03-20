@@ -49,7 +49,7 @@ namespace SaltnPepperEngine
 	using namespace Physics;
 
 
-#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light, RigidBodyComponent 
+#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light //RigidBodyComponent 
 
 #define ALL_ENTTCOMPONENTS(input) get<Transform>(input). \
 	get<IdComponent>(input).		\
@@ -58,8 +58,9 @@ namespace SaltnPepperEngine
 	get<Hierarchy>(input).			\
 	get<Camera>(input).				\
     get<Light>(input).				\
-	get<RigidBodyComponent>(input). \
 	get<ModelComponent>(input)	
+	//get<RigidBodyComponent>(input). \
+	
 	
 	Scene::Scene(const std::string& name)
 		:m_name(name)
@@ -362,7 +363,7 @@ namespace SaltnPepperEngine
 
 			m_EntityManager->GetRegistry().clear();
 
-			entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
+			//entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
 
 
 		} 
