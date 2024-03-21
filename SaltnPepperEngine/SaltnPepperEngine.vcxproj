@@ -93,6 +93,7 @@
     <ClInclude Include="Engine\Core\Animation\SkinnedAnimation.h" />
     <ClInclude Include="Engine\Core\Animation\SkinnedAnimator.h" />
     <ClInclude Include="Engine\Core\AudioSystem\AudioUtils\ChannelData.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Bounding\AABB.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsAPI.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
@@ -203,9 +204,9 @@
     <ClInclude Include="Engine\Core\Rendering\Shader\Shader.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\SoftBody.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\VerletCloth.h" />
-    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\BulletRigidBody.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.h" />
-    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\Animation\Interpolation.cpp" />
@@ -287,9 +288,9 @@
     <ClCompile Include="Engine\Utils\Frustum.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\RectangleObject.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Particles\ParticleSystem.cpp" />
-    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\BulletRigidBody.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.cpp" />
-    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />

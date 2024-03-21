@@ -41,7 +41,7 @@ namespace SaltnPepperEngine
 			};
 		}
 		
-		/*enum class ActivationState
+	/*	enum class ActivationState
 		{
 			ACTIVE_TAG = 1,
 			ISLAND_SLEEPING = 2,

@@ -9,7 +9,7 @@
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
 
-#include "Engine/Core/Physics/PhysicsSystem/RigidBody.h"
+#include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
 
 #include "Engine/Utils/UniqueId/UniqueId.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"

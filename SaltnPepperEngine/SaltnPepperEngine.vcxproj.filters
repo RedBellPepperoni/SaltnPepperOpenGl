@@ -354,7 +354,7 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsAPI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\BulletRigidBody.h">
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.h">
@@ -363,10 +363,13 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody.h">
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\AudioSystem\AudioUtils\ChannelData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Bounding\AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -671,7 +674,7 @@
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Bullet3Bindings.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\BulletRigidBody.cpp">
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.cpp">
@@ -680,7 +683,7 @@
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody.cpp">
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

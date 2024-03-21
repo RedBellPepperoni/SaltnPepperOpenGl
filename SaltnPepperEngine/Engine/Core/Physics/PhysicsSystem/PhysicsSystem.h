@@ -2,8 +2,7 @@
 #define PHYSICSSYSTEM_H
 
 #include "Engine/Core/Memory/MemoryDefinitions.h"
-#include "Engine/Core/EntitySystem/Entity.h"
-#include <vector>
+ #include <vector>
 
 
 class btCollisionConfiguration;
@@ -24,7 +23,7 @@ namespace SaltnPepperEngine
 
 		struct PhysicsSystemData
 		{
-			using CollisionList = std::vector<std::pair<Entity, Entity>>;
+			using CollisionList = std::vector<std::pair<RigidBody*, RigidBody*>>;
 			using CollisionSwapPair = std::pair<CollisionList, CollisionList>;
 
 
@@ -61,7 +60,7 @@ namespace SaltnPepperEngine
 
 			static void InvoveCollisionUpdate();
 
-
+			static void AddCollisionEntry(RigidBody* objectOne ,RigidBody* objectTwo);
 			static PhysicsSystemData* GetCurrent();
 			
 		};

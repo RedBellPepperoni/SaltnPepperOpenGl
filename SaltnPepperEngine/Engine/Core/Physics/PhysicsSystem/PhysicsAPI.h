@@ -1,7 +1,7 @@
 #ifndef PHYSICSAPI_H
 #define PHYSICSAPI_H
 
-#include "BulletRigidBody.h"
+#include "RigidBody/BulletRigidBody.h"
 
 
 //namespace SaltnPepperEngine

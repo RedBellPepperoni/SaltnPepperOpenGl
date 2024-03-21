@@ -317,6 +317,19 @@ namespace SaltnPepperEngine
             return result;
         }
 
+        inline std::pair<Vector3, Vector3>GetMinMaxBounds(Vector3* verteces, size_t size)
+        {
+            Vector3 maxCoords(-1.0f * std::numeric_limits<float>::max());
+            Vector3 minCoords(std::numeric_limits<float>::max());
+            for (size_t i = 0; i < size; i++)
+            {
+                minCoords = VectorMin(minCoords, verteces[i]);
+                maxCoords = VectorMax(maxCoords, verteces[i]);
+            }
+            return { minCoords, maxCoords };
+        }
+
+
 
         template <class T>
         inline bool FloatEquals(T lhs, T rhs, T eps = EPSILON)

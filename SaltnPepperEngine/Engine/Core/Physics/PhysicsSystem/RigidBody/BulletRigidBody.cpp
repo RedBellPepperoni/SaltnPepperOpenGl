@@ -1,5 +1,5 @@
 #include "BulletRigidBody.h"
-#include "Bullet3Bindings.h"
+#include "Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
 
 namespace SaltnPepperEngine
 {
