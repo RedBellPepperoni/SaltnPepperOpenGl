@@ -92,6 +92,7 @@
     <ClInclude Include="Engine\Core\Animation\Interpolation.h" />
     <ClInclude Include="Engine\Core\Animation\SkinnedAnimation.h" />
     <ClInclude Include="Engine\Core\Animation\SkinnedAnimator.h" />
+    <ClInclude Include="Engine\Core\AudioSystem\AudioUtils\ChannelData.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsAPI.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
