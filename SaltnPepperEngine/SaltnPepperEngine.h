@@ -54,9 +54,9 @@
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
 #include "Engine/Core/Physics/Collision/BroadPhase/OctreeBroadPhase.h"
-#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider_Deprecated.h"
 
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"

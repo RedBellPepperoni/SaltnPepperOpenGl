@@ -39,8 +39,10 @@ namespace SaltnPepperEngine
             CollisionCallback onCollisionEnter;
             CollisionCallback onCollisionExit;
 
-            void UpdateTransform();
+            void UpdateTransform(Transform& ECSTransform);
             void UpdateCollider();
+
+            Transform localTransform;
         
 
         public:

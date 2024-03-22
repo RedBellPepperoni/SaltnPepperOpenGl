@@ -88,6 +88,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\BroadPhase.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\BoxCollider_Deprecated.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\CapsuleCollider_Deprecated.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\Collider.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\ConvexHull_Deprecated.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\MeshCollider_Deprecated.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\SphereCollider_Deprecated.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\NarrowPhase\Manifold.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\NarrowPhase\NarrowPhase.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\PhysicsEngine.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\RigidBody3D.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\RungeKuttaIntegration.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\BaseCollider.h" />
     <ClInclude Include="Engine\Core\Animation\Bone.h" />
     <ClInclude Include="Engine\Core\Animation\Interpolation.h" />
     <ClInclude Include="Engine\Core\Animation\SkinnedAnimation.h" />
@@ -106,25 +123,10 @@
     <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Editor\MDIcons.h" />
     <ClInclude Include="Editor\ImGuiRenderer.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\EditorCameraController.h" />
     <ClInclude Include="Engine\Core\Threading\MultiThreader.h" />
+    <ClInclude Include="Engine\Utils\Frustum.h" />
     <ClInclude Include="Engine\Utils\Plane.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\BroadPhase.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\BoxCollider.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\CapsuleCollider.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\Collider.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\ConvexHull.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\MeshCollider.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\Colliders\SphereCollider.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\NarrowPhase\Manifold.h" />
-    <ClInclude Include="Engine\Core\Physics\Collision\NarrowPhase\NarrowPhase.h" />
-    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\PhysicsEngine.h" />
-    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\RigidBody3D.h" />
-    <ClInclude Include="Engine\Core\Physics\PhysicsEngine\RungeKuttaIntegration.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\CameraController.h" />
     <ClInclude Include="Engine\Core\Rendering\Camera\FlyCameraController.h" />
     <ClInclude Include="Engine\Core\Rendering\Lights\Light.h" />
@@ -144,6 +146,7 @@
     <ClInclude Include="Engine\Core\Memory\MemoryDefinitions.h" />
     <ClInclude Include="Engine\Core\System\Window\Window.h" />
     <ClInclude Include="Engine\Utils\Maths\Random.h" />
+    <ClInclude Include="Engine\Utils\Ray.h" />
     <ClInclude Include="Engine\Utils\Singleton.h" />
     <ClInclude Include="Engine\Utils\Time\Time.h" />
     <ClInclude Include="Engine\Utils\GLUtils.h" />
@@ -179,7 +182,6 @@
     <ClInclude Include="Editor\Windows\InspectorWindow.h" />
     <ClInclude Include="Editor\Windows\TextEditWindow.h" />
     <ClInclude Include="Editor\ImGuiUtils.h" />
-    <ClInclude Include="Engine\Utils\Ray.h" />
     <ClInclude Include="Externals\Imgui\imconfig.h" />
     <ClInclude Include="Externals\Imgui\ImFileBrowser.h" />
     <ClInclude Include="Externals\Imgui\imgui.h" />
@@ -194,7 +196,6 @@
     <ClInclude Include="Externals\Imgui\ImGuizmo.h" />
     <ClInclude Include="Editor\Windows\FileBrowserWindow.h" />
     <ClInclude Include="Font.h" />
-    <ClInclude Include="Engine\Utils\Frustum.h" />
     <ClInclude Include="Editor\Windows\SceneWindow.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\RectangleObject.h" />
     <ClInclude Include="Engine\Core\Scene\SceneManager.h" />
@@ -209,6 +210,22 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\BoxCollider_Deprecated.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\CapsuleCollider_Deprecated.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\Collider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\ConvexHull_Deprecated.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\MeshCollider_Deprecated.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\SphereCollider_Deprecated.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\NarrowPhase\Manifold.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\NarrowPhase\NarrowPhase.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\PhysicsEngine.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\RigidBody3D.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\RungeKuttaIntegration.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\BaseCollider.cpp" />
     <ClCompile Include="Engine\Core\Animation\Interpolation.cpp" />
     <ClCompile Include="Engine\Core\Animation\SkinnedAnimation.cpp" />
     <ClCompile Include="Engine\Core\Animation\SkinnedAnimator.cpp" />
@@ -224,25 +241,11 @@
     <ClCompile Include="Editor\Editor.cpp" />
     <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Editor\ImGuiRenderer.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Camera\EditorCameraController.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Material\Material.cpp" />
     <ClCompile Include="Engine\Core\Threading\MultiThreader.cpp" />
+    <ClCompile Include="Engine\Utils\Frustum.cpp" />
     <ClCompile Include="Engine\Utils\Plane.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\OctreeBroadPhase.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\BoxCollider.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\CapsuleCollider.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\Collider.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\ConvexHull.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\MeshCollider.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\Colliders\SphereCollider.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\NarrowPhase\Manifold.cpp" />
-    <ClCompile Include="Engine\Core\Physics\Collision\NarrowPhase\NarrowPhase.cpp" />
-    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\PhysicsEngine.cpp" />
-    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\RigidBody3D.cpp" />
-    <ClCompile Include="Engine\Core\Physics\PhysicsEngine\RungeKuttaIntegration.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Camera\FlyCameraController.cpp" />
     <ClCompile Include="Engine\Core\Components\SceneComponents.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Renderer\DebugRenderer.cpp" />
@@ -267,13 +270,13 @@
     <ClCompile Include="Engine\Core\EntitySystem\EntityManager.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Renderer\Renderer.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Renderer\RenderManager.cpp" />
+    <ClCompile Include="Engine\Utils\Ray.cpp" />
     <ClCompile Include="Engine\Utils\Serialization\GLMSerialization.h" />
     <ClCompile Include="Engine\Utils\Serialization\Serialization.h" />
     <ClCompile Include="Externals\glad\src\glad.c" />
     <ClCompile Include="Editor\Windows\HierarchyWindow.cpp" />
     <ClCompile Include="Editor\Windows\InspectorWindow.cpp" />
     <ClCompile Include="Editor\ImGuiUtils.cpp" />
-    <ClCompile Include="Engine\Utils\Ray.cpp" />
     <ClCompile Include="Externals\Imgui\imgui.cpp" />
     <ClCompile Include="Externals\Imgui\imgui_demo.cpp" />
     <ClCompile Include="Externals\Imgui\imgui_draw.cpp" />
@@ -285,7 +288,6 @@
     <ClCompile Include="Externals\Imgui\ImGuizmo.cpp" />
     <ClCompile Include="Editor\Windows\FileBrowserWindow.cpp" />
     <ClCompile Include="Font.cpp" />
-    <ClCompile Include="Engine\Utils\Frustum.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\RectangleObject.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Particles\ParticleSystem.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.cpp" />

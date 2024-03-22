@@ -1,7 +1,7 @@
 #pragma once
 #include "Engine/Core/Physics/Collision/Colliders/Collider.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
-#include "Engine/Core/Physics/Collision/Colliders/ConvexHull.h"
+#include "Engine/Core/Physics/Collision/Colliders/ConvexHull_Deprecated.h"
 
 
 namespace SaltnPepperEngine
@@ -9,13 +9,13 @@ namespace SaltnPepperEngine
 	namespace Physics
 	{
 
-		class BoxCollider : public Collider
+		class BoxCollider_Deprecated : public Collider
 		{
 
         public:
-			BoxCollider();
-			 BoxCollider(const Vector3& halfDims);
-			~BoxCollider();
+			BoxCollider_Deprecated();
+			 BoxCollider_Deprecated(const Vector3& halfDims);
+			~BoxCollider_Deprecated();
 
 
 			virtual std::vector<Vector3>& GetCollisionNormals(const RigidBody3D* currentBody) override;
@@ -106,7 +106,7 @@ namespace SaltnPepperEngine
         protected:
             Vector3 m_CuboidHalfDimensions;
 
-            static SharedPtr<ConvexHull> m_CubeHull;
+            static SharedPtr<ConvexHull_Deprecated> m_CubeHull;
 
 		};
 	}

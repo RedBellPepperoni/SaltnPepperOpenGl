@@ -1,8 +1,8 @@
 #include "RigidBody3D.h"
 
-#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider_Deprecated.h"
 #include "Engine/Utils/Logging/Log.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
@@ -226,11 +226,11 @@ namespace SaltnPepperEngine
 		{
 			switch (type)
 			{
-			case Physics::BOX: SetCollider(MakeShared<BoxCollider>());
+			case Physics::BOX: SetCollider(MakeShared<BoxCollider_Deprecated>());
 				break;
-			case Physics::SPHERE:SetCollider(MakeShared<SphereCollider>());
+			case Physics::SPHERE:SetCollider(MakeShared<SphereCollider_Deprecated>());
 				break;
-			case Physics::CAPSULE:SetCollider(MakeShared<CapsuleCollider>());
+			case Physics::CAPSULE:SetCollider(MakeShared<CapsuleCollider_Deprecated>());
 				break;
 			default: LOG_ERROR("Unsupported Collider");
 				break;

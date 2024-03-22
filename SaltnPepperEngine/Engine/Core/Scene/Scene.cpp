@@ -11,9 +11,9 @@
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
-#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider_Deprecated.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 
 
@@ -30,13 +30,13 @@
 
 
 
-CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::SphereCollider);
-CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::BoxCollider);
-CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::CapsuleCollider);
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::SphereCollider_Deprecated);
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::BoxCollider_Deprecated);
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::CapsuleCollider_Deprecated);
 
-CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::SphereCollider);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::BoxCollider);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::CapsuleCollider);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::SphereCollider_Deprecated);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::BoxCollider_Deprecated);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::CapsuleCollider_Deprecated);
 
 
 

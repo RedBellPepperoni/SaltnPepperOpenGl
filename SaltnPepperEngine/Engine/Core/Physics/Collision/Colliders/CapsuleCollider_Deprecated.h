@@ -5,12 +5,12 @@ namespace SaltnPepperEngine
 { 
 	namespace Physics
 	{
-		class CapsuleCollider : public Collider
+		class CapsuleCollider_Deprecated : public Collider
 		{
 
 		public:
-			CapsuleCollider(float radius = 1.0f, float height = 2.0f);
-			~CapsuleCollider() = default;
+			CapsuleCollider_Deprecated(float radius = 1.0f, float height = 2.0f);
+			~CapsuleCollider_Deprecated() = default;
 
 
 			virtual std::vector<Vector3>& GetCollisionNormals(const RigidBody3D* currentBody) override;

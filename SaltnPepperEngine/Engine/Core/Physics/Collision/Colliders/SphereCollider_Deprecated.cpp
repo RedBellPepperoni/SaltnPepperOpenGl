@@ -1,4 +1,4 @@
-#include "SphereCollider.h"
+#include "SphereCollider_Deprecated.h"
 #include "Engine/Core/Physics/PhysicsEngine/Rigidbody3D.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
@@ -10,14 +10,14 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
-		SphereCollider::SphereCollider()
+		SphereCollider_Deprecated::SphereCollider_Deprecated()
 		{
 			m_type = ColliderType::SPHERE;
 			SetRadius(1.0f);
 			m_transform = Math::Scale(Matrix4(1.0f), Vector3(m_radius * 2.0f));
 		}
 
-		SphereCollider::SphereCollider(float radius)
+		SphereCollider_Deprecated::SphereCollider_Deprecated(float radius)
 		{
 			m_type = ColliderType::SPHERE;
 			SetRadius(radius);
@@ -25,23 +25,23 @@ namespace SaltnPepperEngine
 
 			
 		}
-		SphereCollider::~SphereCollider()
+		SphereCollider_Deprecated::~SphereCollider_Deprecated()
 		{
 		}
 
-		std::vector<Vector3>& SphereCollider::GetCollisionNormals(const RigidBody3D* currentBody)
+		std::vector<Vector3>& SphereCollider_Deprecated::GetCollisionNormals(const RigidBody3D* currentBody)
 		{
 			// NO need for this in sphere collision
 			m_normallist.clear();
 			return m_normallist;
 
 		}
-		std::vector<ColliderEdge>& SphereCollider::GetEdgeList(const RigidBody3D* currentBody)
+		std::vector<ColliderEdge>& SphereCollider_Deprecated::GetEdgeList(const RigidBody3D* currentBody)
 		{
 			return m_edgelist;
 		}
 
-		void SphereCollider::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
+		void SphereCollider_Deprecated::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
 		{
 			Matrix4 transform = body ? body->GetTransform() * m_transform : m_transform;
 		
@@ -60,7 +60,7 @@ namespace SaltnPepperEngine
 
 		}
 
-		void SphereCollider::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const
+		void SphereCollider_Deprecated::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const
 		{
 			// Since its a sphere, we only need one face that will be parallel
 
@@ -70,7 +70,7 @@ namespace SaltnPepperEngine
 			manifoldPolygon.Normal = axis;
 		}
 
-		Matrix3 SphereCollider::BuildInverseInertia(float invMass) const
+		Matrix3 SphereCollider_Deprecated::BuildInverseInertia(float invMass) const
 		{
 
 		//https://en.wikipedia.org/wiki/List_of_moments_of_inertia
@@ -86,7 +86,7 @@ namespace SaltnPepperEngine
 			return inertia;
 		}
 
-		void SphereCollider::DebugDraw(const RigidBody3D* currentBody) const
+		void SphereCollider_Deprecated::DebugDraw(const RigidBody3D* currentBody) const
 		{
 			Matrix4 transform = currentBody->GetTransform() * m_transform;
 
@@ -108,7 +108,7 @@ namespace SaltnPepperEngine
 
 		}
 
-		void SphereCollider::SetRadius(const float radius)
+		void SphereCollider_Deprecated::SetRadius(const float radius)
 		{
 			// Set the incoming radius
 			m_radius = radius;
@@ -117,11 +117,11 @@ namespace SaltnPepperEngine
 			m_transform = Math::Scale(Matrix4(1.0f), Vector3(m_radius * 2.0f));
 		}
 
-		const float SphereCollider::GetRadius() const
+		const float SphereCollider_Deprecated::GetRadius() const
 		{
 			return m_radius;
 		}
-		float SphereCollider::GetSize() const
+		float SphereCollider_Deprecated::GetSize() const
 		{
 			return m_radius;
 		}

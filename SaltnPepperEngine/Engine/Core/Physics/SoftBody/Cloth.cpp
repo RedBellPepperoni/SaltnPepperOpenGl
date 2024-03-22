@@ -2,7 +2,7 @@
 #include "Engine/Core/Rendering/RenderDefinitions.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Components/Transform.h"
-#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider_Deprecated.h"
 
 namespace SaltnPepperEngine
 {
@@ -66,7 +66,7 @@ namespace SaltnPepperEngine
 
 	
 
-		void Cloth::OnInit(Transform* Transform, SharedPtr<SphereCollider>& collider)
+		void Cloth::OnInit(Transform* Transform, SharedPtr<SphereCollider_Deprecated>& collider)
 		{
 			sphereTransform = Transform;
 			sphere = collider;

@@ -59,7 +59,7 @@ namespace SaltnPepperEngine
 		{
 			auto& [currentCollisions, previousCollisions] = PhysicsSystem::GetCurrent()->collisions;
 
-			std::sort(currentCollisions.begin(), currentCollisions.end());
+			//std::sort(currentCollisions.begin(), currentCollisions.end());
 			auto previousCollisionEntry = previousCollisions.begin();
 
 

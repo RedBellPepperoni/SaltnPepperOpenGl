@@ -8,10 +8,10 @@
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 #include "Engine/Core/Physics/Collision/Colliders/Collider.h"
-#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/MeshCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/MeshCollider_Deprecated.h"
 
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
@@ -744,7 +744,7 @@ namespace MM
         return ColliderType::SPHERE;
     }
 
-    static void BoxColliderInspector(BoxCollider* collider, RigidBodyComponent& phys)
+    static void BoxColliderInspector(BoxCollider_Deprecated* collider, RigidBodyComponent& phys)
     {
         ImGui::AlignTextToFramePadding();
         ImGui::TextUnformatted("Half Dimensions");
@@ -761,7 +761,7 @@ namespace MM
         ImGui::PushItemWidth(-1);
     }
 
-    static void SphereColliderInspector(SphereCollider* collider, RigidBodyComponent& phys)
+    static void SphereColliderInspector(SphereCollider_Deprecated* collider, RigidBodyComponent& phys)
     {
        
         ImGui::AlignTextToFramePadding();
@@ -780,7 +780,7 @@ namespace MM
     }
 
    
-    static void CapsuleColliderInspector(CapsuleCollider* collider, RigidBodyComponent& phys)
+    static void CapsuleColliderInspector(CapsuleCollider_Deprecated* collider, RigidBodyComponent& phys)
     {
         ImGui::AlignTextToFramePadding();
         ImGui::TextUnformatted("Half Dimensions");
@@ -804,7 +804,7 @@ namespace MM
         ImGui::PushItemWidth(-1);
     }
 
-    static void MeshColliderInspector(MeshCollider* collider, RigidBodyComponent& phys)
+    static void MeshColliderInspector(MeshCollider_Deprecated* collider, RigidBodyComponent& phys)
     {  
         // Work on this Later
         ImGui::TextUnformatted("Hull Collision Shape");

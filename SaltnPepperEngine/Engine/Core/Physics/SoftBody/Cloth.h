@@ -25,7 +25,7 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
-		class SphereCollider;
+		class SphereCollider_Deprecated;
 
 		class SoftBodyParticle
 		{
@@ -66,7 +66,7 @@ namespace SaltnPepperEngine
 			Cloth();
 			Cloth(int n, float RangeBetweenPoints);
 
-			void OnInit(Transform* Transform, SharedPtr<SphereCollider>& collider);
+			void OnInit(Transform* Transform, SharedPtr<SphereCollider_Deprecated>& collider);
 			void OnUpdate(float deltaTime,const Transform& ballTransform,const Transform& clothTransform);
 
 			void Simulate(float deltaTime,const Transform& ballTransform, const Transform& clothTransform);
@@ -87,7 +87,7 @@ namespace SaltnPepperEngine
 
 			std::vector<SoftBodyParticle> particles;
 			Transform* sphereTransform = nullptr;
-			SharedPtr<SphereCollider> sphere = nullptr;
+			SharedPtr<SphereCollider_Deprecated> sphere = nullptr;
 
 			inline int IndexFrom2D(int x, int y);
 

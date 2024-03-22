@@ -6,17 +6,17 @@ namespace SaltnPepperEngine
 	namespace Physics
 	{
 
-		class SphereCollider : public Collider
+		class SphereCollider_Deprecated : public Collider
 		{
 		public:
 
-			SphereCollider();
+			SphereCollider_Deprecated();
 
 			//May be add an explicit here later on if it clashes
-			 SphereCollider(float radius);
+			 SphereCollider_Deprecated(float radius);
 
 
-			~SphereCollider();
+			~SphereCollider_Deprecated();
 
 
 			virtual std::vector<Vector3>& GetCollisionNormals(const RigidBody3D* currentBody) override;

@@ -1,4 +1,4 @@
-#include "BoxCollider.h"
+#include "BoxCollider_Deprecated.h"
 #include "Engine/Core/Physics/PhysicsEngine/Rigidbody3D.h"
 
 
@@ -7,9 +7,9 @@ namespace SaltnPepperEngine
 	namespace Physics
 	{
 
-		SharedPtr<ConvexHull> BoxCollider::m_CubeHull = MakeShared<ConvexHull>();
+		SharedPtr<ConvexHull_Deprecated> BoxCollider_Deprecated::m_CubeHull = MakeShared<ConvexHull_Deprecated>();
 		
-		BoxCollider::BoxCollider()
+		BoxCollider_Deprecated::BoxCollider_Deprecated()
 		{
 			m_CuboidHalfDimensions = Vector3(0.5f, 0.5f, 0.5f);
 			m_type = ColliderType::BOX;
@@ -24,7 +24,7 @@ namespace SaltnPepperEngine
 			m_edgelist.resize(m_CubeHull->GetNumEdges());
 		}
 
-		BoxCollider::BoxCollider(const Vector3& halfDims)
+		BoxCollider_Deprecated::BoxCollider_Deprecated(const Vector3& halfDims)
 		{
 			m_CuboidHalfDimensions = halfDims;
 			m_type = ColliderType::BOX;
@@ -39,10 +39,10 @@ namespace SaltnPepperEngine
 			m_edgelist.resize(m_CubeHull->GetNumEdges());
 			
 		}
-		BoxCollider::~BoxCollider()
+		BoxCollider_Deprecated::~BoxCollider_Deprecated()
 		{
 		}
-		std::vector<Vector3>& BoxCollider::GetCollisionNormals(const RigidBody3D* currentBody)
+		std::vector<Vector3>& BoxCollider_Deprecated::GetCollisionNormals(const RigidBody3D* currentBody)
 		{
 			// TODO: insert return statement here
 			m_normallist.resize(3);
@@ -57,7 +57,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		std::vector<ColliderEdge>& BoxCollider::GetEdgeList(const RigidBody3D* currentBody)
+		std::vector<ColliderEdge>& BoxCollider_Deprecated::GetEdgeList(const RigidBody3D* currentBody)
 		{
 			// TODO: insert return statement here
 			Matrix4 transform = currentBody->GetTransform() * m_transform;
@@ -72,7 +72,7 @@ namespace SaltnPepperEngine
 
 			return m_edgelist;
 		}
-		void BoxCollider::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
+		void BoxCollider_Deprecated::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
 		{
 
 			Matrix4 wsTransform = body ? body->GetTransform() * m_transform : m_transform;
@@ -88,7 +88,7 @@ namespace SaltnPepperEngine
 				*outMax = wsTransform * Vector4(m_CubeHull->GetVertex(vMax).pos, 1.0f);
 		}
 
-		void BoxCollider::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const
+		void BoxCollider_Deprecated::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const
 		{
 			Matrix4 wsTransform = currentObject ? currentObject->GetTransform() * m_transform : m_transform;
 
@@ -163,7 +163,7 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		Matrix3 BoxCollider::BuildInverseInertia(float invMass) const
+		Matrix3 BoxCollider_Deprecated::BuildInverseInertia(float invMass) const
 		{
 
 		//https://en.wikipedia.org/wiki/List_of_moments_of_inertia
@@ -179,7 +179,7 @@ namespace SaltnPepperEngine
 			return inertia;
 		}
 
-		void BoxCollider::DebugDraw(const RigidBody3D* currentBody) const
+		void BoxCollider_Deprecated::DebugDraw(const RigidBody3D* currentBody) const
 		{
 			Matrix4 transform = currentBody->GetTransform() * m_transform;
 
@@ -192,7 +192,7 @@ namespace SaltnPepperEngine
 			m_CubeHull->DebugDraw(transform);
 		}
 
-		void BoxCollider::ConstructCubeHull()
+		void BoxCollider_Deprecated::ConstructCubeHull()
 		{
 			
 			// Vertices

@@ -1,4 +1,4 @@
-#include "MeshCollider.h"
+#include "MeshCollider_Deprecated.h"
 #include "Engine/Core/Rendering/RenderDefinitions.h"
 #include "Engine/Core/Physics/PhysicsEngine/Rigidbody3D.h"
 
@@ -11,20 +11,20 @@ namespace SaltnPepperEngine
 
 	
 
-		MeshCollider::MeshCollider()
+		MeshCollider_Deprecated::MeshCollider_Deprecated()
 		{
 			m_HalfDimensions = Vector3(0.5f, 0.5f, 0.5f);
 			m_type = ColliderType::MESH;
 			m_normallist.resize(3);
 		}
 
-		MeshCollider::~MeshCollider()
+		MeshCollider_Deprecated::~MeshCollider_Deprecated()
 		{
 		}
 
-		void MeshCollider::BuildFromMesh(Mesh* mesh)
+		void MeshCollider_Deprecated::BuildFromMesh(Mesh* mesh)
 		{
-			m_Hull = MakeShared<ConvexHull>();
+			m_Hull = MakeShared<ConvexHull_Deprecated>();
 
 			SharedPtr<Rendering::VertexBuffer> vertexBuffer = mesh->GetVBO();
 			
@@ -55,7 +55,7 @@ namespace SaltnPepperEngine
 
 		}
 
-		std::vector<Vector3>& MeshCollider::GetCollisionNormals(const RigidBody3D* body)
+		std::vector<Vector3>& MeshCollider_Deprecated::GetCollisionNormals(const RigidBody3D* body)
 		{
 			Matrix3 objOrientation = QuatToMatrix(body->GetRotation());
 			m_normallist[0] = (objOrientation * Vector3(1.0f, 0.0f, 0.0f)); // X - Axis
@@ -66,7 +66,7 @@ namespace SaltnPepperEngine
 		
 		}
 
-		std::vector<ColliderEdge>& MeshCollider::GetEdgeList(const RigidBody3D* body)
+		std::vector<ColliderEdge>& MeshCollider_Deprecated::GetEdgeList(const RigidBody3D* body)
 		{
 			Matrix4 transform = body->GetTransform() * m_transform;
 
@@ -82,7 +82,7 @@ namespace SaltnPepperEngine
 			return m_edgelist;
 		}
 
-		void MeshCollider::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
+		void MeshCollider_Deprecated::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
 		{
 
 			Matrix4 wsTransform = Transpose(body ? body->GetTransform() * m_transform : m_transform);
@@ -98,7 +98,7 @@ namespace SaltnPepperEngine
 				*outMax = wsTransform * Vector4(m_Hull->GetVertex(vMax).pos, 1.0f);
 		}
 
-		void MeshCollider::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const
+		void MeshCollider_Deprecated::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const
 		{
 
 			Matrix4 wsTransform = currentObject ? currentObject->GetTransform() * m_transform : m_transform;
@@ -177,7 +177,7 @@ namespace SaltnPepperEngine
 
 		}
 
-		Matrix3 MeshCollider::BuildInverseInertia(float invMass) const
+		Matrix3 MeshCollider_Deprecated::BuildInverseInertia(float invMass) const
 		{
 		//https://en.wikipedia.org/wiki/List_of_moments_of_inertia
 			Matrix3 inertia(1.0f);
@@ -192,7 +192,7 @@ namespace SaltnPepperEngine
 			return inertia;
 		}
 
-		void MeshCollider::DebugDraw(const RigidBody3D* currentBody) const
+		void MeshCollider_Deprecated::DebugDraw(const RigidBody3D* currentBody) const
 		{
 			Matrix4 transform = currentBody->GetTransform() * m_transform;
 			m_Hull->DebugDraw(transform);

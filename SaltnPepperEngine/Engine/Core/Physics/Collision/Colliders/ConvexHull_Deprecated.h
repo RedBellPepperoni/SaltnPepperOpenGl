@@ -41,11 +41,11 @@ namespace SaltnPepperEngine
             std::vector<int> adjoining_face_ids;
         };
 
-        class ConvexHull
+        class ConvexHull_Deprecated
         {
         public:
-            ConvexHull();
-            ~ConvexHull();
+            ConvexHull_Deprecated();
+            ~ConvexHull_Deprecated();
 
 
             void AddVertex(const Vector3& v);

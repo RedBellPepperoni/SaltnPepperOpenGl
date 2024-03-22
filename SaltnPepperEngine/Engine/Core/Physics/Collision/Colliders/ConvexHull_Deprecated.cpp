@@ -1,4 +1,4 @@
-#include "ConvexHull.h"
+#include "ConvexHull_Deprecated.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
@@ -7,15 +7,15 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
-		ConvexHull::ConvexHull()
+		ConvexHull_Deprecated::ConvexHull_Deprecated()
 		{
 		}
-		ConvexHull::~ConvexHull()
+		ConvexHull_Deprecated::~ConvexHull_Deprecated()
 		{
 		}
 
 
-		void ConvexHull::AddVertex(const Vector3& v)
+		void ConvexHull_Deprecated::AddVertex(const Vector3& v)
 		{
 			HullVertex new_vertex;
 			new_vertex.idx = static_cast<int>(m_Vertices.size());
@@ -24,7 +24,7 @@ namespace SaltnPepperEngine
 			m_Vertices.push_back(new_vertex);
 		}
 
-		void ConvexHull::AddFace(const Vector3& normal, int nVerts, const int* verts)
+		void ConvexHull_Deprecated::AddFace(const Vector3& normal, int nVerts, const int* verts)
 		{
 			HullFace new_face;
 			new_face.idx = (int)m_Faces.size();
@@ -82,7 +82,7 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		int ConvexHull::FindEdge(int v0_idx, int v1_idx)
+		int ConvexHull_Deprecated::FindEdge(int v0_idx, int v1_idx)
 		{
 			for (const HullEdge& edge : m_Edges)
 			{
@@ -96,7 +96,7 @@ namespace SaltnPepperEngine
 			return -1;
 		}
 
-		void ConvexHull::GetMinMaxVerticesInAxis(const Vector3& local_axis, int* out_min_vert, int* out_max_vert)
+		void ConvexHull_Deprecated::GetMinMaxVerticesInAxis(const Vector3& local_axis, int* out_min_vert, int* out_max_vert)
 		{
 
 			int minVertex = 0, maxVertex = 0;
@@ -126,7 +126,7 @@ namespace SaltnPepperEngine
 				*out_max_vert = maxVertex;
 		}
 
-		void ConvexHull::DebugDraw(const Matrix4& transform)
+		void ConvexHull_Deprecated::DebugDraw(const Matrix4& transform)
 		{
 			/*for (HullFace& face : m_Faces)
 			{
@@ -153,7 +153,7 @@ namespace SaltnPepperEngine
 
 		
 
-		int ConvexHull::ConstructNewEdge(int parent_face_idx, int vert_start, int vert_end)
+		int ConvexHull_Deprecated::ConstructNewEdge(int parent_face_idx, int vert_start, int vert_end)
 		{
 			int out_idx = FindEdge(vert_start, vert_end);
 

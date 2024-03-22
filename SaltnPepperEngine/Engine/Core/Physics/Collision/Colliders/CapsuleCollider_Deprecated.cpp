@@ -1,4 +1,4 @@
-#include "CapsuleCollider.h"
+#include "CapsuleCollider_Deprecated.h"
 #include "Engine/Core/Physics/PhysicsEngine/Rigidbody3D.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
@@ -9,7 +9,7 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
-		CapsuleCollider::CapsuleCollider(float radius, float height)
+		CapsuleCollider_Deprecated::CapsuleCollider_Deprecated(float radius, float height)
 			: m_radius(radius)
 			, m_height(height)
 		{
@@ -18,17 +18,17 @@ namespace SaltnPepperEngine
 		}
 
 		
-		std::vector<Vector3>& CapsuleCollider::GetCollisionNormals(const RigidBody3D* currentBody)
+		std::vector<Vector3>& CapsuleCollider_Deprecated::GetCollisionNormals(const RigidBody3D* currentBody)
 		{
 			return m_normallist;
 		} 
 
-		std::vector<ColliderEdge>& CapsuleCollider::GetEdgeList(const RigidBody3D* currentBody)
+		std::vector<ColliderEdge>& CapsuleCollider_Deprecated::GetEdgeList(const RigidBody3D* currentBody)
 		{
 			return m_edgelist;
 		}
 
-		void CapsuleCollider::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
+		void CapsuleCollider_Deprecated::GetMinMaxFromAxis(const RigidBody3D* body, const Vector3& axis, Vector3* outMin, Vector3* outMax)
 		{
 			Matrix4 transform = body ? body->GetTransform() * m_transform : m_transform;
 			Vector3 pos = transform[3];
@@ -47,7 +47,7 @@ namespace SaltnPepperEngine
 			*outMax = bottomPosition + maxProj * localAxis;
 		}
 
-		void CapsuleCollider::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const
+		void CapsuleCollider_Deprecated::GetManifoldPolygon(const RigidBody3D* currentObject, const Vector3& axis, ManifoldPolygon& manifoldPolygon) const
 		{
 			manifoldPolygon.Faces[0] = currentObject->GetPosition() + axis * m_radius;
 			manifoldPolygon.FaceCount = 1;
@@ -55,7 +55,7 @@ namespace SaltnPepperEngine
 			manifoldPolygon.Normal = axis;
 		}
 
-		Matrix3 CapsuleCollider::BuildInverseInertia(float invMass) const
+		Matrix3 CapsuleCollider_Deprecated::BuildInverseInertia(float invMass) const
 		{
 			Vector3 halfExtents(m_radius, m_radius, m_radius);
 			halfExtents.x += m_height * 0.5f;
@@ -77,7 +77,7 @@ namespace SaltnPepperEngine
 			return inertia;
 		}
 
-		void CapsuleCollider::DebugDraw(const RigidBody3D* currentBody) const
+		void CapsuleCollider_Deprecated::DebugDraw(const RigidBody3D* currentBody) const
 		{
 			Matrix4 transform = currentBody->GetTransform() * m_transform;
 
@@ -93,30 +93,30 @@ namespace SaltnPepperEngine
 
 		}
 
-		void CapsuleCollider::SetRadius(float radius)
+		void CapsuleCollider_Deprecated::SetRadius(float radius)
 		{
 			m_radius = radius;
 			m_transform = Matrix4(1.0f);
 		}
 
-		float CapsuleCollider::GetRadius() const
+		float CapsuleCollider_Deprecated::GetRadius() const
 		{
 			return m_radius;
 		}
 
-		float CapsuleCollider::GetSize() const
+		float CapsuleCollider_Deprecated::GetSize() const
 		{
 			return m_radius;
 		}
 
-		void CapsuleCollider::SetHeight(float height)
+		void CapsuleCollider_Deprecated::SetHeight(float height)
 		{
 			m_height = height;
 			m_transform = Matrix4(1.0f);
 			
 		}
 
-		float CapsuleCollider::GetHeight() const
+		float CapsuleCollider_Deprecated::GetHeight() const
 		{
 			return m_height;
 		}
