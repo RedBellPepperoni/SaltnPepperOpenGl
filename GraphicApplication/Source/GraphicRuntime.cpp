@@ -34,14 +34,14 @@ class GraphicRuntime : public Application
         CreateEnemyAI(AI::BehaviorState::Evade,EnemyModel::DEER,Vector3(10.0f,0.0f,20.0f));
         CreateEnemyAI(AI::BehaviorState::Flee,EnemyModel::SHEEP,Vector3(20.0f,0.0f,20.0f));*/
 
-        WanderPArams paramOne{ 6.0f,2.0f,3.0f };
+       /* WanderPArams paramOne{ 6.0f,2.0f,3.0f };
         WanderPArams paramTwo{ 2.0f,18.0f,5.0f };
         WanderPArams paramThree{ 10.0f,20.0f,6.0f };
 
 
        CreateWanderAI(paramOne, EnemyModel::GOBLIN, Vector3(-40.0f, 0.0f, 40.0f));
        CreateWanderAI(paramTwo, EnemyModel::SHEEP, Vector3(-35.0f, 0.0f,40.0f));
-       CreateWanderAI(paramThree, EnemyModel::CAT, Vector3(-40.0f, 0.0f, 35.0f));
+       CreateWanderAI(paramThree, EnemyModel::CAT, Vector3(-40.0f, 0.0f, 35.0f));*/
        
 
        

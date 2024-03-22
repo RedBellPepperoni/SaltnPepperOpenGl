@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AIStuff\BoidManager.cpp" />
     <ClCompile Include="NavigableMap.cpp" />
     <ClCompile Include="Source\AIStuff\AIManager.cpp" />
     <ClCompile Include="Source\PlayerCharacter.cpp" />
@@ -154,6 +155,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AIStuff\BoidManager.h" />
     <ClInclude Include="NavigableMap.h" />
     <ClInclude Include="Source\AIStuff\AIManager.h" />
     <ClInclude Include="Source\PlayerCharacter.h" />

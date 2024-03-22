@@ -157,7 +157,7 @@ Entity CreateBaseFloor()
 	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Floor");
 	Transform& transform = floorEntity.GetComponent<Transform>();
 
-	transform.SetScale(Vector3(400.0f, 1.0f, 400.0f));
+	transform.SetScale(Vector3(160.0f, 1.0f, 90.0f));
 	transform.SetPosition(Vector3(0.0f, -0.5f, 0.0f));
 
 	ModelComponent& modelComp = floorEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
