@@ -180,7 +180,7 @@ namespace SaltnPepperEngine
 
 			AudioGeometry* CreateGeometry(Entity& entity);
 
-			AudioSource* CreateSource(Entity& entity);
+			void CreateSource(Entity& entity);
 
 
 			void GetListernerAttributes();

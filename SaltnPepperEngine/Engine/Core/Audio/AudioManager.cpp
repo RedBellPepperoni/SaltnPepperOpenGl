@@ -2,6 +2,7 @@
 #include <fmod_errors.h>
 #include "Engine/Utils/Logging/Log.h"
 #include "AudioSource.h"
+#include "AudioListener.h"
 
 #include "Engine/Core/Components/Transform.h"
 
@@ -72,15 +73,43 @@ namespace SaltnPepperEngine
 				return;
 			}
 
+			ComponentView listenerView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AudioListener>();
 
-			if (!GetInstance().m_AudioSources.empty())
+			if (listenerView.Size() > 1)
+			{
+				LOG_WARN("FMOD : More Than One Audio Listeners in the Scene");
+			}
+
+			if (!listenerView.IsEmpty())
+			{
+				AudioListenerComponent& listener = listenerView[0].GetComponent<AudioListenerComponent>();
+				Transform& listenerTransform = listenerView[0].GetComponent<Transform>();
+
+				listener.GetListener()->Update(listenerTransform, deltaTime);
+			}
+
+
+			// Update The Sounds
+			/*if (!GetInstance().m_AudioSources.empty())
 			{
 				for (AudioSource* source : GetInstance().m_AudioSources)
 				{
 					source->Update(deltaTime);
 				}
-			}
+			}*/
 
+			ComponentView sourceView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AudioListener>();
+
+			if (!sourceView.IsEmpty())
+			{
+				for (Entity sourceEntity : sourceView)
+				{
+					AudioSource* source = sourceEntity.GetComponent<AudioSourceComponent>().GetSource();
+					Transform& sourcetransform = sourceEntity.GetComponent<Transform>();
+
+					source->Update(sourcetransform, deltaTime);
+				}
+			}
 
 			CHECKFMODERR(GetInstance().m_audiosystem->update());
 
@@ -447,17 +476,14 @@ namespace SaltnPepperEngine
 			return audioGeo;
 		}
 
-		AudioSource* AudioManager::CreateSource(Entity& entity)
+		void AudioManager::CreateSource(Entity& entity)
 		{
-			Transform* transform = &entity.GetComponent<Transform>();
-
-			AudioSource* audioSource = &entity.AddComponent<AudioSource>(transform);
-			audioSource->RegisterSource();
-
-			SetSource3DMinMaxDist(audioSource->GetChannelIndex(), audioSource->Get3DMinDist(), audioSource->Get3DMaxDist());
 			
-			m_AudioSources.push_back(audioSource);
-			return audioSource;
+			AudioSource& audioSource = entity.AddComponent<AudioSource>();
+			audioSource.RegisterSource();
+
+			SetSource3DMinMaxDist(audioSource.GetChannelIndex(), audioSource.Get3DMinDist(), audioSource.Get3DMaxDist());
+	
 		}
 
 		

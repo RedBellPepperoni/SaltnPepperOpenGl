@@ -12,7 +12,8 @@
 #include "Engine/Utils/Logging/Log.h"
 #include <cereal/cereal.hpp>
 
-
+#include "Engine/Core/Audio/AudioSource.h"
+#include "Engine/Core/Audio/AudioListener.h"
 
 
 namespace SaltnPepperEngine
@@ -323,6 +324,34 @@ namespace SaltnPepperEngine
 			SharedPtr<RigidBody3D> m_rigidBody = nullptr;
 			bool m_ownBody = false;
 			
+		};
+
+
+		class AudioSourceComponent
+		{
+		public:
+			AudioSourceComponent();
+			~AudioSourceComponent() = default;
+
+			Audio::AudioSource* GetSource();
+
+		private:
+
+			UniquePtr<Audio::AudioSource> m_handle = nullptr;
+		};
+
+
+		class AudioListenerComponent
+		{
+		public:
+			AudioListenerComponent();
+			~AudioListenerComponent() = default;
+
+			Audio::AudioListener* GetListener();
+
+		private:
+
+			UniquePtr<Audio::AudioListener> m_handle = nullptr;
 		};
 	}
 

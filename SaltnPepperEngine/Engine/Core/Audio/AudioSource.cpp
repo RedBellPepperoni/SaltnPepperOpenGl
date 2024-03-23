@@ -10,9 +10,9 @@ namespace SaltnPepperEngine
 
 	namespace Audio
 	{
-		AudioSource::AudioSource(Transform* trasnform)
+		AudioSource::AudioSource()
 		{
-			m_transform = trasnform;
+			
 		}
 
 		AudioSource::~AudioSource()
@@ -22,16 +22,16 @@ namespace SaltnPepperEngine
 
 		bool AudioSource::SetAudioClip(const SharedPtr<AudioClip>& clip)
 		{
-			m_audioClip = clip;
+			m_audioClip = clip.get();
 
 			AudioManager::GetInstance().LoadSound(*clip, AudioManager::SoundType::Sound3D);
-			//AudioManager::GetInstance().
+			
 
 
 			return false;
 		}
 
-		const SharedPtr<AudioClip>& AudioSource::GetClip()
+		AudioClip* AudioSource::GetClip()
 		{
 			return m_audioClip;
 		}
@@ -46,18 +46,18 @@ namespace SaltnPepperEngine
 			}
 
 			AudioManager::GetInstance().PlaySound(*GetClip(), m_channelIndex);
-			AudioManager::GetInstance().SetSource3DAttributes(m_channelIndex ,m_transform->GetPosition(),Vector3(0.0f));
+			//AudioManager::GetInstance().SetSource3DAttributes(m_channelIndex ,,Vector3(0.0f));
 
 		}
 
 
 
-		void AudioSource::Update(float deltaTime)
+		void AudioSource::Update(const Transform& transform, float deltaTime)
 		{
 			
 
-			Vector3 position = m_transform->GetPosition();
-			CalculateVelocity(deltaTime);
+			Vector3 position = transform.GetPosition();
+			CalculateVelocity(transform, deltaTime);
 			AudioManager::GetInstance().SetSource3DAttributes(m_channelIndex, position, Vector3(0.0f));
 
 			
@@ -103,15 +103,15 @@ namespace SaltnPepperEngine
 			AudioManager::GetInstance().SetDSPState(m_channelIndex, filter, isactive);
 		}
 
-		Vector3 AudioSource::CalculateVelocity(const float deltatime)
+		Vector3 AudioSource::CalculateVelocity(const Transform& transform ,const float deltatime)
 		{
-			Vector3 currentPosition = m_transform->GetPosition();
+			Vector3 currentPosition = transform.GetPosition();
 
 			float distance = Distance(currentPosition, lastPosition);
 
 			lastPosition = currentPosition;
 
-			if (distance > 0.2f)
+			if (distance > 0.01f)
 			{
 
 				float speed = distance / deltatime;

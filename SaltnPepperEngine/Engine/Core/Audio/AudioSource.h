@@ -23,16 +23,16 @@ namespace SaltnPepperEngine
 		{
 		public:
 
-			AudioSource(Transform* transform);
+			AudioSource();
 			~AudioSource();
 
 			bool SetAudioClip(const SharedPtr<AudioClip>& clip);
 
-			const SharedPtr<AudioClip>& GetClip();
+			AudioClip* GetClip();
 
 			void PlayClip();
 
-			void Update(float deltaTime);
+			void Update(const Transform& transform, float deltaTime);
 
 			void RegisterSource();
 
@@ -53,23 +53,18 @@ namespace SaltnPepperEngine
 
 		protected:
 
-			Vector3 CalculateVelocity(const float deltatime);
+			Vector3 CalculateVelocity(const Transform& transform,const float deltatime);
 
 		protected:
 
 
-			SharedPtr<AudioClip> m_audioClip = nullptr;
+			AudioClip* m_audioClip = nullptr;
 
 			bool m_shouldLoop = false;
 
 			bool m_is3D = true;
 
 			bool m_hasClip = false;
-
-
-
-			// A useful Data pointer
-			Transform* m_transform = nullptr;
 
 			int m_channelIndex = -1;
 

@@ -201,6 +201,26 @@ namespace SaltnPepperEngine
 			return m_rigidBody;
 		}
 
-}
+		AudioSourceComponent::AudioSourceComponent()
+		{
+			m_handle = MakeUnique<Audio::AudioSource>();
+		}
+
+		Audio::AudioSource* AudioSourceComponent::GetSource()
+		{
+			return m_handle.get();
+		}
+
+		AudioListenerComponent::AudioListenerComponent()
+		{
+			m_handle = MakeUnique<Audio::AudioListener>();
+		}
+
+		Audio::AudioListener* AudioListenerComponent::GetListener()
+		{
+			return m_handle.get();
+		}
+
+	}
 }
 
