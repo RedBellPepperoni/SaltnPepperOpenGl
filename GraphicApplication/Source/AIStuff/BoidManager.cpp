@@ -18,28 +18,28 @@ namespace SaltnPepperEngine
 			Transform& flockTransform = flockEntity.GetComponent<Transform>();
 
 			flockTransform.SetPosition(position);
-			flockTransform.SetScale(Vector3(1.0f));
+			flockTransform.SetScale(Vector3(0.5f));
 			
 
 			// Add a Render Model to the Entity
-			ModelComponent& flockModelComp = flockEntity.AddComponent<ModelComponent>(PrimitiveType::Sphere);
+			ModelComponent& flockModelComp = flockEntity.AddComponent<ModelComponent>("Rooster");
 			
 			// Set the Material Parameters
 			SharedPtr<Material>& flockMat = flockModelComp.m_handle->GetMeshes()[0]->GetMaterial();
-			flockMat->SetAlbedoTexture("grass");
+			flockMat->SetAlbedoTexture("rooster");
 
 			// Add the Flock Identifier
 			Flock& flockComp = flockEntity.AddComponent<Flock>();
 			flockComp.flockId = static_cast<uint32_t>(flockSize);
 
-			flockComp.velocity = Vector2(9.0f);
+			flockComp.velocity = Vector2(position.x,position.z);
 
 			flockSize++;
 
 
 		}
 
-		void BoidManager::CreateObstacle(const Vector3& position)
+		void BoidManager::CreateObstacle(const Vector3& position, bool hideMesh)
 		{
 			// Dynamic name allocation
 			std::string name = "ObstacleEntity_" + std::to_string(obstacleCount);
@@ -52,14 +52,19 @@ namespace SaltnPepperEngine
 			obstacleTransform.SetPosition(position);
 			obstacleTransform.SetScale(Vector3(1.0f));
 
+			float RandomYaw = Random32::Range.GetRandom(-60.0f, 70.0f);
+			obstacleTransform.SetEularRotation(Vector3(0.0f,RandomYaw,0.0f));
 
-			// Add a Render Model to the Entity
-			ModelComponent& obstacleModelComp = obstacleEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+			if (!hideMesh)
+			{
+				// Add a Render Model to the Entity
+				ModelComponent& obstacleModelComp = obstacleEntity.AddComponent<ModelComponent>("Rock");
 
-			// Set the Material Parameters
-			SharedPtr<Material>& obstacleMat = obstacleModelComp.m_handle->GetMeshes()[0]->GetMaterial();
-			obstacleMat->SetAlbedoTexture("deer");
+				// Set the Material Parameters
+				SharedPtr<Material>& obstacleMat = obstacleModelComp.m_handle->GetMeshes()[0]->GetMaterial();
+				obstacleMat->SetAlbedoTexture("rock");
 
+			}
 			// Add the Flock Identifier
 			Obstacle& obstacleComp = obstacleEntity.AddComponent<Obstacle>();
 
@@ -75,15 +80,15 @@ namespace SaltnPepperEngine
 			Transform& predatorTransform = predatorEntity.GetComponent<Transform>();
 
 			predatorTransform.SetPosition(position);
-			predatorTransform.SetScale(Vector3(1.0f));
+			predatorTransform.SetScale(Vector3(0.5f));
 
 
 			// Add a Render Model to the Entity
-			ModelComponent& predatorModelComp = predatorEntity.AddComponent<ModelComponent>(PrimitiveType::Cube);
+			ModelComponent& predatorModelComp = predatorEntity.AddComponent<ModelComponent>("Dog");
 
 			// Set the Material Parameters
 			SharedPtr<Material>& predatorMat = predatorModelComp.m_handle->GetMeshes()[0]->GetMaterial();
-			predatorMat->SetAlbedoTexture("cat");
+			predatorMat->SetAlbedoTexture("dog");
 
 			// Add the Flock Identifier
 			Predator& predatorComp = predatorEntity.AddComponent<Predator>();
@@ -93,16 +98,46 @@ namespace SaltnPepperEngine
 
 		void BoidManager::OnInit()
 		{
-			obstacleRadius = 2.0f;
-			avoidanceRadius = 16.0f;
-			predatorAvoidanceRadius = 12.0f;
+			obstacleRadius = 7.0f;
+			avoidanceRadius = 3.5f;
+			predatorAvoidanceRadius = 16.0f;
 		}
 
 
 		void BoidManager::OnUpdate(const float& deltaTime)
 		{
 			localdeltaTime = deltaTime;
-			UpdateFlock();
+
+			ComponentView flockView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Flock>();
+			ComponentView obstacleView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Obstacle>();
+
+			ComponentView predatorView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Predator>();
+
+			if (predatorView.IsEmpty())
+			{
+				LOG_ERROR("NO PREDATOR FOUND");
+				return;
+			}
+
+			Transform& predatorTransform = predatorView[0].GetComponent<Transform>();
+			Vector3 worldPos = predatorTransform.GetPosition();
+
+			Vector2 predatorPosition = Vector2{ worldPos.x,worldPos.z };
+			std::vector<Vector2> obstaclePositionList;
+
+			for (Entity obstacleEntity : obstacleView)
+			{
+				Vector3 obstacleWorldPos = obstacleEntity.GetComponent<Transform>().GetPosition();
+				Vector2 finalpos = Vector2{ obstacleWorldPos.x,obstacleWorldPos.z };
+				obstaclePositionList.push_back(finalpos);
+
+			}
+
+
+
+			UpdateFlock(flockView, obstaclePositionList, predatorPosition);
+
+			UpdatePredator(flockView, obstaclePositionList, predatorTransform);
 		}
 		
 		void BoidManager::SeekAI(const Vector2& position, Flock& flockRef, Vector2 target)
@@ -137,15 +172,17 @@ namespace SaltnPepperEngine
 
 				Vector2 avoidDirection = position - otherPosition;
 
-				float distance = LengthSquared(avoidDirection);
+				float distance = Length(avoidDirection);
 
 				if (distance < avoidanceRadius)
 				{
-					flockRef.avoidanceVec = flockRef.avoidanceVec + Normalize(avoidDirection);
+					Vector2 finalAvoidance = distance > 0.1f ? Normalize(avoidDirection) : Vector2{ 0.0f };
+					flockRef.avoidanceVec = flockRef.avoidanceVec + finalAvoidance;
 				}
 			}
 
-			flockRef.avoidanceVec = Normalize(flockRef.avoidanceVec) * weight * localdeltaTime;
+			Vector2 finalVector = LengthSquared(flockRef.avoidanceVec) > 0.2f ? Normalize(flockRef.avoidanceVec) : Vector2{0.0f};
+			flockRef.avoidanceVec = finalVector * weight * localdeltaTime;
 		}
 
 
@@ -174,44 +211,39 @@ namespace SaltnPepperEngine
 
 				Vector2 avoidDirection = position - otherPosition;
 
-				float distance = LengthSquared(avoidDirection);
+				float distance = Length(avoidDirection);
 
 				if (distance < avoidanceRadius * 2)
 				{
-					flockRef.alignmentVec = flockRef.alignmentVec + Normalize(flockComp.velocity);
+					Vector2 finalVelo = LengthSquared(flockComp.velocity) > 0.2f ? Normalize(flockComp.velocity) : Vector2{ 0.0f };
+					flockRef.alignmentVec = flockRef.alignmentVec + finalVelo;
 					neighbours += 1;
 				}
 
 				flockRef.alignmentVec = Vector2{ flockRef.alignmentVec.x / neighbours, flockRef.alignmentVec.y / neighbours };
-				flockRef.alignmentVec = Normalize(flockRef.alignmentVec) * weight * localdeltaTime;
+				
+				
+				Vector2 finalAlign = LengthSquared(flockRef.alignmentVec) > 0.2f ? Normalize(flockRef.alignmentVec) : Vector2{ 0.0f };
+				flockRef.alignmentVec = finalAlign * weight * localdeltaTime;
 
 			}
 		}
 
-		void BoidManager::UpdateFlock()
+		void BoidManager::UpdateFlock(ComponentView<Flock>& flockView, const std::vector<Vector2>& obstaclePositionList, const Vector2& predatorPos)
 		{
-			float speed = 3.0f;
+			float speed = 6.0f;
 
-			ComponentView flockView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Flock>();
-			ComponentView obstacleView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<Obstacle>();
+			const float XMin = - Bounds.x / 2;
+			const float XMax = Bounds.x / 2;
+			
+			const float YMin = - Bounds.y / 2;
+			const float YMax = Bounds.y / 2;
 
+			
 			// make teh boids attarct to the center
 			Vector2 attractorTarget = Vector2{0.0f};
 
-			std::vector<Vector2> obstaclePositionList;
-
-			for (Entity obstacleEntity : obstacleView)
-			{
-				Vector3 obstacleWorldPos = obstacleEntity.GetComponent<Transform>().GetPosition();
-				Vector2 finalpos = Vector2{ obstacleWorldPos .x,obstacleWorldPos .z};
-				obstaclePositionList.push_back(finalpos);
-
-			}
-
-			if (obstaclePositionList.size() < 1)
-			{
-				//LOG_ERROR("NO Obstacles Found");
-			}
+			
 
 			for (Entity flockEntity : flockView)
 			{
@@ -225,19 +257,19 @@ namespace SaltnPepperEngine
 				SeekAI(convertedPos,flockComp, attractorTarget);
 
 				// Process Internal Agent to Agent avoidance
-				//SpreadAI(convertedPos, flockComp, flockView);
+				SpreadAI(convertedPos, flockComp, flockView);
 
 				// Process Agent Aligh=nemnt
-			//	AlignAI(convertedPos,flockComp, flockView);
+				AlignAI(convertedPos,flockComp, flockView);
 
 				// Process Agent Grouping
-				//GroupAI(convertedPos, flockComp, flockView);
+				GroupAI(convertedPos, flockComp, flockView);
 
 				// Process Agent Object Avoidance
-				//CheckObstacles(convertedPos, flockComp, obstaclePositionList);
+				CheckObstacles(convertedPos, flockComp, obstaclePositionList);
 
 				// Process Agent PredatorAvoidance
-
+				CheckPredator(convertedPos, flockComp, predatorPos);
 
 				// Process Velocity
 				flockComp.ProcessVelocity();
@@ -245,7 +277,7 @@ namespace SaltnPepperEngine
 				// Clamp Max Speed
 				float velocityMagnitude = LengthSquared(flockComp.velocity);
 
-				LOG_WARN("Velocity = {0}", velocityMagnitude);
+				//LOG_WARN("Velocity = {0}", velocityMagnitude);
 				if (velocityMagnitude > (speed *speed))
 				{
 					flockComp.velocity = Normalize(flockComp.velocity) * speed;
@@ -254,33 +286,33 @@ namespace SaltnPepperEngine
 				Vector2 newPosition = convertedPos + flockComp.velocity * localdeltaTime;
 
 				// Bordertraversal === X Direction
-				if (newPosition.x > Bounds.x/2)
+				if (newPosition.x > XMax)
 				{
-					newPosition.x = -Bounds.x / 2;
+					newPosition.x = XMin;
 				}
 
-				else if (newPosition.x < -Bounds.x / 2)
+				else if (newPosition.x < XMin)
 				{
-					newPosition.x = Bounds.x / 2;
+					newPosition.x = XMax;
 				}
 
 				// Bordertraversal === Y Direction
-				if (newPosition.y > Bounds.y / 2)
+				if (newPosition.y > YMax)
 				{
-					newPosition.y = -Bounds.y / 2;
+					newPosition.y = YMin;
 				}
 
-				else if (newPosition.y < -Bounds.y / 2)
+				else if (newPosition.y < YMin)
 				{
-					newPosition.y = Bounds.y / 2;
+					newPosition.y = YMax;
 				}
 
 
 				
 				
-				flockTransform.SetPosition(Vector3(newPosition.x, 0.0f,newPosition.y));
+				flockTransform.SetPosition(Vector3(newPosition.x, worldPos.y,newPosition.y));
 			
-				
+				UpdateAIRotation(flockTransform,flockComp);
 			
 			}
 
@@ -311,13 +343,23 @@ namespace SaltnPepperEngine
 
 				Vector2 avoidDirection = position - otherPosition;
 
-				float distance = LengthSquared(avoidDirection);
+				float distance = Length(avoidDirection);
 
 				if (distance < avoidanceRadius * 2)
 				{
-
+					avgPos = avgPos + otherPosition;
+					neighbours += 1;
 				}
 
+			}
+
+			if (neighbours > 0)
+			{
+				avgPos = Vector2{ avgPos.x / neighbours ,avgPos.y / neighbours };
+				flockRef.cohesionVec = avgPos - position;
+
+				Vector2 finalCohesion = Length(flockRef.cohesionVec) > 0.2f ? Normalize(flockRef.cohesionVec) : Vector2{ 0.0f };
+				flockRef.cohesionVec = finalCohesion * weight * localdeltaTime;
 			}
 		}
 
@@ -337,14 +379,18 @@ namespace SaltnPepperEngine
 			{
 				Vector2 avoidDirection = position - obtstaclePos;
 
-				float distanceToObstacle = LengthSquared(avoidDirection);
+				float distanceToObstacle = Length(avoidDirection);
 				if (distanceToObstacle < obstacleRadius)
 				{
 					weight = (obstacleRadius / distanceToObstacle) * maxWeight;
-					flockRef.obstacleAvoidanceVec = flockRef.obstacleAvoidanceVec + (Normalize(avoidDirection * weight));
+
+					Vector2 finalAvoidance = distanceToObstacle > 0.01f ? Normalize(avoidDirection * weight) : Vector2{ 0.0f };
+					flockRef.obstacleAvoidanceVec = flockRef.obstacleAvoidanceVec + (finalAvoidance);
 				}
 
-				flockRef.obstacleAvoidanceVec = Normalize(flockRef.obstacleAvoidanceVec) * baseWeight * localdeltaTime;
+				Vector2 obstacleAvoid = Length(flockRef.obstacleAvoidanceVec) > 0.01f ? Normalize(flockRef.obstacleAvoidanceVec) : Vector2{ 0.0f };
+
+				flockRef.obstacleAvoidanceVec = obstacleAvoid * baseWeight * localdeltaTime;
 			}
 
 		}
@@ -360,36 +406,171 @@ namespace SaltnPepperEngine
 			
 			Vector2 avoidDirection = position - predatorPosition;
 
-			float distanceToPredator = LengthSquared(avoidDirection);
+			float distanceToPredator = Length(avoidDirection);
 
 			if (distanceToPredator < predatorAvoidanceRadius)
 			{
 				weight = (obstacleRadius / distanceToPredator) * maxWeight;
-				flockRef.predatorAvoidanceVec = flockRef.predatorAvoidanceVec + (Normalize(avoidDirection * weight));
+				Vector2 finalAvoidance = distanceToPredator > 0.2f ? Normalize(avoidDirection * weight) : Vector2{ 0.0f };
+				flockRef.predatorAvoidanceVec = flockRef.predatorAvoidanceVec + finalAvoidance;
 			}
 
-			flockRef.predatorAvoidanceVec = Normalize(flockRef.predatorAvoidanceVec) * baseWeight * localdeltaTime;
+			Vector2 finalPredatorAvoid = Length(flockRef.predatorAvoidanceVec) > 0.2f ? Normalize(flockRef.predatorAvoidanceVec) : Vector2{ 0.0f };
+			flockRef.predatorAvoidanceVec = finalPredatorAvoid * baseWeight * localdeltaTime;
 
 
 		}
+
+		void BoidManager::UpdatePredator(ComponentView<Flock>& flockView, const std::vector<Vector2>& obstaclePositionList, Transform& predatorTransform)
+		{
+			//Speed less than the Flocks 
+			float speed = 5.5f;
+
+			const float XMin = -Bounds.x / 2;
+			const float XMax = Bounds.x / 2;
+
+			const float YMin = -Bounds.y / 2;
+			const float YMax = Bounds.y / 2;
+
+			
+			Vector3 worldPos = predatorTransform.GetPosition();
+			Vector2 predatorPosition = Vector2{ worldPos.x,worldPos.z};
+
+			// Process Predator Seek behaviour
+			PredatorSeek(predatorPosition,flockView);
+
+			//Process Obstacle Avoidance
+			PredatorCheckObtacles(predatorPosition,obstaclePositionList);
+
+			pVelocity = pVelocity + pTargetVec + pObstacleAvoidanceVec;
+
+			float velocityMagnitude = Length(pVelocity);
+
+			if (velocityMagnitude > speed)
+			{
+				pVelocity = Normalize(pVelocity) * speed;
+			}
+
+			Vector2 newPosition = predatorPosition + pVelocity * localdeltaTime;
+
+			// Bordertraversal === X Direction
+			if (newPosition.x > XMax)
+			{
+				newPosition.x = XMin;
+			}
+
+			else if (newPosition.x < XMin)
+			{
+				newPosition.x = XMax;
+			}
+
+			// Bordertraversal === Y Direction
+			if (newPosition.y > YMax)
+			{
+				newPosition.y = YMin;
+			}
+
+			else if (newPosition.y < YMin)
+			{
+				newPosition.y = YMax;
+			}
+
+
+			predatorTransform.SetPosition(Vector3(newPosition.x, worldPos.y, newPosition.y));
+
+			PredatorUpdateRotation(predatorTransform);
+
+		}
+	
+		void BoidManager::PredatorSeek(const Vector2& position, ComponentView<Flock>& flockView)
+		{
+			constexpr float weight = 10.0f;
+
+			if (flockView.IsEmpty())
+			{
+				return;
+			}
+
+			Vector2 avgPos = Vector2{ 0.0f };
+
+			for (Entity flockEntity : flockView)
+			{
+				Flock& flockComp = flockEntity.GetComponent<Flock>();
+				Transform& flockTransform = flockEntity.GetComponent<Transform>();
+
+				Vector3 worldPos = flockTransform.GetPosition();
+				Vector2 currentPos = Vector2{ worldPos.x, worldPos.z };
+
+				
+				avgPos = avgPos + currentPos;
+			}
+
+			avgPos = Vector2{ avgPos.x / flockSize ,avgPos.y/flockSize};
+
+			pTargetVec = avgPos - position;
+
+			Vector2 finalTargetVec = Length(pTargetVec) > 0.2f ? Normalize(pTargetVec) : Vector2{ 0.0f };
+
+			pTargetVec = finalTargetVec * weight * localdeltaTime;
+
+		}
+
+		void BoidManager::PredatorCheckObtacles(const Vector2& position,const std::vector<Vector2>& obstaclePositionList)
+		{
+			constexpr float maxWeight = 25.0f;
+			constexpr float baseWeight = 25.0f;
+			float weight = 0.0f;
+
+			pObstacleAvoidanceVec = Vector2{ 0.0f };
+
+			for (const Vector2& obstaclePos : obstaclePositionList)
+			{
+				Vector2 avoidDirection = position - obstaclePos;
+				float distanceToObstacle = Length(avoidDirection);
+
+				if (distanceToObstacle < obstacleRadius)
+				{
+					weight = (obstacleRadius / distanceToObstacle) * maxWeight;
+
+					Vector2 finalAvoidance = distanceToObstacle > 0.01f ? Normalize(avoidDirection * weight) : Vector2{ 0.0f };
+
+					pObstacleAvoidanceVec = pObstacleAvoidanceVec + finalAvoidance;
+				}
+
+
+				Vector2 finalObs = Length(pObstacleAvoidanceVec) > 0.01f ? Normalize(pObstacleAvoidanceVec) : Vector2{ 0.0f };
+				pObstacleAvoidanceVec = finalObs * baseWeight * localdeltaTime;
+			
+			}
+
+
+		}
+		
+		void BoidManager::PredatorUpdateRotation(Transform& predatorTransform )
+		{
+			//float angle = atan2f(pVelocity.y, pVelocity.x);
+
+			Vector3 velocity = Normalize(Vector3{ pVelocity.x,0.0f,pVelocity.y });
+			Vector3 worldFront = Vector3{ 0.0f,0.0f,-1.0f };
+			float angle = glm::angle(velocity, worldFront);
 
 		
-	
-		void BoidManager::PredatorSeek()
-		{
+			Quaternion rotation = GetQuaternion(Rotate(Matrix4(1.0f), angle, Vector3(0.0f, 1.0f, 0.0f)));
+			
+			predatorTransform.SetRotation(rotation);
+
 		}
 
-		void BoidManager::PredatorCheckObtacles()
+		void BoidManager::UpdateAIRotation(Transform& flockTransform, Flock& flockRef)
 		{
-		}
-		void BoidManager::UpdatePredator()
-		{
-		}
-		void BoidManager::PredatorUpdateRotation()
-		{
-		}
-		void BoidManager::UpdateAIRotation(uint32_t index)
-		{
+			Vector3 velocity = Normalize(Vector3{ flockRef.velocity.x,0.0f, flockRef.velocity.y });
+			Vector3 worldFront = Vector3{ 0.0f,0.0f,-1.0f };
+			float angle = glm::angle(velocity, worldFront);
+
+
+			Quaternion rotation = GetQuaternion(Rotate(Matrix4(1.0f), angle, Vector3(0.0f, 1.0f, 0.0f)));
+
+			flockTransform.SetRotation(rotation);
 		}
 	}
 }

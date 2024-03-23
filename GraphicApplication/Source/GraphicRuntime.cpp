@@ -30,7 +30,52 @@ class GraphicRuntime : public Application
 
         boidManager->OnInit();
 
+        boidManager->CreatePredator(Vector3(15.0f, 0.0f, 25.0f));
+
+        // Create Flock
         boidManager->CreateFlockEntity(Vector3(10.0f,0.0f,5.0f));
+        boidManager->CreateFlockEntity(Vector3(15.0f,0.0f,5.0f));
+        boidManager->CreateFlockEntity(Vector3(20.0f,0.0f,5.0f));
+        boidManager->CreateFlockEntity(Vector3(10.0f,0.0f,15.0f));
+        boidManager->CreateFlockEntity(Vector3(15.0f,0.0f,15.0f));
+        boidManager->CreateFlockEntity(Vector3(15.0f,0.0f,25.0f));
+        boidManager->CreateFlockEntity(Vector3(15.0f,0.0f,20.0f));
+
+
+        boidManager->CreateFlockEntity(Vector3(40.0f, 0.0f, 5.0f));
+        boidManager->CreateFlockEntity(Vector3(35.0f, 0.0f, 5.0f));
+        boidManager->CreateFlockEntity(Vector3(35.0f, 0.0f, 5.0f));
+        boidManager->CreateFlockEntity(Vector3(30.0f, 0.0f, 15.0f));
+        boidManager->CreateFlockEntity(Vector3(35.0f, 0.0f, 15.0f));
+        boidManager->CreateFlockEntity(Vector3(30.0f, 0.0f, 20.0f));
+
+
+        boidManager->CreateFlockEntity(Vector3(-30.0f, 0.0f, -30.0f));
+        boidManager->CreateFlockEntity(Vector3(-35.0f, 0.0f, -30.0f));
+        boidManager->CreateFlockEntity(Vector3(-40.0f, 0.0f, -25.0f));
+        boidManager->CreateFlockEntity(Vector3(-45.0f, 0.0f, -25.0f));
+        boidManager->CreateFlockEntity(Vector3(-45.0f, 0.0f, -25.0f));
+        boidManager->CreateFlockEntity(Vector3(-50.0f, 0.0f, -25.0f));
+        boidManager->CreateFlockEntity(Vector3(-50.0f, 0.0f, -20.0f));
+
+
+        boidManager->CreateFlockEntity(Vector3(30.0f, 0.0f, -30.0f));
+        boidManager->CreateFlockEntity(Vector3(35.0f, 0.0f, -30.0f));
+        boidManager->CreateFlockEntity(Vector3(40.0f, 0.0f, -25.0f));
+        boidManager->CreateFlockEntity(Vector3(45.0f, 0.0f, -25.0f));
+        boidManager->CreateFlockEntity(Vector3(45.0f, 0.0f, -25.0f));
+        boidManager->CreateFlockEntity(Vector3(50.0f, 0.0f, -25.0f));
+        boidManager->CreateFlockEntity(Vector3(50.0f, 0.0f, -20.0f));
+
+      // Create Obstacles
+        boidManager->CreateObstacle(Vector3(0.0f, 0.0f, 0.0f),true);
+        boidManager->CreateObstacle(Vector3(25.0f, 0.0f, 5.0f));
+        boidManager->CreateObstacle(Vector3(-20.0f, 0.0f, 5.0f));
+      /*  boidManager->CreateObstacle(Vector3(10.0f, 2.0f, 15.0f));
+        boidManager->CreateObstacle(Vector3(15.0f, 2.0f, 15.0f));
+        boidManager->CreateObstacle(Vector3(15.0f, 2.0f, 25.0f));
+        boidManager->CreateObstacle(Vector3(15.0f, 2.0f, 20.0f));*/
+
 
         CreatePlayerCharacter(mainCamera);
 

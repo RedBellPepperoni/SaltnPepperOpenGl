@@ -40,6 +40,10 @@ void LoadAllModels()
 	modelLib->LoadModel("Spider","Assets\\Models\\Spider.fbx");
 	modelLib->LoadModel("Deer","Assets\\Models\\Deer.fbx");
 	modelLib->LoadModel("Sheep","Assets\\Models\\Sheep.fbx");
+	modelLib->LoadModel("Rock","Assets\\Models\\Rock.fbx");
+	modelLib->LoadModel("Dog","Assets\\Models\\Dog.fbx");
+	modelLib->LoadModel("Rooster","Assets\\Models\\Rooster.fbx");
+	modelLib->LoadModel("Bread","Assets\\Models\\Bread.fbx");
 
 }
 
@@ -55,6 +59,10 @@ void LoadAllTextures()
 	textureLib->LoadTexture("spider", "Assets\\Textures\\spider.jpg", TextureFormat::RGBA);
 	textureLib->LoadTexture("deer", "Assets\\Textures\\deer.jpeg", TextureFormat::RGBA);
 	textureLib->LoadTexture("sheep", "Assets\\Textures\\sheep.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("dog", "Assets\\Textures\\dog.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("rock", "Assets\\Textures\\rock.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("rooster", "Assets\\Textures\\rooster.jpg", TextureFormat::RGBA);
+	textureLib->LoadTexture("bread", "Assets\\Textures\\bread.jpg", TextureFormat::RGBA);
 }
 
 Entity CreateMainCamera(Vector3 Position = Vector3{0.0f}, Vector3 Rotation = Vector3{0.0f})
@@ -302,7 +310,15 @@ Entity CreateWanderAI(WanderPArams params, EnemyModel model, Vector3 position = 
 }
 
 
+void CreateBreadScene()
+{
+	//Entity Bread
+}
 
+void CreateBread(const Vector3& position, const Vector3& rotation, const Vector3& scale)
+{
+
+}
 
 #endif //  EntitySetup
 

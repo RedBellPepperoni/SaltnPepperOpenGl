@@ -62,7 +62,7 @@ namespace SaltnPepperEngine
 
 
 			void CreateFlockEntity(const Vector3& position);
-			void CreateObstacle(const Vector3& position);
+			void CreateObstacle(const Vector3& position ,bool hideMesh = false);
 			void CreatePredator(const Vector3& position);
 			
 		private:
@@ -71,19 +71,19 @@ namespace SaltnPepperEngine
 			void SpreadAI(const Vector2& position, Flock& flockRef, ComponentView<Flock>& flockView);
 			void AlignAI(const Vector2& position, Flock& flockRef, ComponentView<Flock>& flockView);
 			void GroupAI(const Vector2& position, Flock& flockRef, ComponentView<Flock>& flockView);
-			void UpdateAIRotation(uint32_t index);
+			void UpdateAIRotation(Transform& flockTransform, Flock& flockRef);
 
 
 
-			void UpdateFlock();
+			void UpdateFlock(ComponentView<Flock>& flockView, const std::vector<Vector2>& obstaclePositionList, const Vector2& predatorPos);
 			void CheckObstacles(const Vector2& position, Flock& flockRef,  const std::vector<Vector2>& obstaclePositionList);
 			void CheckPredator(const Vector2& position, Flock& flockRef, const Vector2& predatorPosition);
 
 			
-			void PredatorSeek();
-			void PredatorCheckObtacles();
-			void UpdatePredator();
-			void PredatorUpdateRotation();
+			void PredatorSeek(const Vector2& position, ComponentView<Flock>& flockView);
+			void PredatorCheckObtacles(const Vector2& position,const std::vector<Vector2>& obstaclePositionList);
+			void UpdatePredator(ComponentView<Flock>& flockView, const std::vector<Vector2>& obstaclePositionList, Transform& predatorTransform);
+			void PredatorUpdateRotation(Transform& predatorTransform);
 
 		private:
 
@@ -115,15 +115,11 @@ namespace SaltnPepperEngine
 			Vector2 pObstacleAvoidanceVec;
 
 
-			float obstacleRadius = 2.0f;
-			float avoidanceRadius = 16.0f;
-			float predatorAvoidanceRadius = 12.0f;
+			float obstacleRadius = 8.0f;
+			float avoidanceRadius = 5.0f;
+			float predatorAvoidanceRadius = 15.0f;
 
-			float avoidanceLBoundary = 180.0f - 15.0f;
-			float avoidanceHBoundary = 180.0f + 15.0f;
-
-			float fovLBoundary = 180.0f - 30.0f;
-			float fovHBoundary = 180.0f + 30.0f;
+		
 
 			float attractorSpeed = 3.0f;
 
