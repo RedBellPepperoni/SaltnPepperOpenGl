@@ -57,6 +57,9 @@
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 
-
+// ============== AUDIO SYSTEM ==================
+#include "Engine/Core/Audio/AudioManager.h"
+#include "Engine/Core/Audio/AudioListener.h"
+#include "Engine/Core/Audio/AudioSource.h"
 
 using namespace SaltnPepperEngine;

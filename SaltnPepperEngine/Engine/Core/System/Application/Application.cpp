@@ -13,6 +13,7 @@
 #include "Engine/Core/Components/Transform.h"
 
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+#include "Engine/Core/Audio/AudioManager.h"
 #include "Editor/Editor.h"
 #include "Editor/ImGuiManager.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
@@ -47,8 +48,11 @@ namespace SaltnPepperEngine
 		m_modelLibrary = MakeShared<ModelLibrary>();
 		m_textureLibrary = MakeShared<TextureLibrary>();
 		m_cubeMapLibrary = MakeShared<CubeMapLibrary>();
-		//m_audioLibrary = MakeShared<AudioLibrary>();
+		m_audioLibrary = MakeShared<AudioLibrary>();
 
+
+
+		m_audioSystem = MakeUnique<AudioManager>();
 
 		m_physicsSystem = MakeUnique<PhysicsEngine>();
 		m_physicsSystem->Init();
@@ -63,7 +67,8 @@ namespace SaltnPepperEngine
 
 		m_mainCameraIndex = 0;
 
-		
+
+
 	
 		//m_physicsSystem->UpdateScene(m_currentScene);
 		
@@ -191,7 +196,6 @@ namespace SaltnPepperEngine
 		
 		m_imguiManager = MakeUnique<ImGuiManager>(false);
 		m_imguiManager->Init();
-
 
 		//m_editor->ToggleEditor();
 
@@ -342,10 +346,15 @@ namespace SaltnPepperEngine
 		return m_cubeMapLibrary;
 	}
 
-	SharedPtr<AudioLibrary>& Application::GetAudioLibrary()
+	AudioManager* Application::GetAudioSystem()
+	{
+		return m_audioSystem.get();
+	}
+
+	/*SharedPtr<AudioLibrary>& Application::GetAudioLibrary()
 	{
 		return m_audioLibrary;
-	}
+	}*/
 
 	float Application::GetGLFWTime()
 	{

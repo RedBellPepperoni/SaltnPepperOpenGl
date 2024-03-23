@@ -27,7 +27,7 @@ namespace SaltnPepperEngine
 		m_sensitivity = 0.0002f;
 		m_rotationalVelocity = Vector2((mousePosition.x - m_previousCursorPosition.x), (mousePosition.y - m_previousCursorPosition.y)) * m_sensitivity * 10.0f;
 
-		Application::GetCurrent().GetAppWindow().SetMouseHidden(true);
+		//Application::GetCurrent().GetAppWindow().SetMouseHidden(true);
 
 		if (Length(m_rotationalVelocity) > 0.0001f)
 		{

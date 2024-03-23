@@ -361,6 +361,8 @@ namespace SaltnPepperEngine
 
         void Window::SetMouseHidden(bool isHidden)
         {
+            m_mousehidden = isHidden;
+
             if (isHidden)
             {
                 glfwSetInputMode(windowHandle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -370,6 +372,12 @@ namespace SaltnPepperEngine
                 glfwSetInputMode(windowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
         }
+
+        bool Window::GetMouseHidden() const
+        {
+            return m_mousehidden;
+        }
+
         void Window::ToggleWireframe()
         {
             wireFrame = !wireFrame;

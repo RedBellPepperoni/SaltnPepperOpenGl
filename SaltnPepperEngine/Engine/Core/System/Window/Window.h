@@ -48,7 +48,7 @@ namespace SaltnPepperEngine
 			WindowProperties m_properties;
 			bool m_windowFoucs = true;
 
-
+			bool m_mousehidden = false;
 			// ============================ EVENT WRAPPERS  ==========================
 
 			static inline void WindowSizeCallback(GLFWwindow* window, int newWidth, int newHeight);
@@ -99,7 +99,10 @@ namespace SaltnPepperEngine
 
 			void SetWindowTitle(const std::string& newTitle);
 			void SetMousePosition(Vector2 position);
+
+
 			void SetMouseHidden(bool isHidden);
+			bool GetMouseHidden() const;
 			void ToggleWireframe();
 
 			const Vector2Int GetSize() const;

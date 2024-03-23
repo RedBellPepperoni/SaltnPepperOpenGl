@@ -21,6 +21,13 @@ namespace SaltnPepperEngine
 	class ModelLibrary;
 	class TextureLibrary;
 	class CubeMapLibrary;
+
+	namespace Audio
+	{
+		class AudioManager;
+	}
+	using Audio::AudioManager;
+	
 	class AudioLibrary;
 	class GameObjectRegistry;
 	class Scene;
@@ -94,6 +101,8 @@ namespace SaltnPepperEngine
 		UniquePtr<RuntimeEditor> m_editor = nullptr;
 
 		UniquePtr<SceneManager> m_sceneManager = nullptr;
+
+		UniquePtr<AudioManager> m_audioSystem = nullptr;
 
 		bool m_isRunning = false;
 		bool m_isPaused = false;
@@ -193,6 +202,8 @@ namespace SaltnPepperEngine
 		SharedPtr<TextureLibrary>& GetTextureLibrary();
 
 		SharedPtr<CubeMapLibrary>& GetCubeMapLibrary();
+
+		AudioManager* GetAudioSystem();
 
 		SharedPtr<AudioLibrary>& GetAudioLibrary();
 

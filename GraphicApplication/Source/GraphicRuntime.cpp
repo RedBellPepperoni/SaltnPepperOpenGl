@@ -9,6 +9,16 @@
 
 class GraphicRuntime : public Application
 {
+    void StartAudio()
+    {
+
+    }
+
+    void StopAudio()
+    {
+
+    }
+
 	void OnInit()
 	{
         parser = MakeShared<SceneParser>();
@@ -50,6 +60,10 @@ class GraphicRuntime : public Application
         GetPhysicsEngine()->SetGravity(Vector3(0.0f, -27.0f, 0.0f));
         StartPhysics(true);
 
+        Application::GetCurrent().GetAppWindow().SetMouseHidden(true);
+
+
+      
 	}
 
 
@@ -65,6 +79,12 @@ class GraphicRuntime : public Application
         PlayerCharacter& playerCharacter = player.GetComponent<PlayerCharacter>();
         playerCharacter.Update(deltaTime);
 
+
+        if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Escape))
+        {
+            bool mouseHidden = Application::GetCurrent().GetAppWindow().GetMouseHidden();
+            Application::GetCurrent().GetAppWindow().SetMouseHidden(!mouseHidden);
+        }
 
         animator->Update(deltaTime);
 
