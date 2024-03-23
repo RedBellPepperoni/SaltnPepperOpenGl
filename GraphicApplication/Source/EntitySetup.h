@@ -310,13 +310,22 @@ Entity CreateWanderAI(WanderPArams params, EnemyModel model, Vector3 position = 
 }
 
 
-void CreateBreadScene()
-{
-	//Entity Bread
-}
 
 void CreateBread(const Vector3& position, const Vector3& rotation, const Vector3& scale)
 {
+	Entity breadEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BreadModel");
+
+	Transform& breadTransform = breadEntity.GetComponent<Transform>();
+
+	breadTransform.SetPosition(position);
+	breadTransform.SetEularRotation(rotation);
+	breadTransform.SetScale(scale);
+
+	ModelComponent& breadModelComp = breadEntity.AddComponent<ModelComponent>("Bread");
+	SharedPtr<Material>& mat = breadModelComp.m_handle->GetMeshes()[0]->GetMaterial();
+
+	mat->SetAlbedoTexture("bread");
+
 
 }
 

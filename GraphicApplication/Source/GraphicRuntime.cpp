@@ -79,23 +79,8 @@ class GraphicRuntime : public Application
 
         CreatePlayerCharacter(mainCamera);
 
-       /* CreateEnemyAI(AI::BehaviorState::Seek,EnemyModel::GOBLIN,Vector3(10.0f,0.0f,10.0f));
-        CreateEnemyAI(AI::BehaviorState::Approach,EnemyModel::CAT,Vector3(-10.0f,0.0f,-10.0f));
-        CreateEnemyAI(AI::BehaviorState::Pursue,EnemyModel::SPIDER,Vector3(20.0f,0.0f,10.0f));
-        CreateEnemyAI(AI::BehaviorState::Evade,EnemyModel::DEER,Vector3(10.0f,0.0f,20.0f));
-        CreateEnemyAI(AI::BehaviorState::Flee,EnemyModel::SHEEP,Vector3(20.0f,0.0f,20.0f));*/
-
-       /* WanderPArams paramOne{ 6.0f,2.0f,3.0f };
-        WanderPArams paramTwo{ 2.0f,18.0f,5.0f };
-        WanderPArams paramThree{ 10.0f,20.0f,6.0f };
-
-
-       CreateWanderAI(paramOne, EnemyModel::GOBLIN, Vector3(-40.0f, 0.0f, 40.0f));
-       CreateWanderAI(paramTwo, EnemyModel::SHEEP, Vector3(-35.0f, 0.0f,40.0f));
-       CreateWanderAI(paramThree, EnemyModel::CAT, Vector3(-40.0f, 0.0f, 35.0f));*/
-       
-
-       
+     
+        CreateBreadScene();
 
 
 	}
@@ -141,6 +126,23 @@ class GraphicRuntime : public Application
         TPScontroller.MouseInput(transform,mousePosition,deltaTime);
         playerCharacter.ProcessKeyboardInput(transform,deltaTime);
 	}
+
+
+    void CreateBreadScene()
+    {
+        CreateBread(Vector3(0.0367f, 0.0f, 0.5524f), Vector3(0.0f, 50.4761f, 0.0f), Vector3(7.0f));
+        CreateBread(Vector3(0.6480f, 0.0f, 0.2416f), Vector3(0.0f, -42.6199f, 0.0f), Vector3(7.0f));
+        CreateBread(Vector3(-0.5872f, 0.0f, 0.3864f), Vector3(180.0f, 89.4249f, 180.0f), Vector3(7.0f));
+        CreateBread(Vector3(-0.6210f, 0.0f, -0.1543f), Vector3(180.0f, -46.8466f,180.0f), Vector3(7.0f));
+        CreateBread(Vector3(-0.1560f, 0.0f, -0.5662f), Vector3(180.0f, -69.2301f, 180.0f), Vector3(7.0f));
+        CreateBread(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(7.0f));
+        CreateBread(Vector3(0.4959f, 0.0f, -0.4508f), Vector3(0.0f, 48.6778f, 0.0f), Vector3(8.0f));
+  
+        CreateBread(Vector3(-0.2858f, 0.2534f, -0.1988f), Vector3(0.0f, 0.0f, 0.0f), Vector3(7.0f));
+        CreateBread(Vector3(0.4040f, 0.2534f, 0.1299f), Vector3(0.0f, -80.0934f, 0.0f), Vector3(7.0f));
+    
+    }
+
 
 private:
 
