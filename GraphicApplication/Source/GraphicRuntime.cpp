@@ -1,6 +1,7 @@
 #include "SaltnPepperEngine.h"
 #include "EntitySetup.h"
 #include "AIStuff/AIManager.h"
+#include "AIStuff/BoidManager.h"
 
 
 class GraphicRuntime : public Application
@@ -25,9 +26,14 @@ class GraphicRuntime : public Application
 
 
         aiManager = MakeShared<AI::AIManager>();
+        boidManager = MakeUnique<AI::BoidManager>();
 
+        boidManager->OnInit();
+
+        boidManager->CreateFlockEntity(Vector3(10.0f,0.0f,5.0f));
 
         CreatePlayerCharacter(mainCamera);
+
        /* CreateEnemyAI(AI::BehaviorState::Seek,EnemyModel::GOBLIN,Vector3(10.0f,0.0f,10.0f));
         CreateEnemyAI(AI::BehaviorState::Approach,EnemyModel::CAT,Vector3(-10.0f,0.0f,-10.0f));
         CreateEnemyAI(AI::BehaviorState::Pursue,EnemyModel::SPIDER,Vector3(20.0f,0.0f,10.0f));
@@ -66,6 +72,12 @@ class GraphicRuntime : public Application
 
         Transform* lookTransform = &PlayerLookView[0].GetComponent<Transform>();
 
+        if (boidManager)
+        {
+            boidManager->OnUpdate(deltaTime);
+        }
+
+
         aiManager->Update(deltaTime, playerTransform, lookTransform);
 
         if (Application::GetCurrent().GetEditorActive())
@@ -88,6 +100,7 @@ class GraphicRuntime : public Application
 private:
 
     SharedPtr<AI::AIManager> aiManager = nullptr;
+    UniquePtr<AI::BoidManager> boidManager = nullptr;
 
 };
 
