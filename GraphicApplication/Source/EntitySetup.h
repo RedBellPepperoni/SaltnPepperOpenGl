@@ -103,6 +103,15 @@ namespace SaltnPepperEngine
 			PlayerCharacter& player = playerbaseEntity.AddComponent<PlayerCharacter>();
 			transform->SetPosition(Position);
 
+
+			//AudioSourceComponent& legChargeSource = playerbaseEntity.AddComponent<AudioSourceComponent>();
+			AudioSource* source = AudioManager::GetInstance().CreateSource(playerbaseEntity);
+
+			AudioClip* clip = Application::GetCurrent().GetAudioLibrary()->GetResource("LegCharge").get();
+			source->SetAudioClip(clip);
+			
+			player.SetAudioSource(source);
+
 			AudioListenerComponent& audioListener = playerbaseEntity.AddComponent<AudioListenerComponent>();
 
 			PhysicsProperties properties;

@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)Source\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Source\;$SolutionDir)\Externals\Lua\src\;$(IncludePath)</IncludePath>
     <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\redis-plus-plus\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\inc\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\Externals\hiredis\</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)Source\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Source\;$SolutionDir)\Externals\Lua\src\;$(IncludePath)</IncludePath>
     <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\redis-plus-plus\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\inc\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\Externals\hiredis\</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

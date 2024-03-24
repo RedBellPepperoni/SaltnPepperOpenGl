@@ -3,11 +3,14 @@
 
 
 #include <Engine/Utils/Maths/MathDefinitions.h>
+#include "Engine/Core/Audio/AudioSource.h"
 
 struct AnimationComponent;
 
 namespace SaltnPepperEngine
 {
+	using namespace Audio;
+
 	namespace Components
 	{
 		class Transform;
@@ -39,6 +42,7 @@ namespace SaltnPepperEngine
 		~PlayerCharacter();
 
 		void Init(RigidBody3D* RigidBodyRef, Transform* cameraTransformRef);
+		void SetAudioSource(AudioSource* Source);
 		void SetAnimators(AnimationComponent* left, AnimationComponent* right);
 		void Update(float deltaTime);
 		void ProcessKeyboardInput(Transform& cameratransform, float deltaTime);
@@ -74,7 +78,11 @@ namespace SaltnPepperEngine
 		bool canJump = false;
 		bool canLegCharge = false;
 
+
+
 		float timeCounter = 0.0f;
+
+		AudioSource* m_source = nullptr;
 		//bool isJumping = true;
 	};
 

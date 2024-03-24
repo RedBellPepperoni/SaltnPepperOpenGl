@@ -24,15 +24,26 @@ class GraphicRuntime : public Application
         SharedPtr<AudioClip> clip = GetAudioLibrary()->GetResource("BGMusic");
 
         source->SetAudioClip(clip.get());
-        source->PlayClip();
+        //source->PlayClip();
 
     }
 
-    
+  /*  Entity CreateHoop()
+    {
+        Entity hoopEntity = GetCurrentScene()->CreateEntity("Hoop_"+std::to_string(hoopCount));
+
+    }*/
 
 	void OnInit()
 	{
 #pragma comment(lib, "Ws2_32.lib")
+
+        AudioLibrary* library = GetAudioLibrary().get();
+
+        SharedPtr<AudioClip> clip = library->LoadAudio("BGMusic", "Assets\\Audio\\EnchantedFestival.mp3");
+        SharedPtr<AudioClip> legClip = library->LoadAudio("LegCharge", "Assets\\Audio\\legCharge.wav");
+
+
 
         parser = MakeShared<SceneParser>();
         loader = MakeShared<SceneLoader>();
@@ -66,10 +77,7 @@ class GraphicRuntime : public Application
         }
 
 
-        AudioLibrary* library = GetAudioLibrary().get();
-
-        SharedPtr<AudioClip> clip = library->LoadAudio("BGMusic", "Assets\\Audio\\EnchantedFestival.mp3");
-
+       
         animator = MakeShared<Animator>();
         animator->Init(GetCurrentScene()->GetEntityManager());
 
@@ -162,6 +170,7 @@ private:
     SharedPtr<SceneParser> parser = nullptr;
     SharedPtr<SceneLoader> loader = nullptr;
 
+    int hoopCount = 0;
 };
 
 int main(int argc, char* argv)

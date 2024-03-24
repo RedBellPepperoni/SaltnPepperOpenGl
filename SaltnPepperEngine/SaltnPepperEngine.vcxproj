@@ -44,11 +44,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\Externals\Lua\src\;$(IncludePath)</IncludePath>
     <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ProjectDir)\Externals\fmod\core\inc\</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\Externals\Lua\src\;$(IncludePath)</IncludePath>
     <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ProjectDir)\Externals\fmod\core\inc\</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -91,6 +91,7 @@
     <ClInclude Include="Engine\Core\Audio\AudioListener.h" />
     <ClInclude Include="Engine\Core\Audio\AudioManager.h" />
     <ClInclude Include="Engine\Core\Audio\AudioSource.h" />
+    <ClInclude Include="Engine\Core\Lua\LuaScript.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\BaseShader.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\Compute.h" />
     <ClInclude Include="Engine\Core\Rendering\Shader\ComputeShader.h" />

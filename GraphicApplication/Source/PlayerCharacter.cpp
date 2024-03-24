@@ -32,6 +32,11 @@ namespace SaltnPepperEngine
 
 	}
 
+	void PlayerCharacter::SetAudioSource(AudioSource* Source)
+	{
+		m_source = Source;
+	}
+
 	void PlayerCharacter::SetAnimators(AnimationComponent* left, AnimationComponent* right)
 	{
 		leftHandAnimator = left;
@@ -195,12 +200,26 @@ namespace SaltnPepperEngine
 	bool PlayerCharacter::DetectGround(RigidBody3D* thisBody, RigidBody3D* otherBody)
 	{
 		
-
-		if (otherBody->m_tag & (CollisionTag::BOOMERANG || CollisionTag::GROUND || CollisionTag::PLATFORM))
+		if (otherBody->m_tag & CollisionTag::PLATFORM)
 		{
 			canJump = true;
 
+
+
+		}
+		else if (otherBody->m_tag & CollisionTag::PLATFORM)
+		{
+			canJump = true;
+
+
+		}
+
+		if (otherBody->m_tag & (CollisionTag::BOOMERANG))
+		{
+			
+			canJump = true;
 			//LOG_WARN("Ground Detected");
+
 
 		}
 	
@@ -278,6 +297,12 @@ namespace SaltnPepperEngine
 
 		//velocity.y +=  ChargeAmount * 30.0f;
 		m_rigidBodyRef->SetVelocity(velocity);
+
+		if (m_source)
+		{
+			m_source->PlayClip();
+		}
+
 		canJump = false;
 		canLegCharge = false;
 
