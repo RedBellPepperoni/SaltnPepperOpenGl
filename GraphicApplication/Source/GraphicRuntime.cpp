@@ -94,15 +94,7 @@ class GraphicRuntime : public Application
 
             ConnectionOptions options;
 
-            options.host = "redis-16166.c309.us-east-2-1.ec2.cloud.redislabs.com";
-            options.port = 16166;
-            options.password = "e2gy7RRilShyw0yoGcLSCe0ZfoGEtcbW";
-            options.user = "default";
-
-            std::string url = "redis://default:e2gy7RRilShyw0yoGcLSCe0ZfoGEtcbW@redis-16166.c309.us-east-2-1.ec2.cloud.redislabs.com:16166/0";
-            std::string secondurl = "tcp://127.0.0.1:6379";
-            auto redis = Redis(options);
-            LOG_CRITICAL(redis.ping());
+          
 
 
             //get the Inital Top score
