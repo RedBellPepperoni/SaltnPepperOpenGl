@@ -52,8 +52,6 @@ namespace SaltnPepperEngine
 
 
 
-		m_audioSystem = MakeUnique<AudioManager>();
-
 		m_physicsSystem = MakeUnique<PhysicsEngine>();
 		m_physicsSystem->Init();
 
@@ -182,7 +180,7 @@ namespace SaltnPepperEngine
 
 		m_window->SetEventCallback(BIND_FN(Application::ProcessEvent));
 
-		
+		AudioManager::GetInstance().Init();
 
 		//m_physicsSystem->SetPaused(false);
 		//bool testPause = m_physicsSystem->GetIsPaused();
@@ -280,7 +278,7 @@ namespace SaltnPepperEngine
 			m_physicsSystem->Update(m_deltaTime);
 			m_physicsSystem->UpdateECSTransforms(m_sceneManager->GetCurrentScene());
 //
-			
+			Audio::AudioManager::GetInstance().Update(m_deltaTime);
 
 			OnUpdate(m_deltaTime);
 
@@ -346,15 +344,13 @@ namespace SaltnPepperEngine
 		return m_cubeMapLibrary;
 	}
 
-	AudioManager* Application::GetAudioSystem()
-	{
-		return m_audioSystem.get();
-	}
+	
 
-	/*SharedPtr<AudioLibrary>& Application::GetAudioLibrary()
+	
+	SharedPtr<AudioLibrary>& Application::GetAudioLibrary()
 	{
 		return m_audioLibrary;
-	}*/
+	}
 
 	float Application::GetGLFWTime()
 	{

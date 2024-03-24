@@ -102,7 +102,7 @@ namespace SaltnPepperEngine
 
 		UniquePtr<SceneManager> m_sceneManager = nullptr;
 
-		UniquePtr<AudioManager> m_audioSystem = nullptr;
+		//UniquePtr<AudioManager> m_audioSystem = nullptr;
 
 		bool m_isRunning = false;
 		bool m_isPaused = false;
@@ -203,7 +203,7 @@ namespace SaltnPepperEngine
 
 		SharedPtr<CubeMapLibrary>& GetCubeMapLibrary();
 
-		AudioManager* GetAudioSystem();
+		//AudioManager* GetAudioSystem();
 
 		SharedPtr<AudioLibrary>& GetAudioLibrary();
 

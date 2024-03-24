@@ -26,7 +26,7 @@ namespace SaltnPepperEngine
 			AudioSource();
 			~AudioSource();
 
-			bool SetAudioClip(const SharedPtr<AudioClip>& clip);
+			bool SetAudioClip(AudioClip* clip);
 
 			AudioClip* GetClip();
 

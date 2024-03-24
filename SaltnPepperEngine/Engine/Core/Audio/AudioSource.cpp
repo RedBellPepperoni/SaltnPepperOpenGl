@@ -20,9 +20,9 @@ namespace SaltnPepperEngine
 
 		}
 
-		bool AudioSource::SetAudioClip(const SharedPtr<AudioClip>& clip)
+		bool AudioSource::SetAudioClip(AudioClip* clip)
 		{
-			m_audioClip = clip.get();
+			m_audioClip = clip;
 
 			AudioManager::GetInstance().LoadSound(*clip, AudioManager::SoundType::Sound3D);
 			

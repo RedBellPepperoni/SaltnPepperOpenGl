@@ -103,6 +103,7 @@ namespace SaltnPepperEngine
 			PlayerCharacter& player = playerbaseEntity.AddComponent<PlayerCharacter>();
 			transform->SetPosition(Position);
 
+			AudioListenerComponent& audioListener = playerbaseEntity.AddComponent<AudioListenerComponent>();
 
 			PhysicsProperties properties;
 			properties.collider = MakeShared<SphereCollider>(1.0f);

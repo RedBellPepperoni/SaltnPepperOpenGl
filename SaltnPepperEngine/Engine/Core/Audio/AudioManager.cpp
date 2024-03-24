@@ -476,14 +476,15 @@ namespace SaltnPepperEngine
 			return audioGeo;
 		}
 
-		void AudioManager::CreateSource(Entity& entity)
+		AudioSource* AudioManager::CreateSource(Entity& entity)
 		{
 			
-			AudioSource& audioSource = entity.AddComponent<AudioSource>();
-			audioSource.RegisterSource();
+			AudioSource* audioSource = entity.AddComponent<AudioSourceComponent>().GetSource();
+			audioSource->RegisterSource();
 
-			SetSource3DMinMaxDist(audioSource.GetChannelIndex(), audioSource.Get3DMinDist(), audioSource.Get3DMaxDist());
+			SetSource3DMinMaxDist(audioSource->GetChannelIndex(), audioSource->Get3DMinDist(), audioSource->Get3DMaxDist());
 	
+			return audioSource;
 		}
 
 		

@@ -9,21 +9,30 @@
 
 class GraphicRuntime : public Application
 {
-    void StartAudio()
+   
+
+    void CreateBackgroundAudio()
     {
+        Entity audioEntity = GetCurrentScene()->CreateEntity("BG_Audio");
+      
+
+
+        Audio::AudioSource* source = AudioManager::GetInstance().CreateSource(audioEntity);
+        SharedPtr<AudioClip> clip = GetAudioLibrary()->GetResource("BGMusic");
+
+        source->SetAudioClip(clip.get());
+        source->PlayClip();
 
     }
 
-    void StopAudio()
-    {
-
-    }
+    
 
 	void OnInit()
 	{
         parser = MakeShared<SceneParser>();
         loader = MakeShared<SceneLoader>();
 
+       
 
         parser->ParseScene("Engine\\Scene\\DeadEnergy.json");
         
@@ -52,6 +61,9 @@ class GraphicRuntime : public Application
         }
 
 
+        AudioLibrary* library = GetAudioLibrary().get();
+
+        SharedPtr<AudioClip> clip = library->LoadAudio("BGMusic", "Assets\\Audio\\EnchantedFestival.mp3");
 
         animator = MakeShared<Animator>();
         animator->Init(GetCurrentScene()->GetEntityManager());
@@ -62,7 +74,7 @@ class GraphicRuntime : public Application
 
         Application::GetCurrent().GetAppWindow().SetMouseHidden(true);
 
-
+        CreateBackgroundAudio();
       
 	}
 
