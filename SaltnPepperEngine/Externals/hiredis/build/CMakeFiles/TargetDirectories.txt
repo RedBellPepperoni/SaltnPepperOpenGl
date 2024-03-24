@@ -1,0 +1,7 @@
+D:/Fanshawe/Projects/Classes/Term-2/ExternalResources/RedisTest/RoadtoRedis/hiredis/build/CMakeFiles/hiredis.dir
+D:/Fanshawe/Projects/Classes/Term-2/ExternalResources/RedisTest/RoadtoRedis/hiredis/build/CMakeFiles/hiredis-test.dir
+D:/Fanshawe/Projects/Classes/Term-2/ExternalResources/RedisTest/RoadtoRedis/hiredis/build/CMakeFiles/PACKAGE.dir
+D:/Fanshawe/Projects/Classes/Term-2/ExternalResources/RedisTest/RoadtoRedis/hiredis/build/CMakeFiles/RUN_TESTS.dir
+D:/Fanshawe/Projects/Classes/Term-2/ExternalResources/RedisTest/RoadtoRedis/hiredis/build/CMakeFiles/INSTALL.dir
+D:/Fanshawe/Projects/Classes/Term-2/ExternalResources/RedisTest/RoadtoRedis/hiredis/build/CMakeFiles/ALL_BUILD.dir
+D:/Fanshawe/Projects/Classes/Term-2/ExternalResources/RedisTest/RoadtoRedis/hiredis/build/CMakeFiles/ZERO_CHECK.dir

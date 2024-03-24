@@ -72,11 +72,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)Source\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\inc\</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\redis-plus-plus\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\inc\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\Externals\hiredis\</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)Source\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\inc\</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\redis-plus-plus\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\inc\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\Externals\hiredis\</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -117,8 +117,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)SaltnPepperEngine\Externals\glfw\lib\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\lib\;$(SolutionDir)SaltnPepperEngine\Externals\msdf-atlas-gen\lib\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SaltnPepperEngine.lib;glfw3.lib;assimp-vc143-mt.lib;msdf-atlas-gen.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)SaltnPepperEngine\Externals\glfw\lib\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\lib\;$(SolutionDir)SaltnPepperEngine\Externals\msdf-atlas-gen\lib\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\lib\;$(SolutionDir)SaltnPepperEngine\Externals\redisLib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SaltnPepperEngine.lib;glfw3.lib;assimp-vc143-mt.lib;msdf-atlas-gen.lib;fmod_vc.lib;hiredisd.lib;redis++_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,8 +136,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)SaltnPepperEngine\Externals\glfw\lib\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\lib\;$(SolutionDir)SaltnPepperEngine\Externals\msdf-atlas-gen\lib\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SaltnPepperEngine.lib;glfw3.lib;assimp-vc143-mt.lib;msdf-atlas-gen.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)SaltnPepperEngine\Externals\glfw\lib\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\lib\;$(SolutionDir)SaltnPepperEngine\Externals\msdf-atlas-gen\lib\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\lib\;$(SolutionDir)SaltnPepperEngine\Externals\redisLib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SaltnPepperEngine.lib;glfw3.lib;assimp-vc143-mt.lib;msdf-atlas-gen.lib;fmod_vc.lib;hiredisd.lib;redis++_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

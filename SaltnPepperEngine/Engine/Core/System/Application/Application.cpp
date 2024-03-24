@@ -1,4 +1,4 @@
-  #include "Application.h"
+#include "Application.h"
 #include "Engine/Utils/Logging/Log.h"
 #include "Engine/Utils/Time/Time.h"
 #include "Engine/Core/System/Input/InputSystem.h"

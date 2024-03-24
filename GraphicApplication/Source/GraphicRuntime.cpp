@@ -5,7 +5,10 @@
 #include "AnimationDefinitions.h"
 #include "SceneLoading/SceneLoader.h"
 #include "SceneLoading/SceneParser.h"
+#include <sw/redis++/redis++.h>
 
+
+using namespace sw::redis;
 
 class GraphicRuntime : public Application
 {
@@ -29,6 +32,8 @@ class GraphicRuntime : public Application
 
 	void OnInit()
 	{
+#pragma comment(lib, "Ws2_32.lib")
+
         parser = MakeShared<SceneParser>();
         loader = MakeShared<SceneLoader>();
 
@@ -76,6 +81,37 @@ class GraphicRuntime : public Application
 
         CreateBackgroundAudio();
       
+
+        try {
+
+            ConnectionOptions options;
+
+            options.host = "redis-16166.c309.us-east-2-1.ec2.cloud.redislabs.com";
+            options.port = 16166;
+            options.password = "e2gy7RRilShyw0yoGcLSCe0ZfoGEtcbW";
+            options.user = "default";
+
+            std::string url = "redis://default:e2gy7RRilShyw0yoGcLSCe0ZfoGEtcbW@redis-16166.c309.us-east-2-1.ec2.cloud.redislabs.com:16166/0";
+            std::string secondurl = "tcp://127.0.0.1:6379";
+            auto redis = Redis(options);
+            LOG_CRITICAL(redis.ping());
+
+
+            //get the Inital Top score
+            LOG_CRITICAL("Topscore : {0}", redis.get("TopScore").value());
+
+            // Set TopScore
+            redis.set("TopScore", "10");
+            LOG_CRITICAL("New Topscore : {0}", redis.get("TopScore").value());
+
+           /* redis.setex("redis", 10, "c++");
+            redis.setnx("redis++", "c++");*/
+        }
+        catch (const Error& err) {
+            // other errors
+            std::cout << err.what() << std::endl;
+        }
+        
 	}
 
 
