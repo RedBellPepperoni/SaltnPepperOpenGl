@@ -91,6 +91,7 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCapsule.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCylinder.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\SphereCollider.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.h" />
@@ -222,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\SphereCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.cpp" />

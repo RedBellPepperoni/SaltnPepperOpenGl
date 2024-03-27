@@ -408,6 +408,9 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SaltnPepperEngine.h">
@@ -750,6 +753,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
