@@ -404,7 +404,24 @@ namespace SaltnPepperEngine
             return glm::abs(value);
         }
 
-      
+        template<typename T>
+        inline constexpr T RootTwo()
+        {
+            return glm::root_two<T>();
+        }
+
+        template<typename T>
+        inline constexpr T RootThree()
+        {
+            return glm::root_three<T>();
+        }
+
+        template<typename T>
+        inline constexpr T RootFive()
+        {
+            return glm::root_five<T>();
+        }
+
 		
 	}
 

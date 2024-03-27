@@ -49,7 +49,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ProjectDir)\Externals\Bullet3\include\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -88,6 +88,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCapsule.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BroadPhase\BroadPhase.h" />
@@ -113,6 +115,9 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Bounding\AABB.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsAPI.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\BaseShape.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\BoxShape.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\SphereShape.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
     <ClInclude Include="Engine\Core\Rendering\Textures\DepthTextureArray.h" />
     <ClInclude Include="Engine\Core\Physics\SoftBody\Cloth.h" />
@@ -208,8 +213,10 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\OrientedBoundingBox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BroadPhase\DefaultBroadPhase.cpp" />
@@ -231,6 +238,9 @@
     <ClCompile Include="Engine\Core\Animation\SkinnedAnimator.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Bullet3Bindings.h" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\BaseShape.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\BoxShape.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\SphereShape.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Textures\DepthTextureArray.cpp" />
     <ClCompile Include="Engine\Core\Physics\SoftBody\Cloth.cpp" />
@@ -293,6 +303,7 @@
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.cpp" />
+    <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\OrientedBoundingBox.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
     <ClCompile Include="Engine\Utils\Time\Time.cpp" />
