@@ -2,15 +2,17 @@
 #include "Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
 
 #include "Engine/Core/Physics/PhysicsSystem/Colliders/BoxCollider.h"
-//#include "Engine/Core/Physics/PhysicsSystem/Colliders/SphereCollider.h"
-//#include "Engine/Core/Physics/PhysicsSystem/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/SphereCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/CylinderCollider.h"
 
 namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
-		void RigidBody::UpdateTransform(Transform& ECSTransform)
-		{
+
+		void RigidBody::UpdateTransform(Transform& ECSTransform) 
+		{ 
 			Vector3 selfScale = ECSTransform.GetScale();
 
 			
@@ -44,7 +46,23 @@ namespace SaltnPepperEngine
 
 		}
 
-		
+
+		template< typename T>
+		bool TestCollider(BulletRigidBody* rigidBody, T* collider)
+		{
+			if (collider == nullptr) {return false;}
+			if (rigidBody == nullptr) { return false;}
+
+			if (collider->HasColliderChanged())
+			{
+				auto shape = collider->GetNativeHandle();
+				rigidBody->SetCollisionShape(shape->GetNativeHandle());
+				collider->SetColliderChangedFlag(false);
+			}
+
+			return true;
+
+		}
 
 		void RigidBody::UpdateCollider(BaseCollider* Collider)
 		{
@@ -53,7 +71,10 @@ namespace SaltnPepperEngine
 				rigidbody->SetCollisionShape(nullptr);
 			}
 
-			//if (TestCollider(rigidbody, static_cast<BoxCollider>(Collider)));
+			if (TestCollider(rigidbody.get(), reinterpret_cast<BoxCollider*>(Collider))) return ;
+			if (TestCollider(rigidbody.get(), reinterpret_cast<SphereCollider*>(Collider))) return;
+			if (TestCollider(rigidbody.get(), reinterpret_cast<CapsuleCollider*>(Collider))) return;
+			if (TestCollider(rigidbody.get(), reinterpret_cast<CylinderCollider*>(Collider))) return;
 		}
 
 		void RigidBody::Init()

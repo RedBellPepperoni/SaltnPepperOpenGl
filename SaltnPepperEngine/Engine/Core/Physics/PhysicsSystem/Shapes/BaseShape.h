@@ -43,7 +43,7 @@ namespace SaltnPepperEngine
 			void SetScale(const Vector3& scale);
 			const Vector3 GetScale() const;
 
-			btCollisionShape* GetHandle();
+			btCollisionShape* GetNativeHandle();
 			
 			BoundingBox GetAABB() const;
 			BoundingBox GetAABBTranformed(const Transform& transform) const;

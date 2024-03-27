@@ -57,7 +57,7 @@ namespace SaltnPepperEngine
 
 		void CapsuleCollider::SetBoundingCapsule(BoundingCapsule capsule)
 		{
-			CreateNewShape(capsule);
+			CreateNewShape(capsule );
 		}
 	}
 }

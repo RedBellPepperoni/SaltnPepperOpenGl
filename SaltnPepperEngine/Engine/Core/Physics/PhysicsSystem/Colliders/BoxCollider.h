@@ -8,7 +8,7 @@ namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
-		class BoxCollider : BaseCollider
+		class BoxCollider : public BaseCollider
 		{
 			SharedPtr<BoxShape> boxShape;
 			void CreateNewShape(const OrientedBoundingBox& box);

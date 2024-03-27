@@ -25,7 +25,7 @@ namespace SaltnPepperEngine
 			return FromBulletVector3(collider->getLocalScaling());
 		}
 
-		btCollisionShape* BaseShape::GetHandle()
+		btCollisionShape* BaseShape::GetNativeHandle()
 		{
 			return collider;
 		}
