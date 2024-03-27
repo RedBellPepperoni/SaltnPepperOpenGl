@@ -393,6 +393,21 @@
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCapsule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\CylinderShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCylinder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\SphereCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SaltnPepperEngine.h">
@@ -723,6 +738,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\CylinderShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\SphereCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

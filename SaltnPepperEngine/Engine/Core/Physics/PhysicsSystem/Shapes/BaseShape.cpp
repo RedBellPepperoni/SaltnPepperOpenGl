@@ -22,7 +22,7 @@ namespace SaltnPepperEngine
 
 		const Vector3 BaseShape::GetScale() const
 		{
-			FromBulletVector3(collider->getLocalScaling());
+			return FromBulletVector3(collider->getLocalScaling());
 		}
 
 		btCollisionShape* BaseShape::GetHandle()

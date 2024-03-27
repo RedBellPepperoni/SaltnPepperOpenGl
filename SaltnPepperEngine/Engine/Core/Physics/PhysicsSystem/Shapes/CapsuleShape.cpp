@@ -76,7 +76,7 @@ namespace SaltnPepperEngine
 		BoundingCapsule CapsuleShape::GetBoundingCapsule() const
 		{
 			BoundingBox box = GetAABB();
-			auto scale = GetScale();
+			Vector3 scale = GetScale();
 			box.m_min *= scale;
 			box.m_max *= scale;
 

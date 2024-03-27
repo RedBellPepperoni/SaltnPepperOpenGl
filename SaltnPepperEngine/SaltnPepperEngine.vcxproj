@@ -88,7 +88,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCapsule.h" />
+    <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCylinder.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\SphereCollider.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />
@@ -117,6 +121,7 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsAPI.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\BaseShape.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\BoxShape.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\CylinderShape.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\SphereShape.h" />
     <ClInclude Include="Engine\Core\Rendering\Geometry\SkinnedModel.h" />
     <ClInclude Include="Engine\Core\Rendering\Textures\DepthTextureArray.h" />
@@ -216,6 +221,9 @@
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\OrientedBoundingBox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\SphereCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />
@@ -240,6 +248,7 @@
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\BaseShape.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\BoxShape.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\CylinderShape.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\SphereShape.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Geometry\SkinnedModel.cpp" />
     <ClCompile Include="Engine\Core\Rendering\Textures\DepthTextureArray.cpp" />

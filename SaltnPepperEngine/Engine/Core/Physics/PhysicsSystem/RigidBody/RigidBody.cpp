@@ -1,6 +1,10 @@
 #include "RigidBody.h"
 #include "Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
 
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/BoxCollider.h"
+//#include "Engine/Core/Physics/PhysicsSystem/Colliders/SphereCollider.h"
+//#include "Engine/Core/Physics/PhysicsSystem/Colliders/CapsuleCollider.h"
+
 namespace SaltnPepperEngine
 {
 	namespace Physics
@@ -42,8 +46,14 @@ namespace SaltnPepperEngine
 
 		
 
-		void RigidBody::UpdateCollider()
+		void RigidBody::UpdateCollider(BaseCollider* Collider)
 		{
+			if (Collider == nullptr)
+			{
+				rigidbody->SetCollisionShape(nullptr);
+			}
+
+			//if (TestCollider(rigidbody, static_cast<BoxCollider>(Collider)));
 		}
 
 		void RigidBody::Init()
@@ -166,6 +176,11 @@ namespace SaltnPepperEngine
 		ActivationState RigidBody::GetActivationState() const
 		{
 			return ActivationState();
+		}
+
+		BoundingBox RigidBody::GetAABB() const
+		{
+			return BoundingBox();
 		}
 
 		void RigidBody::Activate()

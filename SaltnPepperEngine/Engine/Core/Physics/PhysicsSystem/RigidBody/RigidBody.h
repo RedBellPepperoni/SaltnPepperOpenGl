@@ -40,7 +40,7 @@ namespace SaltnPepperEngine
             CollisionCallback onCollisionExit;
 
             void UpdateTransform(Transform& ECSTransform);
-            void UpdateCollider();
+            void UpdateCollider(BaseCollider* Collider);
 
             Transform localTransform;
         
@@ -103,7 +103,7 @@ namespace SaltnPepperEngine
             void ActivateParentIsland();
             void SetActivationState(ActivationState state);
             ActivationState GetActivationState() const;
-            //AABB GetAABB() const;
+            BoundingBox GetAABB() const;
             void Activate();
             void ClearForces();
             float GetMass() const;
