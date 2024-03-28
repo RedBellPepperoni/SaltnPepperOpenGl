@@ -92,10 +92,12 @@ namespace SaltnPepperEngine
 		void RigidBody::Init(const Transform& transform, BaseCollider* collider)
 		{
 
-			rigidbody = MakeUnique<BulletRigidBody>(transform);
+			rigidbody = MakeShared<BulletRigidBody>(transform);
 		
 			PhysicsUtils::SetRigidBodyParent(rigidbody->GetNativeHandle(), this);
 		
+			if (collider == nullptr) { return; }
+
 			InvalidateCollider(reinterpret_cast<BoxCollider*>(collider));
 			InvalidateCollider(reinterpret_cast<SphereCollider*>(collider));
 			InvalidateCollider(reinterpret_cast<CapsuleCollider*>(collider));
@@ -103,17 +105,16 @@ namespace SaltnPepperEngine
 
 		}
 
-		void RigidBody::OnUpdate(float dt)
+		void RigidBody::OnUpdate(float dt, Transform& transform)
 		{
+			UpdateTransform(transform);
 		}
 
-		void RigidBody::SyncObjectState()
-		{
-		}
+	
 
 		BulletRigidBody* RigidBody::GetBulletHandle() const
 		{
-			return nullptr;
+			return rigidbody.get();
 		}
 
 		void RigidBody::InvokeOnCollisionCallback(RigidBody* self, RigidBody* object)

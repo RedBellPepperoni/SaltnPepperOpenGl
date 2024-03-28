@@ -72,11 +72,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)Source\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\include\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)Source\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\include\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

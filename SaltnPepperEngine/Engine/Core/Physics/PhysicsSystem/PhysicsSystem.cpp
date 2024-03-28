@@ -3,6 +3,10 @@
 #include "PhysicsAPI.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Core/Components/SceneComponents.h"
+#include "Engine/Core/EntitySystem/EntityManager.h"
+#include "Engine/Core/EntitySystem/Entity.h"
+#include "Engine/Core/System/Application/Application.h"
+#include "Engine/Core/Scene/Scene.h"
 
 
 namespace SaltnPepperEngine
@@ -15,7 +19,7 @@ namespace SaltnPepperEngine
 
 		void PhysicsSystem::Init()
 		{
-			data = MakeUnique<PhysicsSystemData>();
+			/*data = MakeUnique<PhysicsSystemData>();
 			data->CollisionConfiguration = MakeUnique<btDefaultCollisionConfiguration>();
 		
 			data->Dispatcher = MakeUnique<btCollisionDispatcher>(data->CollisionConfiguration.get());
@@ -23,18 +27,55 @@ namespace SaltnPepperEngine
 			data->Solver = MakeUnique<btSequentialImpulseConstraintSolver>();
 			data->Solver->reset();
 			data->World = MakeUnique<btDiscreteDynamicsWorld>(data->Dispatcher.get(), data->Broadphase.get(), data->Solver.get(), data->CollisionConfiguration.get());
-		
+		*/
+
+			data = new PhysicsSystemData();
+			data->CollisionConfiguration = new btDefaultCollisionConfiguration();
+
+			data->Dispatcher = new btCollisionDispatcher(data->CollisionConfiguration);
+			data->Broadphase = new btDbvtBroadphase();
+			data->Solver = new btSequentialImpulseConstraintSolver();
+			data->Solver->reset();
+			data->World = new btDiscreteDynamicsWorld(data->Dispatcher, data->Broadphase, data->Solver, data->CollisionConfiguration);
+
+
 			data->World->setGravity(btVector3(0.0f, -9.81f, 0.0f));
 		}
 
 
 		void PhysicsSystem::OnUpdate(const float& deltaTime)
 		{
+			
 			if (data->simulationStep != 0.0f)
 			{
 				PhysicsSystem::PerformSimulationStep(Min(deltaTime, data->simulationStep));
 				OnCollisionCallback();
 			}
+
+			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBodyComponent>();
+
+			if (rigidView.IsEmpty()) { return; }
+
+			for (Entity rigidComp : rigidView)
+			{
+				RigidBody* rigidBody = rigidComp.GetComponent<RigidBodyComponent>().GetRigidBody().get();
+
+				Transform& rigidTransform = rigidComp.GetComponent<Transform>();
+
+				rigidBody->OnUpdate(deltaTime, rigidTransform);
+
+			}
+
+		}
+
+		void PhysicsSystem::Destroy()
+		{
+			free (data->World);
+			free (data->Solver);
+			free (data->Broadphase);
+			free (data->Dispatcher);
+			free (data->CollisionConfiguration);
+			free (data);
 		}
 
 		void PhysicsSystem::PerformSimulationStep(float dt)
@@ -126,7 +167,8 @@ namespace SaltnPepperEngine
 
 		PhysicsSystemData* PhysicsSystem::GetCurrent() 
 		{ 
-			return PhysicsSystem::data.get();
+			//return PhysicsSystem::data.get();
+			return PhysicsSystem::data;
 		}
 
 		

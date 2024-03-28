@@ -27,11 +27,17 @@ namespace SaltnPepperEngine
 			using CollisionSwapPair = std::pair<CollisionList, CollisionList>;
 
 
-			UniquePtr<btCollisionConfiguration> CollisionConfiguration;
-			UniquePtr<btDispatcher> Dispatcher;
-			UniquePtr<btBroadphaseInterface> Broadphase;
-			UniquePtr<btConstraintSolver> Solver;
-			UniquePtr<btDiscreteDynamicsWorld> World;
+			//UniquePtr<btCollisionConfiguration> CollisionConfiguration;
+			//UniquePtr<btDispatcher> Dispatcher;
+			//UniquePtr<btBroadphaseInterface> Broadphase;
+			//UniquePtr<btConstraintSolver> Solver;
+			//UniquePtr<btDiscreteDynamicsWorld> World;
+
+			btCollisionConfiguration* CollisionConfiguration;
+			btDispatcher* Dispatcher;
+			btBroadphaseInterface* Broadphase;
+			btConstraintSolver* Solver;
+			btDiscreteDynamicsWorld* World;
 			float simulationStep = 1.0f;
 
 			CollisionSwapPair collisions;
@@ -42,7 +48,8 @@ namespace SaltnPepperEngine
 		{
 			
 
-			inline static UniquePtr<PhysicsSystemData> data = nullptr;
+			//inline static UniquePtr<PhysicsSystemData> data = nullptr;
+			inline static PhysicsSystemData* data = nullptr;
 
 		private:
 
@@ -53,6 +60,8 @@ namespace SaltnPepperEngine
 
 			static void Init();
 			static void OnUpdate(const float& deltaTime);
+
+			static void Destroy();
 
 			static void PerformSimulationStep(float dt);
 			static void SetSimulationStep(float timedelta);

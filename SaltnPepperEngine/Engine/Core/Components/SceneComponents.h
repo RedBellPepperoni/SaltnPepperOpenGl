@@ -10,6 +10,10 @@
 #include "Engine/Core/Rendering/Camera/CameraController.h"
 
 #include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/BoxCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/SphereCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/CylinderCollider.h"
 
 #include "Engine/Utils/UniqueId/UniqueId.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
@@ -365,6 +369,19 @@ namespace SaltnPepperEngine
 
 			SharedPtr<RigidBody> m_rigidBody = nullptr;
 
+		};
+
+		using namespace Physics;
+
+		class BoxColliderComponent
+		{
+		public:
+			BoxColliderComponent();
+			~BoxColliderComponent() = default;
+		
+			BoxCollider* GetCollider();
+		private:
+			SharedPtr<BoxCollider> m_collider = nullptr;
 		};
 	}
 

@@ -7,6 +7,7 @@
 
 static int cameraCount = 0;
 static int tvCount = 0;
+static int boxCount = 0;
 
 struct FishSchool
 {
@@ -468,6 +469,30 @@ Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{ 0.0f }, const V
 	animComp.GetAnimator()->PlayAnimation(idleanim);
 
 	return skinnedEntity;
+
+}
+
+Entity CreatePhysicsBox(const Vector3& position)
+{
+	std::string name = "Box_" + std::to_string(boxCount);
+	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
+	Transform& boxTransform = boxEntity.GetComponent<Transform>();
+
+	boxTransform.SetPosition(position);
+
+	BoundingBox bounds{ Vector3(-0.5f),Vector3(0.5f)};
+
+	BoxCollider* collider = boxEntity.AddComponent<BoxColliderComponent>().GetCollider();
+
+	collider->Init(bounds);
+
+	RigidBody* body = boxEntity.AddComponent<RigidBodyComponent>().GetRigidBody().get();
+	body->Init(boxTransform,collider);
+	body->UpdateCollider(collider);
+
+	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
+
+	return boxEntity;
 
 }
 

@@ -249,6 +249,16 @@ namespace SaltnPepperEngine
 			return m_rigidBody;
 		}
 
+		BoxColliderComponent::BoxColliderComponent()
+		{
+			m_collider = MakeShared<BoxCollider>();
+		}
+
+		BoxCollider* BoxColliderComponent::GetCollider()
+		{
+			return m_collider.get();
+		}
+
 }
 }
 

@@ -64,7 +64,10 @@ namespace SaltnPepperEngine
 
 		void PhysicsUtils::AddRigidBody(void* body, int group, int layer)
 		{
-			PHYSICSWORLD->addRigidBody((btRigidBody*)body, group, layer);
+			auto bodyref = (btRigidBody*)body;
+
+			auto btWorld = PhysicsSystem::GetCurrent()->World;
+			btWorld->addRigidBody(bodyref, group, layer);
 		}
 
 		void PhysicsUtils::RemoveRigidBody(void* body)

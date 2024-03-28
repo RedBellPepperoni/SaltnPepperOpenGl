@@ -47,7 +47,12 @@ namespace SaltnPepperEngine
 
 		void BulletRigidBody::ReAddRigidBody()
 		{
+			auto rigid = GetNativeHandle();
+
 			PhysicsUtils::RemoveRigidBody(this->GetNativeHandle());
+
+			auto rigid2 = GetNativeHandle();
+
 			PhysicsUtils::AddRigidBody(this->GetNativeHandle(), m_group, m_layer);
 		}
 

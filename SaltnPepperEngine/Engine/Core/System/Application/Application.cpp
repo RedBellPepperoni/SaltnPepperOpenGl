@@ -13,6 +13,8 @@
 #include "Engine/Core/Components/Transform.h"
 
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 #include "Editor/Editor.h"
 #include "Editor/ImGuiManager.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
@@ -65,7 +67,6 @@ namespace SaltnPepperEngine
 
 		m_mainCameraIndex = 0;
 
-		
 	
 		//m_physicsSystem->UpdateScene(m_currentScene);
 		
@@ -193,7 +194,9 @@ namespace SaltnPepperEngine
 		
 		m_imguiManager = MakeUnique<ImGuiManager>(false);
 		m_imguiManager->Init();
-
+		Physics::PhysicsSystem::Init();
+		Physics::PhysicsUtils::SetSimulationStep(1/60.0f);
+		Physics::PhysicsUtils::SetGravity(Vector3(0.0f,-9.81f,0.0f));
 
 		//m_editor->ToggleEditor();
 

@@ -34,22 +34,25 @@ namespace SaltnPepperEngine
 		{
             using CollisionCallback = std::function<void(RigidBody*, RigidBody*)>;
 		
-            UniquePtr<BulletRigidBody> rigidbody;
+            SharedPtr<BulletRigidBody> rigidbody = nullptr;
             CollisionCallback onCollision;
             CollisionCallback onCollisionEnter;
             CollisionCallback onCollisionExit;
 
             void UpdateTransform(Transform& ECSTransform);
-            void UpdateCollider(BaseCollider* Collider);
-
+          
             Transform localTransform;
         
 
         public:
             RigidBody() = default;
             void Init(const Transform& transform, BaseCollider* collider);
-            void OnUpdate(float dt);
-            void SyncObjectState();
+            void OnUpdate(float dt, Transform& transform);
+            
+            void UpdateCollider(BaseCollider* Collider);
+
+            
+          
 
             BulletRigidBody* GetBulletHandle() const;
             void InvokeOnCollisionCallback(RigidBody* self, RigidBody* object);
