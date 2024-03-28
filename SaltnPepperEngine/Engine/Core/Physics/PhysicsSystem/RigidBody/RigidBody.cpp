@@ -1,5 +1,6 @@
 #include "RigidBody.h"
 #include "Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 
 #include "Engine/Core/Physics/PhysicsSystem/Colliders/BoxCollider.h"
 #include "Engine/Core/Physics/PhysicsSystem/Colliders/SphereCollider.h"
@@ -64,6 +65,15 @@ namespace SaltnPepperEngine
 
 		}
 
+		template<typename T>
+		void InvalidateCollider(T* collider)
+		{
+			if (collider != nullptr)
+			{
+				collider->SetColliderChangedFlag(true);
+			}
+		}
+
 		void RigidBody::UpdateCollider(BaseCollider* Collider)
 		{
 			if (Collider == nullptr)
@@ -77,8 +87,20 @@ namespace SaltnPepperEngine
 			if (TestCollider(rigidbody.get(), reinterpret_cast<CylinderCollider*>(Collider))) return;
 		}
 
-		void RigidBody::Init()
+
+
+		void RigidBody::Init(const Transform& transform, BaseCollider* collider)
 		{
+
+			rigidbody = MakeUnique<BulletRigidBody>(transform);
+		
+			PhysicsUtils::SetRigidBodyParent(rigidbody->GetNativeHandle(), this);
+		
+			InvalidateCollider(reinterpret_cast<BoxCollider*>(collider));
+			InvalidateCollider(reinterpret_cast<SphereCollider*>(collider));
+			InvalidateCollider(reinterpret_cast<CapsuleCollider*>(collider));
+			InvalidateCollider(reinterpret_cast<CylinderCollider*>(collider));
+
 		}
 
 		void RigidBody::OnUpdate(float dt)
@@ -96,335 +118,443 @@ namespace SaltnPepperEngine
 
 		void RigidBody::InvokeOnCollisionCallback(RigidBody* self, RigidBody* object)
 		{
+			if (onCollision)
+			{
+				onCollision(std::move(self), std::move(object));
+			}
 		}
 
 		void RigidBody::InvokeOnCollisionEnterCallback(RigidBody* self, RigidBody* object)
 		{
+			if (onCollisionEnter)
+			{
+				onCollisionEnter(std::move(self), std::move(object));
+			}
 		}
 
 		void RigidBody::InvokeOnCollisionExitCallback(RigidBody* self, RigidBody* object)
 		{
+			if (onCollisionExit)
+			{
+				onCollisionExit(std::move(self), std::move(object));
+			}
 		}
 
 		void RigidBody::MakeKinematic()
 		{
+			SetMass(0.0f);
+			SetCollisionFilter(CollisionLayer::KINEMATIC, CollisionGroup::NO_STATIC_COLLISIONS);
+			rigidbody->SetKinematicFlag();
 		}
 
 		void RigidBody::MakeDynamic()
 		{
+			if (GetMass() == 0.0f) { SetMass(1.0f); }
+
+			SetCollisionFilter(CollisionLayer::DYNAMIC, CollisionGroup::ALL);
+
+			rigidbody->UnsetKinematicFlag();
 		}
 
 		void RigidBody::MakeStatic()
 		{
+			SetMass(0.0f);
+			SetCollisionFilter(CollisionLayer::STATIC, CollisionGroup::NO_STATIC_COLLISIONS);
+			rigidbody->UnsetKinematicFlag();
+
 		}
 
 		void RigidBody::MakeTrigger()
 		{
+			rigidbody->SetTriggerFlag();
 		}
 
 		bool RigidBody::IsKinematic() const
 		{
-			return false;
+			return GetCollisionLayer() & CollisionLayer::KINEMATIC;
 		}
 
 		bool RigidBody::IsDynamic() const
 		{
-			return false;
+			return GetCollisionLayer() & CollisionLayer::DYNAMIC;
 		}
 
 		bool RigidBody::IsStatic() const
 		{
-			return false;
+			return GetCollisionLayer() & CollisionLayer::STATIC;
 		}
 
 		bool RigidBody::IsTrigger() const
 		{
-			return false;
+			return !rigidbody->HasCollisionResponce();
 		}
 
 		bool RigidBody::IsRayCastable() const
 		{
-			return false;
+			return this->GetCollisionGroup() & CollisionGroup::RAYCAST_ONLY;
 		}
 
 		void RigidBody::ToggleRayCasting(bool value)
 		{
+			if (value)
+			{
+				this->SetCollisionFilter(this->GetCollisionLayer(), this->GetCollisionGroup() | CollisionGroup::RAYCAST_ONLY);
+			}
+			else
+			{
+				this->SetCollisionFilter(this->GetCollisionLayer(), this->GetCollisionGroup() & ~CollisionGroup::RAYCAST_ONLY);
+			}
 		}
 
 		bool RigidBody::IsMoving() const
 		{
-			return false;
+			return rigidbody->IsMoving();
 		}
 
 		void RigidBody::ToggleTrigger(bool value)
 		{
+			if (value) { MakeTrigger(); }
 		}
 
 		RigidBodyType RigidBody::GetTypeInternal() const
 		{
-			return RigidBodyType();
+			return  this->IsStatic() ? RigidBodyType::STATIC :
+					this->IsDynamic() ? RigidBodyType::DYNAMIC :
+					this->IsKinematic() ? RigidBodyType::KINEMATIC :
+					RigidBodyType::STATIC;
 		}
 
 		void RigidBody::SetTypeInternal(RigidBodyType type)
 		{
+			switch (type)
+			{
+			case RigidBodyType::STATIC:
+				this->MakeStatic();
+				break;
+			case RigidBodyType::DYNAMIC:
+				this->MakeDynamic();
+				break;
+			case RigidBodyType::KINEMATIC:
+				this->MakeKinematic();
+				break;
+			default: // do not do anything
+				break;
+			}
 		}
 
 		void RigidBody::SetCollisionFilter(uint32_t mask, uint32_t group)
 		{
+			rigidbody->SetCollisionFilter(group, mask);
 		}
 
 		void RigidBody::SetCollisionFilter(CollisionLayer::Mask mask, CollisionGroup::Group group)
 		{
+			SetCollisionFilter((uint32_t)mask, (uint32_t)group);
 		}
 
 		uint32_t RigidBody::GetCollisionGroup() const
 		{
-			return 0;
+			return rigidbody->GetCollisionGroup();
 		}
 
-		uint32_t RigidBody::GetCollisionMask() const
+		uint32_t RigidBody::GetCollisionLayer() const
 		{
-			return 0;
+			return rigidbody->GetCollisionMask();
 		}
+
 		void RigidBody::ActivateParentIsland()
 		{
+			PhysicsUtils::ActiveRigidBodyIsland(rigidbody->GetNativeHandle());
 		}
 
 		void RigidBody::SetActivationState(ActivationState state)
 		{
+			rigidbody->SetActivationState(state);
 		}
 
 		ActivationState RigidBody::GetActivationState() const
 		{
-			return ActivationState();
+			return rigidbody->GetActivationState();
 		}
 
 		BoundingBox RigidBody::GetAABB() const
 		{
-			return BoundingBox();
+			BoundingBox result{};
+
+			btCollisionShape* collider = rigidbody->GetCollisionShape();
+
+			if (collider != nullptr)
+			{
+				btVector3 min, max;
+				btTransform& tr = rigidbody->GetNativeHandle()->getWorldTransform();
+				collider->getAabb(tr, min, max);
+				result.m_min = FromBulletVector3(min);
+				result.m_max = FromBulletVector3(max);
+			}
+
+			return result;
 		}
 
 		void RigidBody::Activate()
 		{
+			rigidbody->Activate();
 		}
 
 		void RigidBody::ClearForces()
 		{
+			rigidbody->GetNativeHandle()->clearForces();
 		}
 
 		float RigidBody::GetMass() const
 		{
-			return 0.0f;
+			return rigidbody->GetMass();
 		}
 
 		void RigidBody::SetMass(float mass)
 		{
+			rigidbody->SetMass(mass);
 		}
 
 		float RigidBody::GetFriction() const
 		{
-			return 0.0f;
+			return rigidbody->GetNativeHandle()->getFriction();
 		}
 
 		void RigidBody::SetFriction(float value)
 		{
-
+			rigidbody->GetNativeHandle()->setFriction(value);
 		}
 
 		float RigidBody::GetSpinningFriction() const
 		{
-			return 0.0f;
+			return rigidbody->GetNativeHandle()->getSpinningFriction();
 		}
 
 		void RigidBody::SetSpinningFriction(float value)
 		{
+			rigidbody->GetNativeHandle()->setSpinningFriction(value);
 		}
 
 		float RigidBody::GetRollingFriction() const
 		{
-			return 0.0f;
+			return rigidbody->GetNativeHandle()->getRollingFriction();
 		}
 
 		void RigidBody::SetRollingFriction(float value)
 		{
+			rigidbody->GetNativeHandle()->setRollingFriction(value);
 		}
 
 		float RigidBody::GetBounceFactor() const
 		{
-			return 0.0f;
+			return rigidbody->GetNativeHandle()->getRestitution();
 		}
 		void RigidBody::SetBounceFactor(float value)
 		{
+			rigidbody->GetNativeHandle()->setRestitution(value);
 		}
 
 		void RigidBody::SetGravity(Vector3 gravity)
 		{
+			rigidbody->GetNativeHandle()->setGravity(ToBulletVector3(gravity));
 		}
 
 		Vector3 RigidBody::GetGravity() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getGravity());
 		}
 
 		void RigidBody::SetLinearVelocity(Vector3 velocity)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->setLinearVelocity(ToBulletVector3(velocity));
 		}
 
 		Vector3 RigidBody::GetLinearVelocity() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getLinearVelocity());
 		}
 
 		void RigidBody::SetAngularVelocity(Vector3 velocity)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->setAngularVelocity(ToBulletVector3(velocity));
 		}
 
 		Vector3 RigidBody::GetAngularVelocity() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getAngularVelocity());
 		}
 
 		float RigidBody::GetInverseMass() const
 		{
-			return 0.0f;
+			return rigidbody->GetNativeHandle()->getInvMass();
 		}
 
 		Vector3 RigidBody::GetAngularForceFactor() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getAngularFactor());
 		}
 
 		void RigidBody::SetAngularForceFactor(Vector3 factor)
 		{
+			rigidbody->GetNativeHandle()->setAngularFactor(ToBulletVector3(factor));
 		}
 
 		Vector3 RigidBody::GetLinearForceFactor() const
 		{
-			return Vector3();
+			return FromBulletVector3(this->rigidbody->GetNativeHandle()->getLinearFactor());
 		}
 
 		void RigidBody::SetLinearForceFactor(Vector3 factor)
 		{
+			rigidbody->GetNativeHandle()->setLinearFactor(ToBulletVector3(factor));
 		}
 
 		void RigidBody::SetAngularAirResistance(float value)
 		{
-
+			rigidbody->GetNativeHandle()->setDamping(this->GetLinearAirResistance(), value);
 		}
 
 		float RigidBody::GetAngularAirResistance() const
 		{
-			return 0.0f;
+			return rigidbody->GetNativeHandle()->getAngularDamping();;
 		}
 
 		void RigidBody::SetLinearAirResistance(float value)
 		{
+			rigidbody->GetNativeHandle()->setDamping(value, this->GetAngularAirResistance());
 		}
 
 		float RigidBody::GetLinearAirResistance() const
 		{
-			return 0.0f;
+			return rigidbody->GetNativeHandle()->getLinearDamping();
 		}
 
 		Vector3 RigidBody::GetTotalForceApplied() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getTotalForce());
 		}
 
 		Vector3 RigidBody::GetTotalTorqueApplied() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getTotalTorque());
 		}
 
 		Vector3 RigidBody::GetInertia() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getLocalInertia());
 		}
 
 		Vector3 RigidBody::GetVelocityInPoint(Vector3 relativePosition)
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getVelocityInLocalPoint(ToBulletVector3(relativePosition)));
 		}
 
 		Vector3 RigidBody::GetPushVelocityInPoint(Vector3 relativePosition)
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getPushVelocityInLocalPoint(ToBulletVector3(relativePosition)));
 		}
 
 		void RigidBody::ApplyCentralImpulse(Vector3 impulse)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyCentralImpulse(ToBulletVector3(impulse));
 		}
 
 		void RigidBody::ApplyCentralPushImpulse(Vector3 impulse)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyCentralPushImpulse(ToBulletVector3(impulse));
 		}
 
 		void RigidBody::ApplyForce(const Vector3& force, const Vector3& relativePosition)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyForce(ToBulletVector3(force), ToBulletVector3(relativePosition));
 		}
 
 		void RigidBody::ApplyImpulse(const Vector3& impulse, const Vector3& relativePosition)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyImpulse(ToBulletVector3(impulse), ToBulletVector3(relativePosition));
 		}
 
 		void RigidBody::ApplyPushImpulse(const Vector3& impulse, const Vector3& relativePosition)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyPushImpulse(ToBulletVector3(impulse), ToBulletVector3(relativePosition));
 		}
 
 		void RigidBody::ApplyTorque(const Vector3& force)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyTorque(ToBulletVector3(force));
 		}
 
 		void RigidBody::ApplyTorqueImpulse(const Vector3& impulse)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyTorqueImpulse(ToBulletVector3(impulse));
 		}
 
 		void RigidBody::ApplyTorqueTurnImpulse(const Vector3& impulse)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyTorqueTurnImpulse(ToBulletVector3(impulse));
 		}
 
 		void RigidBody::ApplyCentralForce(const Vector3& force)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->applyCentralForce(ToBulletVector3(force));
 		}
 
 		void RigidBody::SetPushVelocity(Vector3 velocity)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->setPushVelocity(ToBulletVector3(velocity));
 		}
 
 		Vector3 RigidBody::GetPushVelocity() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getPushVelocity());
 		}
 
 		void RigidBody::SetTurnVelocity(Vector3 velocity)
 		{
+			rigidbody->Activate();
+			rigidbody->GetNativeHandle()->setTurnVelocity(ToBulletVector3(velocity));
 		}
 
 		Vector3 RigidBody::GetTurnVelocity() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getTurnVelocity());
 		}
 
 		void RigidBody::SetAnisotropicFriction(Vector3 friction, AnisotropicFriction mode)
 		{
+			rigidbody->GetNativeHandle()->setAnisotropicFriction(ToBulletVector3(friction), (int)mode);
 		}
 
 		void RigidBody::SetAnisotropicFriction(Vector3 friction)
 		{
+			SetAnisotropicFriction(friction, HasAnisotropicFriction() ? AnisotropicFriction::ENABLED : AnisotropicFriction::DISABLED);
 		}
 
 		bool RigidBody::HasAnisotropicFriction() const
 		{
-			return false;
+			return rigidbody->GetNativeHandle()->hasAnisotropicFriction();
 		}
 
 		void RigidBody::ToggleAnisotropicFriction(bool value)
 		{
+			SetAnisotropicFriction(GetAnisotropicFriction(), value ? AnisotropicFriction::ENABLED : AnisotropicFriction::DISABLED);
 		}
 
 		Vector3 RigidBody::GetAnisotropicFriction() const
 		{
-			return Vector3();
+			return FromBulletVector3(rigidbody->GetNativeHandle()->getAnisotropicFriction());
 		}
 	}
 }

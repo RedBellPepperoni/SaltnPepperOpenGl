@@ -21,7 +21,7 @@ namespace SaltnPepperEngine
             static void RemoveRigidBody(void* body);
             static void ActiveRigidBodyIsland(void* body);
 
-            static void SetRigidBodyParent(BulletRigidBody* body, RigidBody* entity);
+            static void SetRigidBodyParent(void* body, RigidBody* entity);
             
             static RigidBody* GetRigidBodyParent(const void* body);
 

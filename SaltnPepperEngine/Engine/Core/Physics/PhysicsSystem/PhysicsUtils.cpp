@@ -84,7 +84,7 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		void PhysicsUtils::SetRigidBodyParent(BulletRigidBody* body, RigidBody* entity)
+		void PhysicsUtils::SetRigidBodyParent(void* body, RigidBody* entity)
 		{
 			((btRigidBody*)body)->setUserPointer(reinterpret_cast<void*>(entity));
 		}

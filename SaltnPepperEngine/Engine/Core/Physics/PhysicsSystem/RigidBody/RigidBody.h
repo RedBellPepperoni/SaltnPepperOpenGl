@@ -47,7 +47,7 @@ namespace SaltnPepperEngine
 
         public:
             RigidBody() = default;
-            void Init();
+            void Init(const Transform& transform, BaseCollider* collider);
             void OnUpdate(float dt);
             void SyncObjectState();
 
@@ -99,7 +99,7 @@ namespace SaltnPepperEngine
             void SetCollisionFilter(uint32_t mask, uint32_t group = CollisionGroup::ALL);
             void SetCollisionFilter(CollisionLayer::Mask mask, CollisionGroup::Group group = CollisionGroup::ALL);
             uint32_t GetCollisionGroup() const;
-            uint32_t GetCollisionMask() const;
+            uint32_t GetCollisionLayer() const;
             void ActivateParentIsland();
             void SetActivationState(ActivationState state);
             ActivationState GetActivationState() const;

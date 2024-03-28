@@ -62,7 +62,7 @@ namespace SaltnPepperEngine
 		class BulletRigidBody
 		{
 			struct RigidBodyAllocation;
-			SharedPtr<RigidBodyAllocation> m_bodyAllocation = nullptr;
+			RigidBodyAllocation* m_bodyAllocation = nullptr;
 		
 			uint32_t m_group = CollisionGroup::NO_STATIC_COLLISIONS;
 			uint32_t m_layer = CollisionLayer::STATIC;
@@ -75,9 +75,9 @@ namespace SaltnPepperEngine
 			
 			BulletRigidBody(const Transform& transform);
 			BulletRigidBody(const BulletRigidBody&) = delete;
-			BulletRigidBody(BulletRigidBody&&) noexcept;
+			BulletRigidBody(BulletRigidBody&& other) noexcept;
 			BulletRigidBody& operator=(const BulletRigidBody&) = delete;
-			//BulletRigidBody& operator=(BulletRigidBody&&) noexcept;
+			BulletRigidBody& operator=(BulletRigidBody&& other ) noexcept;
 			~BulletRigidBody();
 
 
