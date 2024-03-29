@@ -9,12 +9,16 @@ class btRigidBody;
 class btCollisionShape;
 class btMotionState;
 
+
 namespace SaltnPepperEngine
 {
 	using Components::Transform;
 
 	namespace Physics
 	{
+		class MotionStateNotifier;
+
+
 		namespace CollisionLayer
 		{
 			enum Mask : uint32_t
@@ -61,8 +65,11 @@ namespace SaltnPepperEngine
 
 		class BulletRigidBody
 		{
-			struct RigidBodyAllocation;
-			RigidBodyAllocation* m_bodyAllocation = nullptr;
+			//struct RigidBodyAllocation;
+			//SharedPtr<RigidBodyAllocation> m_bodyAllocation = nullptr;
+
+			btRigidBody* Body = nullptr;
+			MotionStateNotifier* MotionState = nullptr;
 		
 			uint32_t m_group = CollisionGroup::NO_STATIC_COLLISIONS;
 			uint32_t m_layer = CollisionLayer::STATIC;
@@ -81,7 +88,7 @@ namespace SaltnPepperEngine
 			~BulletRigidBody();
 
 
-			btRigidBody* GetNativeHandle();
+			btRigidBody* GetNativeHandle(); 
 			const btRigidBody* GetNativeHandle() const;
 			btMotionState* GetMotionState();
 			const btMotionState* GetMotionState() const;

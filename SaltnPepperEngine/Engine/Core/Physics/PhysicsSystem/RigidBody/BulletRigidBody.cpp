@@ -21,26 +21,27 @@ namespace SaltnPepperEngine
 			}
 		};
 
-		struct BulletRigidBody::RigidBodyAllocation
+		/*struct BulletRigidBody::RigidBodyAllocation
 		{
-			btRigidBody Body;
-			MotionStateNotifier MotionState;
-		};
+			btRigidBody* Body = nullptr;
+			MotionStateNotifier* MotionState = nullptr;
+		};*/
 
 		
 		void BulletRigidBody::DestroyBody()
 		{
-			if (this->m_bodyAllocation != nullptr)
+			//if (this->m_bodyAllocation != nullptr)
+			if (Body != nullptr)
 			{
-				btRigidBody* body = std::addressof(this->m_bodyAllocation->Body);
+				btRigidBody* body = Body;
 
 				PhysicsUtils::ActiveRigidBodyIsland(body);
 				PhysicsUtils::RemoveRigidBody(body);
 
-				m_bodyAllocation->MotionState.~MotionStateNotifier();
+				MotionState->~MotionStateNotifier();
 				body->~btRigidBody();
 	
-				std::free((void*)this->m_bodyAllocation);
+				//std::free((void*)this->m_bodyAllocation);
 			}
 		}
 
@@ -82,24 +83,40 @@ namespace SaltnPepperEngine
 
 			ToBulletTransform(transform, bulletTransform);
 
-			m_bodyAllocation = reinterpret_cast<RigidBodyAllocation*>(std::malloc(sizeof(RigidBodyAllocation)));
+			/*m_bodyAllocation = reinterpret_cast<RigidBodyAllocation*>(std::malloc(sizeof(RigidBodyAllocation)));
 			auto state = new((uint8_t*)m_bodyAllocation + sizeof(btRigidBody)) MotionStateNotifier(bulletTransform);
-			auto body = new(m_bodyAllocation) btRigidBody(0.0f, state, nullptr);
+			auto body = new(m_bodyAllocation) btRigidBody(0.0f, state, nullptr, btVector3(0, 0, 0));*/
 
-			PhysicsUtils::AddRigidBody(body, m_group, m_layer);
+			//m_bodyAllocation = MakeShared<RigidBodyAllocation>();
+			MotionState = new MotionStateNotifier(bulletTransform);
+			Body = new btRigidBody(10.0f, MotionState,nullptr, btVector3(0, 0, 0));
+
+			PhysicsUtils::AddRigidBody(Body, m_group, m_layer);
 		}
 
 		BulletRigidBody::BulletRigidBody(BulletRigidBody&& other) noexcept
 		{
-			m_bodyAllocation = other.m_bodyAllocation;
-			other.m_bodyAllocation = nullptr;
+			/*m_bodyAllocation = other.m_bodyAllocation;
+			other.m_bodyAllocation = nullptr;*/
+
+			Body = other.Body;
+			other.Body = nullptr;
+
+			MotionState = other.MotionState;
+			other.MotionState = nullptr;
 		}
 
 		BulletRigidBody& BulletRigidBody::operator=(BulletRigidBody&& other) noexcept
 		{
 			DestroyBody();
-			m_bodyAllocation = other.m_bodyAllocation;
-			other.m_bodyAllocation = nullptr;
+			/*m_bodyAllocation = other.m_bodyAllocation;
+			other.m_bodyAllocation = nullptr;*/
+
+			Body = other.Body;
+			other.Body = nullptr;
+
+			MotionState = other.MotionState;
+			other.MotionState = nullptr;
 			return *this;
 		}
 
@@ -110,12 +127,15 @@ namespace SaltnPepperEngine
 
 		btRigidBody* BulletRigidBody::GetNativeHandle()
 		{
-			return std::addressof(m_bodyAllocation->Body);
+			//return std::addressof(m_bodyAllocation->Body);
+			//return m_bodyAllocation->Body;
+			return Body;
 		}
 
 		const btRigidBody* BulletRigidBody::GetNativeHandle() const
 		{
-			return std::addressof(m_bodyAllocation->Body);
+			//return std::addressof(m_bodyAllocation->Body);
+			return Body;
 		}
 
 		btMotionState* BulletRigidBody::GetMotionState()

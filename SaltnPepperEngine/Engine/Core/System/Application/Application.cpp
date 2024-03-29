@@ -283,7 +283,7 @@ namespace SaltnPepperEngine
 //
 			
 			PhysicsSystem::OnUpdate(m_deltaTime);
-			PhysicsSystem::InvoveCollisionUpdate();
+			//PhysicsSystem::InvoveCollisionUpdate();
 
 			OnUpdate(m_deltaTime);
 

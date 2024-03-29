@@ -80,7 +80,7 @@ namespace SaltnPepperEngine
 
 		void PhysicsSystem::PerformSimulationStep(float dt)
 		{
-			constexpr int maxSubSteps = 10;
+			constexpr int maxSubSteps = 3;
 
 			data->World->stepSimulation(dt, maxSubSteps);
 

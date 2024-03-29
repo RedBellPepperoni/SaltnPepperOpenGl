@@ -487,8 +487,17 @@ Entity CreatePhysicsBox(const Vector3& position)
 	collider->Init(bounds);
 
 	RigidBody* body = boxEntity.AddComponent<RigidBodyComponent>().GetRigidBody().get();
-	body->Init(boxTransform,collider);
+	body->Init(boxTransform, collider);
+	
+	body->MakeDynamic();
+	body->SetMass(100.0f);
+	body->SetFriction(1.0f);
+	body->SetRollingFriction(0.01f);
+	body->SetAngularForceFactor(Vector3(0.1f));
 	body->UpdateCollider(collider);
+	body->SetActivationState(ActivationState::ACTIVETAG);
+
+	
 
 	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
 

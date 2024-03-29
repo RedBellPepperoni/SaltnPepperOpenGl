@@ -31,10 +31,12 @@ namespace SaltnPepperEngine
 			// If its not kinematic, the Transform should be controlled by the Bullet Engine
 			else if (rigidbody->HasTransformUpdate())
 			{
-				FromBulletTransform(rigidbody->GetNativeHandle()->getWorldTransform(), ECSTransform);
+				
+				btTransform Trans = rigidbody->GetNativeHandle()->getWorldTransform();
+				FromBulletTransform(Trans, localTransform);
 				rigidbody->SetTransformUpdateFlag(false);
 
-				localTransform = ECSTransform;
+				ECSTransform = localTransform;
 
 			}
 
@@ -98,10 +100,15 @@ namespace SaltnPepperEngine
 		
 			if (collider == nullptr) { return; }
 
-			InvalidateCollider(reinterpret_cast<BoxCollider*>(collider));
+			if (TestCollider(rigidbody.get(), reinterpret_cast<BoxCollider*>(collider))) return;
+			if (TestCollider(rigidbody.get(), reinterpret_cast<SphereCollider*>(collider))) return;
+			if (TestCollider(rigidbody.get(), reinterpret_cast<CapsuleCollider*>(collider))) return;
+			if (TestCollider(rigidbody.get(), reinterpret_cast<CylinderCollider*>(collider))) return;
+
+			/*InvalidateCollider(reinterpret_cast<BoxCollider*>(collider));
 			InvalidateCollider(reinterpret_cast<SphereCollider*>(collider));
 			InvalidateCollider(reinterpret_cast<CapsuleCollider*>(collider));
-			InvalidateCollider(reinterpret_cast<CylinderCollider*>(collider));
+			InvalidateCollider(reinterpret_cast<CylinderCollider*>(collider));*/
 
 		}
 

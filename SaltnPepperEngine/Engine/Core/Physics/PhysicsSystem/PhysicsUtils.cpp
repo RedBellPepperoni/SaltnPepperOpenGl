@@ -57,27 +57,27 @@ namespace SaltnPepperEngine
 		};
 
 
-		void PhysicsUtils::AddRigidBody(void* body)
+		void PhysicsUtils::AddRigidBody(btRigidBody* body)
 		{
-			PHYSICSWORLD->addRigidBody((btRigidBody*)body);
+			PHYSICSWORLD->addRigidBody(body);
 		}
 
-		void PhysicsUtils::AddRigidBody(void* body, int group, int layer)
+		void PhysicsUtils::AddRigidBody(btRigidBody* body, int group, int layer)
 		{
-			auto bodyref = (btRigidBody*)body;
+			auto bodyref = body;
 
 			auto btWorld = PhysicsSystem::GetCurrent()->World;
 			btWorld->addRigidBody(bodyref, group, layer);
 		}
 
-		void PhysicsUtils::RemoveRigidBody(void* body)
+		void PhysicsUtils::RemoveRigidBody(btRigidBody* body)
 		{
-			PHYSICSWORLD->removeRigidBody((btRigidBody*)body);
+			PHYSICSWORLD->removeRigidBody(body);
 		}
 
-		void PhysicsUtils::ActiveRigidBodyIsland(void* body)
+		void PhysicsUtils::ActiveRigidBodyIsland(btRigidBody* body)
 		{
-			int islandTag = ((btRigidBody*)body)->getIslandTag();
+			int islandTag = (body)->getIslandTag();
 			int numberOfObjects = PHYSICSWORLD->getNumCollisionObjects();
 			auto& objectArray = PHYSICSWORLD->getCollisionObjectArray();
 			for (int i = 0; i < numberOfObjects; i++)
@@ -87,9 +87,9 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		void PhysicsUtils::SetRigidBodyParent(void* body, RigidBody* entity)
+		void PhysicsUtils::SetRigidBodyParent(btRigidBody* body, RigidBody* entity)
 		{
-			((btRigidBody*)body)->setUserPointer(reinterpret_cast<void*>(entity));
+			(body)->setUserPointer(reinterpret_cast<void*>(entity));
 		}
 
 		RigidBody* PhysicsUtils::GetRigidBodyParent(const void* body)

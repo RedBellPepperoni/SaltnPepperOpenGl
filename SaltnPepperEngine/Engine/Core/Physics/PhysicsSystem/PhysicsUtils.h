@@ -15,13 +15,13 @@ namespace SaltnPepperEngine
 		{
 		public:
 
-			static void AddRigidBody(void* body);
-			static void AddRigidBody(void* body, int group, int layer);
+			static void AddRigidBody(btRigidBody* body);
+			static void AddRigidBody(btRigidBody* body, int group, int layer);
 
-            static void RemoveRigidBody(void* body);
-            static void ActiveRigidBodyIsland(void* body);
+            static void RemoveRigidBody(btRigidBody* body);
+            static void ActiveRigidBodyIsland(btRigidBody* body);
 
-            static void SetRigidBodyParent(void* body, RigidBody* entity);
+            static void SetRigidBodyParent(btRigidBody* body, RigidBody* entity);
             
             static RigidBody* GetRigidBodyParent(const void* body);
 
