@@ -21,6 +21,7 @@ namespace SaltnPepperEngine
 			virtual ~BoxCollider() = default;
 		
 			BoxShape* GetNativeHandle() const;
+			virtual btCollisionShape* GetShape() override { return boxShape->GetNativeHandle(); }
 		
 			BoundingBox GetAABB(const Transform& transform) const;
 			OrientedBoundingBox GetOBB(const Transform& transform) const;

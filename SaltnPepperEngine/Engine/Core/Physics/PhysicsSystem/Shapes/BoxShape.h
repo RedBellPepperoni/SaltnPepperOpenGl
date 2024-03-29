@@ -15,6 +15,8 @@ namespace SaltnPepperEngine
 		public:
 			using NativeHandle = btBoxShape*;
 
+			//void CreateShape();
+
 			BoxShape(const OrientedBoundingBox& boundingBox);
 			BoxShape(const BoxShape&) = delete;
 			BoxShape(BoxShape&& other) noexcept;

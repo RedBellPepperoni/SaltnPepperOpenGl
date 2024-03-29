@@ -8,6 +8,7 @@ namespace SaltnPepperEngine
 		{
 			SetColliderChangedFlag(true);
 			boxShape = MakeShared<BoxShape>(box);
+			btCollisionShape* shape = boxShape->GetNativeHandle();
 		}
 
 		void BoxCollider::Init(BoundingBox box)

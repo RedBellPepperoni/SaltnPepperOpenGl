@@ -19,6 +19,8 @@ namespace SaltnPepperEngine
             void UpdateCollider(const BoundingCylinder& cylinder);
 
             CylinderShape* GetNativeHandle() const;
+            
+            virtual btCollisionShape* GetShape() override { return cylinderShape->GetNativeHandle(); }
 
             void SetOrientation(const BoundingBox& aabb, BoundingCylinder::Axis axis);
             BoundingCylinder::Axis GetOrientation() const;

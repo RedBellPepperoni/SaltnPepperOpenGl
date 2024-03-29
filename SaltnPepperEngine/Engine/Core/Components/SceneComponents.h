@@ -377,6 +377,7 @@ namespace SaltnPepperEngine
 		{
 		public:
 			BoxColliderComponent();
+			BoxColliderComponent(const BoundingBox& box);
 			~BoxColliderComponent() = default;
 		
 			BoxCollider* GetCollider();

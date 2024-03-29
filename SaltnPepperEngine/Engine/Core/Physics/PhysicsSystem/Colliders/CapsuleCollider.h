@@ -22,6 +22,8 @@ namespace SaltnPepperEngine
 
             CapsuleShape* GetNativeHandle() const;
 
+            virtual btCollisionShape* GetShape() override { return capsuleShape->GetNativeHandle(); }
+
             void SetOrientation(const BoundingBox& aabb, BoundingCapsule::Axis axis);
             BoundingCapsule::Axis GetOrientation() const;
 

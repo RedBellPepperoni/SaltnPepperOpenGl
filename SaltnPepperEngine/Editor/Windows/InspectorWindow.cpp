@@ -1062,7 +1062,7 @@ namespace SaltnPepperEngine
             ICON_COMPONENT(Transform, "Transform");
             ICON_COMPONENT(ModelComponent, "ModelComponent");
             ICON_COMPONENT(Camera, "Camera");
-            ICON_COMPONENT(RigidBodyComponent, "RigidBody");
+           // ICON_COMPONENT(RigidBodyComponent, "RigidBody");
             ICON_COMPONENT(Light, "Light");   
         }
 

@@ -56,8 +56,8 @@ namespace SaltnPepperEngine
 
 			if (collider->HasColliderChanged())
 			{
-				auto shape = collider->GetNativeHandle();
-				rigidBody->SetCollisionShape(shape->GetNativeHandle());
+				btCollisionShape* shape = collider->GetShape();
+				rigidBody->SetCollisionShape(shape);
 				collider->SetColliderChangedFlag(false);
 			}
 

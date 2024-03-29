@@ -3,6 +3,7 @@
 
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 
+class btCollisionShape;
 
 namespace SaltnPepperEngine
 {
@@ -26,7 +27,14 @@ namespace SaltnPepperEngine
 
 		protected:
 			
+			
+
 		public:
+
+			virtual btCollisionShape* GetShape() = 0;
+
+			virtual ~BaseCollider() = default;
+
 			void SetColliderChangedFlag(bool value) { colliderChangedFlag = value; }
 			bool HasColliderChanged() const { return colliderChangedFlag; }
 

@@ -252,6 +252,15 @@ namespace SaltnPepperEngine
 		BoxColliderComponent::BoxColliderComponent()
 		{
 			m_collider = MakeShared<BoxCollider>();
+
+			BoundingBox box{ Vector3(-0.5f),Vector3(0.5f) };
+			m_collider->Init(box);
+		}
+
+		BoxColliderComponent::BoxColliderComponent(const BoundingBox& box)
+		{
+			m_collider = MakeShared<BoxCollider>();
+			m_collider->Init(box);
 		}
 
 		BoxCollider* BoxColliderComponent::GetCollider()

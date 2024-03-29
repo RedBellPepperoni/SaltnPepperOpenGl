@@ -18,6 +18,8 @@ namespace SaltnPepperEngine
             void Init(const BoundingSphere& sphere);
             void UpdateCollider(const BoundingSphere& sphere);
 
+            virtual btCollisionShape* GetShape() override { return sphereShape->GetNativeHandle(); }
+
             SphereShape* GetNativeHandle() const;
 
             BoundingBox GetAABB(const Transform& transform) const;
