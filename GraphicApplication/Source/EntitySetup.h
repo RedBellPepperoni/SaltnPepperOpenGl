@@ -505,5 +505,46 @@ Entity CreatePhysicsBox(const Vector3& position)
 
 }
 
+
+Entity CreatePhysicsTest(const Vector3& position)
+{
+	std::string name = "Test_" + std::to_string(boxCount);
+	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
+	Transform& boxTransform = boxEntity.GetComponent<Transform>();
+
+	
+
+	boxTransform.SetPosition(position);
+
+	/*BoundingBox bounds{ Vector3(-0.5f),Vector3(0.5f) };
+
+	BoxCollider* collider = boxEntity.AddComponent<BoxColliderComponent>().GetCollider();
+
+	collider->Init(bounds);*/
+
+	RShape* shape = &boxEntity.AddComponent<RShape>();
+	RBody* body = &boxEntity.AddComponent<RBody>(position, shape->GetShape());
+	//body->GetBody()->setGravity(btVector3(0.0f,-9.81f,0.0f));
+	body->GetBody()->activate(true);
+	bool kin = body->GetBody()->isKinematicObject();
+	/*RigidBody* body = boxEntity.AddComponent<RigidBodyComponent>().GetRigidBody().get();
+	body->Init(boxTransform, collider);
+
+	body->MakeDynamic();
+	body->SetMass(100.0f);
+	body->SetFriction(1.0f);
+	body->SetRollingFriction(0.01f);
+	body->SetAngularForceFactor(Vector3(0.1f));
+	body->UpdateCollider(collider);
+	body->SetActivationState(ActivationState::ACTIVETAG);*/
+
+
+
+	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
+
+	return boxEntity;
+
+}
+
 #endif //  EntitySetup
 

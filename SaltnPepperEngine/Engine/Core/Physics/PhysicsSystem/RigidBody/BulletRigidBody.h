@@ -81,6 +81,7 @@ namespace SaltnPepperEngine
 		public:
 			
 			BulletRigidBody(const Transform& transform);
+			BulletRigidBody(const Transform& transform, btCollisionShape* collider);
 			BulletRigidBody(const BulletRigidBody&) = delete;
 			BulletRigidBody(BulletRigidBody&& other) noexcept;
 			BulletRigidBody& operator=(const BulletRigidBody&) = delete;

@@ -94,7 +94,8 @@ class GraphicRuntime : public Application
         CreateEntity(LakeModel::TABLE, Vector3(-1.3920f, 2.9666f, -1.0738f),Vector3(0.0f,89.0f,0.0f), Vector3(1.4f));
 
 
-        CreatePhysicsBox(Vector3(0.0f,10.0f,0.0f));
+       // CreatePhysicsBox(Vector3(0.0f,10.0f,0.0f));
+        CreatePhysicsTest(Vector3(0.0f,10.0f,0.0f));
 
       /*  /// Render One
         SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-2.5003f, 4.7171f, -2.1473f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -20.5682, 0.0f),true);

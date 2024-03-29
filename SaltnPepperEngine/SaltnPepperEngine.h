@@ -71,6 +71,8 @@
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsAPI.h"
 #include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
 #include "Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 
 
 

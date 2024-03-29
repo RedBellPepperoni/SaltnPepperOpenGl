@@ -12,11 +12,11 @@ namespace SaltnPepperEngine
 	namespace Physics
 	{
 
-#define PHYSICSWORLD PhysicsSystem::GetCurrent()->World
+//#define PHYSICSWORLD PhysicsSystem::GetCurrent()->World
 
 		void OnCollisionCallback()
 		{
-			auto dispatcher = PHYSICSWORLD->getDispatcher(); 
+			auto dispatcher = PhysicsSystem::GetCurrent()->World->getDispatcher();
 			int numManiforlds = dispatcher->getNumManifolds(); 
 
 			for (int i = 0; i < numManiforlds; i++)
@@ -59,7 +59,7 @@ namespace SaltnPepperEngine
 
 		void PhysicsUtils::AddRigidBody(btRigidBody* body)
 		{
-			PHYSICSWORLD->addRigidBody(body);
+			PhysicsSystem::GetCurrent()->World->addRigidBody(body);
 		}
 
 		void PhysicsUtils::AddRigidBody(btRigidBody* body, int group, int layer)
@@ -70,16 +70,18 @@ namespace SaltnPepperEngine
 			btWorld->addRigidBody(bodyref, group, layer);
 		}
 
+	
+
 		void PhysicsUtils::RemoveRigidBody(btRigidBody* body)
 		{
-			PHYSICSWORLD->removeRigidBody(body);
+			PhysicsSystem::GetCurrent()->World->removeRigidBody(body);
 		}
 
 		void PhysicsUtils::ActiveRigidBodyIsland(btRigidBody* body)
 		{
 			int islandTag = (body)->getIslandTag();
-			int numberOfObjects = PHYSICSWORLD->getNumCollisionObjects();
-			auto& objectArray = PHYSICSWORLD->getCollisionObjectArray();
+			int numberOfObjects = PhysicsSystem::GetCurrent()->World->getNumCollisionObjects();
+			auto& objectArray = PhysicsSystem::GetCurrent()->World->getCollisionObjectArray();
 			for (int i = 0; i < numberOfObjects; i++)
 			{
 				if (objectArray[i]->getIslandTag() == islandTag)
@@ -116,7 +118,7 @@ namespace SaltnPepperEngine
 
 			CustomRayCastCallback callback(bulletFrom, bulletTo, rayCastMask);
 
-			PHYSICSWORLD->rayTest(bulletFrom, bulletTo, callback);
+			PhysicsSystem::GetCurrent()->World->rayTest(bulletFrom, bulletTo, callback);
 			rayFraction = callback.GetRayFraction();
 
 			return callback.GetResult();
@@ -128,12 +130,12 @@ namespace SaltnPepperEngine
 		
 		Vector3 PhysicsUtils::GetGravity()
 		{
-			return  FromBulletVector3(PHYSICSWORLD->getGravity());
+			return  FromBulletVector3(PhysicsSystem::GetCurrent()->World->getGravity());
 		}
 
 		void PhysicsUtils::SetGravity(const Vector3& gravity)
 		{
-			PHYSICSWORLD->setGravity(ToBulletVector3(gravity));
+			PhysicsSystem::GetCurrent()->World->setGravity(ToBulletVector3(gravity));
 		}
 
 		void PhysicsUtils::PerformExtraSimulationStep(float timeDelta)

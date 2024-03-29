@@ -52,17 +52,23 @@ namespace SaltnPepperEngine
 				OnCollisionCallback();
 			}
 
-			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBodyComponent>();
+			//ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBodyComponent>();
+			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RBody>();
 
 			if (rigidView.IsEmpty()) { return; }
 
 			for (Entity rigidComp : rigidView)
 			{
-				RigidBody* rigidBody = rigidComp.GetComponent<RigidBodyComponent>().GetRigidBody().get();
+				//RigidBody* rigidBody = rigidComp.GetComponent<RigidBodyComponent>().GetRigidBody().get();
 
-				Transform& rigidTransform = rigidComp.GetComponent<Transform>();
+				//Transform& rigidTransform = rigidComp.GetComponent<Transform>();
 
-				rigidBody->OnUpdate(deltaTime, rigidTransform);
+				//rigidBody->OnUpdate(deltaTime, rigidTransform);
+
+				Transform& transform = rigidComp.GetComponent<Transform>();
+				RBody& body = rigidComp.GetComponent<RBody>();
+				Vector3 pos = FromBulletVector3(body.GetBody()->getWorldTransform().getOrigin());
+				transform.SetPosition(pos);
 
 			}
 

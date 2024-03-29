@@ -89,7 +89,25 @@ namespace SaltnPepperEngine
 
 			//m_bodyAllocation = MakeShared<RigidBodyAllocation>();
 			MotionState = new MotionStateNotifier(bulletTransform);
-			Body = new btRigidBody(10.0f, MotionState,nullptr, btVector3(0, 0, 0));
+
+			btRigidBody::btRigidBodyConstructionInfo info(10, MotionState, nullptr, btVector3(0, 0, 0));
+
+
+			Body = new btRigidBody(info);
+
+			PhysicsUtils::AddRigidBody(Body, m_group, m_layer);
+		}
+
+		BulletRigidBody::BulletRigidBody(const Transform& transform, btCollisionShape* collider)
+		{
+			btTransform bulletTransform;
+
+			ToBulletTransform(transform, bulletTransform);
+			MotionState = new MotionStateNotifier(bulletTransform);
+
+			btRigidBody::btRigidBodyConstructionInfo info(10,MotionState,collider,btVector3(0,0,0));
+
+			Body = new btRigidBody(info);
 
 			PhysicsUtils::AddRigidBody(Body, m_group, m_layer);
 		}

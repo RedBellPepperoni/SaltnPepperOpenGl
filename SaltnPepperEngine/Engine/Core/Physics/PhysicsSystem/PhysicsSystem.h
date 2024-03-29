@@ -12,7 +12,10 @@ class btConstraintSolver;
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 
+//class btRigidBody;
+//class btMotionState;
 
+#include"Bullet3Bindings.h"
 
 namespace SaltnPepperEngine
 {
@@ -20,6 +23,10 @@ namespace SaltnPepperEngine
 	{
 
 		class RigidBody;
+		class PhysicsSystem;
+
+	
+
 
 		struct PhysicsSystemData
 		{
@@ -49,7 +56,7 @@ namespace SaltnPepperEngine
 			
 
 			//inline static UniquePtr<PhysicsSystemData> data = nullptr;
-			inline static PhysicsSystemData* data = nullptr;
+			
 
 		private:
 
@@ -57,6 +64,8 @@ namespace SaltnPepperEngine
 			
 
 		public:
+
+			inline static PhysicsSystemData* data = nullptr;
 
 			static void Init();
 			static void OnUpdate(const float& deltaTime);
@@ -72,6 +81,51 @@ namespace SaltnPepperEngine
 			static void AddCollisionEntry(RigidBody* objectOne ,RigidBody* objectTwo);
 			static PhysicsSystemData* GetCurrent();
 			
+		};
+
+		class RShape
+		{
+		private:
+			btSphereShape* collider = nullptr;
+
+		public:
+			RShape() { collider = new btSphereShape(1); }
+			~RShape() { delete collider; }
+
+			btSphereShape* GetShape() {
+				return collider;
+			}
+		};
+
+		class RBody
+		{
+		private:
+
+			btRigidBody* bodyHandle = nullptr;
+			btMotionState* motionHandle = nullptr;
+
+		public:
+
+			RBody(const Vector3& position, btCollisionShape* shape)
+			{
+				btVector3 pos = ToBulletVector3(position);
+
+				motionHandle = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
+					pos));
+
+				btRigidBody::btRigidBodyConstructionInfo info(10, motionHandle, shape, btVector3(0, 0, 0));
+				bodyHandle = new btRigidBody(info);
+
+				PhysicsSystem::GetCurrent()->World->addRigidBody(bodyHandle);
+			}
+			~RBody()
+			{
+				delete motionHandle;
+				delete bodyHandle;
+			};
+
+			btRigidBody* GetBody() { return bodyHandle; }
+
 		};
 
 	}

@@ -17,7 +17,7 @@ namespace SaltnPepperEngine
 
 			static void AddRigidBody(btRigidBody* body);
 			static void AddRigidBody(btRigidBody* body, int group, int layer);
-
+			
             static void RemoveRigidBody(btRigidBody* body);
             static void ActiveRigidBodyIsland(btRigidBody* body);
 
