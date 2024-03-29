@@ -282,6 +282,8 @@ namespace SaltnPepperEngine
 			//m_physicsSystem->UpdateECSTransforms(m_sceneManager->GetCurrentScene());
 //
 			
+			PhysicsSystem::OnUpdate(m_deltaTime);
+			PhysicsSystem::InvoveCollisionUpdate();
 
 			OnUpdate(m_deltaTime);
 

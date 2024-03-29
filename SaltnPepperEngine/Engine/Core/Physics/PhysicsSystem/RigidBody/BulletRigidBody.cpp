@@ -60,6 +60,8 @@ namespace SaltnPepperEngine
 		{
 			btVector3 inertia(0.0f, 0.0f, 0.0f);
 
+			if (mass == 0.0f) { mass = 1.0f; }
+
 			if (collider != nullptr && mass != 0.0f) 
 			{
 				collider->calculateLocalInertia(mass, inertia);
