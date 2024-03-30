@@ -411,6 +411,9 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SaltnPepperEngine.h">

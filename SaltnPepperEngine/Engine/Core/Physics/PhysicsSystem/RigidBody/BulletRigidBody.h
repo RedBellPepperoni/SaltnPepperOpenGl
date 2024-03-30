@@ -4,6 +4,7 @@
 #include "Engine/Utils/Maths/MathDefinitions.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/Components/Transform.h"
+#include "RigidBody.h"
 
 class btRigidBody;
 class btCollisionShape;
@@ -16,7 +17,7 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
-		class MotionStateNotifier;
+		//class MotionStateNotifier;
 
 
 		namespace CollisionLayer

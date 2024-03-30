@@ -96,6 +96,7 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\SphereCollider.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.h" />

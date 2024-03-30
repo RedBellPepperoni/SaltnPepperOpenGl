@@ -16,7 +16,7 @@ class GraphicRuntime : public Application
     void OnInit()
     {
        
-       
+        PhysicsSystem::SetPaused(true);
         LoadAllModels();
         LoadAllTextures();
 
@@ -130,6 +130,11 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
+        if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::G))
+        {
+            PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
+        }
+        
         ComponentView school = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<FishSchool>();
 
        

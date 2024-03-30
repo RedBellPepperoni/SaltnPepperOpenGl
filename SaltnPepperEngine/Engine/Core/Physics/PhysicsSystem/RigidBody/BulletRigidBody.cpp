@@ -7,7 +7,7 @@ namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
-		class MotionStateNotifier : public btDefaultMotionState
+		/*class MotionStateNotifier : public btDefaultMotionState
 		{
 		public:
 			MotionStateNotifier(btTransform& tr) : btDefaultMotionState(tr) { }
@@ -19,7 +19,7 @@ namespace SaltnPepperEngine
 				this->TransformUpdated = true;
 				btDefaultMotionState::setWorldTransform(centerOfMassWorldTrans);
 			}
-		};
+		};*/
 
 		/*struct BulletRigidBody::RigidBodyAllocation
 		{

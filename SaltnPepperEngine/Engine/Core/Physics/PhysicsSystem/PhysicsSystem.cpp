@@ -3,6 +3,7 @@
 #include "PhysicsAPI.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
 //#include "Engine/Core/Components/SceneComponents.h"
+#include "RigidBody/RigidBody.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
 #include "Engine/Core/EntitySystem/Entity.h"
 #include "Engine/Core/System/Application/Application.h"
@@ -45,7 +46,9 @@ namespace SaltnPepperEngine
 
 		void PhysicsSystem::OnUpdate(const float& deltaTime)
 		{
-			
+			if (data->paused) { return; }
+
+
 			if (data->simulationStep != 0.0f)
 			{
 				PhysicsSystem::PerformSimulationStep(Min(deltaTime, data->simulationStep));
@@ -53,7 +56,7 @@ namespace SaltnPepperEngine
 			}
 
 			//ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBodyComponent>();
-			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RBody>();
+			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBody>();
 
 			if (rigidView.IsEmpty()) { return; }
 
@@ -66,7 +69,7 @@ namespace SaltnPepperEngine
 				//rigidBody->OnUpdate(deltaTime, rigidTransform);
 
 				Transform& transform = rigidComp.GetComponent<Transform>();
-				RBody& body = rigidComp.GetComponent<RBody>();
+				RigidBody& body = rigidComp.GetComponent<RigidBody>();
 				Vector3 pos = FromBulletVector3(body.GetBody()->getWorldTransform().getOrigin());
 				transform.SetPosition(pos);
 
@@ -175,6 +178,16 @@ namespace SaltnPepperEngine
 		{ 
 			//return PhysicsSystem::data.get();
 			return PhysicsSystem::data;
+		}
+
+		bool PhysicsSystem::GetPaused()
+		{
+			return PhysicsSystem::data->paused;
+		}
+
+		void PhysicsSystem::SetPaused(bool value)
+		{
+			PhysicsSystem::data->paused = value;
 		}
 
 		

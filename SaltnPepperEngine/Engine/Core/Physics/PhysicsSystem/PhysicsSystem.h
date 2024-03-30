@@ -48,6 +48,8 @@ namespace SaltnPepperEngine
 			float simulationStep = 1.0f;
 
 			CollisionSwapPair collisions;
+
+			bool paused = false;
 		};
 
 
@@ -81,6 +83,8 @@ namespace SaltnPepperEngine
 			static void AddCollisionEntry(RigidBody_Dep* objectOne ,RigidBody_Dep* objectTwo);
 			static PhysicsSystemData* GetCurrent();
 			
+			static bool GetPaused();
+			static void SetPaused(bool value);
 		};
 
 		class RShape
@@ -97,37 +101,7 @@ namespace SaltnPepperEngine
 			}
 		};
 
-		class RBody
-		{
-		private:
-
-			btRigidBody* bodyHandle = nullptr;
-			btMotionState* motionHandle = nullptr;
-
-		public:
-
-			RBody(const Vector3& position, btCollisionShape* shape)
-			{
-				btVector3 pos = ToBulletVector3(position);
-
-				motionHandle = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
-					pos));
-
-				btRigidBody::btRigidBodyConstructionInfo info(10, motionHandle, shape, btVector3(0, 0, 0));
-				bodyHandle = new btRigidBody(info);
-
-				PhysicsSystem::GetCurrent()->World->addRigidBody(bodyHandle);
-			}
-			~RBody()
-			{
-				delete motionHandle;
-				delete bodyHandle;
-			};
-
-			btRigidBody* GetBody() { return bodyHandle; }
-
-		};
-
+		
 	}
 }
 
