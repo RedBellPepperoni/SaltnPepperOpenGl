@@ -27,8 +27,8 @@ namespace SaltnPepperEngine
 
 				if (!colliderOne->getCollisionShape()->isNonMoving() && !colliderTwo->getCollisionShape()->isNonMoving())
 				{
-					RigidBody* objectOne = PhysicsUtils::GetRigidBodyParent(colliderOne);
-					RigidBody* objectTwo = PhysicsUtils::GetRigidBodyParent(colliderTwo);
+					RigidBody_Dep* objectOne = PhysicsUtils::GetRigidBodyParent(colliderOne);
+					RigidBody_Dep* objectTwo = PhysicsUtils::GetRigidBodyParent(colliderTwo);
 
 					PhysicsSystem::AddCollisionEntry(objectOne, objectTwo);
 				}
@@ -44,7 +44,7 @@ namespace SaltnPepperEngine
 				this->m_collisionFilterMask = rayCastMask;
 			}
 
-			RigidBody* GetResult() const
+			RigidBody_Dep* GetResult() const
 			{
 				if (!this->hasHit()) return nullptr;
 				return PhysicsUtils::GetRigidBodyParent(this->m_collisionObject);
@@ -89,29 +89,29 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		void PhysicsUtils::SetRigidBodyParent(btRigidBody* body, RigidBody* entity)
+		void PhysicsUtils::SetRigidBodyParent(btRigidBody* body, RigidBody_Dep* entity)
 		{
 			(body)->setUserPointer(reinterpret_cast<void*>(entity));
 		}
 
-		RigidBody* PhysicsUtils::GetRigidBodyParent(const void* body)
+		RigidBody_Dep* PhysicsUtils::GetRigidBodyParent(const void* body)
 		{
-			RigidBody* returnBody = reinterpret_cast<RigidBody*>(((btRigidBody*)body)->getUserPointer());
+			RigidBody_Dep* returnBody = reinterpret_cast<RigidBody_Dep*>(((btRigidBody*)body)->getUserPointer());
 			return returnBody;
 		}
 
-		RigidBody* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to)
+		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to)
 		{
 			float rayFraction = 0.0f;
 			return PhysicsUtils::RayCast(from, to, rayFraction);
 		}
 
-		RigidBody* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction)
+		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction)
 		{
 			return PhysicsUtils::RayCast(from, to, rayFraction, CollisionLayer::RAYCAST_ONLY);
 		}
 
-		RigidBody* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionLayer::Mask rayCastMask)
+		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionLayer::Mask rayCastMask)
 		{
 			btVector3 bulletFrom = ToBulletVector3(from);
 			btVector3 bulletTo = ToBulletVector3(to);

@@ -476,7 +476,7 @@ Entity CreatePhysicsBox(const Vector3& position)
 {
 	std::string name = "Box_" + std::to_string(boxCount);
 	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
-	Transform& boxTransform = boxEntity.GetComponent<Transform>();
+	/*Transform& boxTransform = boxEntity.GetComponent<Transform>();
 
 	boxTransform.SetPosition(position);
 
@@ -499,7 +499,7 @@ Entity CreatePhysicsBox(const Vector3& position)
 
 	
 
-	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
+	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");*/
 
 	return boxEntity;
 

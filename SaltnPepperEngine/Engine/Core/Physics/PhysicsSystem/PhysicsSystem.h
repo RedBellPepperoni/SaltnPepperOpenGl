@@ -22,7 +22,7 @@ namespace SaltnPepperEngine
 	namespace Physics
 	{
 
-		class RigidBody;
+		class RigidBody_Dep;
 		class PhysicsSystem;
 
 	
@@ -30,7 +30,7 @@ namespace SaltnPepperEngine
 
 		struct PhysicsSystemData
 		{
-			using CollisionList = std::vector<std::pair<RigidBody*, RigidBody*>>;
+			using CollisionList = std::vector<std::pair<RigidBody_Dep*, RigidBody_Dep*>>;
 			using CollisionSwapPair = std::pair<CollisionList, CollisionList>;
 
 
@@ -78,7 +78,7 @@ namespace SaltnPepperEngine
 
 			static void InvoveCollisionUpdate();
 
-			static void AddCollisionEntry(RigidBody* objectOne ,RigidBody* objectTwo);
+			static void AddCollisionEntry(RigidBody_Dep* objectOne ,RigidBody_Dep* objectTwo);
 			static PhysicsSystemData* GetCurrent();
 			
 		};

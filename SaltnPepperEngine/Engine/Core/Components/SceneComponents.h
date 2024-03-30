@@ -9,7 +9,7 @@
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
 
-#include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
+//#include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
 #include "Engine/Core/Physics/PhysicsSystem/Colliders/BoxCollider.h"
 #include "Engine/Core/Physics/PhysicsSystem/Colliders/SphereCollider.h"
 #include "Engine/Core/Physics/PhysicsSystem/Colliders/CapsuleCollider.h"
@@ -354,7 +354,7 @@ namespace SaltnPepperEngine
 		//};
 
 
-		using Physics::RigidBody;
+		/*using Physics::RigidBody_Dep;
 
 		class RigidBodyComponent
 		{
@@ -363,13 +363,13 @@ namespace SaltnPepperEngine
 			RigidBodyComponent();
 			~RigidBodyComponent() = default;
 
-			SharedPtr<RigidBody>& GetRigidBody();
+			SharedPtr<RigidBody_Dep>& GetRigidBody();
 
 		private:
 
-			SharedPtr<RigidBody> m_rigidBody = nullptr;
+			SharedPtr<RigidBody_Dep> m_rigidBody = nullptr;
 
-		};
+		};*/
 
 		using namespace Physics;
 

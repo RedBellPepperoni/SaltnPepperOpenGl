@@ -1,5 +1,5 @@
-#ifndef RIGIDBODY_H
-#define RIGIDBODY_H
+#ifndef RIGIDBODY_DEP_H
+#define RIGIDBODY_DEP_H
 
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsAPI.h"
 
@@ -30,9 +30,9 @@ namespace SaltnPepperEngine
             BOOMERANG
         };
 
-		class RigidBody
+		class RigidBody_Dep
 		{
-            using CollisionCallback = std::function<void(RigidBody*, RigidBody*)>;
+            using CollisionCallback = std::function<void(RigidBody_Dep*, RigidBody_Dep*)>;
 		
             SharedPtr<BulletRigidBody> rigidbody = nullptr;
             CollisionCallback onCollision;
@@ -45,7 +45,7 @@ namespace SaltnPepperEngine
         
 
         public:
-            RigidBody() = default;
+            RigidBody_Dep() = default;
             void Init(const Transform& transform, BaseCollider* collider);
             void OnUpdate(float dt, Transform& transform);
             
@@ -55,9 +55,9 @@ namespace SaltnPepperEngine
           
 
             BulletRigidBody* GetBulletHandle() const;
-            void InvokeOnCollisionCallback(RigidBody* self, RigidBody* object);
-            void InvokeOnCollisionEnterCallback(RigidBody* self, RigidBody* object);
-            void InvokeOnCollisionExitCallback(RigidBody* self, RigidBody* object);
+            void InvokeOnCollisionCallback(RigidBody_Dep* self, RigidBody_Dep* object);
+            void InvokeOnCollisionEnterCallback(RigidBody_Dep* self, RigidBody_Dep* object);
+            void InvokeOnCollisionExitCallback(RigidBody_Dep* self, RigidBody_Dep* object);
 
             void MakeKinematic();
             void MakeDynamic();
@@ -165,4 +165,4 @@ namespace SaltnPepperEngine
 }
 
 
-#endif // !RIGIDBODY_H
+#endif // !RIGIDBODY_DEP_H

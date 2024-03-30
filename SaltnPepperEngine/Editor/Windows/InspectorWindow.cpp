@@ -744,186 +744,186 @@ namespace MM
         return ColliderType::SPHERE;
     }
 
-    static void BoxColliderInspector(BoxCollider_Deprecated* collider, RigidBodyComponent& phys)
-    {
-        ImGui::AlignTextToFramePadding();
-        ImGui::TextUnformatted("Half Dimensions");
-        ImGui::NextColumn();
-        ImGui::PushItemWidth(-1);
+    //static void BoxColliderInspector(BoxCollider_Deprecated* collider, RigidBodyComponent& phys)
+    //{
+    //    ImGui::AlignTextToFramePadding();
+    //    ImGui::TextUnformatted("Half Dimensions");
+    //    ImGui::NextColumn();
+    //    ImGui::PushItemWidth(-1);
 
-        Vector3 size = collider->GetHalfDimensions();
-        if (ImGui::DragFloat3("##CollisionShapeHalfDims", glm::value_ptr(size), 1.0f, 0.0f, 10000.0f, "%.2f"))
-        {
-            collider->SetHalfDimensions(size);
-           // phys.GetRigidBody()->ColliderUpdated();
-        }
-        ImGui::NextColumn();
-        ImGui::PushItemWidth(-1);
-    }
+    //    Vector3 size = collider->GetHalfDimensions();
+    //    if (ImGui::DragFloat3("##CollisionShapeHalfDims", glm::value_ptr(size), 1.0f, 0.0f, 10000.0f, "%.2f"))
+    //    {
+    //        collider->SetHalfDimensions(size);
+    //       // phys.GetRigidBody()->ColliderUpdated();
+    //    }
+    //    ImGui::NextColumn();
+    //    ImGui::PushItemWidth(-1);
+    //}
 
-    static void SphereColliderInspector(SphereCollider_Deprecated* collider, RigidBodyComponent& phys)
-    {
-       
-        ImGui::AlignTextToFramePadding();
-        ImGui::TextUnformatted("Radius");
-        ImGui::NextColumn();
-        ImGui::PushItemWidth(-1);
+    //static void SphereColliderInspector(SphereCollider_Deprecated* collider, RigidBodyComponent& phys)
+    //{
+    //   
+    //    ImGui::AlignTextToFramePadding();
+    //    ImGui::TextUnformatted("Radius");
+    //    ImGui::NextColumn();
+    //    ImGui::PushItemWidth(-1);
 
-        float radius = collider->GetRadius();
-        if (ImGui::DragFloat("##CollisionShapeRadius", &radius, 1.0f, 0.0f, 10000.0f))
-        {
-            collider->SetRadius(radius);
-          //  phys.GetRigidBody()->ColliderUpdated();
-        }
-        ImGui::NextColumn();
-        ImGui::PushItemWidth(-1);
-    }
+    //    float radius = collider->GetRadius();
+    //    if (ImGui::DragFloat("##CollisionShapeRadius", &radius, 1.0f, 0.0f, 10000.0f))
+    //    {
+    //        collider->SetRadius(radius);
+    //      //  phys.GetRigidBody()->ColliderUpdated();
+    //    }
+    //    ImGui::NextColumn();
+    //    ImGui::PushItemWidth(-1);
+    //}
 
    
-    static void CapsuleColliderInspector(CapsuleCollider_Deprecated* collider, RigidBodyComponent& phys)
-    {
-        ImGui::AlignTextToFramePadding();
-        ImGui::TextUnformatted("Half Dimensions");
-        ImGui::NextColumn();
-        ImGui::PushItemWidth(-1);
+    //static void CapsuleColliderInspector(CapsuleCollider_Deprecated* collider, RigidBodyComponent& phys)
+    //{
+    //    ImGui::AlignTextToFramePadding();
+    //    ImGui::TextUnformatted("Half Dimensions");
+    //    ImGui::NextColumn();
+    //    ImGui::PushItemWidth(-1);
 
-        float radius = collider->GetRadius();
-        if (ImGui::DragFloat("##CollisionShapeRadius", &radius, 1.0f, 0.0f, 10000.0f, "%.2f"))
-        {
-            collider->SetRadius(radius);
-          //  phys.GetRigidBody()->ColliderUpdated();
-        }
+    //    float radius = collider->GetRadius();
+    //    if (ImGui::DragFloat("##CollisionShapeRadius", &radius, 1.0f, 0.0f, 10000.0f, "%.2f"))
+    //    {
+    //        collider->SetRadius(radius);
+    //      //  phys.GetRigidBody()->ColliderUpdated();
+    //    }
 
-        float height = collider->GetHeight();
-        if (ImGui::DragFloat("##CollisionShapeHeight", &height, 1.0f, 0.0f, 10000.0f, "%.2f"))
-        {
-            collider->SetHeight(height);
-          //  phys.GetRigidBody()->ColliderUpdated();
-        }
-        ImGui::NextColumn();
-        ImGui::PushItemWidth(-1);
-    }
+    //    float height = collider->GetHeight();
+    //    if (ImGui::DragFloat("##CollisionShapeHeight", &height, 1.0f, 0.0f, 10000.0f, "%.2f"))
+    //    {
+    //        collider->SetHeight(height);
+    //      //  phys.GetRigidBody()->ColliderUpdated();
+    //    }
+    //    ImGui::NextColumn();
+    //    ImGui::PushItemWidth(-1);
+    //}
 
-    static void MeshColliderInspector(MeshCollider_Deprecated* collider, RigidBodyComponent& phys)
-    {  
-        // Work on this Later
-        ImGui::TextUnformatted("Hull Collision Shape");
-        ImGui::NextColumn();
-        ImGui::PushItemWidth(-1);
-    }
+    //static void MeshColliderInspector(MeshCollider_Deprecated* collider, RigidBodyComponent& phys)
+    //{  
+    //    // Work on this Later
+    //    ImGui::TextUnformatted("Hull Collision Shape");
+    //    ImGui::NextColumn();
+    //    ImGui::PushItemWidth(-1);
+    //}
 
-    template <>
-    void ComponentEditorWidget<RigidBodyComponent>(entt::registry& reg, entt::registry::entity_type e)
-    {
-       
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
-        ImGui::Columns(2);
-        ImGui::Separator();
-        RigidBodyComponent& phys = reg.get<RigidBodyComponent>(e);
+    //template <>
+    //void ComponentEditorWidget<RigidBodyComponent>(entt::registry& reg, entt::registry::entity_type e)
+    //{
+    //   
+    //    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+    //    ImGui::Columns(2);
+    //    ImGui::Separator();
+    //    RigidBodyComponent& phys = reg.get<RigidBodyComponent>(e);
 
-        //Vector3 pos = phys.GetRigidBody()->GetPosition();
-        //Vector3 force = phys.GetRigidBody()->GetForce();
-        //Vector3 rotation = glm::eulerAngles(phys.GetRigidBody()->GetRotation());
-        //
-        //float friction = phys.GetRigidBody()->GetFriction();
-        //bool isStatic = phys.GetRigidBody()->GetIsStatic();
-        //bool isStationary = phys.GetRigidBody()->GetIsStationary();
-        //float mass = 1.0f / phys.GetRigidBody()->GetInverseMass();
-        //Vector3 velocity = phys.GetRigidBody()->GetVelocity();
-        //float elasticity = phys.GetRigidBody()->GetElasticity();
-        //SharedPtr<Collider> collisionShape = phys.GetRigidBody()->GetCollider();
-        //auto UUID = phys.GetRigidBody()->GetUniqueId();
+    //    //Vector3 pos = phys.GetRigidBody()->GetPosition();
+    //    //Vector3 force = phys.GetRigidBody()->GetForce();
+    //    //Vector3 rotation = glm::eulerAngles(phys.GetRigidBody()->GetRotation());
+    //    //
+    //    //float friction = phys.GetRigidBody()->GetFriction();
+    //    //bool isStatic = phys.GetRigidBody()->GetIsStatic();
+    //    //bool isStationary = phys.GetRigidBody()->GetIsStationary();
+    //    //float mass = 1.0f / phys.GetRigidBody()->GetInverseMass();
+    //    //Vector3 velocity = phys.GetRigidBody()->GetVelocity();
+    //    //float elasticity = phys.GetRigidBody()->GetElasticity();
+    //    //SharedPtr<Collider> collisionShape = phys.GetRigidBody()->GetCollider();
+    //    //auto UUID = phys.GetRigidBody()->GetUniqueId();
 
-        //ImGuiUtils::Property("UniqueId", (uint32_t&)UUID, ImGuiUtils::PropertyFlag::ReadOnly);
+    //    //ImGuiUtils::Property("UniqueId", (uint32_t&)UUID, ImGuiUtils::PropertyFlag::ReadOnly);
 
-        //if (ImGuiUtils::Property("Position", pos))
-        //    phys.GetRigidBody()->SetPosition(pos);
+    //    //if (ImGuiUtils::Property("Position", pos))
+    //    //    phys.GetRigidBody()->SetPosition(pos);
 
-        //if (ImGuiUtils::Property("Velocity", velocity))
-        //    phys.GetRigidBody()->SetVelocity(velocity);
+    //    //if (ImGuiUtils::Property("Velocity", velocity))
+    //    //    phys.GetRigidBody()->SetVelocity(velocity);
 
-       
-        //if (ImGuiUtils::Property("Rotation", rotation))
-        //    phys.GetRigidBody()->SetRotation(Quaternion(rotation));
+    //   
+    //    //if (ImGuiUtils::Property("Rotation", rotation))
+    //    //    phys.GetRigidBody()->SetRotation(Quaternion(rotation));
 
-        //if (ImGuiUtils::Property("Force", force))
-        //    phys.GetRigidBody()->SetForce(force);
+    //    //if (ImGuiUtils::Property("Force", force))
+    //    //    phys.GetRigidBody()->SetForce(force);
 
-        //if (ImGuiUtils::Property("Friction", friction, 0.0f, 1.0f))
-        //    phys.GetRigidBody()->SetFriction(friction);
+    //    //if (ImGuiUtils::Property("Friction", friction, 0.0f, 1.0f))
+    //    //    phys.GetRigidBody()->SetFriction(friction);
 
-        //if (ImGuiUtils::Property("Mass", mass))
-        //{
-        //    mass = Max(mass, 0.0001f);
-        //    phys.GetRigidBody()->SetInverseMass(1.0f / mass);
-        //}
+    //    //if (ImGuiUtils::Property("Mass", mass))
+    //    //{
+    //    //    mass = Max(mass, 0.0001f);
+    //    //    phys.GetRigidBody()->SetInverseMass(1.0f / mass);
+    //    //}
 
-        //if (ImGuiUtils::Property("Elasticity", elasticity))
-        //    phys.GetRigidBody()->SetElasticity(elasticity);
+    //    //if (ImGuiUtils::Property("Elasticity", elasticity))
+    //    //    phys.GetRigidBody()->SetElasticity(elasticity);
 
-        //if (ImGuiUtils::Property("Static", isStatic))
-        //    phys.GetRigidBody()->SetStatic(isStatic);
+    //    //if (ImGuiUtils::Property("Static", isStatic))
+    //    //    phys.GetRigidBody()->SetStatic(isStatic);
 
-        //if (ImGuiUtils::Property("Stationary", isStationary))
-        //    phys.GetRigidBody()->SetIsStationary(isStationary);
+    //    //if (ImGuiUtils::Property("Stationary", isStationary))
+    //    //    phys.GetRigidBody()->SetIsStationary(isStationary);
 
-        ImGui::Columns(1);
-        ImGui::Separator();
-        ImGui::PopStyleVar();
+    //    ImGui::Columns(1);
+    //    ImGui::Separator();
+    //    ImGui::PopStyleVar();
 
-       /* const char* shapes[4] = { "Box", "Sphere", "Capsule", "Mesh (Broken)" };
-        int selectedIndex = 0;
-        const char* shape_current = collisionShape ? CollisionShapeTypeToString(collisionShape->GetType()) : "";
-        int index = 0;
-        for (auto& shape : shapes)
-        {
-            if (shape == shape_current)
-            {
-                selectedIndex = index;
-                break;
-            }
-            index++;
-        }
+    //   /* const char* shapes[4] = { "Box", "Sphere", "Capsule", "Mesh (Broken)" };
+    //    int selectedIndex = 0;
+    //    const char* shape_current = collisionShape ? CollisionShapeTypeToString(collisionShape->GetType()) : "";
+    //    int index = 0;
+    //    for (auto& shape : shapes)
+    //    {
+    //        if (shape == shape_current)
+    //        {
+    //            selectedIndex = index;
+    //            break;
+    //        }
+    //        index++;
+    //    }
 
-        bool updated = ImGuiUtils::PropertyDropdown("Collision Shape", shapes, 4, &selectedIndex);*/
+    //    bool updated = ImGuiUtils::PropertyDropdown("Collision Shape", shapes, 4, &selectedIndex);*/
 
-       // if (updated)
-           // phys.GetRigidBody()->SetCollider(StringToCollisionShapeType(shapes[selectedIndex])); 
+    //   // if (updated)
+    //       // phys.GetRigidBody()->SetCollider(StringToCollisionShapeType(shapes[selectedIndex])); 
 
-    /*    if (collisionShape)
-        {
-            switch (collisionShape->GetType())
-            {
-            case ColliderType::BOX:
-                BoxColliderInspector(reinterpret_cast<BoxCollider*>(collisionShape.get()), phys);
-                break;
-            case ColliderType::SPHERE:
-                SphereColliderInspector(reinterpret_cast<SphereCollider*>(collisionShape.get()), phys);
-                break;
-            case ColliderType::CAPSULE:
-                CapsuleColliderInspector(reinterpret_cast<CapsuleCollider*>(collisionShape.get()), phys);
-                break;
-            case ColliderType::MESH:
-                MeshColliderInspector(reinterpret_cast<MeshCollider*>(collisionShape.get()), phys);
-                break;
-            default:
-                ImGui::NextColumn();
-                ImGui::PushItemWidth(-1);
-                LOG_ERROR("Unsupported Collision shape");
-                break;
-            }
-        }
-        else
-        {
-            ImGui::NextColumn();
-            ImGui::PushItemWidth(-1);
-        }*/
+    ///*    if (collisionShape)
+    //    {
+    //        switch (collisionShape->GetType())
+    //        {
+    //        case ColliderType::BOX:
+    //            BoxColliderInspector(reinterpret_cast<BoxCollider*>(collisionShape.get()), phys);
+    //            break;
+    //        case ColliderType::SPHERE:
+    //            SphereColliderInspector(reinterpret_cast<SphereCollider*>(collisionShape.get()), phys);
+    //            break;
+    //        case ColliderType::CAPSULE:
+    //            CapsuleColliderInspector(reinterpret_cast<CapsuleCollider*>(collisionShape.get()), phys);
+    //            break;
+    //        case ColliderType::MESH:
+    //            MeshColliderInspector(reinterpret_cast<MeshCollider*>(collisionShape.get()), phys);
+    //            break;
+    //        default:
+    //            ImGui::NextColumn();
+    //            ImGui::PushItemWidth(-1);
+    //            LOG_ERROR("Unsupported Collision shape");
+    //            break;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        ImGui::NextColumn();
+    //        ImGui::PushItemWidth(-1);
+    //    }*/
 
-        ImGui::PopItemWidth();
-        ImGui::Columns(1);
+    //    ImGui::PopItemWidth();
+    //    ImGui::Columns(1);
 
-        ImGui::Separator();
-    }
+    //    ImGui::Separator();
+    //}
 
 
 }

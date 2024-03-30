@@ -3,6 +3,7 @@
 
 #include "Engine/Core/EntitySystem/Entity.h"
 #include "PhysicsAPI.h"
+#include "RigidBody/RigidBody_Dep.h"
 
 namespace SaltnPepperEngine
 {
@@ -21,13 +22,13 @@ namespace SaltnPepperEngine
             static void RemoveRigidBody(btRigidBody* body);
             static void ActiveRigidBodyIsland(btRigidBody* body);
 
-            static void SetRigidBodyParent(btRigidBody* body, RigidBody* entity);
+            static void SetRigidBodyParent(btRigidBody* body, RigidBody_Dep* entity);
             
-            static RigidBody* GetRigidBodyParent(const void* body);
+            static RigidBody_Dep* GetRigidBodyParent(const void* body);
 
-            static RigidBody* RayCast(const Vector3& from, const Vector3& to);
-            static RigidBody* RayCast(const Vector3& from, const Vector3& to, float& rayFraction);
-            static RigidBody* RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionLayer::Mask rayCastMask);
+            static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to);
+            static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to, float& rayFraction);
+            static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionLayer::Mask rayCastMask);
             static Vector3 GetGravity();
 
             static void SetGravity(const Vector3& gravity);

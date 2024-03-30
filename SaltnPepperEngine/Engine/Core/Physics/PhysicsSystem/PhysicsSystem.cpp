@@ -2,7 +2,7 @@
 #include "Bullet3Bindings.h"
 #include "PhysicsAPI.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
-#include "Engine/Core/Components/SceneComponents.h"
+//#include "Engine/Core/Components/SceneComponents.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
 #include "Engine/Core/EntitySystem/Entity.h"
 #include "Engine/Core/System/Application/Application.h"
@@ -104,67 +104,67 @@ namespace SaltnPepperEngine
 
 		void PhysicsSystem::InvoveCollisionUpdate()
 		{
-			auto& [currentCollisions, previousCollisions] = PhysicsSystem::GetCurrent()->collisions;
+			//auto& [currentCollisions, previousCollisions] = PhysicsSystem::GetCurrent()->collisions;
 
-			//std::sort(currentCollisions.begin(), currentCollisions.end());
-			auto previousCollisionEntry = previousCollisions.begin();
+			////std::sort(currentCollisions.begin(), currentCollisions.end());
+			//auto previousCollisionEntry = previousCollisions.begin();
 
 
-			/// Work On Collision Stuff later
+			///// Work On Collision Stuff later
 
-			constexpr auto CollisionCallback = [](RigidBody* objectOne, RigidBody* objectTwo, auto callbackMethod)
-			{
-				constexpr auto valid = [](RigidBody* object) -> bool
-				{
-					return object != nullptr;
-				};
+			//constexpr auto CollisionCallback = [](RigidBody* objectOne, RigidBody* objectTwo, auto callbackMethod)
+			//{
+			//	constexpr auto valid = [](RigidBody* object) -> bool
+			//	{
+			//		return object != nullptr;
+			//	};
 
-				//Call If both Objects are Valid
+			//	//Call If both Objects are Valid
 
-				if (valid(objectOne) && valid(objectTwo))
-				{
-					
-					std::invoke(callbackMethod, objectOne, objectOne, objectTwo);
+			//	if (valid(objectOne) && valid(objectTwo))
+			//	{
+			//		
+			//		std::invoke(callbackMethod, objectOne, objectOne, objectTwo);
 
-					std::invoke(callbackMethod, objectTwo, objectTwo, objectOne);
-				}
+			//		std::invoke(callbackMethod, objectTwo, objectTwo, objectOne);
+			//	}
 
-					
-			};
+			//		
+			//};
 
-			for (auto it = currentCollisions.begin(); it != currentCollisions.end(); it++)
-			{
-				auto& [object1, object2] = *it;
+			//for (auto it = currentCollisions.begin(); it != currentCollisions.end(); it++)
+			//{
+			//	auto& [object1, object2] = *it;
 
-				while (previousCollisionEntry != previousCollisions.end() && *previousCollisionEntry < *it)
-				{
-					auto& [obj1, obj2] = *previousCollisionEntry;
-					CollisionCallback(obj1, obj2, &RigidBody::InvokeOnCollisionExitCallback);
-					previousCollisionEntry++;
-				}
+			//	while (previousCollisionEntry != previousCollisions.end() && *previousCollisionEntry < *it)
+			//	{
+			//		auto& [obj1, obj2] = *previousCollisionEntry;
+			//		CollisionCallback(obj1, obj2, &RigidBody_Dep::InvokeOnCollisionExitCallback);
+			//		previousCollisionEntry++;
+			//	}
 
-				if (previousCollisionEntry == previousCollisions.end() || *previousCollisionEntry != *it)
-					CollisionCallback(object1, object2, &RigidBody::InvokeOnCollisionEnterCallback);
+			//	if (previousCollisionEntry == previousCollisions.end() || *previousCollisionEntry != *it)
+			//		CollisionCallback(object1, object2, &RigidBody_Dep::InvokeOnCollisionEnterCallback);
 
-				if (previousCollisionEntry != previousCollisions.end() && *previousCollisionEntry == *it)
-					previousCollisionEntry++;
+			//	if (previousCollisionEntry != previousCollisions.end() && *previousCollisionEntry == *it)
+			//		previousCollisionEntry++;
 
-				CollisionCallback(object1, object2, &RigidBody::InvokeOnCollisionCallback);
-			}
+			//	CollisionCallback(object1, object2, &RigidBody_Dep::InvokeOnCollisionCallback);
+			//}
 
-			while (previousCollisionEntry != previousCollisions.end())
-			{
-				auto& [obj1, obj2] = *previousCollisionEntry;
-				CollisionCallback(obj1, obj2, &RigidBody::InvokeOnCollisionExitCallback);
-				previousCollisionEntry++;
-			}
+			//while (previousCollisionEntry != previousCollisions.end())
+			//{
+			//	auto& [obj1, obj2] = *previousCollisionEntry;
+			//	CollisionCallback(obj1, obj2, &RigidBody_Dep::InvokeOnCollisionExitCallback);
+			//	previousCollisionEntry++;
+			//}
 
-			std::swap(currentCollisions, previousCollisions);
-			currentCollisions.clear();
+			//std::swap(currentCollisions, previousCollisions);
+			//currentCollisions.clear();
 		
 		}
 
-		void PhysicsSystem::AddCollisionEntry(RigidBody* objectOne, RigidBody* objectTwo)
+		void PhysicsSystem::AddCollisionEntry(RigidBody_Dep* objectOne, RigidBody_Dep* objectTwo)
 		{
 			auto& [currentCollisions, previousCollisions] = PhysicsSystem::GetCurrent()->collisions;
 			currentCollisions.emplace_back(objectOne, objectTwo);

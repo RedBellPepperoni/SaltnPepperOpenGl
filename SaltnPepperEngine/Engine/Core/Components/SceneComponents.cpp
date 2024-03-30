@@ -239,15 +239,15 @@ namespace SaltnPepperEngine
 			return m_animator;
 		}
 
-		RigidBodyComponent::RigidBodyComponent()
+		/*RigidBodyComponent::RigidBodyComponent()
 		{
-			m_rigidBody = MakeShared<RigidBody>();
+			m_rigidBody = MakeShared<RigidBody_Dep>();
 		}
 
-		SharedPtr<RigidBody>& RigidBodyComponent::GetRigidBody()
+		SharedPtr<RigidBody_Dep>& RigidBodyComponent::GetRigidBody()
 		{
 			return m_rigidBody;
-		}
+		}*/
 
 		BoxColliderComponent::BoxColliderComponent()
 		{

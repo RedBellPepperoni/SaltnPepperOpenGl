@@ -309,7 +309,7 @@
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.h">
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody_Dep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\AudioSystem\AudioUtils\ChannelData.h">
@@ -671,7 +671,7 @@
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.cpp">
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody_Dep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\BaseCollider.cpp">

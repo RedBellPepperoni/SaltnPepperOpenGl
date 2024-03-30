@@ -220,7 +220,7 @@
     <ClInclude Include="Engine\Core\Physics\SoftBody\VerletCloth.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.h" />
-    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.h" />
+    <ClInclude Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody_Dep.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\OrientedBoundingBox.h" />
   </ItemGroup>
   <ItemGroup>
@@ -315,7 +315,7 @@
     <ClCompile Include="Engine\Core\Rendering\Particles\ParticleSystem.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\BulletRigidBody.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\PhysicsSystem.cpp" />
-    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody_Dep.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\OrientedBoundingBox.cpp" />
     <ClCompile Include="SaltnPepperEngine.h" />
     <ClCompile Include="Engine\Core\System\Window\Window.cpp" />
