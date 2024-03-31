@@ -74,8 +74,8 @@ namespace SaltnPepperEngine
 
 			btCollisionShape* shapeHandle = nullptr;
 
-			uint32_t collisionMask = CollisionGroup::NO_STATIC_COLLISIONS;;
-			uint32_t collisionGroup = CollisionMask::STATIC;
+			uint32_t collisionMask = CollisionMask::DYNAMIC;
+			uint32_t collisionGroup = CollisionGroup::ALL;
 
 			CollisionCallback onCollision;
 			CollisionCallback onCollisionEnter;

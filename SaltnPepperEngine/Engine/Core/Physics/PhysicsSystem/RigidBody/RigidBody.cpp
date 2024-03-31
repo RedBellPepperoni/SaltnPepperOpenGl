@@ -143,8 +143,8 @@ namespace SaltnPepperEngine
 
 			SetBounceFactor(0.1f);
 
-			//PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle(), collisionGroup, collisionMask);
-			PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle());
+			PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle(), collisionGroup, collisionMask);
+			//PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle());
 
 
 		}
