@@ -55,6 +55,28 @@ namespace SaltnPepperEngine
 			}
 		}
 
+		void RigidBody::SetKinematicFlag()
+		{
+			bodyHandle->setCollisionFlags(bodyHandle->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+			SetActivationState(ActivationState::DISABLEDEACTIVATION);
+		}
+
+		void RigidBody::UnsetKinematicFlag()
+		{
+		}
+
+		void RigidBody::SetTriggerFlag()
+		{
+		}
+
+		void RigidBody::UnsetTriggerFlag()
+		{
+		}
+
+		void RigidBody::UnsetAllFlags()
+		{
+		}
+
 		RigidBody::RigidBody(const Vector3& position, btCollisionShape* shape)
 		{
 			// Assign the Shape Reference
@@ -79,6 +101,22 @@ namespace SaltnPepperEngine
 			DestroyBody();
 		}
 
+
+		void RigidBody::Activate()
+		{
+			bodyHandle->activate(true);
+		}
+
+		const bool RigidBody::IsActive() const
+		{
+			bodyHandle->isActive();
+		}
+
+		void RigidBody::SetCollisionShape(btCollisionShape* newShape)
+		{
+			UpdateCollider(GetMass(), newShape);
+		}
+
 		void RigidBody::SetMass(const float value)
 		{
 			UpdateCollider(value, shapeHandle);
@@ -88,5 +126,23 @@ namespace SaltnPepperEngine
 		{
 			return static_cast<float>(bodyHandle->getMass());
 		}
+
+		void RigidBody::SetCollisionFilter(uint32_t mask, uint32_t group)
+		{
+			collisionMask = mask;
+			collisionGroup = group;
+			ReAddRigidBody();
+		}
+
+		void RigidBody::SetCollisionFilter(CollisionMask::Mask mask, CollisionGroup::Group group)
+		{
+			SetCollisionFilter((uint32_t)mask, (uint32_t)group);
+		}
+		
+		void RigidBody::SetActivationState(ActivationState state)
+		{
+			bodyHandle->forceActivationState((int)state);
+		}
+
 	}
 }

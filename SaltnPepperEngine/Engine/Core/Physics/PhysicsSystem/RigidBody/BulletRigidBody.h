@@ -55,14 +55,14 @@ namespace SaltnPepperEngine
 			DISABLE_SIMULATION = 5
 		}*/
 
-		enum class ActivationState
-		{
-			ACTIVETAG = 1,
-			ISLANDSLEEPING = 2,
-			WANTSDEACTIVATION = 3,
-			DISABLEDEACTIVATION = 4,
-			DISABLESIMULATION = 5
-		};
+		//enum class ActivationState
+		//{
+		//	ACTIVETAG = 1,
+		//	ISLANDSLEEPING = 2,
+		//	WANTSDEACTIVATION = 3,
+		//	DISABLEDEACTIVATION = 4,
+		//	DISABLESIMULATION = 5
+		//};
 
 		class BulletRigidBody
 		{

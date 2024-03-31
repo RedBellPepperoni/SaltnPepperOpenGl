@@ -36,6 +36,15 @@ namespace SaltnPepperEngine
 		}
 
 
+		enum class ActivationState
+		{
+			ACTIVETAG = 1,
+			ISLANDSLEEPING = 2,
+			WANTSDEACTIVATION = 3,
+			DISABLEDEACTIVATION = 4,
+			DISABLESIMULATION = 5
+		};
+
 
 		class MotionStateNotifier : public btDefaultMotionState
 		{
@@ -72,12 +81,26 @@ namespace SaltnPepperEngine
 
 			void UpdateCollider(float mass, btCollisionShape* newShape);
 
+			// Collision Flags : KINEMATIC
+			void SetKinematicFlag();
+			void UnsetKinematicFlag();
+
+			// Collision Flags : TRIGEGR
+			void SetTriggerFlag();
+			void UnsetTriggerFlag();
+
+			void UnsetAllFlags();
+			
+
 		public:
 
 			RigidBody(const Vector3& position, btCollisionShape* shape);
 			
 			~RigidBody();
 		
+
+			void Activate();
+			const bool IsActive() const;
 
 			btRigidBody* GetNativeHandle() { return bodyHandle.get(); }
 			const btRigidBody* GetNativeHandle() const { return bodyHandle.get(); }
@@ -88,9 +111,19 @@ namespace SaltnPepperEngine
 			btCollisionShape* GetCollisionShape() { return shapeHandle; }
 			const btCollisionShape* GetCollisionShape() const{ return shapeHandle; }
 
+			void SetCollisionShape(btCollisionShape* newShape);
+
 			void SetMass(const float value);
 			const float GetMass() const;
 
+			void SetCollisionFilter(uint32_t mask, uint32_t group = CollisionGroup::Group::ALL);
+			void SetCollisionFilter(CollisionMask::Mask mask, CollisionGroup::Group group = CollisionGroup::Group::ALL);
+
+			const uint32_t GetCollisionGroup() const { return collisionGroup; }
+			const uint32_t GetCollisionMask() const { return collisionMask; }
+
+			void SetActivationState(ActivationState state);
+			ActivationState GetActivationState() const;
 
 		};
 
