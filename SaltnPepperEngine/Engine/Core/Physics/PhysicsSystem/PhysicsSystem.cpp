@@ -62,19 +62,15 @@ namespace SaltnPepperEngine
 
 			for (Entity rigidComp : rigidView)
 			{
-				//RigidBody* rigidBody = rigidComp.GetComponent<RigidBodyComponent>().GetRigidBody().get();
-
-				//Transform& rigidTransform = rigidComp.GetComponent<Transform>();
-
-				//rigidBody->OnUpdate(deltaTime, rigidTransform);
-
+	
 				Transform& transform = rigidComp.GetComponent<Transform>();
 				RigidBody& body = rigidComp.GetComponent<RigidBody>();
-				Vector3 pos = FromBulletVector3(body.GetNativeHandle()->getWorldTransform().getOrigin());
-				transform.SetPosition(pos);
+			
+
+				body.UpdateTransform(transform);
 
 			}
-
+			
 		}
 
 		void PhysicsSystem::Destroy()

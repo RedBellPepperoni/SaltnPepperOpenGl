@@ -559,5 +559,36 @@ RigidBody* CreatePhysicsTest(const Vector3& position)
 
 }
 
+
+RigidBody* CreatePhysicsKinematic(const Vector3& position)
+{
+	
+	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Kinematic");
+	Transform& boxTransform = boxEntity.GetComponent<Transform>();
+
+
+
+	boxTransform.SetPosition(position);
+
+	
+
+	SphereCollider& shape = boxEntity.AddComponent<SphereCollider>();
+	shape.Init(BoundingSphere(Vector3(0.0f), 1.0f));
+
+	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape.GetShape());
+
+	body->SetBounceFactor(0.8f);
+	//body->MakeKinematic();
+
+	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
+	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+
+	mat->albedoColour = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+	mat->albedoMapFactor = 0.2f;
+	//return boxEntity;
+	return body;
+
+}
+
 #endif //  EntitySetup
 

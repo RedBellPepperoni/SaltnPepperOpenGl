@@ -99,6 +99,10 @@ namespace SaltnPepperEngine
 			void UnsetTriggerFlag();
 
 			void UnsetAllFlags();
+
+			bool HasTransformUpdate();
+
+			void SetTransformUpdateFlag(bool value);
 			
 
 		public:
@@ -108,9 +112,14 @@ namespace SaltnPepperEngine
 			RigidBody(const Vector3& position, btCollisionShape* shape);
 			
 			~RigidBody();
+
+		
 		
 
-			//void UpdateTransform();
+			void UpdateTransform(Transform& ecsTransform);
+
+			Vector3 GetScale();
+			void SetScale(const Vector3& scale);
 
 			void Activate();
 			const bool IsActive() const;

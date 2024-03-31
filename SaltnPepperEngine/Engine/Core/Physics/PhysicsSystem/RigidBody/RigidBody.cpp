@@ -5,6 +5,40 @@ namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
+
+		void RigidBody::UpdateTransform(Transform& ecsTransform)
+		{
+			Vector3 selfScale = ecsTransform.GetScale();
+
+
+
+			// If the Body is kinematic, update the Rigidbody's transform usingthe ECS transform
+			if (IsKinematic())
+			{
+				btTransform transform;
+				ToBulletTransform(ecsTransform, transform);
+				bodyHandle->getMotionState()->setWorldTransform(transform);
+
+			}
+
+			// If its not kinematic, the Transform should be controlled by the Bullet Engine
+			else if (HasTransformUpdate())
+			{
+
+				btTransform Trans = bodyHandle->getWorldTransform();
+				FromBulletTransform(Trans, ecsTransform);
+				SetTransformUpdateFlag(false);
+
+			}
+
+
+			if (selfScale != GetScale())
+			{
+				SetScale(selfScale);
+			}
+
+		}
+
 		void RigidBody::DestroyBody()
 		{
 			if (bodyHandle)
@@ -83,6 +117,16 @@ namespace SaltnPepperEngine
 			UnsetKinematicFlag();
 		}
 
+		bool RigidBody::HasTransformUpdate()
+		{
+			return GetMotionState()->TransformUpdated;
+		}
+
+		void RigidBody::SetTransformUpdateFlag(bool value)
+		{
+			GetMotionState()->TransformUpdated = value;
+		}
+
 		RigidBody::RigidBody(const Vector3& position, btCollisionShape* shape)
 		{
 			// Assign the Shape Reference
@@ -99,7 +143,8 @@ namespace SaltnPepperEngine
 
 			SetBounceFactor(0.1f);
 
-			PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle(), collisionGroup, collisionMask);
+			//PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle(), collisionGroup, collisionMask);
+			PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle());
 
 
 		}
@@ -107,6 +152,27 @@ namespace SaltnPepperEngine
 		RigidBody::~RigidBody()
 		{
 			DestroyBody();
+		}
+
+		void RigidBody::SetScale(const Vector3& scale)
+		{
+			if (shapeHandle != nullptr)
+			{
+				shapeHandle->setLocalScaling(ToBulletVector3(scale));
+			}
+		}
+
+		Vector3 RigidBody::GetScale()
+		{
+			if (shapeHandle != nullptr)
+			{
+				return FromBulletVector3(shapeHandle->getLocalScaling());
+			}
+			else
+			{
+				return Vector3{ 0.0f };
+
+			}
 		}
 
 
@@ -117,7 +183,7 @@ namespace SaltnPepperEngine
 
 		const bool RigidBody::IsActive() const
 		{
-			bodyHandle->isActive();
+			return bodyHandle->isActive();
 		}
 
 		void RigidBody::SetCollisionShape(btCollisionShape* newShape)
@@ -127,12 +193,12 @@ namespace SaltnPepperEngine
 
 		void RigidBody::ClearForces()
 		{
-
+			bodyHandle->clearForces();
 		}
 
 		bool RigidBody::IsMoving() const
 		{
-			shapeHandle != nullptr && !shapeHandle->isNonMoving();
+			return shapeHandle != nullptr && !shapeHandle->isNonMoving();
 		}
 
 		void RigidBody::SetMass(const float value)
@@ -222,12 +288,12 @@ namespace SaltnPepperEngine
 
 		const bool RigidBody::IsTrigger() const
 		{
-			!HasCollisionResponse();
+			return !HasCollisionResponse();
 		}
 
 		const bool RigidBody::IsRayCastable() const
 		{
-			GetCollisionGroup() & CollisionGroup::RAYCAST_ONLY;
+			return GetCollisionGroup() & CollisionGroup::RAYCAST_ONLY;
 		}
 
 		void RigidBody::ToggleRayCasting(bool value)
@@ -244,7 +310,7 @@ namespace SaltnPepperEngine
 
 		float RigidBody::GetBounceFactor() const
 		{
-			bodyHandle->getRestitution();
+			return bodyHandle->getRestitution();
 		}
 
 		void RigidBody::SetBounceFactor(float value)
