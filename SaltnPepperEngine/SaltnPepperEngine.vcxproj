@@ -229,6 +229,7 @@
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\SphereCollider.cpp" />
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Shapes\CapsuleShape.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingBox.cpp" />
     <ClCompile Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingSphere.cpp" />

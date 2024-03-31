@@ -32,21 +32,12 @@ namespace SaltnPepperEngine
 			//btMotionState* motionHandle = nullptr;
 			SharedPtr<MotionStateNotifier> motionHandle = nullptr;
 
+			btCollisionShape* shapeHandle = nullptr;
+
 		public:
 
-			RigidBody(const Vector3& position, btCollisionShape* shape)
-			{
-				btVector3 pos = ToBulletVector3(position);
-				btTransform transform = btTransform(btQuaternion(0, 0, 0, 1), pos);
-				motionHandle = MakeShared<MotionStateNotifier>(transform);
-
-				btRigidBody::btRigidBodyConstructionInfo info(10, motionHandle.get(), shape, btVector3(0, 0, 0));
-				//bodyHandle = new btRigidBody(info);
-				bodyHandle = MakeShared<btRigidBody>(info);
-
-				PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle());
-
-			}
+			RigidBody(const Vector3& position, btCollisionShape* shape);
+			
 			~RigidBody()
 			{
 				//delete motionHandle;
@@ -54,7 +45,14 @@ namespace SaltnPepperEngine
 			};
 
 			btRigidBody* GetNativeHandle() { return bodyHandle.get(); }
+			const btRigidBody* GetNativeHandle() const { return bodyHandle.get(); }
 
+			MotionStateNotifier* GetMotionState() { return motionHandle.get(); }
+			const MotionStateNotifier* GetMotionState() const { return motionHandle.get(); }
+
+
+			//void SetMass(const float value);
+			const float GetMass() const;
 		};
 
 	}

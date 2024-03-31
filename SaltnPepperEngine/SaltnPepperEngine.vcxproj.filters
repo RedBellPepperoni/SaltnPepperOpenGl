@@ -761,5 +761,8 @@
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\Physics\PhysicsSystem\RigidBody\RigidBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
