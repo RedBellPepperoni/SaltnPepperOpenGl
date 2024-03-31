@@ -125,6 +125,10 @@ namespace SaltnPepperEngine
 			void SetActivationState(ActivationState state);
 			ActivationState GetActivationState() const;
 
+
+			void MakeKinematic();
+			void MakeDynamic();
+			void MakeStatic();
 		};
 
 	}

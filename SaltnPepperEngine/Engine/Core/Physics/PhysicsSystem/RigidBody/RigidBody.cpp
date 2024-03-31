@@ -63,18 +63,24 @@ namespace SaltnPepperEngine
 
 		void RigidBody::UnsetKinematicFlag()
 		{
+			bodyHandle->setCollisionFlags(bodyHandle->getCollisionFlags() & ~btCollisionObject::CF_KINEMATIC_OBJECT);
+			SetActivationState(ActivationState::ACTIVETAG);
 		}
 
 		void RigidBody::SetTriggerFlag()
 		{
+			bodyHandle->setCollisionFlags(bodyHandle->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 		}
 
 		void RigidBody::UnsetTriggerFlag()
 		{
+			bodyHandle->setCollisionFlags(bodyHandle->getCollisionFlags() & ~btCollisionObject::CF_NO_CONTACT_RESPONSE);
 		}
 
 		void RigidBody::UnsetAllFlags()
 		{
+			UnsetTriggerFlag();
+			UnsetKinematicFlag();
 		}
 
 		RigidBody::RigidBody(const Vector3& position, btCollisionShape* shape)
@@ -144,5 +150,25 @@ namespace SaltnPepperEngine
 			bodyHandle->forceActivationState((int)state);
 		}
 
+		void RigidBody::MakeKinematic()
+		{
+			SetMass(0.0f);
+			SetCollisionFilter(CollisionMask::KINEMATIC, CollisionGroup::NO_STATIC_COLLISIONS); 
+			SetKinematicFlag();
+		}
+
+		void RigidBody::MakeDynamic()
+		{
+			if (GetMass() == 0.0f) { SetMass(1.0f); } 
+			SetCollisionFilter(CollisionMask::DYNAMIC, CollisionGroup::ALL); 
+			UnsetKinematicFlag(); 
+		}
+
+		void RigidBody::MakeStatic()
+		{
+			SetMass(0.0f);
+			SetCollisionFilter(CollisionMask::STATIC, CollisionGroup::NO_STATIC_COLLISIONS);
+			UnsetKinematicFlag();
+		}
 	}
 }

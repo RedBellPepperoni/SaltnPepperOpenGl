@@ -505,6 +505,24 @@ Entity CreatePhysicsBox(const Vector3& position)
 
 }
 
+RigidBody* CreatePhysicsFloor(const Vector3& position)
+{
+	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_Floor");
+	Transform& floorTransform = floorEntity.GetComponent<Transform>();
+
+
+
+	floorTransform.SetPosition(position);
+
+
+	BoundingBox bounds{ Vector3(-10.0f,-0.5f,-10.0f),Vector3(10.0f,0.5f,10.0f) };
+	BoxCollider& shape = floorEntity.AddComponent<BoxCollider>();
+	shape.Init(bounds);
+	RigidBody* body = &floorEntity.AddComponent<RigidBody>(position, shape.GetShape());
+
+	
+}
+
 
 RigidBody* CreatePhysicsTest(const Vector3& position)
 {
@@ -522,8 +540,12 @@ RigidBody* CreatePhysicsTest(const Vector3& position)
 
 	collider->Init(bounds);*/
 
-	RShape* shape = &boxEntity.AddComponent<RShape>();
-	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape->GetShape());
+	//RShape* shape = &boxEntity.AddComponent<RShape>();
+
+	SphereCollider& shape = boxEntity.AddComponent<SphereCollider>();
+	shape.Init(BoundingSphere(Vector3(0.0f), 1.0f));
+
+	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape.GetShape());
 	//body->GetBody()->setGravity(btVector3(0.0f,-9.81f,0.0f));
 	//body->GetNativeHandle()->activate(true);
 	bool kin = body->GetNativeHandle()->isKinematicObject();
