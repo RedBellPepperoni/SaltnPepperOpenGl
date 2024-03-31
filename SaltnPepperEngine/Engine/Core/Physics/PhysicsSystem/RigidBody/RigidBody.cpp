@@ -125,6 +125,16 @@ namespace SaltnPepperEngine
 			UpdateCollider(GetMass(), newShape);
 		}
 
+		void RigidBody::ClearForces()
+		{
+
+		}
+
+		bool RigidBody::IsMoving() const
+		{
+			shapeHandle != nullptr && !shapeHandle->isNonMoving();
+		}
+
 		void RigidBody::SetMass(const float value)
 		{
 			UpdateCollider(value, shapeHandle);
@@ -133,6 +143,17 @@ namespace SaltnPepperEngine
 		const float RigidBody::GetMass() const
 		{
 			return static_cast<float>(bodyHandle->getMass());
+		}
+
+
+		void RigidBody::SetFriction(float value)
+		{
+			bodyHandle->setFriction(value);
+		}
+
+		const float RigidBody::GetFriction() const
+		{
+			return bodyHandle->getFriction();
 		}
 
 		void RigidBody::SetCollisionFilter(uint32_t mask, uint32_t group)
@@ -176,6 +197,12 @@ namespace SaltnPepperEngine
 			return GetCollisionMask() & CollisionMask::DYNAMIC;
 		}
 
+		
+		bool RigidBody::HasCollisionResponse() const
+		{
+			return !(bodyHandle->getCollisionFlags() & btCollisionObject::CF_NO_CONTACT_RESPONSE);;
+		}
+
 		void RigidBody::MakeStatic()
 		{
 			SetMass(0.0f);
@@ -188,6 +215,33 @@ namespace SaltnPepperEngine
 			return GetCollisionMask() & CollisionMask::STATIC;
 		}
 
+		void RigidBody::MakeTrigger()
+		{
+			SetTriggerFlag();
+		}
+
+		const bool RigidBody::IsTrigger() const
+		{
+			!HasCollisionResponse();
+		}
+
+		const bool RigidBody::IsRayCastable() const
+		{
+			GetCollisionGroup() & CollisionGroup::RAYCAST_ONLY;
+		}
+
+		void RigidBody::ToggleRayCasting(bool value)
+		{
+			if (value)
+			{
+				SetCollisionFilter(this->GetCollisionMask(), this->GetCollisionGroup() | CollisionGroup::RAYCAST_ONLY);
+			}
+			else
+			{
+				SetCollisionFilter(this->GetCollisionMask(), this->GetCollisionGroup() & ~CollisionGroup::RAYCAST_ONLY);
+			}
+		}
+
 		float RigidBody::GetBounceFactor() const
 		{
 			bodyHandle->getRestitution();
@@ -196,6 +250,61 @@ namespace SaltnPepperEngine
 		void RigidBody::SetBounceFactor(float value)
 		{
 			bodyHandle->setRestitution(value);
+		}
+
+
+		void RigidBody::ApplyCentralImpulse(Vector3 impulse)
+		{
+			Activate();
+			bodyHandle->applyCentralImpulse(ToBulletVector3(impulse));
+		}
+
+		void RigidBody::ApplyCentralPushImpulse(Vector3 impulse)
+		{
+			Activate();
+			bodyHandle->applyCentralPushImpulse(ToBulletVector3(impulse));
+		}
+
+		void RigidBody::ApplyForce(const Vector3& force, const Vector3& relativePosition)
+		{
+			Activate();
+			bodyHandle->applyForce(ToBulletVector3(force), ToBulletVector3(relativePosition));
+		}
+
+		void RigidBody::ApplyImpulse(const Vector3& impulse, const Vector3& relativePosition)
+		{
+			Activate();
+			bodyHandle->applyImpulse(ToBulletVector3(impulse), ToBulletVector3(relativePosition));
+		}
+
+		void RigidBody::ApplyPushImpulse(const Vector3& impulse, const Vector3& relativePosition)
+		{
+			Activate();
+			bodyHandle->applyPushImpulse(ToBulletVector3(impulse), ToBulletVector3(relativePosition));
+		}
+
+		void RigidBody::ApplyTorque(const Vector3& force)
+		{
+			Activate();
+			bodyHandle->applyTorque(ToBulletVector3(force));
+		}
+
+		void RigidBody::ApplyTorqueImpulse(const Vector3& impulse)
+		{
+			Activate();
+			bodyHandle->applyTorqueImpulse(ToBulletVector3(impulse));
+		}
+
+		void RigidBody::ApplyTorqueTurnImpulse(const Vector3& impulse)
+		{
+			Activate();
+			bodyHandle->applyTorqueTurnImpulse(ToBulletVector3(impulse));
+		}
+
+		void RigidBody::ApplyCentralForce(const Vector3& force)
+		{
+			Activate();
+			bodyHandle->applyCentralForce(ToBulletVector3(force));
 		}
 	}
 }

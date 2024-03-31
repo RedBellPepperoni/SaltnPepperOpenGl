@@ -108,7 +108,9 @@ namespace SaltnPepperEngine
             ActivationState GetActivationState() const;
             BoundingBox GetAABB() const;
             void Activate();
+
             void ClearForces();
+            
             float GetMass() const;
             void SetMass(float mass);
             float GetFriction() const;

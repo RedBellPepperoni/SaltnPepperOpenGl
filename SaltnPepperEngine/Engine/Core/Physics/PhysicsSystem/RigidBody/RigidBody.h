@@ -62,7 +62,11 @@ namespace SaltnPepperEngine
 
 		class RigidBody
 		{
+			using CollisionCallback = std::function<void(RigidBody*, RigidBody*)>;
+
 		private:
+
+
 
 			SharedPtr<btRigidBody> bodyHandle = nullptr;
 			//btMotionState* motionHandle = nullptr;
@@ -72,6 +76,11 @@ namespace SaltnPepperEngine
 
 			uint32_t collisionMask = CollisionGroup::NO_STATIC_COLLISIONS;;
 			uint32_t collisionGroup = CollisionMask::STATIC;
+
+			CollisionCallback onCollision;
+			CollisionCallback onCollisionEnter;
+			CollisionCallback onCollisionExit;
+
 
 		private:
 
@@ -94,10 +103,14 @@ namespace SaltnPepperEngine
 
 		public:
 
+			
+
 			RigidBody(const Vector3& position, btCollisionShape* shape);
 			
 			~RigidBody();
 		
+
+			//void UpdateTransform();
 
 			void Activate();
 			const bool IsActive() const;
@@ -113,8 +126,14 @@ namespace SaltnPepperEngine
 
 			void SetCollisionShape(btCollisionShape* newShape);
 
+			void ClearForces();
+
 			void SetMass(const float value);
 			const float GetMass() const;
+
+			
+			void SetFriction(float value);
+			const float GetFriction() const;
 
 			void SetCollisionFilter(uint32_t mask, uint32_t group = CollisionGroup::Group::ALL);
 			void SetCollisionFilter(CollisionMask::Mask mask, CollisionGroup::Group group = CollisionGroup::Group::ALL);
@@ -125,6 +144,8 @@ namespace SaltnPepperEngine
 			void SetActivationState(ActivationState state);
 			ActivationState GetActivationState() const;
 
+			bool HasCollisionResponse() const;
+			bool IsMoving() const;
 
 			void MakeKinematic();
 			const bool IsKinematic() const;
@@ -144,6 +165,20 @@ namespace SaltnPepperEngine
 
 			float GetBounceFactor() const;
 			void SetBounceFactor(float value);
+
+			void ApplyCentralImpulse(Vector3 impulse);
+			void ApplyCentralPushImpulse(Vector3 impulse);
+
+			void ApplyForce(const Vector3& force, const Vector3& relativePosition);
+			void ApplyImpulse(const Vector3& impulse, const Vector3& relativePosition);
+
+			void ApplyPushImpulse(const Vector3& impulse, const Vector3& relativePosition);
+			void ApplyTorque(const Vector3& force);
+
+			void ApplyTorqueImpulse(const Vector3& impulse);
+			void ApplyTorqueTurnImpulse(const Vector3& impulse);
+
+			void ApplyCentralForce(const Vector3& force);
 		};
 
 	}
