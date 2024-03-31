@@ -525,8 +525,8 @@ Entity CreatePhysicsTest(const Vector3& position)
 	RShape* shape = &boxEntity.AddComponent<RShape>();
 	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape->GetShape());
 	//body->GetBody()->setGravity(btVector3(0.0f,-9.81f,0.0f));
-	body->GetBody()->activate(true);
-	bool kin = body->GetBody()->isKinematicObject();
+	//body->GetNativeHandle()->activate(true);
+	bool kin = body->GetNativeHandle()->isKinematicObject();
 	/*RigidBody* body = boxEntity.AddComponent<RigidBodyComponent>().GetRigidBody().get();
 	body->Init(boxTransform, collider);
 

@@ -3,6 +3,7 @@
 
 #include"Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
+#include "Engine/Core/Memory/MemoryDefinitions.h"
 
 namespace SaltnPepperEngine
 {
@@ -27,30 +28,32 @@ namespace SaltnPepperEngine
 		{
 		private:
 
-			btRigidBody* bodyHandle = nullptr;
-			btMotionState* motionHandle = nullptr;
+			SharedPtr<btRigidBody> bodyHandle = nullptr;
+			//btMotionState* motionHandle = nullptr;
+			SharedPtr<MotionStateNotifier> motionHandle = nullptr;
 
 		public:
 
 			RigidBody(const Vector3& position, btCollisionShape* shape)
 			{
 				btVector3 pos = ToBulletVector3(position);
+				btTransform transform = btTransform(btQuaternion(0, 0, 0, 1), pos);
+				motionHandle = MakeShared<MotionStateNotifier>(transform);
 
-				motionHandle = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
-					pos));
+				btRigidBody::btRigidBodyConstructionInfo info(10, motionHandle.get(), shape, btVector3(0, 0, 0));
+				//bodyHandle = new btRigidBody(info);
+				bodyHandle = MakeShared<btRigidBody>(info);
 
-				btRigidBody::btRigidBodyConstructionInfo info(10, motionHandle, shape, btVector3(0, 0, 0));
-				bodyHandle = new btRigidBody(info);
+				PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle());
 
-				PhysicsSystem::GetCurrent()->World->addRigidBody(bodyHandle);
 			}
 			~RigidBody()
 			{
-				delete motionHandle;
-				delete bodyHandle;
+				//delete motionHandle;
+				//delete bodyHandle;
 			};
 
-			btRigidBody* GetBody() { return bodyHandle; }
+			btRigidBody* GetNativeHandle() { return bodyHandle.get(); }
 
 		};
 

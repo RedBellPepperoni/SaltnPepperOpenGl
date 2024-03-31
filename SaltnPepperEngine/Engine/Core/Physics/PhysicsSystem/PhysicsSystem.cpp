@@ -70,7 +70,7 @@ namespace SaltnPepperEngine
 
 				Transform& transform = rigidComp.GetComponent<Transform>();
 				RigidBody& body = rigidComp.GetComponent<RigidBody>();
-				Vector3 pos = FromBulletVector3(body.GetBody()->getWorldTransform().getOrigin());
+				Vector3 pos = FromBulletVector3(body.GetNativeHandle()->getWorldTransform().getOrigin());
 				transform.SetPosition(pos);
 
 			}
