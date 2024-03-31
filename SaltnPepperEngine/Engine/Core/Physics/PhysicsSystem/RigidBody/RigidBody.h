@@ -9,6 +9,33 @@ namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
+		namespace CollisionMask
+		{
+			enum Mask : uint32_t
+			{
+				NONE = 0,
+				STATIC = 1,
+				KINEMATIC = 1 << 1,
+				DYNAMIC = 1 << 2,
+				RAYCAST_ONLY = 1 << 3
+			};
+		}
+
+		namespace CollisionGroup
+		{
+			enum Group : uint32_t
+			{
+				NONE = 0,
+				RAYCAST_ONLY = CollisionMask::RAYCAST_ONLY,
+				DYNAMIC_STATIC_KINEMATTIC = CollisionMask::DYNAMIC | CollisionMask::STATIC | CollisionMask::KINEMATIC,
+				ALL_NO_RAYCAST = DYNAMIC_STATIC_KINEMATTIC,
+				ALL = DYNAMIC_STATIC_KINEMATTIC | CollisionMask::RAYCAST_ONLY,
+				NO_STATIC_COLLISIONS = ALL & ~CollisionMask::STATIC & ~CollisionMask::KINEMATIC,
+				NO_STATIC_COLLISION_NO_RAYCAST = NO_STATIC_COLLISIONS & ~CollisionMask::RAYCAST_ONLY
+			};
+		}
+
+
 
 		class MotionStateNotifier : public btDefaultMotionState
 		{
@@ -34,15 +61,23 @@ namespace SaltnPepperEngine
 
 			btCollisionShape* shapeHandle = nullptr;
 
+			uint32_t collisionMask = CollisionGroup::NO_STATIC_COLLISIONS;;
+			uint32_t collisionGroup = CollisionMask::STATIC;
+
+		private:
+
+			void DestroyBody();
+
+			void ReAddRigidBody();
+
+			void UpdateCollider(float mass, btCollisionShape* newShape);
+
 		public:
 
 			RigidBody(const Vector3& position, btCollisionShape* shape);
 			
-			~RigidBody()
-			{
-				//delete motionHandle;
-				//delete bodyHandle;
-			};
+			~RigidBody();
+		
 
 			btRigidBody* GetNativeHandle() { return bodyHandle.get(); }
 			const btRigidBody* GetNativeHandle() const { return bodyHandle.get(); }
@@ -50,9 +85,13 @@ namespace SaltnPepperEngine
 			MotionStateNotifier* GetMotionState() { return motionHandle.get(); }
 			const MotionStateNotifier* GetMotionState() const { return motionHandle.get(); }
 
+			btCollisionShape* GetCollisionShape() { return shapeHandle; }
+			const btCollisionShape* GetCollisionShape() const{ return shapeHandle; }
 
-			//void SetMass(const float value);
+			void SetMass(const float value);
 			const float GetMass() const;
+
+
 		};
 
 	}

@@ -37,7 +37,7 @@ namespace SaltnPepperEngine
 
 		struct CustomRayCastCallback : public btCollisionWorld::ClosestRayResultCallback
 		{
-			CustomRayCastCallback(const btVector3& from, const btVector3& to, CollisionLayer::Mask rayCastMask)
+			CustomRayCastCallback(const btVector3& from, const btVector3& to, CollisionMask::Mask rayCastMask)
 				: btCollisionWorld::ClosestRayResultCallback(from, to)
 			{
 				this->m_collisionFilterGroup = CollisionGroup::ALL;
@@ -108,10 +108,10 @@ namespace SaltnPepperEngine
 
 		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction)
 		{
-			return PhysicsUtils::RayCast(from, to, rayFraction, CollisionLayer::RAYCAST_ONLY);
+			return PhysicsUtils::RayCast(from, to, rayFraction, CollisionMask::RAYCAST_ONLY);
 		}
 
-		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionLayer::Mask rayCastMask)
+		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionMask::Mask rayCastMask)
 		{
 			btVector3 bulletFrom = ToBulletVector3(from);
 			btVector3 bulletTo = ToBulletVector3(to);

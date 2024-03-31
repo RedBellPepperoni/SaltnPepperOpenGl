@@ -151,7 +151,7 @@ namespace SaltnPepperEngine
 		void RigidBody_Dep::MakeKinematic()
 		{
 			SetMass(0.0f);
-			SetCollisionFilter(CollisionLayer::KINEMATIC, CollisionGroup::NO_STATIC_COLLISIONS);
+			SetCollisionFilter(CollisionMask::KINEMATIC, CollisionGroup::NO_STATIC_COLLISIONS);
 			rigidbody->SetKinematicFlag();
 		}
 
@@ -159,7 +159,7 @@ namespace SaltnPepperEngine
 		{
 			if (GetMass() == 0.0f) { SetMass(1.0f); }
 
-			SetCollisionFilter(CollisionLayer::DYNAMIC, CollisionGroup::ALL);
+			SetCollisionFilter(CollisionMask::DYNAMIC, CollisionGroup::ALL);
 
 			rigidbody->UnsetKinematicFlag();
 		}
@@ -167,7 +167,7 @@ namespace SaltnPepperEngine
 		void RigidBody_Dep::MakeStatic()
 		{
 			SetMass(0.0f);
-			SetCollisionFilter(CollisionLayer::STATIC, CollisionGroup::NO_STATIC_COLLISIONS);
+			SetCollisionFilter(CollisionMask::STATIC, CollisionGroup::NO_STATIC_COLLISIONS);
 			rigidbody->UnsetKinematicFlag();
 
 		}
@@ -179,17 +179,17 @@ namespace SaltnPepperEngine
 
 		bool RigidBody_Dep::IsKinematic() const
 		{
-			return GetCollisionLayer() & CollisionLayer::KINEMATIC;
+			return GetCollisionLayer() & CollisionMask::KINEMATIC;
 		}
 
 		bool RigidBody_Dep::IsDynamic() const
 		{
-			return GetCollisionLayer() & CollisionLayer::DYNAMIC;
+			return GetCollisionLayer() & CollisionMask::DYNAMIC;
 		}
 
 		bool RigidBody_Dep::IsStatic() const
 		{
-			return GetCollisionLayer() & CollisionLayer::STATIC;
+			return GetCollisionLayer() & CollisionMask::STATIC;
 		}
 
 		bool RigidBody_Dep::IsTrigger() const
@@ -255,7 +255,7 @@ namespace SaltnPepperEngine
 			rigidbody->SetCollisionFilter(group, mask);
 		}
 
-		void RigidBody_Dep::SetCollisionFilter(CollisionLayer::Mask mask, CollisionGroup::Group group)
+		void RigidBody_Dep::SetCollisionFilter(CollisionMask::Mask mask, CollisionGroup::Group group)
 		{
 			SetCollisionFilter((uint32_t)mask, (uint32_t)group);
 		}

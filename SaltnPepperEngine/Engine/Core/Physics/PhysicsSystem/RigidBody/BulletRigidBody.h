@@ -20,7 +20,7 @@ namespace SaltnPepperEngine
 		//class MotionStateNotifier;
 
 
-		namespace CollisionLayer
+		/*namespace CollisionLayer
 		{
 			enum Mask : uint32_t
 			{
@@ -45,7 +45,7 @@ namespace SaltnPepperEngine
 				NO_STATIC_COLLISION_NO_RAYCAST = NO_STATIC_COLLISIONS & ~CollisionLayer::RAYCAST_ONLY
 			};
 		}
-		
+		*/
 	/*	enum class ActivationState
 		{
 			ACTIVE_TAG = 1,
@@ -73,7 +73,7 @@ namespace SaltnPepperEngine
 			MotionStateNotifier* MotionState = nullptr;
 		
 			uint32_t m_group = CollisionGroup::NO_STATIC_COLLISIONS;
-			uint32_t m_layer = CollisionLayer::STATIC;
+			uint32_t m_layer = CollisionMask::STATIC;
 
 			void DestroyBody();
 			void ReAddRigidBody();

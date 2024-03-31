@@ -28,7 +28,7 @@ namespace SaltnPepperEngine
 
             static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to);
             static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to, float& rayFraction);
-            static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionLayer::Mask rayCastMask);
+            static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionMask::Mask rayCastMask);
             static Vector3 GetGravity();
 
             static void SetGravity(const Vector3& gravity);

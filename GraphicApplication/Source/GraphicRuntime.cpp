@@ -95,7 +95,7 @@ class GraphicRuntime : public Application
 
 
        // CreatePhysicsBox(Vector3(0.0f,10.0f,0.0f));
-        CreatePhysicsTest(Vector3(0.0f,10.0f,0.0f));
+       body = CreatePhysicsTest(Vector3(0.0f,10.0f,0.0f));
 
       /*  /// Render One
         SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-2.5003f, 4.7171f, -2.1473f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -20.5682, 0.0f),true);
@@ -134,6 +134,18 @@ class GraphicRuntime : public Application
         {
             PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
         }
+
+        if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Numpad0))
+        {
+            body->SetMass(0.0f);
+        }
+
+        if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Numpad1))
+        {
+            body->SetMass(10.0f);
+        }
+
+
         
         ComponentView school = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<FishSchool>();
 
@@ -223,6 +235,8 @@ private:
 
     SharedPtr<Material> matOne = nullptr;
     SharedPtr<Material> matTwo = nullptr;
+
+    RigidBody* body = nullptr;
 
 };
 

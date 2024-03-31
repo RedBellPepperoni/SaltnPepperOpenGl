@@ -100,7 +100,7 @@ namespace SaltnPepperEngine
             }
 
             void SetCollisionFilter(uint32_t mask, uint32_t group = CollisionGroup::ALL);
-            void SetCollisionFilter(CollisionLayer::Mask mask, CollisionGroup::Group group = CollisionGroup::ALL);
+            void SetCollisionFilter(CollisionMask::Mask mask, CollisionGroup::Group group = CollisionGroup::ALL);
             uint32_t GetCollisionGroup() const;
             uint32_t GetCollisionLayer() const;
             void ActivateParentIsland();
