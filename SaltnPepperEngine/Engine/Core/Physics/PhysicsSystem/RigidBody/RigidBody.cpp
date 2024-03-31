@@ -97,6 +97,8 @@ namespace SaltnPepperEngine
 			//bodyHandle = new btRigidBody(info);
 			bodyHandle = MakeShared<btRigidBody>(info);
 
+			SetBounceFactor(0.1f);
+
 			PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle(), collisionGroup, collisionMask);
 
 
@@ -157,6 +159,11 @@ namespace SaltnPepperEngine
 			SetKinematicFlag();
 		}
 
+		const bool RigidBody::IsKinematic() const
+		{
+			return GetCollisionMask() & CollisionMask::KINEMATIC;
+		}
+
 		void RigidBody::MakeDynamic()
 		{
 			if (GetMass() == 0.0f) { SetMass(1.0f); } 
@@ -164,11 +171,31 @@ namespace SaltnPepperEngine
 			UnsetKinematicFlag(); 
 		}
 
+		const bool RigidBody::IsDynamic() const
+		{
+			return GetCollisionMask() & CollisionMask::DYNAMIC;
+		}
+
 		void RigidBody::MakeStatic()
 		{
 			SetMass(0.0f);
 			SetCollisionFilter(CollisionMask::STATIC, CollisionGroup::NO_STATIC_COLLISIONS);
 			UnsetKinematicFlag();
+		}
+
+		const bool RigidBody::IsStatic() const
+		{
+			return GetCollisionMask() & CollisionMask::STATIC;
+		}
+
+		float RigidBody::GetBounceFactor() const
+		{
+			bodyHandle->getRestitution();
+		}
+
+		void RigidBody::SetBounceFactor(float value)
+		{
+			bodyHandle->setRestitution(value);
 		}
 	}
 }

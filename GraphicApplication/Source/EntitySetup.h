@@ -519,6 +519,9 @@ RigidBody* CreatePhysicsFloor(const Vector3& position)
 	BoxCollider& shape = floorEntity.AddComponent<BoxCollider>();
 	shape.Init(bounds);
 	RigidBody* body = &floorEntity.AddComponent<RigidBody>(position, shape.GetShape());
+	body->MakeStatic();
+	body->SetBounceFactor(0.5f);
+	return body;
 
 	
 }
@@ -560,7 +563,7 @@ RigidBody* CreatePhysicsTest(const Vector3& position)
 	body->UpdateCollider(collider);
 	body->SetActivationState(ActivationState::ACTIVETAG);*/
 
-
+	body->SetBounceFactor(0.8f);
 
 	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
 

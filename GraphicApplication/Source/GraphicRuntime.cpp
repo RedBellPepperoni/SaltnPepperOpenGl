@@ -93,7 +93,7 @@ class GraphicRuntime : public Application
 
         CreateEntity(LakeModel::TABLE, Vector3(-1.3920f, 2.9666f, -1.0738f),Vector3(0.0f,89.0f,0.0f), Vector3(1.4f));
 
-
+        CreatePhysicsFloor(Vector3(0.0f,5.0f,0.0f));
        // CreatePhysicsBox(Vector3(0.0f,10.0f,0.0f));
        body = CreatePhysicsTest(Vector3(0.0f,10.0f,0.0f));
 

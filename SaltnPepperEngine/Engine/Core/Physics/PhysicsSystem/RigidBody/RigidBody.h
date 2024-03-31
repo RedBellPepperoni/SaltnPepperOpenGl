@@ -127,8 +127,23 @@ namespace SaltnPepperEngine
 
 
 			void MakeKinematic();
+			const bool IsKinematic() const;
+
 			void MakeDynamic();
+			const bool IsDynamic() const;
+
 			void MakeStatic();
+			const bool IsStatic() const;
+
+			void MakeTrigger();
+			const bool IsTrigger() const;
+			
+			const bool IsRayCastable() const;
+			void ToggleRayCasting(bool value);
+
+
+			float GetBounceFactor() const;
+			void SetBounceFactor(float value);
 		};
 
 	}
