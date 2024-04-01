@@ -578,7 +578,7 @@ RigidBody* CreatePhysicsKinematic(const Vector3& position)
 	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape.GetShape());
 
 	body->SetBounceFactor(0.8f);
-	body->MakeKinematic();
+	//body->MakeKinematic();
 
 	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
 	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
