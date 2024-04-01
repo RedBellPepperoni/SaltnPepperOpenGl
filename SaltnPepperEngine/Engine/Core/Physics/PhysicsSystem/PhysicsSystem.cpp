@@ -46,6 +46,22 @@ namespace SaltnPepperEngine
 
 		void PhysicsSystem::OnUpdate(const float& deltaTime)
 		{
+
+			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBody>();
+
+			if (rigidView.IsEmpty()) { return; }
+
+			for (Entity rigidComp : rigidView)
+			{
+
+				Transform& transform = rigidComp.GetComponent<Transform>();
+				RigidBody& body = rigidComp.GetComponent<RigidBody>();
+
+
+				body.UpdateTransform(transform);
+
+			}
+
 			if (data->paused) { return; }
 
 
@@ -56,20 +72,7 @@ namespace SaltnPepperEngine
 			}
 
 			//ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBodyComponent>();
-			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBody>();
-
-			if (rigidView.IsEmpty()) { return; }
-
-			for (Entity rigidComp : rigidView)
-			{
-	
-				Transform& transform = rigidComp.GetComponent<Transform>();
-				RigidBody& body = rigidComp.GetComponent<RigidBody>();
 			
-
-				body.UpdateTransform(transform);
-
-			}
 			
 		}
 

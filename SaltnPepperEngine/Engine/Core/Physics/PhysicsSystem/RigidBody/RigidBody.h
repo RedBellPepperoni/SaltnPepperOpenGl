@@ -4,6 +4,7 @@
 #include"Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 
 namespace SaltnPepperEngine
 {
@@ -64,6 +65,16 @@ namespace SaltnPepperEngine
 		{
 			using CollisionCallback = std::function<void(RigidBody*, RigidBody*)>;
 
+		public:
+
+			enum class DebugMode : uint8_t
+			{
+				NONE = 0,
+				AABB = 1,
+				COLLIDER = 2,
+				ALL = 3
+			};
+
 		private:
 
 
@@ -80,6 +91,8 @@ namespace SaltnPepperEngine
 			CollisionCallback onCollision;
 			CollisionCallback onCollisionEnter;
 			CollisionCallback onCollisionExit;
+
+			DebugMode debugMode = DebugMode::AABB;
 
 
 		private:
@@ -104,7 +117,7 @@ namespace SaltnPepperEngine
 
 			void SetTransformUpdateFlag(bool value);
 			
-
+			void DebugDraw(DebugMode mode);
 		public:
 
 			
@@ -134,6 +147,8 @@ namespace SaltnPepperEngine
 			const btCollisionShape* GetCollisionShape() const{ return shapeHandle; }
 
 			void SetCollisionShape(btCollisionShape* newShape);
+
+			BoundingBox GetAABB();
 
 			void ClearForces();
 

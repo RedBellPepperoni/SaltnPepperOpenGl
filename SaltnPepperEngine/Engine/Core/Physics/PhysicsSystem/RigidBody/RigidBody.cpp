@@ -1,10 +1,45 @@
 #include "RigidBody.h"
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
+		void RigidBody::DebugDraw(DebugMode mode)
+		{
+			Vector4 color(1.0f, 0.3f, 0.7f, 1.0f);
+
+
+			if (!IsStatic())
+			{
+				// Make it green to show it is doing physics
+				color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+			}
+
+			BoundingBox box = GetAABB();
+
+			switch (mode)
+			{
+			case DebugMode::NONE:
+				break;
+			case DebugMode::AABB:
+
+
+				DebugRenderer::DebugDraw(box, color, true);
+
+				break;
+
+			case DebugMode::COLLIDER:
+				break;
+			case DebugMode::ALL:
+				break;
+			default:
+				break;
+			}
+
+			//DebugRenderer::DebugDraw(box, color, true);
+		}
 
 		void RigidBody::UpdateTransform(Transform& ecsTransform)
 		{
@@ -189,6 +224,24 @@ namespace SaltnPepperEngine
 		void RigidBody::SetCollisionShape(btCollisionShape* newShape)
 		{
 			UpdateCollider(GetMass(), newShape);
+		}
+
+		BoundingBox RigidBody::GetAABB()
+		{
+			BoundingBox result{};
+
+			
+
+			if (shapeHandle != nullptr)
+			{
+				btVector3 min, max;
+				btTransform& tr = bodyHandle->getWorldTransform();
+				shapeHandle->getAabb(tr, min, max);
+				result.m_min = FromBulletVector3(min);
+				result.m_max = FromBulletVector3(max);
+			}
+
+			return result;
 		}
 
 		void RigidBody::ClearForces()
