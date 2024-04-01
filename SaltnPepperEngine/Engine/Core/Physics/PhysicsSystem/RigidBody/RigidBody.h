@@ -122,7 +122,7 @@ namespace SaltnPepperEngine
 
 			
 
-			RigidBody(const Vector3& position, btCollisionShape* shape);
+			RigidBody(const Transform& ecstransform, btCollisionShape* shape);
 			
 			~RigidBody();
 

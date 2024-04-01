@@ -21,7 +21,8 @@ namespace SaltnPepperEngine
 
 			bulletTransform.setIdentity();
 			bulletTransform.setOrigin(ToBulletVector3(engineTransform.GetPosition()));
-			bulletTransform.setRotation(*reinterpret_cast<btQuaternion*>(&rot));
+			//bulletTransform.setRotation(*reinterpret_cast<btQuaternion*>(&rot));
+			bulletTransform.setRotation(btQuaternion(rot.x,rot.y,rot.z,rot.w));
 		}
 	
 		inline void FromBulletTransform(const btTransform& bulletTransform, Transform& engineTransform)

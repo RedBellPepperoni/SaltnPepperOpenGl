@@ -505,7 +505,7 @@ Entity CreatePhysicsBox(const Vector3& position)
 
 }
 
-RigidBody* CreatePhysicsFloor(const Vector3& position)
+RigidBody* CreatePhysicsFloor(const Vector3& position,const Vector3& rotation)
 {
 	Entity floorEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_Floor");
 	Transform& floorTransform = floorEntity.GetComponent<Transform>();
@@ -513,12 +513,12 @@ RigidBody* CreatePhysicsFloor(const Vector3& position)
 
 
 	floorTransform.SetPosition(position);
-
+	floorTransform.SetEularRotation(rotation);
 
 	BoundingBox bounds{ Vector3(-10.0f,-0.5f,-10.0f),Vector3(10.0f,0.5f,10.0f) };
 	BoxCollider& shape = floorEntity.AddComponent<BoxCollider>();
 	shape.Init(bounds);
-	RigidBody* body = &floorEntity.AddComponent<RigidBody>(position, shape.GetShape());
+	RigidBody* body = &floorEntity.AddComponent<RigidBody>(floorTransform, shape.GetShape());
 	body->MakeStatic();
 	body->SetBounceFactor(0.5f);
 	return body;
@@ -536,7 +536,7 @@ RigidBody* CreatePhysicsTest(const Vector3& position)
 	
 
 	boxTransform.SetPosition(position);
-
+	boxTransform.SetEularRotation(Vector3(0.0f));
 	/*BoundingBox bounds{ Vector3(-0.5f),Vector3(0.5f) };
 
 	BoxCollider* collider = boxEntity.AddComponent<BoxColliderComponent>().GetCollider();
@@ -548,7 +548,7 @@ RigidBody* CreatePhysicsTest(const Vector3& position)
 	SphereCollider& shape = boxEntity.AddComponent<SphereCollider>();
 	shape.Init(BoundingSphere(Vector3(0.0f), 0.5f));
 
-	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape.GetShape());
+	RigidBody* body = &boxEntity.AddComponent<RigidBody>(boxTransform, shape.GetShape());
 
 	body->SetBounceFactor(0.8f);
 
@@ -565,7 +565,7 @@ RigidBody* CreatePhysicsKinematic(const Vector3& position)
 	
 	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Kinematic");
 	Transform& boxTransform = boxEntity.GetComponent<Transform>();
-
+	boxTransform.SetEularRotation(Vector3(0.0f));
 
 
 	boxTransform.SetPosition(position);
@@ -575,7 +575,7 @@ RigidBody* CreatePhysicsKinematic(const Vector3& position)
 	SphereCollider& shape = boxEntity.AddComponent<SphereCollider>();
 	shape.Init(BoundingSphere(Vector3(0.0f), 0.5f));
 
-	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape.GetShape());
+	RigidBody* body = &boxEntity.AddComponent<RigidBody>(boxTransform, shape.GetShape());
 
 	body->SetBounceFactor(0.8f);
 	//body->MakeKinematic();
