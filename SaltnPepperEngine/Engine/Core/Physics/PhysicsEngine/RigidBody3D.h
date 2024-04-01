@@ -20,7 +20,7 @@ namespace SaltnPepperEngine
 		//class Collider;
 		enum ColliderType : uint8_t;
 		class RigidBody3D;
-		class PhysicsEngine;
+		//class PhysicsEngine;
 		class Manifold;
 
 		//typedef  PhysicsCollisionCallback;

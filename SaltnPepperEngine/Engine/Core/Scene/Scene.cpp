@@ -11,9 +11,9 @@
 #include "Engine/Core/Rendering/Camera/Camera.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
-#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider_Deprecated.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 
 
@@ -30,13 +30,13 @@
 
 
 
-CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::SphereCollider);
-CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::BoxCollider);
-CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::CapsuleCollider);
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::SphereCollider_Deprecated);
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::BoxCollider_Deprecated);
+CEREAL_REGISTER_TYPE(SaltnPepperEngine::Physics::CapsuleCollider_Deprecated);
 
-CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::SphereCollider);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::BoxCollider);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::CapsuleCollider);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::SphereCollider_Deprecated);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::BoxCollider_Deprecated);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(SaltnPepperEngine::Physics::Collider, SaltnPepperEngine::Physics::CapsuleCollider_Deprecated);
 
 
 
@@ -49,7 +49,7 @@ namespace SaltnPepperEngine
 	using namespace Physics;
 
 
-#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light, RigidBodyComponent 
+#define ALL_COMPONENTS Transform, IdComponent ,NameComponent, ActiveComponent, Hierarchy, Camera, ModelComponent, Light //RigidBodyComponent 
 
 #define ALL_ENTTCOMPONENTS(input) get<Transform>(input). \
 	get<IdComponent>(input).		\
@@ -58,8 +58,9 @@ namespace SaltnPepperEngine
 	get<Hierarchy>(input).			\
 	get<Camera>(input).				\
     get<Light>(input).				\
-	get<RigidBodyComponent>(input). \
 	get<ModelComponent>(input)	
+	//get<RigidBodyComponent>(input). \
+	
 	
 	Scene::Scene(const std::string& name)
 		:m_name(name)
@@ -362,7 +363,7 @@ namespace SaltnPepperEngine
 
 			m_EntityManager->GetRegistry().clear();
 
-			entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
+			//entt::snapshot_loader{ m_EntityManager->GetRegistry() }.get<entt::entity>(input).ALL_ENTTCOMPONENTS(input);
 
 
 		} 

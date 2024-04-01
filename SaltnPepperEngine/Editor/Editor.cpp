@@ -227,12 +227,12 @@ namespace SaltnPepperEngine
 							{
 								transform->SetLocalMatrix(model);
 
-								RigidBodyComponent* rigidBodyComponent = registry.try_get<RigidBodyComponent>(m_SelectedEntity);
+								/*RigidBodyComponent* rigidBodyComponent = registry.try_get<RigidBodyComponent>(m_SelectedEntity);
 								if (rigidBodyComponent)
 								{
 									rigidBodyComponent->GetRigidBody()->SetPosition(model[3]);
 									rigidBodyComponent->GetRigidBody()->SetRotation(GetRotationFromMatrix(model));
-								}		
+								}		*/
 								
 							}
 						}

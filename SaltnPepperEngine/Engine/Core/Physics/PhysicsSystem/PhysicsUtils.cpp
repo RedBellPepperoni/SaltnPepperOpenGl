@@ -1,0 +1,156 @@
+#include "PhysicsUtils.h"
+#include "PhysicsSystem.h"
+#include "Bullet3Bindings.h"
+#include "Engine/Core/System/Application/Application.h"
+#include "Engine/Core/EntitySystem/Entity.h"
+#include "Engine/Core/EntitySystem/EntityManager.h"
+#include "Engine/Core/Scene/Scene.h"
+#include "Engine/Core/Physics/PhysicsSystem/RigidBody/BulletRigidBody.h"
+
+namespace SaltnPepperEngine
+{
+	namespace Physics
+	{
+
+//#define PHYSICSWORLD PhysicsSystem::GetCurrent()->World
+
+		void OnCollisionCallback()
+		{
+			auto dispatcher = PhysicsSystem::GetCurrent()->World->getDispatcher();
+			int numManiforlds = dispatcher->getNumManifolds(); 
+
+			for (int i = 0; i < numManiforlds; i++)
+			{
+				btPersistentManifold* contactManifold = dispatcher->getManifoldByIndexInternal(i);
+				const btCollisionObject* colliderOne = contactManifold->getBody0();
+				const btCollisionObject* colliderTwo = contactManifold->getBody1();
+
+				if (!colliderOne->getCollisionShape()->isNonMoving() && !colliderTwo->getCollisionShape()->isNonMoving())
+				{
+					RigidBody_Dep* objectOne = PhysicsUtils::GetRigidBodyParent(colliderOne);
+					RigidBody_Dep* objectTwo = PhysicsUtils::GetRigidBodyParent(colliderTwo);
+
+					PhysicsSystem::AddCollisionEntry(objectOne, objectTwo);
+				}
+			}
+		}
+
+		struct CustomRayCastCallback : public btCollisionWorld::ClosestRayResultCallback
+		{
+			CustomRayCastCallback(const btVector3& from, const btVector3& to, CollisionMask::Mask rayCastMask)
+				: btCollisionWorld::ClosestRayResultCallback(from, to)
+			{
+				this->m_collisionFilterGroup = CollisionGroup::ALL;
+				this->m_collisionFilterMask = rayCastMask;
+			}
+
+			RigidBody_Dep* GetResult() const
+			{
+				if (!this->hasHit()) return nullptr;
+				return PhysicsUtils::GetRigidBodyParent(this->m_collisionObject);
+			}
+
+			float GetRayFraction() const
+			{
+				return this->m_closestHitFraction;
+			}
+		};
+
+
+		void PhysicsUtils::AddRigidBody(btRigidBody* body)
+		{
+			PhysicsSystem::GetCurrent()->World->addRigidBody(body);
+		}
+
+		void PhysicsUtils::AddRigidBody(btRigidBody* body, int group, int layer)
+		{
+			auto bodyref = body;
+
+			auto btWorld = PhysicsSystem::GetCurrent()->World;
+			btWorld->addRigidBody(bodyref, group, layer);
+		}
+
+	
+
+		void PhysicsUtils::RemoveRigidBody(btRigidBody* body)
+		{
+			PhysicsSystem::GetCurrent()->World->removeRigidBody(body);
+		}
+
+		void PhysicsUtils::ActiveRigidBodyIsland(btRigidBody* body)
+		{
+			int islandTag = (body)->getIslandTag();
+			int numberOfObjects = PhysicsSystem::GetCurrent()->World->getNumCollisionObjects();
+			auto& objectArray = PhysicsSystem::GetCurrent()->World->getCollisionObjectArray();
+			for (int i = 0; i < numberOfObjects; i++)
+			{
+				if (objectArray[i]->getIslandTag() == islandTag)
+					objectArray[i]->setActivationState(ACTIVE_TAG);
+			}
+		}
+
+		void PhysicsUtils::SetRigidBodyParent(btRigidBody* body, RigidBody_Dep* entity)
+		{
+			(body)->setUserPointer(reinterpret_cast<void*>(entity));
+		}
+
+		RigidBody_Dep* PhysicsUtils::GetRigidBodyParent(const void* body)
+		{
+			RigidBody_Dep* returnBody = reinterpret_cast<RigidBody_Dep*>(((btRigidBody*)body)->getUserPointer());
+			return returnBody;
+		}
+
+		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to)
+		{
+			float rayFraction = 0.0f;
+			return PhysicsUtils::RayCast(from, to, rayFraction);
+		}
+
+		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction)
+		{
+			return PhysicsUtils::RayCast(from, to, rayFraction, CollisionMask::RAYCAST_ONLY);
+		}
+
+		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionMask::Mask rayCastMask)
+		{
+			btVector3 bulletFrom = ToBulletVector3(from);
+			btVector3 bulletTo = ToBulletVector3(to);
+
+			CustomRayCastCallback callback(bulletFrom, bulletTo, rayCastMask);
+
+			PhysicsSystem::GetCurrent()->World->rayTest(bulletFrom, bulletTo, callback);
+			rayFraction = callback.GetRayFraction();
+
+			return callback.GetResult();
+		}
+
+		
+
+		
+		
+		Vector3 PhysicsUtils::GetGravity()
+		{
+			return  FromBulletVector3(PhysicsSystem::GetCurrent()->World->getGravity());
+		}
+
+		void PhysicsUtils::SetGravity(const Vector3& gravity)
+		{
+			PhysicsSystem::GetCurrent()->World->setGravity(ToBulletVector3(gravity));
+		}
+
+		void PhysicsUtils::PerformExtraSimulationStep(float timeDelta)
+		{
+			PhysicsSystem::PerformSimulationStep(timeDelta);
+		}
+
+		void PhysicsUtils::SetSimulationStep(float timeDelta)
+		{
+			PhysicsSystem::SetSimulationStep(timeDelta);
+		}
+
+		float PhysicsUtils::GetSimulationStep()
+		{
+			return PhysicsSystem::GetSimulationStep();
+		}
+	}
+}

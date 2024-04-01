@@ -34,7 +34,9 @@ namespace SaltnPepperEngine
 			for (size_t i = 0; i < count; i++)
 			{
 				auto& stageInfo = stageInfos[i];
-				LOG_INFO("Shader : compiling " + std::string(GetShaderTypeString[stageInfo.type]) + " shader");
+
+				std::string fileName = FileSystem::GetFileName(stageInfo.path);
+				LOG_INFO("Shader : compiling " + std::string(GetShaderTypeString[stageInfo.type]) + " shader : from [{0}]",fileName);
 				shaderIds[i] = BaseShader::CreateShader(OpenGLShadertype[stageInfo.type], stageInfo.sourceCode, stageInfo.path);
 			}
 

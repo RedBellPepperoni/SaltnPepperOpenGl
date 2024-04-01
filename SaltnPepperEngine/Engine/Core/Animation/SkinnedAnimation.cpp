@@ -43,7 +43,7 @@ namespace SaltnPepperEngine
 	{
 		std::vector<BoneProps>& boneProps = model->GetBoneProps();
 
-		for (int i = 0; i < animation->mNumChannels; i++)
+		for (unsigned int i = 0; i < animation->mNumChannels; i++)
 		{
 			auto channel = animation->mChannels[i];
 			std::string boneName = channel->mNodeName.data;
@@ -61,7 +61,7 @@ namespace SaltnPepperEngine
 					BoneProps boneProp;
 					boneProp.name = boneName;
 					boneProps.push_back(boneProp);
-					boneId = boneProps.size() - 1;
+					boneId = (int)boneProps.size() - 1;
 				}
 			}
 			m_bones.push_back(Bone(channel->mNodeName.data, boneId, channel));

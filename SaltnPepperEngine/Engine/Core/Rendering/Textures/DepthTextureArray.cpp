@@ -36,7 +36,7 @@ namespace SaltnPepperEngine
 			GLDEBUG(glGenTextures(1, &m_textureId));
 			GLDEBUG(glBindTexture(GL_TEXTURE_2D_ARRAY, m_textureId));
 
-			GLDEBUG(glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, m_width, m_height, m_count, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr));
+			GLDEBUG(glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, static_cast<GLuint>(m_width), static_cast<GLuint>(m_height), static_cast<GLuint>(m_count), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr));
 
 			GLDEBUG(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT));
 			GLDEBUG(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT));
@@ -51,10 +51,10 @@ namespace SaltnPepperEngine
 		void DepthTextureArray::Resize(size_t newWidth, size_t newHeight, size_t newCount)
 		{
 			m_width = newWidth;
-			m_textureId = newHeight;
+			m_textureId = static_cast<uint32_t>(newHeight);
 			m_count = newCount;
 
-			GLDEBUG(glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, static_cast<GLuint>(m_width), m_height, m_count, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr));
+			GLDEBUG(glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, static_cast<GLuint>(m_width), static_cast<GLuint>(m_height), static_cast<GLuint>(m_count), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr));
 			
 			GLDEBUG(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT));
 			GLDEBUG(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT));
@@ -95,7 +95,7 @@ namespace SaltnPepperEngine
 
 		int DepthTextureArray::GetCount() const
 		{
-			return m_count;
+			return static_cast<int>(m_count);
 		}
 
 		void DepthTextureArray::DeleteTexture()

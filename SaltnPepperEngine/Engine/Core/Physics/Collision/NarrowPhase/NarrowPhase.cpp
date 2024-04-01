@@ -2,9 +2,9 @@
 #include "NarrowPhase.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 
-#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/MeshCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/MeshCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider_Deprecated.h"
 #include "Engine/Utils/Logging/Log.h"
 
 
@@ -238,8 +238,8 @@ namespace SaltnPepperEngine
 
 		bool NarrowPhase::DetectCapsuleCollision(RigidBody3D* bodyOne, RigidBody3D* bodyTwo, Collider* colliderOne, Collider* colliderTwo, CollisionData* outData)
 		{
-			CapsuleCollider* capsulecolliderOne = static_cast<CapsuleCollider*>(colliderOne);
-			CapsuleCollider* capsulecolliderTwo = static_cast<CapsuleCollider*>(colliderTwo);
+			CapsuleCollider_Deprecated* capsulecolliderOne = static_cast<CapsuleCollider_Deprecated*>(colliderOne);
+			CapsuleCollider_Deprecated* capsulecolliderTwo = static_cast<CapsuleCollider_Deprecated*>(colliderTwo);
 
 			CollisionData collisionData;
 			collisionData.penetration = -FLT_MAX;
@@ -603,7 +603,7 @@ namespace SaltnPepperEngine
 		bool NarrowPhase::DetectCapsulePolygonCollision(RigidBody3D* bodyOne, RigidBody3D* bodyTwo, Collider* colliderOne, Collider* colliderTwo, CollisionData* outData)
 		{
 			Collider* complexCollider;
-			CapsuleCollider* capsuleCollider;
+			CapsuleCollider_Deprecated* capsuleCollider;
 			RigidBody3D* complexObj;
 			RigidBody3D* capsuleObj;
 
@@ -612,14 +612,14 @@ namespace SaltnPepperEngine
 				capsuleObj = bodyOne;
 				complexCollider = colliderTwo;
 				complexObj = bodyTwo;
-				capsuleCollider = static_cast<CapsuleCollider*>(colliderOne);
+				capsuleCollider = static_cast<CapsuleCollider_Deprecated*>(colliderOne);
 			}
 			else
 			{
 				capsuleObj = bodyTwo;
 				complexCollider = colliderOne;
 				complexObj = bodyOne;
-				capsuleCollider = static_cast<CapsuleCollider*>(colliderTwo);
+				capsuleCollider = static_cast<CapsuleCollider_Deprecated*>(colliderTwo);
 			}
 
 			CollisionData cur_colData;
@@ -682,24 +682,24 @@ namespace SaltnPepperEngine
 
 			CollisionData colData;
 
-			CapsuleCollider* capsuleShape;
-			SphereCollider* sphereShape;
+			CapsuleCollider_Deprecated* capsuleShape;
+			SphereCollider_Deprecated* sphereShape;
 			RigidBody3D* capsuleObj;
 			RigidBody3D* sphereObj;
 
 			if (bodyOne->GetCollider()->GetType() | ColliderType::SPHERE)
 			{
 				sphereObj = bodyOne;
-				sphereShape = (SphereCollider*)colliderOne;
-				capsuleShape = (CapsuleCollider*)colliderTwo;
+				sphereShape = (SphereCollider_Deprecated*)colliderOne;
+				capsuleShape = (CapsuleCollider_Deprecated*)colliderTwo;
 				capsuleObj = bodyTwo;
 			}
 			else
 			{
 				capsuleObj = bodyOne;
 				sphereObj = bodyTwo;
-				sphereShape = (SphereCollider*)colliderTwo;
-				capsuleShape = (CapsuleCollider*)colliderOne;
+				sphereShape = (SphereCollider_Deprecated*)colliderTwo;
+				capsuleShape = (CapsuleCollider_Deprecated*)colliderOne;
 			}
 
 			float sphereRadius = sphereShape->GetRadius();

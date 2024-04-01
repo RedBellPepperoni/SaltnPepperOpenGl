@@ -34,6 +34,15 @@ namespace SaltnPepperEngine
 		// Resets the min and Mix for bounding box
 		void Reset();
 
+		constexpr Vector3 Length() const
+		{
+			return m_max - m_min;
+		}
+
+		constexpr Vector3 GetCenter() const
+		{
+			return (m_max + m_min) * 0.5f;
+		}
 
 		BoundingBox& operator=(const BoundingBox& other);
 		BoundingBox& operator=(BoundingBox&& other);

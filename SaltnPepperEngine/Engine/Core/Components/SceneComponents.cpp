@@ -166,41 +166,41 @@ namespace SaltnPepperEngine
 			return m_type;
 		}
 
-		RigidBodyComponent::RigidBodyComponent()
-		{
-			/*PhysicsProperties properties;
-			properties.position = Vector3(0.0f);
-			properties.rotation = Quaternion();
-			properties.mass = 10.f;
-			properties.elasticity = */
+		//RigidBodyComponent::RigidBodyComponent()
+		//{
+		//	/*PhysicsProperties properties;
+		//	properties.position = Vector3(0.0f);
+		//	properties.rotation = Quaternion();
+		//	properties.mass = 10.f;
+		//	properties.elasticity = */
 
-			m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->CreateRigidBody();
-		}
+		//	m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->CreateRigidBody();
+		//}
 
-		RigidBodyComponent::RigidBodyComponent(const RigidBodyComponent& other)
-		{
-			m_rigidBody = other.m_rigidBody;
-			m_ownBody = other.m_ownBody;
-		}
+		//RigidBodyComponent::RigidBodyComponent(const RigidBodyComponent& other)
+		//{
+		//	m_rigidBody = other.m_rigidBody;
+		//	m_ownBody = other.m_ownBody;
+		//}
 
-		RigidBodyComponent::RigidBodyComponent(const PhysicsProperties& properties)
-		{
-			m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->CreateRigidBody(properties);
-		}
+		//RigidBodyComponent::RigidBodyComponent(const PhysicsProperties& properties)
+		//{
+		//	m_rigidBody = Application::GetCurrent().GetPhysicsEngine()->CreateRigidBody(properties);
+		//}
 
 
-		RigidBodyComponent::~RigidBodyComponent()
-		{
-		}
+		//RigidBodyComponent::~RigidBodyComponent()
+		//{
+		//}
 
-		void RigidBodyComponent::OnImgui()
-		{
-		}
+		//void RigidBodyComponent::OnImgui()
+		//{
+		//}
 
-		SharedPtr<RigidBody3D> RigidBodyComponent::GetRigidBody()
-		{
-			return m_rigidBody;
-		}
+		//SharedPtr<RigidBody3D> RigidBodyComponent::GetRigidBody()
+		//{
+		//	return m_rigidBody;
+		//}
 
 		SkinnedModelComponent::SkinnedModelComponent()
 		{
@@ -237,6 +237,35 @@ namespace SaltnPepperEngine
 		SharedPtr<SkinnedAnimator>& AnimatorComponent::GetAnimator()
 		{
 			return m_animator;
+		}
+
+		/*RigidBodyComponent::RigidBodyComponent()
+		{
+			m_rigidBody = MakeShared<RigidBody_Dep>();
+		}
+
+		SharedPtr<RigidBody_Dep>& RigidBodyComponent::GetRigidBody()
+		{
+			return m_rigidBody;
+		}*/
+
+		BoxColliderComponent::BoxColliderComponent()
+		{
+			m_collider = MakeShared<BoxCollider>();
+
+			BoundingBox box{ Vector3(-0.5f),Vector3(0.5f) };
+			m_collider->Init(box);
+		}
+
+		BoxColliderComponent::BoxColliderComponent(const BoundingBox& box)
+		{
+			m_collider = MakeShared<BoxCollider>();
+			m_collider->Init(box);
+		}
+
+		BoxCollider* BoxColliderComponent::GetCollider()
+		{
+			return m_collider.get();
 		}
 
 }

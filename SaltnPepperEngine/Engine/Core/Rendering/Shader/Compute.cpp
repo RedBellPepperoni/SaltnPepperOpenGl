@@ -27,7 +27,7 @@ namespace SaltnPepperEngine
         void Compute::Dispatch(const SharedPtr<ComputeShader>& computeShader, size_t x, size_t y, size_t z)
         {
             computeShader->Bind();
-            GLDEBUG(glDispatchCompute(x, y, z));
+            GLDEBUG(glDispatchCompute(static_cast<GLuint>(x), static_cast<GLuint>(y), static_cast<GLuint>(z)));
         }
 
         void Compute::SetMemoryBarrier(BarrierType::Bits barriers)

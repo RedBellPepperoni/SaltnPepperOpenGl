@@ -16,7 +16,7 @@ class GraphicRuntime : public Application
     void OnInit()
     {
        
-       
+        PhysicsSystem::SetPaused(true);
         LoadAllModels();
         LoadAllTextures();
 
@@ -93,8 +93,12 @@ class GraphicRuntime : public Application
 
         CreateEntity(LakeModel::TABLE, Vector3(-1.3920f, 2.9666f, -1.0738f),Vector3(0.0f,89.0f,0.0f), Vector3(1.4f));
 
+        CreatePhysicsFloor(Vector3(0.0f,5.0f,0.0f),Vector3(15.0f,0.0f,0.0f));
+       // CreatePhysicsBox(Vector3(0.0f,10.0f,0.0f));
+        body = CreatePhysicsTest(Vector3(0.0f,10.0f,0.0f));
+        CreatePhysicsKinematic(Vector3(0.2f, 8.0f, 0.0f));
 
-        /// Render One
+      /*  /// Render One
         SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-2.5003f, 4.7171f, -2.1473f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -20.5682, 0.0f),true);
         SharedPtr<Texture> camTwoTexture = CreateSecurityCamera(Vector3(4.9996f, 1.3538f, 15.7607f), Vector3(0.0f, 20.2819f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
         SharedPtr<Texture> camThreeTexture = CreateSecurityCamera(Vector3(6.3439f, 7.1660f, -4.2813f), Vector3(180.0f, 57.819f, 180.0f), Vector3(0.0f, 0.0f, 0.0f), true);
@@ -106,10 +110,10 @@ class GraphicRuntime : public Application
         CreateTV(camTwoTexture,Vector3(-1.3338f, 3.5348f, -0.5282f), Vector3(0.0f, 82.62f, 0.0f));
 
         CreateTV(camThreeTexture,Vector3(-1.2803f, 4.0532f, -0.9660f), Vector3(0.0f, 82.62f, 0.0f), DistortType::CHROMATIC);
-
+*/
 
         
-        cameraRenders.push_back(camOneTexture);
+       // cameraRenders.push_back(camOneTexture);
         //cameraRenders.push_back(camTwoTexture);
       
         //matOne->textureMaps.albedoMap = camTwoTexture;
@@ -127,6 +131,23 @@ class GraphicRuntime : public Application
 
 	void OnUpdate(float deltaTime)
 	{
+        if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::G))
+        {
+            PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
+        }
+
+        if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Numpad0))
+        {
+            body->SetMass(0.0f);
+        }
+
+        if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::Numpad1))
+        {
+            body->SetMass(10.0f);
+        }
+
+
+        
         ComponentView school = GetCurrentScene()->GetEntityManager()->GetComponentsOfType<FishSchool>();
 
        
@@ -145,7 +166,7 @@ class GraphicRuntime : public Application
         }
 
 
-        ComponentView securityView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SecurityCamera>();
+       /* ComponentView securityView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SecurityCamera>();
 
         for (Entity entityCam : securityView)
         {
@@ -153,7 +174,7 @@ class GraphicRuntime : public Application
             SecurityCamera& cam = entityCam.GetComponent<SecurityCamera>();
 
             cam.Update(transform, deltaTime);
-        }
+        }*/
 
 
         ComponentView animaView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AnimatorComponent>();
@@ -215,6 +236,8 @@ private:
 
     SharedPtr<Material> matOne = nullptr;
     SharedPtr<Material> matTwo = nullptr;
+
+    RigidBody* body = nullptr;
 
 };
 

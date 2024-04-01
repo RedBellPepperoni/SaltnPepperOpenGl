@@ -13,6 +13,8 @@
 #include "Engine/Core/Components/Transform.h"
 
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 #include "Editor/Editor.h"
 #include "Editor/ImGuiManager.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
@@ -52,8 +54,8 @@ namespace SaltnPepperEngine
 		//m_audioLibrary = MakeShared<AudioLibrary>();
 
 
-		m_physicsSystem = MakeUnique<PhysicsEngine>();
-		m_physicsSystem->Init();
+		/*m_physicsSystem = MakeUnique<PhysicsEngine>();
+		m_physicsSystem->Init();*/
 
 		m_sceneManager = MakeUnique<SceneManager>();
 		m_sceneManager->EnqueueScene("New Scene");
@@ -65,7 +67,6 @@ namespace SaltnPepperEngine
 
 		m_mainCameraIndex = 0;
 
-		
 	
 		//m_physicsSystem->UpdateScene(m_currentScene);
 		
@@ -167,10 +168,10 @@ namespace SaltnPepperEngine
 		return m_sceneManager->GetCurrentScene();
 	}
 
-	PhysicsEngine* Application::GetPhysicsEngine() const
+	/*PhysicsEngine* Application::GetPhysicsEngine() const
 	{
 		return m_physicsSystem.get();
-	}
+	}*/
 
 	void Application::Initialize()
 	{
@@ -193,7 +194,9 @@ namespace SaltnPepperEngine
 		
 		m_imguiManager = MakeUnique<ImGuiManager>(false);
 		m_imguiManager->Init();
-
+		Physics::PhysicsSystem::Init();
+		Physics::PhysicsUtils::SetSimulationStep(1/60.0f);
+		Physics::PhysicsUtils::SetGravity(Vector3(0.0f,-9.81f,0.0f));
 
 		//m_editor->ToggleEditor();
 
@@ -267,7 +270,7 @@ namespace SaltnPepperEngine
 				// Do all the ImGUI Rendering before Swapping the buffers
 				m_imguiManager->OnRender(GetCurrentScene());
 
-				m_physicsSystem->DebugDraw();
+				//m_physicsSystem->DebugDraw();
 			}
 
 			// Swapping the framebuffers 
@@ -275,10 +278,12 @@ namespace SaltnPepperEngine
 			
 
 			// Do the Physics Update here
-			m_physicsSystem->Update(m_deltaTime);
-			m_physicsSystem->UpdateECSTransforms(m_sceneManager->GetCurrentScene());
+			//m_physicsSystem->Update(m_deltaTime);
+			//m_physicsSystem->UpdateECSTransforms(m_sceneManager->GetCurrentScene());
 //
 			
+			PhysicsSystem::OnUpdate(m_deltaTime);
+			//PhysicsSystem::InvoveCollisionUpdate();
 
 			OnUpdate(m_deltaTime);
 
@@ -291,8 +296,8 @@ namespace SaltnPepperEngine
 
 			if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::G))
 			{
-				bool testPause = m_physicsSystem->GetIsPaused();
-				m_physicsSystem->SetPaused(!testPause);
+				/*bool testPause = m_physicsSystem->GetIsPaused();
+				m_physicsSystem->SetPaused(!testPause);*/
 				
 			}
 
@@ -442,7 +447,7 @@ namespace SaltnPepperEngine
 
 	void Application::StartPhysics(bool shouldstart)
 	{
-		m_physicsSystem->SetPaused(!shouldstart);
+		//m_physicsSystem->SetPaused(!shouldstart);
 
 	}
 

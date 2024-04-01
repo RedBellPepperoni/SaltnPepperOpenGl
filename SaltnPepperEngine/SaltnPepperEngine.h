@@ -54,13 +54,29 @@
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
 #include "Engine/Core/Physics/Collision/BroadPhase/OctreeBroadPhase.h"
-#include "Engine/Core/Physics/Collision/Colliders/SphereCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/BoxCollider.h"
-#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/Collision/Colliders/SphereCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/BoxCollider_Deprecated.h"
+#include "Engine/Core/Physics/Collision/Colliders/CapsuleCollider_Deprecated.h"
 
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
 #include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
 
 
+// ============ Bullet Physics System ==================
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/BaseCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/BoxCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/SphereCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/CapsuleCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/Colliders/CylinderCollider.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsAPI.h"
+#include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
+#include "Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
+#include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
+
+
+
 
 using namespace SaltnPepperEngine;
+
+using namespace SaltnPepperEngine::Physics;

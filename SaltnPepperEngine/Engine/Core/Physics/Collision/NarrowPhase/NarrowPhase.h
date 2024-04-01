@@ -14,8 +14,8 @@ namespace SaltnPepperEngine
 	{
 		class RigidBody3D;
 		class Collider;
-		class SphereCollider;
-		class MeshCollider;
+		class SphereCollider_Deprecated;
+		class MeshCollider_Deprecated;
 
 
 

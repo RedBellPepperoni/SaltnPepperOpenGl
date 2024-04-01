@@ -47,12 +47,12 @@ namespace SaltnPepperEngine
 
 	using namespace Editor;
 
-	namespace Physics
+	/*namespace Physics
 	{
 		class PhysicsEngine;
 	}
 
-	using Physics::PhysicsEngine;
+	using Physics::PhysicsEngine;*/
 
 
 	namespace Components
@@ -91,7 +91,7 @@ namespace SaltnPepperEngine
 
 		UniquePtr<Window> m_window = nullptr;
 
-		UniquePtr<PhysicsEngine> m_physicsSystem = nullptr;
+		//UniquePtr<PhysicsEngine> m_physicsSystem = nullptr;
 
 		UniquePtr<RuntimeEditor> m_editor = nullptr;
 
@@ -174,7 +174,7 @@ namespace SaltnPepperEngine
 		// Reference Getter for teh current scene
 		Scene* GetCurrentScene() const;
 
-		PhysicsEngine* GetPhysicsEngine() const;
+		//PhysicsEngine* GetPhysicsEngine() const;
 
 		// The start up setup for the apllication
 		void Initialize();
