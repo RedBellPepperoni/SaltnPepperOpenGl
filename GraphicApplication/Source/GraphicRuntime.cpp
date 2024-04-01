@@ -96,7 +96,7 @@ class GraphicRuntime : public Application
         CreatePhysicsFloor(Vector3(0.0f,5.0f,0.0f));
        // CreatePhysicsBox(Vector3(0.0f,10.0f,0.0f));
        body = CreatePhysicsTest(Vector3(0.0f,10.0f,0.0f));
-       CreatePhysicsKinematic(Vector3(0.0f, 8.0f, 0.0f));
+       CreatePhysicsKinematic(Vector3(0.2f, 8.0f, 0.0f));
 
       /*  /// Render One
         SharedPtr<Texture> camOneTexture = CreateSecurityCamera(Vector3(-2.5003f, 4.7171f, -2.1473f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, -20.5682, 0.0f),true);

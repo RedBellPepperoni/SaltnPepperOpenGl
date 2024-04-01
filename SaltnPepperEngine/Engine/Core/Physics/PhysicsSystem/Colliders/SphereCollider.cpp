@@ -1,4 +1,5 @@
 #include "SphereCollider.h"
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
@@ -18,6 +19,12 @@ namespace SaltnPepperEngine
 		void SphereCollider::UpdateCollider(const BoundingSphere& sphere)
 		{
 			CreateNewShape(sphere);
+		}
+
+		void SphereCollider::DebugDraw(const Transform& transform)
+		{
+			const BoundingSphere debugSphere = sphereShape->GetBoundingSphereTransformed(transform);
+			Rendering::DebugRenderer::DebugDraw(debugSphere, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 		}
 
 		SphereShape* SphereCollider::GetNativeHandle() const

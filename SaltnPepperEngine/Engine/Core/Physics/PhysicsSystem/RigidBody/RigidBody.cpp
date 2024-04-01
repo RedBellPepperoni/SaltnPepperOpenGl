@@ -18,6 +18,9 @@ namespace SaltnPepperEngine
 			}
 
 			BoundingBox box = GetAABB();
+			
+
+
 
 			switch (mode)
 			{
@@ -26,11 +29,16 @@ namespace SaltnPepperEngine
 			case DebugMode::AABB:
 
 
-				DebugRenderer::DebugDraw(box, color, true);
+				DebugRenderer::DebugDraw(box, color, false);
 
 				break;
 
 			case DebugMode::COLLIDER:
+
+
+				
+
+
 				break;
 			case DebugMode::ALL:
 				break;
@@ -71,6 +79,8 @@ namespace SaltnPepperEngine
 			{
 				SetScale(selfScale);
 			}
+
+			DebugDraw(debugMode);
 
 		}
 

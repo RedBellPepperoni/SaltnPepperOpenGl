@@ -20,6 +20,8 @@ namespace SaltnPepperEngine
 
             virtual btCollisionShape* GetShape() override { return sphereShape->GetNativeHandle(); }
 
+            virtual void DebugDraw(const Transform& transform) override ;
+
             SphereShape* GetNativeHandle() const;
 
             BoundingBox GetAABB(const Transform& transform) const;

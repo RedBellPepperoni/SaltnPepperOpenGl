@@ -546,7 +546,7 @@ RigidBody* CreatePhysicsTest(const Vector3& position)
 	//RShape* shape = &boxEntity.AddComponent<RShape>();
 
 	SphereCollider& shape = boxEntity.AddComponent<SphereCollider>();
-	shape.Init(BoundingSphere(Vector3(0.0f), 1.0f));
+	shape.Init(BoundingSphere(Vector3(0.0f), 0.5f));
 
 	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape.GetShape());
 
@@ -573,7 +573,7 @@ RigidBody* CreatePhysicsKinematic(const Vector3& position)
 	
 
 	SphereCollider& shape = boxEntity.AddComponent<SphereCollider>();
-	shape.Init(BoundingSphere(Vector3(0.0f), 1.0f));
+	shape.Init(BoundingSphere(Vector3(0.0f), 0.5f));
 
 	RigidBody* body = &boxEntity.AddComponent<RigidBody>(position, shape.GetShape());
 

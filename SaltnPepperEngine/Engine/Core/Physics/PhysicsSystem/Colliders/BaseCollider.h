@@ -2,6 +2,7 @@
 #define BASECOLLIDER_H
 
 #include "Engine/Core/Memory/MemoryDefinitions.h"
+#include "Engine/Core/Components/Transform.h"
 
 class btCollisionShape;
 
@@ -9,6 +10,8 @@ namespace SaltnPepperEngine
 {
 	class BoundingSphere;
 	class BoundingBox;
+
+	using namespace Components;
 
 	namespace Rendering
 	{
@@ -37,6 +40,8 @@ namespace SaltnPepperEngine
 
 			void SetColliderChangedFlag(bool value) { colliderChangedFlag = value; }
 			bool HasColliderChanged() const { return colliderChangedFlag; }
+
+			virtual void DebugDraw(const Transform& transform) {};
 
 		};
 

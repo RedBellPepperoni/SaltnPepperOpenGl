@@ -1,4 +1,5 @@
 #include "BoxCollider.h"
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
@@ -25,6 +26,14 @@ namespace SaltnPepperEngine
 		BoxShape* BoxCollider::GetNativeHandle() const
 		{
 			return boxShape.get();
+		}
+
+		void BoxCollider::DebugDraw(const Transform& transform)
+		{
+			BoundingBox debugSphere = boxShape->GetAABBTranformed(transform); 
+			//debugSphere.Rotate(transform.GetRotation());
+
+			Rendering::DebugRenderer::DebugDraw(debugSphere, Vector4(0.0f, 1.0f, 0.0f, 1.0f)); 
 		}
 
 		BoundingBox BoxCollider::GetAABB(const Transform& transform) const

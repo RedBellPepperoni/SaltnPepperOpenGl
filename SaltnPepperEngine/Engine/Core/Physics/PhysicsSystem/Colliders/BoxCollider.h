@@ -23,6 +23,8 @@ namespace SaltnPepperEngine
 			BoxShape* GetNativeHandle() const;
 			virtual btCollisionShape* GetShape() override { return boxShape->GetNativeHandle(); }
 		
+			virtual void DebugDraw(const Transform& transform) override;
+
 			BoundingBox GetAABB(const Transform& transform) const;
 			OrientedBoundingBox GetOBB(const Transform& transform) const;
 			OrientedBoundingBox GetOBBInternal() const;
