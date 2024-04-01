@@ -7,8 +7,9 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
-		BoxShape::BoxShape(const OrientedBoundingBox& boundingBox)
+		BoxShape::BoxShape(const BoundingBox& boundingBox)
 		{
+			box = boundingBox;
 			CreateShape<btBoxShape>(ToBulletVector3(boundingBox.Length() * 0.5f));
 		}
 
@@ -16,6 +17,7 @@ namespace SaltnPepperEngine
 		{
 			collider = other.collider;
 			other.collider = nullptr;
+			box = other.box;
 		}
 
 		BoxShape& BoxShape::operator=(BoxShape&& other) noexcept
@@ -23,6 +25,7 @@ namespace SaltnPepperEngine
 			DestroyShape();
 			collider = other.collider;
 			other.collider = nullptr;
+			box = other.box;
 			return *this;
 		}
 
@@ -31,32 +34,33 @@ namespace SaltnPepperEngine
 			DestroyShape();
 		}
 
-		OrientedBoundingBox BoxShape::GetBoundingBoxTransformed(const Transform& transform) const
+		BoundingBox BoxShape::GetBoundingBoxTransformed(Transform& transform) const
 		{
-			OrientedBoundingBox box = this->GetBoundingBox();
-			box.min *= transform.GetScale();
-			box.max *= transform.GetScale();
-			box.center = transform.GetPosition();
-			box.rotation = transform.GetRotation();
-			return box;
+			
+
+			BoundingBox resultbox = this->GetBoundingBox();
+			BoundingBox finalBox;
+			finalBox = resultbox.GetTransformedBox(transform.GetLocalMatrix());
+
+			return finalBox;
 			
 		}
 
-		OrientedBoundingBox BoxShape::GetBoundingBox() const
-		{
-			BoundingBox aabb = this->GetAABB();
-			OrientedBoundingBox box = ToOBB(aabb);
+		BoundingBox BoxShape::GetBoundingBox() const
+		{		
 			return box;
 		}
 
-		OrientedBoundingBox BoxShape::GetNativeBounding() const
+		BoundingBox BoxShape::GetNativeBounding() const
 		{
-			return GetBoundingBox();
+			return GetAABB();
 		}
 
-		OrientedBoundingBox BoxShape::GetNativeBoundingTransformed(const Transform& transform) const
+		BoundingBox BoxShape::GetNativeBoundingTransformed(Transform& transform) const
 		{
-			return GetBoundingBoxTransformed(transform);
+			BoundingBox result = GetNativeBounding();
+
+			return result.GetTransformedBox(transform.GetLocalMatrix());
 		}
 	}
 

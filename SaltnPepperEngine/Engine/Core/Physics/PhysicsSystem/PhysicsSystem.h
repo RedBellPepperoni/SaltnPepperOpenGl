@@ -50,6 +50,7 @@ namespace SaltnPepperEngine
 			CollisionSwapPair collisions;
 
 			bool paused = false;
+			bool debugDraw = true;
 		};
 
 

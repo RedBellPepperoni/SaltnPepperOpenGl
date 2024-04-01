@@ -48,8 +48,10 @@ namespace SaltnPepperEngine
 		{
 
 			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBody>();
+			//ComponentView boxColliderView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<BoxCollider>();
+			//ComponentView sphereColliderView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SphereCollider>();
 
-			if (rigidView.IsEmpty()) { return; }
+			//if (rigidView.IsEmpty()) { return; }
 
 			for (Entity rigidComp : rigidView)
 			{
@@ -59,6 +61,13 @@ namespace SaltnPepperEngine
 
 
 				body.UpdateTransform(transform);
+
+				BoxCollider* boxCol = rigidComp.TryGetComponent<BoxCollider>();
+				SphereCollider* sphereCol = rigidComp.TryGetComponent<SphereCollider>();
+
+
+				if (boxCol) { boxCol->DebugDraw(transform); }
+				if (sphereCol) { sphereCol->DebugDraw(transform); }
 
 			}
 

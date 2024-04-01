@@ -21,10 +21,11 @@ namespace SaltnPepperEngine
 			CreateNewShape(sphere);
 		}
 
-		void SphereCollider::DebugDraw(const Transform& transform)
+		void SphereCollider::DebugDraw(Transform transform)
 		{
-			const BoundingSphere debugSphere = sphereShape->GetBoundingSphereTransformed(transform);
-			Rendering::DebugRenderer::DebugDraw(debugSphere, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+			BoundingSphere debugSphere = sphereShape->GetBoundingSphereTransformed(transform);
+
+			Rendering::DebugRenderer::DebugDrawSphere(debugSphere.GetRadius(), debugSphere.GetCenter(), Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 		}
 
 		SphereShape* SphereCollider::GetNativeHandle() const

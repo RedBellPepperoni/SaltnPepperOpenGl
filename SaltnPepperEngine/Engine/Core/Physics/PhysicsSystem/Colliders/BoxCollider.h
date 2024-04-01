@@ -11,7 +11,7 @@ namespace SaltnPepperEngine
 		class BoxCollider : public BaseCollider
 		{
 			SharedPtr<BoxShape> boxShape;
-			void CreateNewShape(const OrientedBoundingBox& box);
+			void CreateNewShape(const BoundingBox& box);
 
 		public:
 			BoxCollider() = default;
@@ -23,14 +23,14 @@ namespace SaltnPepperEngine
 			BoxShape* GetNativeHandle() const;
 			virtual btCollisionShape* GetShape() override { return boxShape->GetNativeHandle(); }
 		
-			virtual void DebugDraw(const Transform& transform) override;
+			virtual void DebugDraw(Transform transform) override;
 
-			BoundingBox GetAABB(const Transform& transform) const;
-			OrientedBoundingBox GetOBB(const Transform& transform) const;
-			OrientedBoundingBox GetOBBInternal() const;
+			BoundingBox GetAABB(Transform& transform) const;
+			BoundingBox GetOBB(Transform& transform) const;
+			BoundingBox GetOBBInternal() const;
 			BoundingSphere GetBoundingSphere(const Transform& transform) const;
 
-			void SetBoundingBox(OrientedBoundingBox box);
+			void SetBoundingBox(BoundingBox box);
 
 
 		};

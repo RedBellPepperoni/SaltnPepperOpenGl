@@ -80,7 +80,7 @@ namespace SaltnPepperEngine
 				SetScale(selfScale);
 			}
 
-			DebugDraw(debugMode);
+			//DebugDraw(debugMode);
 
 		}
 

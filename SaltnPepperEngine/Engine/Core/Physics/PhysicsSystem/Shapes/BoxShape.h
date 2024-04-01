@@ -3,6 +3,7 @@
 
 #include "BaseShape.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/OrientedBoundingBox.h"
+//#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 
 class btBoxShape;
 
@@ -17,7 +18,7 @@ namespace SaltnPepperEngine
 
 			//void CreateShape();
 
-			BoxShape(const OrientedBoundingBox& boundingBox);
+			BoxShape(const BoundingBox& boundingBox);
 			BoxShape(const BoxShape&) = delete;
 			BoxShape(BoxShape&& other) noexcept;
 
@@ -26,10 +27,13 @@ namespace SaltnPepperEngine
 
 			virtual ~BoxShape();
 
-			OrientedBoundingBox GetBoundingBoxTransformed(const Transform& transform) const;
-			OrientedBoundingBox GetBoundingBox() const;
-			OrientedBoundingBox GetNativeBounding() const;
-			OrientedBoundingBox GetNativeBoundingTransformed(const Transform& transform) const;
+			BoundingBox GetBoundingBoxTransformed(Transform& transform) const;
+			BoundingBox GetBoundingBox() const;
+			BoundingBox GetNativeBounding() const;
+			BoundingBox GetNativeBoundingTransformed(Transform& transform) const;
+
+
+			BoundingBox box;
 		};
 	}
 }

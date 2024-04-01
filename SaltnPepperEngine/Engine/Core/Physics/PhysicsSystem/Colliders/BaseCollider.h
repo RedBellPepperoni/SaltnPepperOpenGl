@@ -41,7 +41,7 @@ namespace SaltnPepperEngine
 			void SetColliderChangedFlag(bool value) { colliderChangedFlag = value; }
 			bool HasColliderChanged() const { return colliderChangedFlag; }
 
-			virtual void DebugDraw(const Transform& transform) {};
+			virtual void DebugDraw(Transform transform) {};
 
 		};
 

@@ -88,7 +88,9 @@ namespace SaltnPepperEngine
 
 			collider->getBoundingSphere(center, radius);
 
-			return BoundingSphere{ FromBulletVector3(center) + transform.GetPosition(),radius / RootThree<float>()};
+			Vector3 pos = FromBulletVector3(center) + transform.GetPosition();
+			float finalRadius = radius / RootThree<float>();
+			return BoundingSphere{ pos , finalRadius};
 
 		}
 		

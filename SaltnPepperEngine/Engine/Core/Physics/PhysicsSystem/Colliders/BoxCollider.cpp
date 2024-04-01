@@ -5,7 +5,7 @@ namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
-		void BoxCollider::CreateNewShape(const OrientedBoundingBox& box)
+		void BoxCollider::CreateNewShape(const BoundingBox& box)
 		{
 			SetColliderChangedFlag(true);
 			boxShape = MakeShared<BoxShape>(box);
@@ -20,7 +20,7 @@ namespace SaltnPepperEngine
 
 		void BoxCollider::UpdateCollider(BoundingBox box)
 		{
-			CreateNewShape(ToOBB(box));
+			CreateNewShape((box));
 		}
 
 		BoxShape* BoxCollider::GetNativeHandle() const
@@ -28,25 +28,39 @@ namespace SaltnPepperEngine
 			return boxShape.get();
 		}
 
-		void BoxCollider::DebugDraw(const Transform& transform)
+		void BoxCollider::DebugDraw(Transform transform)
 		{
-			BoundingBox debugSphere = boxShape->GetAABBTranformed(transform); 
-			//debugSphere.Rotate(transform.GetRotation());
+			//BoundingBox debugBox = boxShape->GetBoundingBoxTransformed(transform); 
 
-			Rendering::DebugRenderer::DebugDraw(debugSphere, Vector4(0.0f, 1.0f, 0.0f, 1.0f)); 
+			btBoxShape* shape = static_cast<btBoxShape*>(boxShape->GetNativeHandle());
+			
+			int edgeCount = shape->getNumEdges();
+
+			for (int i = 0; i < edgeCount; i++)
+			{
+				btVector3 pointOne;
+				btVector3 pointTwo;
+
+				shape->getEdge(i,pointOne,pointTwo);
+				
+				Rendering::DebugRenderer::DrawLine(FromBulletVector3(pointOne),FromBulletVector3(pointTwo),Vector4(0.0f,0.0f,1.0f,1.0f));
+			}
+
+
+			//Rendering::DebugRenderer::DebugDraw(debugBox, Vector4(0.0f, 0.0f, 1.0f, 1.0f),false);
 		}
 
-		BoundingBox BoxCollider::GetAABB(const Transform& transform) const
+		BoundingBox BoxCollider::GetAABB(Transform& transform) const
 		{
 			return boxShape->GetAABBTranformed(transform);
 		}
 
-		OrientedBoundingBox BoxCollider::GetOBB(const Transform& transform) const
+		BoundingBox BoxCollider::GetOBB(Transform& transform) const
 		{
 			return boxShape->GetBoundingBoxTransformed(transform);
 		}
 
-		OrientedBoundingBox BoxCollider::GetOBBInternal() const
+		BoundingBox BoxCollider::GetOBBInternal() const
 		{
 			return GetNativeHandle()->GetBoundingBox();
 		}
@@ -56,7 +70,7 @@ namespace SaltnPepperEngine
 			return boxShape->GetBoundingSphereTransformed(transform);
 		}
 
-		void BoxCollider::SetBoundingBox(OrientedBoundingBox box)
+		void BoxCollider::SetBoundingBox(BoundingBox box)
 		{
 			CreateNewShape(box);
 		}
