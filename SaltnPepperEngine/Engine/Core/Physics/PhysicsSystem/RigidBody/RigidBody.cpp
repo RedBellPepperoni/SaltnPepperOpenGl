@@ -439,5 +439,16 @@ namespace SaltnPepperEngine
 			Activate();
 			bodyHandle->applyCentralForce(ToBulletVector3(force));
 		}
+
+		void RigidBody::SetLinearVelocity(const Vector3& velocity)
+		{
+			Activate();
+			bodyHandle->setLinearVelocity(ToBulletVector3(velocity));
+		}
+
+		const Vector3 RigidBody::GetLinearVelocity() const
+		{
+			return FromBulletVector3(bodyHandle->getLinearVelocity());
+		}
 	}
 }

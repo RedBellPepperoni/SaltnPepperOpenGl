@@ -39,9 +39,9 @@ namespace SaltnPepperEngine
 	private:
 
 		int m_playerCameraIndex = 0;
-		float m_speed = 10.0f;
+		float m_speed = 2.0f;
 		
-
+		const float m_forceMultiplier = 1.0f;
 
 		SkinnedAnimator* m_animator = nullptr;
 		RigidBody* m_rigidBody = nullptr;

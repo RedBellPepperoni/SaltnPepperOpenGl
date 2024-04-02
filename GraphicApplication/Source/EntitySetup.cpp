@@ -267,6 +267,7 @@ RigidBody* EntitySetup::CreatePhysicsFloor(const Vector3& position, const Vector
 	RigidBody* body = &floorEntity.AddComponent<RigidBody>(floorTransform, shape.GetShape());
 	body->MakeStatic();
 	body->SetBounceFactor(0.5f);
+	body->SetFriction(0.8f);
 	return body;
 
 }
@@ -407,11 +408,11 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	playerTransform.SetEularRotation(Vector3(0.0f));
 
 	CapsuleCollider& capsuleCol = playerEntity.AddComponent<CapsuleCollider>();
-	capsuleCol.Init(BoundingCapsule(1.6f,0.5f,BoundingCapsule::Axis::Y));
+	capsuleCol.Init(BoundingCapsule(1.2f,0.3f,BoundingCapsule::Axis::Y));
 
 	RigidBody* rigidBody = playerEntity.AddComponent<RigidBodyComponent>(playerTransform,capsuleCol.GetShape()).GetRigidBody();
 	rigidBody->SetBounceFactor(0.1f);
-
+	rigidBody->SetFriction(0.95f);
 
 	Hierarchy& playerHie = playerEntity.AddComponent<Hierarchy>();
 	
@@ -419,7 +420,7 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	Entity lookEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerLook");
 	Transform& lookTransform = lookEntity.GetComponent<Transform>();
 
-	lookTransform.SetPosition(Vector3{ 0.0f });
+	lookTransform.SetPosition(Vector3{0.0f,1.0f,0.0f });
 	lookTransform.SetEularRotation(Vector3(0.0f,rotation.y,0.0f));
 
 	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();

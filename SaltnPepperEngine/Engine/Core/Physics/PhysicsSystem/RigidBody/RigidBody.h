@@ -203,6 +203,9 @@ namespace SaltnPepperEngine
 			void ApplyTorqueTurnImpulse(const Vector3& impulse);
 
 			void ApplyCentralForce(const Vector3& force);
+
+			void SetLinearVelocity(const Vector3& velocity);
+			const Vector3 GetLinearVelocity() const;
 		};
 
 	}

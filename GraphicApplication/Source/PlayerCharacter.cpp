@@ -9,37 +9,40 @@ namespace SaltnPepperEngine
 
 		if (m_rigidBody == nullptr) { return; }
 
-		float finalSpeed = m_speed;
+		float finalSpeed = m_speed * m_forceMultiplier;
 
 		// Way more if needed
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::LeftShift))
 		{
-			finalSpeed = m_speed * 1.6f;
+			finalSpeed = m_speed * 1.6f * m_forceMultiplier;
 		}
 
-		Vector3 forwardDirection = lookTransform.GetForwardVector();
+		const Vector3 forwardDirection = lookTransform.GetForwardVector();
+		const Vector3 rightDirection = lookTransform.GetRightVector();
 
-
-		// ============ FORWARD CAMERA MOVEMENT =================
+		Vector3 finalDirection = Vector3{ 0.0f,0.0f,0.0f };
+			
+		// ============ FORWARD MOVEMENT =================
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::W))
 		{		
-			m_rigidBody->ApplyCentralForce(forwardDirection * finalSpeed);
+			//m_rigidBody->ApplyCentralForce(forwardDirection * finalSpeed);
+
+			finalDirection += forwardDirection ;
 		}
 
-		// ================ REVERSE CAMERA MOVEMENT =====================
+		// ================ REVERSE MOVEMENT =====================
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::S))
-		{
-			
-
+		{	
+			finalDirection += -1.0f * forwardDirection ;
 		}
 
 		// ================ RIGHT CAMERA MOVEMENT =====================
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::A))
 		{
-			
+			finalDirection += -1.0f * rightDirection;
 		}
 
 		// ================ LEFT CAMERA MOVEMENT =====================
@@ -47,7 +50,7 @@ namespace SaltnPepperEngine
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::D))
 		{
-			
+			finalDirection +=  rightDirection ;
 		}
 
 		// ================ UP CAMERA MOVEMENT =====================
@@ -65,22 +68,22 @@ namespace SaltnPepperEngine
 			
 		}
 
+		Vector3 verticalVelocity = m_rigidBody->GetLinearVelocity();
 
-		// If there is velocity, move the Object
-
-		/*if (m_velocity.length() > 0.00001f)
+		if (LengthSquared(finalDirection) > 0.1f)
 		{
-			Vector3 position = transform.GetPosition();
-			position += m_velocity * deltaTime;
-			transform.SetPosition(position);
-			m_velocity = m_velocity * pow(m_linearDampening, deltaTime);
+			finalDirection = Normalize(finalDirection);
+			
+			Vector3 horizontalVelocity = (finalDirection * finalSpeed);
+			Vector3 finalVelo = Vector3{ horizontalVelocity.x,verticalVelocity.y,horizontalVelocity.z };
+			m_rigidBody->SetLinearVelocity(finalVelo);
 		}
-
 		else
 		{
-			m_velocity = Vector3(0.0f);
+			m_rigidBody->SetLinearVelocity(Vector3{0.0f,verticalVelocity.y,0.0f});
+		}
 
-		}*/
+		
 	}
 
 	void PlayerCharacter::MouseInput(const float deltaTime, Transform& lookTransform)
