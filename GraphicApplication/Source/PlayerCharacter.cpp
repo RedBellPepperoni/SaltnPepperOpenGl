@@ -20,6 +20,9 @@ namespace SaltnPepperEngine
 		const Vector3 forwardDirection = lookTransform.GetForwardVector();
 		const Vector3 rightDirection = lookTransform.GetRightVector();
 
+		const Vector3 flattenedForward = Normalize(Vector3(forwardDirection.x, 0.0f, forwardDirection.z));
+		const Vector3 flattenedRight = Normalize(Vector3(rightDirection.x, 0.0f, rightDirection.z));
+
 		Vector3 finalDirection = Vector3{ 0.0f,0.0f,0.0f };
 			
 		// ============ FORWARD MOVEMENT =================
@@ -28,21 +31,21 @@ namespace SaltnPepperEngine
 		{		
 			//m_rigidBody->ApplyCentralForce(forwardDirection * finalSpeed);
 
-			finalDirection += forwardDirection ;
+			finalDirection += flattenedForward;
 		}
 
 		// ================ REVERSE MOVEMENT =====================
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::S))
 		{	
-			finalDirection += -1.0f * forwardDirection ;
+			finalDirection += -1.0f * flattenedForward;
 		}
 
 		// ================ RIGHT CAMERA MOVEMENT =====================
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::A))
 		{
-			finalDirection += -1.0f * rightDirection;
+			finalDirection += -1.0f * flattenedRight;
 		}
 
 		// ================ LEFT CAMERA MOVEMENT =====================
@@ -50,7 +53,7 @@ namespace SaltnPepperEngine
 
 		if (Input::InputSystem::GetInstance().GetKeyHeld(Input::Key::D))
 		{
-			finalDirection +=  rightDirection ;
+			finalDirection += flattenedRight;
 		}
 
 		// ================ UP CAMERA MOVEMENT =====================
@@ -86,8 +89,62 @@ namespace SaltnPepperEngine
 		
 	}
 
-	void PlayerCharacter::MouseInput(const float deltaTime, Transform& lookTransform)
+	void PlayerCharacter::MouseInput(const float deltaTime, Vector2 mousePosition, Transform& lookTransform)
 	{
+		// Window is not in focus , don't do the mosue update
+		/*if (!Application::GetCurrent().GetAppWindow().GetFocus())
+		{
+			return;
+		}*/
+
+		m_sensitivity = 0.0002f;
+
+
+
+		m_rotationalVelocity = Vector2((mousePosition.x - m_previousCursorPosition.x), (mousePosition.y - m_previousCursorPosition.y)) * m_sensitivity * 10.0f;
+
+		//Application::GetCurrent().GetAppWindow().SetMouseHidden(true);
+
+		if (Length(m_rotationalVelocity) > 0.0001f)
+		{
+			//Get The Rotation
+			Quaternion rotation = lookTransform.GetRotation();
+
+
+			Quaternion Pitch = glm::angleAxis(-m_rotationalVelocity.y, Vector3(1.0f, 0.0f, 0.0f));
+
+
+			Quaternion Yaw = glm::angleAxis(-m_rotationalVelocity.x, Vector3(0.0f, 1.0f, 0.0f));
+
+
+			rotation = Yaw * rotation;
+			rotation = rotation * Pitch;
+
+		
+
+
+
+			lookTransform.SetRotation(rotation);
+
+			m_previousCursorPosition = mousePosition;
+
+
+
+
+
+		}
+		else
+		{
+			m_rotationalVelocity = Vector2(0.0f);
+		}
+
+
+
+
+
+		m_rotationalVelocity = m_rotationalVelocity * pow(m_rotationalDampening, deltaTime);
+
+
 	}
 
 	void PlayerCharacter::SetAnimatorRef(SkinnedAnimator* animRef)
@@ -100,13 +157,13 @@ namespace SaltnPepperEngine
 		m_rigidBody = bodyRef;
 	}
 
-	void PlayerCharacter::OnUpdate(float deltaTime, Transform& lookTransform)
+	void PlayerCharacter::OnUpdate(float deltaTime, Vector2 mousePosition, Transform& lookTransform)
 	{
 		if (Application::GetCurrent().GetEditorActive()) { return; }
 
 
 		KeyBoardInput(deltaTime, lookTransform);
-		MouseInput(deltaTime, lookTransform);
+		MouseInput(deltaTime, mousePosition,lookTransform);
 
 	}
 

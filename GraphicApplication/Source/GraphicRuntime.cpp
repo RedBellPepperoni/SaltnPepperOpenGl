@@ -129,20 +129,6 @@ class GraphicRuntime : public Application
             PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
         }
 
-      
-        
-        ComponentView PlayerComponentView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerComponent>();
-        ComponentView PlayerLookView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerLook>();
-
-        if (!PlayerComponentView.IsEmpty()&&!PlayerLookView.IsEmpty())
-        {
-            PlayerCharacter* player = PlayerComponentView[0].GetComponent<PlayerComponent>().GetPlayer();
-            Transform& playerLook = PlayerLookView[0].GetComponent<Transform>();
-
-            player->OnUpdate(deltaTime, playerLook);
-       
-        }
-
         ComponentView animaView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AnimatorComponent>();
 
         idle = true;
@@ -186,6 +172,29 @@ class GraphicRuntime : public Application
 
 
             comp.GetAnimator()->OnUpdate(deltaTime);
+        }
+
+        if (Application::GetCurrent().GetEditorActive())
+        {
+            Application::GetCurrent().GetAppWindow().SetMouseHidden(false);
+            return;
+        }
+      
+        Application::GetCurrent().GetAppWindow().SetMouseHidden(true);
+
+        Vector2 mousePosition = InputSystem::GetInstance().GetMousePosition();
+
+        ComponentView PlayerComponentView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerComponent>();
+        ComponentView PlayerLookView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<PlayerLook>();
+
+        if (!PlayerComponentView.IsEmpty() && !PlayerLookView.IsEmpty())
+        {
+            PlayerCharacter* player = PlayerComponentView[0].GetComponent<PlayerComponent>().GetPlayer();
+            Transform& playerLook = PlayerLookView[0].GetComponent<Transform>();
+
+
+            player->OnUpdate(deltaTime, mousePosition, playerLook);
+
         }
 	}
 
