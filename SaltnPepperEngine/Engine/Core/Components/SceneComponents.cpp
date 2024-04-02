@@ -4,7 +4,7 @@
 #include "Engine/Core/Rendering/Geometry/Primitives.h"
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
-#include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
+#include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
 
 
@@ -266,6 +266,16 @@ namespace SaltnPepperEngine
 		BoxCollider* BoxColliderComponent::GetCollider()
 		{
 			return m_collider.get();
+		}
+
+		RigidBodyComponent::RigidBodyComponent(const Transform& ecstransform, btCollisionShape* shape)
+		{
+			m_rigidBody = MakeShared<RigidBody>(ecstransform, shape);
+		}
+
+		RigidBody* RigidBodyComponent::GetRigidBody()
+		{
+			return m_rigidBody.get();
 		}
 
 }

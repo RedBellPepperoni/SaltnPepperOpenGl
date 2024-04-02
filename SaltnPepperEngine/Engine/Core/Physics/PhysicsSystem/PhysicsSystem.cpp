@@ -2,7 +2,7 @@
 #include "Bullet3Bindings.h"
 #include "PhysicsAPI.h"
 #include "Engine/Utils/Maths/MathDefinitions.h"
-//#include "Engine/Core/Components/SceneComponents.h"
+#include "Engine/Core/Components/SceneComponents.h"
 #include "RigidBody/RigidBody.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
 #include "Engine/Core/EntitySystem/Entity.h"
@@ -47,7 +47,7 @@ namespace SaltnPepperEngine
 		void PhysicsSystem::OnUpdate(const float& deltaTime)
 		{
 
-			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBody>();
+			ComponentView rigidView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<RigidBodyComponent>();
 			//ComponentView boxColliderView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<BoxCollider>();
 			//ComponentView sphereColliderView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<SphereCollider>();
 
@@ -57,17 +57,31 @@ namespace SaltnPepperEngine
 			{
 
 				Transform& transform = rigidComp.GetComponent<Transform>();
-				RigidBody& body = rigidComp.GetComponent<RigidBody>();
+				RigidBody* body = rigidComp.GetComponent<RigidBodyComponent>().GetRigidBody();
 
 
-				body.UpdateTransform(transform);
+				body->UpdateTransform(transform);
 
 				BoxCollider* boxCol = rigidComp.TryGetComponent<BoxCollider>();
+				if (boxCol) 
+				{ 
+					boxCol->DebugDraw(transform); 
+					continue;
+				}
+
 				SphereCollider* sphereCol = rigidComp.TryGetComponent<SphereCollider>();
+				if (sphereCol) 
+				{ 
+					sphereCol->DebugDraw(transform); 
+					continue;
+				}
 
-
-				if (boxCol) { boxCol->DebugDraw(transform); }
-				if (sphereCol) { sphereCol->DebugDraw(transform); }
+				CapsuleCollider* capsuleCol = rigidComp.TryGetComponent<CapsuleCollider>();
+				if (capsuleCol)
+				{
+					capsuleCol->DebugDraw(transform);
+					continue;
+				}
 
 			}
 

@@ -1,4 +1,5 @@
 #include "CapsuleCollider.h"
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
@@ -58,6 +59,12 @@ namespace SaltnPepperEngine
 		void CapsuleCollider::SetBoundingCapsule(BoundingCapsule capsule)
 		{
 			CreateNewShape(capsule );
+		}
+
+		void CapsuleCollider::DebugDraw(Transform transform)
+		{
+			BoundingCapsule capsule = GetBoundingCapsuleInternal();
+			Rendering::DebugRenderer::DebugDrawCapsule(transform.GetPosition(),transform.GetRotation(),capsule.height,capsule.radius,Vector4(1.0f,1.0f,0.0f,1.0f));
 		}
 	}
 }

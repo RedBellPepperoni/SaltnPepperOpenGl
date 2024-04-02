@@ -143,6 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\EntitySetup.cpp" />
+    <ClCompile Include="Source\PlayerCharacter.cpp" />
     <ClCompile Include="Source\AIStuff\AIManager.cpp" />
     <ClCompile Include="Source\AIStuff\AIBaseAgent.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
@@ -153,9 +155,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\PlayerCharacter.h" />
     <ClInclude Include="Source\AIStuff\AIManager.h" />
     <ClInclude Include="Source\AIStuff\AIBaseAgent.h" />
     <ClInclude Include="Source\EntitySetup.h" />
+    <ClInclude Include="Source\IDamagable.h" />
     <ClInclude Include="Source\ScifiScreen.h" />
     <ClInclude Include="Source\SecurityCamera.h" />
   </ItemGroup>

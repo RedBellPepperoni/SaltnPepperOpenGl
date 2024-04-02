@@ -32,7 +32,7 @@ namespace SaltnPepperEngine
 		{
 			//BoundingBox debugBox = boxShape->GetBoundingBoxTransformed(transform); 
 
-			btBoxShape* shape = static_cast<btBoxShape*>(boxShape->GetNativeHandle());
+			/*btBoxShape* shape = static_cast<btBoxShape*>(boxShape->GetNativeHandle());
 			
 			int edgeCount = shape->getNumEdges();
 
@@ -44,7 +44,7 @@ namespace SaltnPepperEngine
 				shape->getEdge(i,pointOne,pointTwo);
 				
 				Rendering::DebugRenderer::DrawLine(FromBulletVector3(pointOne),FromBulletVector3(pointTwo),Vector4(0.0f,0.0f,1.0f,1.0f));
-			}
+			}*/
 
 
 			//Rendering::DebugRenderer::DebugDraw(debugBox, Vector4(0.0f, 0.0f, 1.0f, 1.0f),false);

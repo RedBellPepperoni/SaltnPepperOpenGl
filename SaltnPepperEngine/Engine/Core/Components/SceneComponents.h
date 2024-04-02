@@ -30,6 +30,7 @@ namespace SaltnPepperEngine
 	{
 		struct PhysicsProperties;
 		class RigidBody3D;
+		class RigidBody;
 	}
 
 	using Physics::RigidBody3D;
@@ -354,22 +355,22 @@ namespace SaltnPepperEngine
 		//};
 
 
-		/*using Physics::RigidBody_Dep;
+		using Physics::RigidBody;
 
 		class RigidBodyComponent
 		{
 		public:
 
-			RigidBodyComponent();
+			RigidBodyComponent(const Transform& ecstransform, btCollisionShape* shape);
 			~RigidBodyComponent() = default;
 
-			SharedPtr<RigidBody_Dep>& GetRigidBody();
+			RigidBody* GetRigidBody();
 
 		private:
 
-			SharedPtr<RigidBody_Dep> m_rigidBody = nullptr;
+			SharedPtr<RigidBody> m_rigidBody = nullptr;
 
-		};*/
+		};
 
 		using namespace Physics;
 
