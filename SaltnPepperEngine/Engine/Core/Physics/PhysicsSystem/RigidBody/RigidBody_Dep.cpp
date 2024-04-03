@@ -1,5 +1,7 @@
 #include "RigidBody_Dep.h"
 #include "Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
+#include "Engine/Core/Physics/PhysicsSystem/RigidBody/BulletRigidBody.h"
+
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 
 #include "Engine/Core/Physics/PhysicsSystem/Colliders/BoxCollider.h"
@@ -96,7 +98,7 @@ namespace SaltnPepperEngine
 
 			rigidbody = MakeShared<BulletRigidBody>(transform);
 		
-			PhysicsUtils::SetRigidBodyParent(rigidbody->GetNativeHandle(), this);
+			//PhysicsUtils::SetRigidBodyParent(rigidbody->GetNativeHandle(), this);
 		
 			if (collider == nullptr) { return; }
 

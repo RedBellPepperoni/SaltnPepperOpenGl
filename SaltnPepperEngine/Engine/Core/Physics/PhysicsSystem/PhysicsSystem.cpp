@@ -189,7 +189,7 @@ namespace SaltnPepperEngine
 		
 		}
 
-		void PhysicsSystem::AddCollisionEntry(RigidBody_Dep* objectOne, RigidBody_Dep* objectTwo)
+		void PhysicsSystem::AddCollisionEntry(RigidBody* objectOne, RigidBody* objectTwo)
 		{
 			auto& [currentCollisions, previousCollisions] = PhysicsSystem::GetCurrent()->collisions;
 			currentCollisions.emplace_back(objectOne, objectTwo);

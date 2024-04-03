@@ -34,7 +34,7 @@ class GraphicRuntime : public Application
 
         EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));
       
-        EntitySetup::CreatePlayer(Vector3(5.0f,5.0f,5.0f),Vector3(0.0f,20.0f,0.0f));
+        body = EntitySetup::CreatePlayer(Vector3(5.0f,5.0f,5.0f),Vector3(0.0f,20.0f,0.0f));
       
         ///// Water Spawn
         //CreateEntity(LakeModel::WATER, Vector3(-0.1594f, -5.7900f, 5.7429f));
@@ -88,7 +88,7 @@ class GraphicRuntime : public Application
 
         EntitySetup::CreatePhysicsFloor(Vector3(0.0f,-0.5f,0.0f),Vector3(0.0f,0.0f,0.0f));
      
-        body = EntitySetup::CreatePhysicsTest(Vector3(0.0f,10.0f,0.0f));
+        EntitySetup::CreatePhysicsTest(Vector3(0.0f,10.0f,0.0f));
         EntitySetup::CreatePhysicsKinematic(Vector3(0.2f, 8.0f, 0.0f));
 
       /*  /// Render One
@@ -129,11 +129,19 @@ class GraphicRuntime : public Application
             PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
         }
 
-        ComponentView animaView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AnimatorComponent>();
+
+
+        if (Input::InputSystem::GetInstance().GetKeyDown(Key::M))
+        {
+           std::string name =  body->GetEntityId().GetComponent<NameComponent>().name;
+           LOG_INFO("Name : {0}",name);
+        }
+
+       /* ComponentView animaView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AnimatorComponent>();
 
         idle = true;
 
-      
+      */
 
       /*  for (Entity entityAnim : animaView)
         {

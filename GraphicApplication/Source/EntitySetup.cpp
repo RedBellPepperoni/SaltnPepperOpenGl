@@ -389,6 +389,7 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	RigidBody* rigidBody = playerEntity.AddComponent<RigidBodyComponent>(playerTransform,capsuleCol.GetShape()).GetRigidBody();
 	rigidBody->SetBounceFactor(0.1f);
 	rigidBody->SetFriction(0.95f);
+	rigidBody->SetEntityId(playerEntity);
 
 	Hierarchy& playerHie = playerEntity.AddComponent<Hierarchy>();
 	

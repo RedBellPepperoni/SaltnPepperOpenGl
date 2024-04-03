@@ -22,13 +22,13 @@ namespace SaltnPepperEngine
             static void RemoveRigidBody(btRigidBody* body);
             static void ActiveRigidBodyIsland(btRigidBody* body);
 
-            static void SetRigidBodyParent(btRigidBody* body, RigidBody_Dep* entity);
+            static void SetRigidBodyParent(btRigidBody* body, RigidBody* entity);
             
-            static RigidBody_Dep* GetRigidBodyParent(const void* body);
+            static RigidBody* GetRigidBodyParent(const void* body);
 
-            static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to);
-            static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to, float& rayFraction);
-            static RigidBody_Dep* RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionMask::Mask rayCastMask);
+            static RigidBody* RayCast(const Vector3& from, const Vector3& to);
+            static RigidBody* RayCast(const Vector3& from, const Vector3& to, float& rayFraction);
+            static RigidBody* RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionMask::Mask rayCastMask);
             static Vector3 GetGravity();
 
             static void SetGravity(const Vector3& gravity);

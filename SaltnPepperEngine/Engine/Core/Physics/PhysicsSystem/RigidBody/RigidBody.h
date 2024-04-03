@@ -1,13 +1,17 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
+#include "Engine/Core/EntitySystem/EntityManager.h"
 #include"Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 
+
 namespace SaltnPepperEngine
 {
+	//class Entity;
+
 	namespace Physics
 	{
 		namespace CollisionMask
@@ -94,6 +98,8 @@ namespace SaltnPepperEngine
 
 			DebugMode debugMode = DebugMode::AABB;
 
+			Entity entityID;
+
 
 		private:
 
@@ -102,6 +108,8 @@ namespace SaltnPepperEngine
 			void ReAddRigidBody();
 
 			void UpdateCollider(float mass, btCollisionShape* newShape);
+
+		
 
 			// Collision Flags : KINEMATIC
 			void SetKinematicFlag();
@@ -127,7 +135,8 @@ namespace SaltnPepperEngine
 			~RigidBody();
 
 		
-		
+			void SetEntityId(Entity parentId);
+			Entity GetEntityId() const;
 
 			void UpdateTransform(Transform& ecsTransform);
 
@@ -206,6 +215,8 @@ namespace SaltnPepperEngine
 
 			void SetLinearVelocity(const Vector3& velocity);
 			const Vector3 GetLinearVelocity() const;
+
+
 		};
 
 	}

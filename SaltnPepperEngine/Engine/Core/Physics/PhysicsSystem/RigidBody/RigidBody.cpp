@@ -2,6 +2,7 @@
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
+
 namespace SaltnPepperEngine
 {
 	namespace Physics
@@ -132,6 +133,16 @@ namespace SaltnPepperEngine
 				this->GetNativeHandle()->setCollisionShape(shapeHandle);
 				this->ReAddRigidBody();
 			}
+		}
+
+		void RigidBody::SetEntityId(Entity parentId)
+		{
+			entityID = parentId;
+		}
+
+		Entity RigidBody::GetEntityId() const
+		{
+			return entityID;
 		}
 
 		void RigidBody::SetKinematicFlag()
