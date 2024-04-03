@@ -27,6 +27,7 @@ namespace SaltnPepperEngine
 		virtual ~PlayerCharacter() = default;
 
 		void SetAnimatorRef(SkinnedAnimator* animRef);
+		SkinnedAnimator* GetAnimator();
 		void SetRigidBodyRef(RigidBody* bodyRef);
 
 		void OnUpdate(float deltaTime, Vector2 mousePosition, Transform& lookTransform);
@@ -54,6 +55,19 @@ namespace SaltnPepperEngine
 
 		float m_Yaw = 0.0f;
 		float m_Pitch = 0.0f;
+
+		float m_shootCooldown = 0.12f;
+		float m_shootcounter = 0.0f;
+
+		float m_ReloadTimer = 3.6f;
+		float m_reloadCounter = 0.0f;
+
+		bool isReloading = false;
+
+		SharedPtr<SkinnedAnimation> idleAnim;
+		SharedPtr<SkinnedAnimation> shootAnim;
+		SharedPtr<SkinnedAnimation> reloadAnim;
+
 
 	};
 

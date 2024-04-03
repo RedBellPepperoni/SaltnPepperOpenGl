@@ -86,6 +86,28 @@ namespace SaltnPepperEngine
 			m_rigidBody->SetLinearVelocity(Vector3{0.0f,verticalVelocity.y,0.0f});
 		}
 
+
+		if (InputSystem::GetInstance().GetKeyDown(Key::R))
+		{
+			isReloading = true;
+		}
+
+
+		if (isReloading)
+		{
+			m_reloadCounter += deltaTime;
+
+			m_animator->PlayAnimationbyName("Reload");
+
+			if (m_reloadCounter > m_ReloadTimer)
+			{
+				isReloading = false;
+				m_reloadCounter = 0.0f;
+				
+			}
+
+		}
+
 		
 	}
 
@@ -112,18 +134,11 @@ namespace SaltnPepperEngine
 
 
 			Quaternion Pitch = glm::angleAxis(-m_rotationalVelocity.y, Vector3(1.0f, 0.0f, 0.0f));
-
-
 			Quaternion Yaw = glm::angleAxis(-m_rotationalVelocity.x, Vector3(0.0f, 1.0f, 0.0f));
 
 
 			rotation = Yaw * rotation;
 			rotation = rotation * Pitch;
-
-		
-
-
-
 			lookTransform.SetRotation(rotation);
 
 			m_previousCursorPosition = mousePosition;
@@ -145,11 +160,40 @@ namespace SaltnPepperEngine
 		m_rotationalVelocity = m_rotationalVelocity * pow(m_rotationalDampening, deltaTime);
 
 
+		m_shootcounter += deltaTime;
+
+		static bool LeftButtonHeld = false;
+
+		if(InputSystem::GetInstance().GetMouseBtnClicked(Input::MouseButton::Left) && m_shootcounter > m_shootCooldown && !isReloading)
+		{
+			LeftButtonHeld = true;
+
+			m_animator->PlayAnimationbyName("Shoot",false);
+			m_shootcounter = 0.0f;
+
+			LOG_CRITICAL("SHOOT");
+				
+		}
+
+
+		if (m_shootcounter > m_shootCooldown + m_shootCooldown && !isReloading)
+		{
+			m_animator->PlayAnimationbyName("Idle", true);
+		}
+
+		//if (!LeftButtonHeld) { m_animator->PlayAnimationbyName("Idle", true); }
+
 	}
 
 	void PlayerCharacter::SetAnimatorRef(SkinnedAnimator* animRef)
 	{
 		m_animator = animRef;
+		m_animator->SetTransitiontime(0.01f);
+	}
+
+	SkinnedAnimator* PlayerCharacter::GetAnimator()
+	{
+		return m_animator;
 	}
 
 	void PlayerCharacter::SetRigidBodyRef(RigidBody* bodyRef)
@@ -164,6 +208,8 @@ namespace SaltnPepperEngine
 
 		KeyBoardInput(deltaTime, lookTransform);
 		MouseInput(deltaTime, mousePosition,lookTransform);
+
+		m_animator->OnUpdate(deltaTime);
 
 	}
 

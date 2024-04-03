@@ -26,6 +26,8 @@
 // ============= RENDERING GEOMETRY ==============
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+#include "Engine/Core/Animation/SkinnedAnimator.h"
 
 // ============= RENDERING ESSENTAILS ================
 #include "Engine/Core/Rendering/Material/Material.h"

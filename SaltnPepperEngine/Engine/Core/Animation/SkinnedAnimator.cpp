@@ -36,7 +36,7 @@ namespace SaltnPepperEngine
 		if (m_currentAnimation) {
 			m_currentTime = fmod(m_currentTime + m_currentAnimation->GetTicksPerSecond() * deltatime, m_currentAnimation->GetDuration());
 
-			float transitionTime = m_currentAnimation->GetTicksPerSecond() * 0.2f;
+			float transitionTime = m_currentAnimation->GetTicksPerSecond() * m_transition;
 			if (m_interpolating && m_interTime <= transitionTime) {
 				m_interTime += m_currentAnimation->GetTicksPerSecond() * deltatime;
 				CalculateBoneTranslation(m_currentAnimation->getRootNode(), glm::mat4(1.0f), m_currentAnimation, m_nextAnimation, m_haltTime, m_interTime, transitionTime);

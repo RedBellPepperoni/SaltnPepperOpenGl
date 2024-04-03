@@ -28,6 +28,8 @@ namespace SaltnPepperEngine
 	
 		std::vector<Matrix4>& GetFinalBoneMatrices();
 
+		void SetTransitiontime(float time) { m_transition = time; }
+
 	private:
 		std::vector<glm::mat4> m_finalBoneMatrices;
 		SharedPtr<SkinnedAnimation> m_currentAnimation = nullptr;
@@ -37,6 +39,7 @@ namespace SaltnPepperEngine
 		bool m_interpolating;
 		float m_haltTime;
 		float m_interTime;
+		float m_transition = 0.2f;
 
 
 		std::unordered_map<std::string ,SharedPtr<SkinnedAnimation>> m_animationMap;

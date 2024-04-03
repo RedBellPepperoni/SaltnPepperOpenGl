@@ -34,7 +34,7 @@ class GraphicRuntime : public Application
 
         EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));
       
-        EntitySetup::CreatePlayer(Vector3(5.0f,5.0f,5.0f),Vector3(0.0f));
+        EntitySetup::CreatePlayer(Vector3(5.0f,5.0f,5.0f),Vector3(0.0f,20.0f,0.0f));
       
         ///// Water Spawn
         //CreateEntity(LakeModel::WATER, Vector3(-0.1594f, -5.7900f, 5.7429f));
@@ -135,7 +135,7 @@ class GraphicRuntime : public Application
 
       
 
-        for (Entity entityAnim : animaView)
+      /*  for (Entity entityAnim : animaView)
         {
             AnimatorComponent& comp = entityAnim.GetComponent<AnimatorComponent>();
 
@@ -172,7 +172,7 @@ class GraphicRuntime : public Application
 
 
             comp.GetAnimator()->OnUpdate(deltaTime);
-        }
+        }*/
 
         if (Application::GetCurrent().GetEditorActive())
         {

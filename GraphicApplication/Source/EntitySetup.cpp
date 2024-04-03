@@ -34,39 +34,14 @@ void EntitySetup::LoadAllModels()
 	SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
 	SharedPtr<SkinnedModelLibrary>& skinnedmodelLib = Application::GetCurrent().GetSkinnedModelLibrary();
 
-	modelLib->LoadModel("Bed", "Assets\\Models\\Lake_Bed.fbx");
-	modelLib->LoadModel("Bench", "Assets\\Models\\Lake_Bench.fbx");
-	modelLib->LoadModel("Boat", "Assets\\Models\\Lake_Boat.fbx");
-	modelLib->LoadModel("Branch", "Assets\\Models\\Lake_Branch.fbx");
-	modelLib->LoadModel("Bucket", "Assets\\Models\\Lake_Bucket.fbx");
+
 	modelLib->LoadModel("Crow", "Assets\\Models\\Lake_Crow.fbx");
-	modelLib->LoadModel("Dock", "Assets\\Models\\Lake_Dock.fbx");
-	modelLib->LoadModel("Ducks", "Assets\\Models\\Lake_Ducks.fbx");
-	modelLib->LoadModel("Fence", "Assets\\Models\\Lake_Fence.fbx");
-	modelLib->LoadModel("FishSchool", "Assets\\Models\\Lake_FishSchool.fbx");
-	modelLib->LoadModel("Grass", "Assets\\Models\\Lake_Grass.fbx");
-	modelLib->LoadModel("Ground", "Assets\\Models\\Lake_Ground.fbx");
-	modelLib->LoadModel("Lamp", "Assets\\Models\\Lake_Lamp.fbx");
-	modelLib->LoadModel("PlantPot", "Assets\\Models\\Lake_PlantPot.fbx");
-	modelLib->LoadModel("Plants", "Assets\\Models\\Lake_Plants.fbx");
-	modelLib->LoadModel("Rock", "Assets\\Models\\Lake_Rock.fbx");
-	modelLib->LoadModel("Rocks", "Assets\\Models\\Lake_Rocks.fbx");
-	modelLib->LoadModel("Shack", "Assets\\Models\\Lake_Shack.fbx");
-	modelLib->LoadModel("Shrooms", "Assets\\Models\\Lake_Shrooms.fbx");
-	modelLib->LoadModel("Tree", "Assets\\Models\\Lake_Tree.fbx");
-	modelLib->LoadModel("Water", "Assets\\Models\\Lake_Water.fbx");
-	modelLib->LoadModel("Pole", "Assets\\Models\\Lake_Pole.fbx");
+	
+	
 
-	modelLib->LoadModel("Table", "Assets\\Models\\Lake_Table.fbx");
-	modelLib->LoadModel("Stool", "Assets\\Models\\Lake_Stool.fbx");
-	modelLib->LoadModel("TV", "Assets\\Models\\TV.fbx");
-	modelLib->LoadModel("TVScreen", "Assets\\Models\\TVScreen.fbx");
-
-	modelLib->LoadModel("Cam", "Assets\\Models\\Cam.fbx");
-	modelLib->LoadModel("CamBase", "Assets\\Models\\CamBase.fbx");
-
-
-	skinnedmodelLib->LoadModel("SCharacter", "Assets\\Models\\aj.dae");
+	//skinnedmodelLib->LoadModel("SCharacter", "Assets\\Models\\aj.dae");
+	//skinnedmodelLib->LoadModel("Gun_Fal", "Assets\\Models\\GUN_FAL.dae");
+	skinnedmodelLib->LoadModel("Gun_Pistol", "Assets\\Models\\GUN_PISTOL.fbx");
 	skinnedmodelLib->LoadModel("RacerCharacter", "Assets\\Models\\racer.dae");
 }
 
@@ -74,13 +49,14 @@ void EntitySetup::LoadAllTextures()
 {
 	SharedPtr<TextureLibrary>& textureLib = Application::GetCurrent().GetTextureLibrary();
 
-	textureLib->LoadTexture("pallet", "Assets\\Textures\\color.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("water", "Assets\\Textures\\water.png", TextureFormat::RGBA);
+	
 	textureLib->LoadTexture("noise", "Assets\\Textures\\noise.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
 	textureLib->LoadTexture("skinned", "Assets\\Textures\\aj.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("racer", "Assets\\Textures\\racer.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("racerNormal", "Assets\\Textures\\racerNormal.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("fphand", "Assets\\Textures\\hand.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("fppistol", "Assets\\Textures\\pistol.png", TextureFormat::RGBA);
 
 }
 
@@ -429,13 +405,59 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	PlayerLook& look = lookEntity.AddComponent<PlayerLook>();
 
 
+	// ================ PLayer Hands ================
+	Entity skinnedEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PLayerHands");
+	Transform& transform = skinnedEntity.GetComponent<Transform>();
+
+	transform.SetPosition(Vector3(0.0f,-3.14f,-0.8f));
+	transform.SetEularRotation(Vector3(180.0f,-0.02f,180.0f));
+	transform.SetScale(Vector3(0.02f));
+
+	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("Gun_Pistol");
+	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
+
+
+	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Idle", "Assets\\Models\\GUN_PISTOL_IDLE.fbx", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle);
+	
+	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
+	animComp.GetAnimator()->AddAnimation("Reload", reloadanim);
+	animComp.GetAnimator()->AddAnimation("Shoot", shootanim);
+
+	animComp.GetAnimator()->PlayAnimation(idleanim);
+
+	skinnedEntity.AddComponent<Hierarchy>();
+
+	skinnedEntity.SetParent(lookEntity);
+
+
+	SharedPtr<Material>& matOne = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	matOne->SetAlbedoTexture("fppistol");
+	matOne->albedoMapFactor = 1.0f;
+	//matOne->normalMapFactor = 0.0f;
+
+	SharedPtr<Material>& matTwo = modelComp.m_handle->GetMeshes()[2]->GetMaterial();
+	matTwo->SetAlbedoTexture("fppistol");
+	matTwo->albedoMapFactor = 1.0f;
+
+	SharedPtr<Material>& matThree = modelComp.m_handle->GetMeshes()[3]->GetMaterial();
+	matThree->SetAlbedoTexture("fphand");
+	matThree->albedoMapFactor = 1.0f;
+
+	/*SharedPtr<Material>& matFour = modelComp.m_handle->GetMeshes()[4]->GetMaterial();
+	matFour->SetAlbedoTexture("fphand");
+	matFour->normalMapFactor = 1.0f;*/
+	
+	
+	
 	// ================ Player Bindings ============
 
 	lookEntity.SetParent(playerEntity);
 
 	PlayerCharacter* player = playerEntity.AddComponent<PlayerComponent>().GetPlayer();
 	player->SetRigidBodyRef(rigidBody);
-
+	player->SetAnimatorRef(animComp.GetAnimator().get());
 	return rigidBody;
 
 }

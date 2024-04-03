@@ -143,17 +143,19 @@ namespace SaltnPepperEngine
 					Vector3 pos = transform->GetPosition();
 					Vector3 rot = transform->GetEulerRotation();
 
-					string fps = std::to_string(Application::GetCurrent().GetFPS());
-
-					std::string display = "SaltnPepperEngine : OpenGL [FPS: " + fps + " ]";
-
-					Application::GetCurrent().SetWindowTitle(display);
+					
 
 				}
 
 
 
 			}
+
+			string fps = std::to_string(Application::GetCurrent().GetFPS());
+
+			std::string display = "SaltnPepperEngine : OpenGL [FPS: " + fps + " ]";
+
+			Application::GetCurrent().SetWindowTitle(display);
 		}
 
 

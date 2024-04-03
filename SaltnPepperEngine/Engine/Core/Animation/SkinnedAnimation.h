@@ -43,6 +43,8 @@ namespace SaltnPepperEngine
 
 		inline const std::vector<BoneProps>& getBoneProps() { return m_boneProps; }
 
+		
+
 	private:
 
 		void LoadIntermediateBones(const aiAnimation* animation, SharedPtr<SkinnedModel>& model);
