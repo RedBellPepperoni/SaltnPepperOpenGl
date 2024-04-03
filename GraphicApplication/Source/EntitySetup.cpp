@@ -242,6 +242,7 @@ RigidBody* EntitySetup::CreatePhysicsFloor(const Vector3& position, const Vector
 	shape.Init(bounds);
 	RigidBody* body = &floorEntity.AddComponent<RigidBody>(floorTransform, shape.GetShape());
 	body->MakeStatic();
+	body->SetEntityId(floorEntity);
 	body->SetBounceFactor(0.5f);
 	body->SetFriction(0.8f);
 	return body;
@@ -266,7 +267,7 @@ RigidBody* EntitySetup::CreatePhysicsTest(const Vector3& position)
 	RigidBody* body = boxEntity.AddComponent<RigidBodyComponent>(boxTransform, shape.GetShape()).GetRigidBody();
 
 	body->SetBounceFactor(0.8f);
-
+	body->SetEntityId(boxEntity);
 	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
 
 	//return boxEntity;
@@ -482,7 +483,7 @@ RigidBody* EntitySetup::CreatePhysicsKinematic(const Vector3& position)
 	RigidBody* body = boxEntity.AddComponent<RigidBodyComponent>(boxTransform, shape.GetShape()).GetRigidBody();
 
 	body->SetBounceFactor(0.8f);
-	//body->MakeKinematic();
+	body->SetEntityId(boxEntity);
 
 	ModelComponent& modelComp = boxEntity.AddComponent<ModelComponent>("Crow");
 	SharedPtr<Material>& mat = modelComp.m_handle->GetMeshes()[0]->GetMaterial();

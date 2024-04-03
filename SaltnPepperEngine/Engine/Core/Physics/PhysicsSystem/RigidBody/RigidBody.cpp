@@ -202,7 +202,7 @@ namespace SaltnPepperEngine
 			bodyHandle = MakeShared<btRigidBody>(info);
 
 			SetBounceFactor(0.1f);
-
+			PhysicsUtils::SetRigidBodyParent(bodyHandle.get(),this);
 			PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle(), collisionGroup, collisionMask);
 			//PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle());
 

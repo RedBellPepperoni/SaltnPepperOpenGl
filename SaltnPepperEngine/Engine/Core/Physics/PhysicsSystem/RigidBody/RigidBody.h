@@ -14,7 +14,7 @@ namespace SaltnPepperEngine
 
 	namespace Physics
 	{
-		namespace CollisionMask
+		/*namespace CollisionMask
 		{
 			enum Mask : uint32_t
 			{
@@ -38,7 +38,34 @@ namespace SaltnPepperEngine
 				NO_STATIC_COLLISIONS = ALL & ~CollisionMask::STATIC & ~CollisionMask::KINEMATIC,
 				NO_STATIC_COLLISION_NO_RAYCAST = NO_STATIC_COLLISIONS & ~CollisionMask::RAYCAST_ONLY
 			};
+		}*/
+		namespace CollisionMask
+		{
+			enum Mask 
+			{
+				DYNAMIC = 1,
+				STATIC = 2,
+				KINEMATIC = 4,
+				RAYCAST = 8,
+				TRIGGER = 16,
+				CHARACTER = 32,
+				AllFilter = -1  //all bits sets: DefaultFilter | StaticFilter | KinematicFilter | DebrisFilter | SensorTrigger
+			};
 		}
+
+		namespace CollisionGroup
+		{
+			enum Group 
+			{
+				NONE = 0,
+				RAYCAST_ONLY = CollisionMask::RAYCAST,
+				DYNAMIC_STATIC_KINEMATTIC = CollisionMask::DYNAMIC | CollisionMask::STATIC | CollisionMask::KINEMATIC,
+				ALL = DYNAMIC_STATIC_KINEMATTIC | CollisionMask::RAYCAST,
+				NO_STATIC_COLLISIONS = ALL & ~CollisionMask::STATIC & ~CollisionMask::KINEMATIC,
+				NO_STATIC_COLLISION_NO_RAYCAST = NO_STATIC_COLLISIONS & ~CollisionMask::RAYCAST
+			};
+		}
+
 
 
 		enum class ActivationState
