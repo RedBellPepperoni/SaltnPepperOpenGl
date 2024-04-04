@@ -35,6 +35,8 @@ class GraphicRuntime : public Application
         EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));
       
         body = EntitySetup::CreatePlayer(Vector3(5.0f,5.0f,5.0f),Vector3(0.0f,20.0f,0.0f));
+
+        EntitySetup::CreateEnemy(Vector3(0.0f, 5.0f, 2.0f), Vector3(0.0f, 0.0f, 0.0f), EntitySetup::EnemyType::THUG);
       
         ///// Water Spawn
         //CreateEntity(LakeModel::WATER, Vector3(-0.1594f, -5.7900f, 5.7429f));

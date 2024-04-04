@@ -176,29 +176,20 @@ namespace SaltnPepperEngine
 			const Vector3 origin = lookTransform.GetWorldPosition();
 			const Vector3 forward = lookTransform.GetForwardVector();
 
-			const Vector3 offsetOrigin = origin + (forward * (1.0f));
+			const Vector3 offsetOrigin = origin + (forward * (0.4f));
 			const Vector3 targetOffset = origin + (forward * (50.0f));
 
-			LOG_WARN("Origin : {0} | {1} | {2}", offsetOrigin.x, offsetOrigin.y, offsetOrigin.z);
-			LOG_WARN("Origin : {0} | {1} | {2}", targetOffset.x, targetOffset.y, targetOffset.z);
-			//LOG_WARN("Target : {0} : {1} : [2}", targetOffset.x, targetOffset.y, targetOffset.z);
+			
 			float rayFraction = 0.0f;
-			//RigidBody* hitbody = PhysicsUtils::RayCast(offsetOrigin, targetOffset,rayFraction, CollisionMask::DYNAMIC | CollisionMask::STATIC | CollisionMask::KINEMATIC);
-			RigidBody* hitbody = PhysicsUtils::RayCast(offsetOrigin, targetOffset,rayFraction, CollisionMask::DYNAMIC);
+			RigidBody* hitbody = PhysicsUtils::RayCast(offsetOrigin, targetOffset,rayFraction, CollisionMask::STATIC);
 
-
-
-			if (hitbody)
+			if (hitbody)  
 			{
 				std::string name = hitbody->GetEntityId().GetComponent<NameComponent>().name;
 
 				LOG_CRITICAL("HIT : {0}", name);
 			}
 
-			else
-			{
-				LOG_TRACE("NO HIT");
-			}
 		}
 
 

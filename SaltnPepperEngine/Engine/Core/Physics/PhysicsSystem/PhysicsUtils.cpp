@@ -122,17 +122,17 @@ namespace SaltnPepperEngine
 			btVector3 bulletFrom = ToBulletVector3(from);
 			btVector3 bulletTo = ToBulletVector3(to);
 
-			//CustomRayCastCallback callback(bulletFrom, bulletTo, rayCastMask);
+			CustomRayCastCallback callback(bulletFrom, bulletTo, rayCastMask);
 
-			btCollisionWorld::ClosestRayResultCallback callback(bulletFrom, bulletTo);
+			//btCollisionWorld::ClosestRayResultCallback callback(bulletFrom, bulletTo);
 
 			PhysicsSystem::GetCurrent()->World->rayTest(bulletFrom, bulletTo, callback);
-			/*rayFraction = callback.GetRayFraction();
+			rayFraction = callback.GetRayFraction();
 
-			return callback.GetResult();*/
+			return callback.GetResult();
 
 
-			bool hit = callback.hasHit();
+			/*bool hit = callback.hasHit();
 
 			RigidBody* body = nullptr;
 
@@ -141,7 +141,7 @@ namespace SaltnPepperEngine
 				body =  PhysicsUtils::GetRigidBodyParent(callback.m_collisionObject);
 			}
 			
-			return body;
+			return body;*/
 			
 		}
 

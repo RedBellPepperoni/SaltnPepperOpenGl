@@ -5,10 +5,12 @@
 #include "SecurityCamera.h"
 #include "ScifiScreen.h"
 #include "PlayerCharacter.h"
+#include "EnemyCharacter.h"
 
 static int cameraCount = 0;
 static int tvCount = 0;
 static int boxCount = 0;
+static int enemyCount = 0;
 
 class EntitySetup
 {
@@ -52,6 +54,11 @@ public:
 		POLE
 	};
 
+	enum class EnemyType : uint8_t
+	{
+		THUG,
+		MASKED
+	};
 
 	static std::array<std::string, 24> LakeModelString;
 	
@@ -78,6 +85,7 @@ public:
 	static RigidBody* CreatePhysicsFloor(const Vector3& position, const Vector3& rotation);
 	static RigidBody* CreatePhysicsTest(const Vector3& position);
 	static RigidBody* CreatePhysicsKinematic(const Vector3& position);
+	static RigidBody* CreateEnemy(const Vector3& position, const Vector3& rotation, EnemyType type = EnemyType::THUG);
 
 	static RigidBody* CreatePlayer(const Vector3& position, const Vector3& rotation);
 

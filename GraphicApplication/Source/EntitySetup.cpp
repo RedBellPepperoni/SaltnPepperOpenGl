@@ -43,6 +43,9 @@ void EntitySetup::LoadAllModels()
 	//skinnedmodelLib->LoadModel("Gun_Fal", "Assets\\Models\\GUN_FAL.dae");
 	skinnedmodelLib->LoadModel("Gun_Pistol", "Assets\\Models\\GUN_PISTOL.fbx");
 	skinnedmodelLib->LoadModel("RacerCharacter", "Assets\\Models\\racer.dae");
+	skinnedmodelLib->LoadModel("EnemyOne", "Assets\\Models\\enemyOne.fbx");
+
+
 }
 
 void EntitySetup::LoadAllTextures()
@@ -57,6 +60,9 @@ void EntitySetup::LoadAllTextures()
 	textureLib->LoadTexture("racerNormal", "Assets\\Textures\\racerNormal.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("fphand", "Assets\\Textures\\hand.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("fppistol", "Assets\\Textures\\pistol.png", TextureFormat::RGBA);
+
+	textureLib->LoadTexture("enemyOneDiffuse", "Assets\\Textures\\enemyOneDiffuse.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("enemyOneNormal", "Assets\\Textures\\enemyOneNormal.png", TextureFormat::RGBA);
 
 }
 
@@ -275,6 +281,9 @@ RigidBody* EntitySetup::CreatePhysicsTest(const Vector3& position)
 
 }
 
+
+
+
 SharedPtr<Texture>& EntitySetup::CreateSecurityCamera(const Vector3& position, const Vector3& rotation, const Vector3 camRotation, bool Moving)
 {
 	cameraCount++;
@@ -398,7 +407,7 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	Entity lookEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerLook");
 	Transform& lookTransform = lookEntity.GetComponent<Transform>();
 
-	lookTransform.SetPosition(Vector3{0.0f,1.0f,0.0f });
+	lookTransform.SetPosition(Vector3{0.0f,0.70f,0.0f });
 	lookTransform.SetEularRotation(Vector3(0.0f,rotation.y,0.0f));
 
 	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();
@@ -411,9 +420,9 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	Entity skinnedEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PLayerHands");
 	Transform& transform = skinnedEntity.GetComponent<Transform>();
 
-	transform.SetPosition(Vector3(0.0f,-3.14f,-0.8f));
+	transform.SetPosition(Vector3(0.0f,-1.55f,-0.40f));
 	transform.SetEularRotation(Vector3(180.0f,-0.02f,180.0f));
-	transform.SetScale(Vector3(0.02f));
+	transform.SetScale(Vector3(0.01f));
 
 	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("Gun_Pistol");
 	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
@@ -464,6 +473,69 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 
 }
 
+
+RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rotation, EnemyType type)
+{
+
+	std::string name = "Enemy_" + std::to_string(enemyCount);
+	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
+
+	enemyCount++;
+
+	Transform& enemyTransform = enemyEntity.GetComponent<Transform>();
+
+	enemyTransform.SetPosition(position);
+	enemyTransform.SetEularRotation(Vector3(0.0f));
+
+	CapsuleCollider& capsuleCol = enemyEntity.AddComponent<CapsuleCollider>();
+
+	capsuleCol.Init(BoundingCapsule(1.2f, 0.3f, BoundingCapsule::Axis::Y));
+
+	RigidBody* rigidBody = enemyEntity.AddComponent<RigidBodyComponent>(enemyTransform, capsuleCol.GetShape()).GetRigidBody();
+	rigidBody->SetBounceFactor(0.1f);
+	rigidBody->SetFriction(0.95f);
+	rigidBody->SetEntityId(enemyEntity);
+	EnemyCharacter& enemy = enemyEntity.AddComponent<EnemyCharacter>();
+
+	Hierarchy& playerHie = enemyEntity.AddComponent<Hierarchy>();
+
+	// =============== Enemy Look ===============
+	Entity lookEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("EnemyLook");
+	Transform& lookTransform = lookEntity.GetComponent<Transform>();
+
+	lookTransform.SetPosition(Vector3{ 0.0f,0.0f,0.0f });
+	lookTransform.SetEularRotation(Vector3(0.0f, rotation.y, 0.0f));
+	lookTransform.SetScale(Vector3(0.01f));
+
+	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();
+	SkinnedModelComponent& modelComp = lookEntity.AddComponent<SkinnedModelComponent>("EnemyOne");
+	AnimatorComponent& animComp = lookEntity.AddComponent<AnimatorComponent>();
+
+
+	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("EnemyOne_Idle", "Assets\\Models\\Anims\\EnemyOne_Idle.fbx", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("EnemyOne_Hit", "Assets\\Models\\Anims\\EnemyOne_HitOne.fbx", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> deathanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("EnemyOne_DeathOne", "Assets\\Models\\Anims\\EnemyOne_DeathOne.fbx", modelComp.m_handle);
+
+
+	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
+	animComp.GetAnimator()->AddAnimation("HitOne", hitanim);
+	animComp.GetAnimator()->AddAnimation("DeathOne", deathanim);
+
+	animComp.GetAnimator()->PlayAnimation(idleanim);
+
+
+	lookEntity.SetParent(enemyEntity);
+
+
+	SharedPtr<Material>& matOne = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	matOne->SetAlbedoTexture("enemyOneDiffuse");
+	matOne->SetNormalTexture("enemyOneNormal");
+	matOne->albedoMapFactor = 1.0f;
+	matOne->normalMapFactor = 1.0f;
+	
+
+	return rigidBody;
+}
 
 
 RigidBody* EntitySetup::CreatePhysicsKinematic(const Vector3& position)

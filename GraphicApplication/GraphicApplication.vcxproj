@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\EnemyCharacter.cpp" />
     <ClCompile Include="Source\EntitySetup.cpp" />
     <ClCompile Include="Source\PlayerCharacter.cpp" />
     <ClCompile Include="Source\AIStuff\AIManager.cpp" />
@@ -155,6 +156,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\EnemyCharacter.h" />
     <ClInclude Include="Source\PlayerCharacter.h" />
     <ClInclude Include="Source\AIStuff\AIManager.h" />
     <ClInclude Include="Source\AIStuff\AIBaseAgent.h" />
