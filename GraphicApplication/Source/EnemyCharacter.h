@@ -19,6 +19,7 @@ namespace SaltnPepperEngine
 			SHOOTING,
 			RELOADING,
 			TAKINGHIT,
+			DYING,
 			DEAD
 		};
 
@@ -29,6 +30,7 @@ namespace SaltnPepperEngine
 
 		SkinnedAnimator* m_animator = nullptr;
 		RigidBody* m_rigidBody = nullptr;
+		Transform* m_weaponTransform = nullptr;
 
 		float m_shootCooldown = 0.12f;
 		float m_shootcounter = 0.0f;
@@ -56,16 +58,30 @@ namespace SaltnPepperEngine
 	public:
 
 
-		EnemyCharacter() = default;
+		EnemyCharacter();
 		virtual ~EnemyCharacter() = default;
 
 		void SetAnimatorRef(SkinnedAnimator* animRef);
 		SkinnedAnimator* GetAnimator();
+		void SetWeaponTransform(Transform* weaponTransform);
 		void SetRigidBodyRef(RigidBody* bodyRef);
 
-		void OnUpdate(float deltaTime,const Vector3& playerHeadPos, Transform& lookTransform);
+		void OnUpdate(float deltaTime,const Vector3& playerHeadPos, Transform& enemyTransform, Transform& lookTransform);
 
 		virtual void TakeDamage(const int damage) override;
+	};
+
+
+	struct EnemyComponent
+	{
+		EnemyComponent();
+		~EnemyComponent();
+
+		EnemyCharacter* GetEnemy();
+
+
+	private:
+		SharedPtr<EnemyCharacter> enemyHandle = nullptr;
 	};
 }
 

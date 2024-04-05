@@ -234,9 +234,9 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		SharedPtr<SkinnedAnimator>& AnimatorComponent::GetAnimator()
+		SkinnedAnimator* AnimatorComponent::GetAnimator()
 		{
-			return m_animator;
+			return m_animator.get();
 		}
 
 		/*RigidBodyComponent::RigidBodyComponent()

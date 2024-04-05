@@ -1,4 +1,5 @@
 #include "PlayerCharacter.h"
+#include "EnemyCharacter.h"
 
 namespace SaltnPepperEngine
 {
@@ -185,9 +186,21 @@ namespace SaltnPepperEngine
 
 			if (hitbody)  
 			{
-				std::string name = hitbody->GetEntityId().GetComponent<NameComponent>().name;
+				/*std::string name = hitbody->GetEntityId().GetComponent<NameComponent>().name;
 
-				LOG_CRITICAL("HIT : {0}", name);
+				LOG_CRITICAL("HIT : {0}", name);*/
+
+				Entity hitEntity = hitbody->GetEntityId();
+
+				EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
+
+				// Enemy Hit
+				if(enemyComp)
+				{ 
+					EnemyCharacter* enemy = enemyComp->GetEnemy();
+					enemy->TakeDamage(20);
+				}
+
 			}
 
 		}

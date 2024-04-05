@@ -468,7 +468,7 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 
 	PlayerCharacter* player = playerEntity.AddComponent<PlayerComponent>().GetPlayer();
 	player->SetRigidBodyRef(rigidBody);
-	player->SetAnimatorRef(animComp.GetAnimator().get());
+	player->SetAnimatorRef(animComp.GetAnimator());
 	return rigidBody;
 
 }
@@ -495,7 +495,9 @@ RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rota
 	rigidBody->SetBounceFactor(0.1f);
 	rigidBody->SetFriction(0.95f);
 	rigidBody->SetEntityId(enemyEntity);
-	EnemyCharacter& enemy = enemyEntity.AddComponent<EnemyCharacter>();
+	EnemyCharacter* enemy = enemyEntity.AddComponent<EnemyComponent>().GetEnemy();
+
+	
 
 	Hierarchy& playerHie = enemyEntity.AddComponent<Hierarchy>();
 
@@ -503,9 +505,12 @@ RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rota
 	Entity lookEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("EnemyLook");
 	Transform& lookTransform = lookEntity.GetComponent<Transform>();
 
-	lookTransform.SetPosition(Vector3{ 0.0f,0.0f,0.0f });
+	lookTransform.SetPosition(Vector3{ 0.0f,-0.9f,0.0f });
 	lookTransform.SetEularRotation(Vector3(0.0f, rotation.y, 0.0f));
 	lookTransform.SetScale(Vector3(0.01f));
+	//lookTransform.SetScale(Vector3(1.0f));
+
+	lookEntity.AddComponent<EnemyLook>();
 
 	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();
 	SkinnedModelComponent& modelComp = lookEntity.AddComponent<SkinnedModelComponent>("EnemyOne");
@@ -523,7 +528,8 @@ RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rota
 
 	animComp.GetAnimator()->PlayAnimation(idleanim);
 
-
+	enemy->SetAnimatorRef(animComp.GetAnimator());
+	enemy->SetRigidBodyRef(rigidBody);
 	lookEntity.SetParent(enemyEntity);
 
 
@@ -532,7 +538,20 @@ RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rota
 	matOne->SetNormalTexture("enemyOneNormal");
 	matOne->albedoMapFactor = 1.0f;
 	matOne->normalMapFactor = 1.0f;
+
 	
+	//==== Spawn the Weapon
+
+	Entity weaponEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Weapon_Rifle");
+	Transform& weaponTransform = weaponEntity.GetComponent<Transform>();
+
+	weaponTransform.SetPosition(Vector3(0.0f));
+	weaponTransform.SetEularRotation(Vector3(0.0f));
+	weaponTransform.SetScale(Vector3(1.0f));
+
+
+	enemy->SetWeaponTransform(&weaponTransform);
+
 
 	return rigidBody;
 }

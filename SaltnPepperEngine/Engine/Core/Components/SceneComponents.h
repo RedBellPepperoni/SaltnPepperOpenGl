@@ -134,7 +134,7 @@ namespace SaltnPepperEngine
 			AnimatorComponent();
 			~AnimatorComponent();
 
-			SharedPtr<SkinnedAnimator>& GetAnimator();
+			SkinnedAnimator* GetAnimator();
 
 			SharedPtr<SkinnedAnimator> m_animator = nullptr;
 		};

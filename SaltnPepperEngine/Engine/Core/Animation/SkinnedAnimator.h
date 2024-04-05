@@ -30,6 +30,8 @@ namespace SaltnPepperEngine
 
 		void SetTransitiontime(float time) { m_transition = time; }
 
+		SkinnedAnimation* GetCurrentAnimation();
+
 	private:
 		std::vector<glm::mat4> m_finalBoneMatrices;
 		SharedPtr<SkinnedAnimation> m_currentAnimation = nullptr;

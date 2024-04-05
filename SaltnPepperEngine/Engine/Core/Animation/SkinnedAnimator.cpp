@@ -213,4 +213,8 @@ namespace SaltnPepperEngine
 	{
 		return m_finalBoneMatrices;
 	}
+	SkinnedAnimation* SkinnedAnimator::GetCurrentAnimation()
+	{
+		return m_currentAnimation.get();
+	}
 }
