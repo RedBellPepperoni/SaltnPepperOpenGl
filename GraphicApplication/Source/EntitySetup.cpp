@@ -243,7 +243,7 @@ RigidBody* EntitySetup::CreatePhysicsFloor(const Vector3& position, const Vector
 
 	//ModelComponen& model = floorEntity.AddComponent<ModelComponent>
 
-	BoundingBox bounds{ Vector3(-10.0f,-0.5f,-10.0f),Vector3(10.0f,0.5f,10.0f) };
+	BoundingBox bounds{ Vector3(-100.0f,-0.5f,-100.0f),Vector3(100.0f,0.5f,100.0f) };
 	BoxCollider& shape = floorEntity.AddComponent<BoxCollider>();
 	shape.Init(bounds);
 	RigidBody* body = &floorEntity.AddComponent<RigidBody>(floorTransform, shape.GetShape());
@@ -251,6 +251,13 @@ RigidBody* EntitySetup::CreatePhysicsFloor(const Vector3& position, const Vector
 	body->SetEntityId(floorEntity);
 	body->SetBounceFactor(0.5f);
 	body->SetFriction(0.8f);
+
+	Entity floorDisplay = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_Floor_Display");
+	floorDisplay.GetComponent<Transform>().SetScale(Vector3(100.0f, 1.0f, 100.0f));
+	floorDisplay.GetComponent<Transform>().SetPosition(Vector3(0.0f, -0.5f, 0.0f));
+	ModelComponent& model = floorDisplay.AddComponent<ModelComponent>(PrimitiveType::Cube);
+
+
 	return body;
 
 }

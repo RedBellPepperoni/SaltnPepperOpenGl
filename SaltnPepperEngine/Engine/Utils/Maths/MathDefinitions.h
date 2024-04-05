@@ -266,7 +266,17 @@ namespace SaltnPepperEngine
 
             return DegreeRotaiton;
         }
+
+        inline Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, float a)
+        {
+            return glm::lerp(q1, q2, a);
+        }
         
+        inline Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float a)
+        {
+            return glm::slerp(q1, q2, a);
+        }
+
 
         // ====================== Min Max =================================
 

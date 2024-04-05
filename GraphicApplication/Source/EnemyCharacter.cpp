@@ -5,29 +5,41 @@ namespace SaltnPepperEngine
 	{
 		float duration = 0.0f;
 
-		
+		if (m_markedForDeath)
+		{
+			m_deathcounter += deltaTime;
+			duration = 3.00f;
+
+			if (m_deathcounter > duration)
+			{
+				m_counter = 0.0f;
+				currentState = EnemyState::DEAD;
+			}
+
+			return;
+		}
 
 
 		switch (currentState)
 		{
 		case EnemyState::IDLE:
 
-
+			m_animator->SetTransitiontime(0.4f);
 			m_animator->PlayAnimationbyName("Idle");
-			m_animator->SetTransitiontime(0.1f);
+			
 
 			break;
 
 		case EnemyState::WALKING:
-
+			m_animator->SetTransitiontime(0.4f);
 			m_animator->PlayAnimationbyName("Walk");
-			m_animator->SetTransitiontime(0.1f);
+			
 			break;
 
 		case EnemyState::ATTACKING:
-
+			m_animator->SetTransitiontime(0.2f);
 			m_animator->PlayAnimationbyName("Attack");
-			m_animator->SetTransitiontime(0.1f);
+			
 			m_counter += deltaTime;
 			duration = 1.0f;
 			if (m_counter > duration)
@@ -41,7 +53,7 @@ namespace SaltnPepperEngine
 
 		case EnemyState::TAKINGHIT:
 
-			
+			m_animator->SetTransitiontime(0.05f);
 			m_animator->PlayAnimationbyName("HitOne",false);
 
 			m_counter += deltaTime;
@@ -55,19 +67,8 @@ namespace SaltnPepperEngine
 
 			break;
 
-		case EnemyState::DYING:
-
-		
-			m_counter += deltaTime;
-			duration = 3.00f;
-
-			if (m_counter > duration)
-			{
-				m_counter = 0.0f;
-				currentState = EnemyState::DEAD;
-			}
-
-			break;
+	
+			
 		}
 	}
 
@@ -75,7 +76,11 @@ namespace SaltnPepperEngine
 	{
 		const float sqDist = DistanceSquared(position, playerpos);
 		
-		if (sqDist > m_detectionRadius * m_detectionRadius) { return; }
+		if (sqDist > m_detectionRadius * m_detectionRadius) 
+		{ 
+			currentBehaviour = EnemyBehaviour::DECIDING;
+			return; 
+		}
 		
 		currentBehaviour = EnemyBehaviour::HUNT;
 		
@@ -87,21 +92,30 @@ namespace SaltnPepperEngine
 
 	}
 
-	void EnemyCharacter::DecideMovement(const Vector3& currentPosition,const Vector3& playerPosition, const Vector3& currentForward)
+	void EnemyCharacter::DecideMovement(const float deltatime,const Vector3& currentPosition,const Vector3& playerPosition, Transform& lookTrasform)
 	{
 		Vector3 finalDirection = Vector3(0.0f);
 
+		
 
 		switch (currentBehaviour)
 		{
+		case EnemyBehaviour::DECIDING:
+			
+			currentState = EnemyState::IDLE;
+			break;
+
 		case EnemyBehaviour::WANDER:
 
 			break;
 
 		case EnemyBehaviour::HUNT:
 
+			
 			finalDirection = Normalize(playerPosition - currentPosition);
 			Move(finalDirection);
+
+			RotateModel(deltatime,finalDirection, lookTrasform);
 
 			break;
 		}
@@ -109,9 +123,47 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::Move(const Vector3& targetDirection)
 	{	
-		const Vector3 finalVelocity = targetDirection * m_speed * m_forceMultiplier;
+		Vector3 finalVelocity = targetDirection * m_speed * m_forceMultiplier;
+		float fallVelo = m_rigidBody->GetLinearVelocity().y;
+
+		finalVelocity.y = fallVelo;
 		m_rigidBody->SetLinearVelocity(finalVelocity);
+
+		currentState = EnemyState::WALKING;
 	}
+
+	void EnemyCharacter::RotateModel(float deltatime, const Vector3& target, Transform& looktransform)
+	{
+		Vector3 forward = looktransform.GetForwardVector();
+		float rotationStep = m_turnRate * deltatime;
+
+		float angle = atan2(Length(Cross(target, forward)), Dot(target, forward));
+		if (angle < rotationStep) { return; }
+
+		Vector3 rotationAxis = Cross(forward, target);
+
+		if (rotationAxis.y > 0.01f)
+		{
+			rotationAxis = Vector3(0.0f, 1.0f, 0.0f);
+		}
+		else
+		{
+			rotationAxis = Vector3(0.0f, -1.0f, 0.0f);
+		}
+
+		Quaternion rotation = Rotate(looktransform.GetRotation(), -rotationStep, rotationAxis);
+		looktransform.SetRotation(rotation);
+
+
+		//Quaternion rot = LookAtRotation(-target, Vector3(0.0f, 1.0f, 0.0f));
+		//Quaternion currentRot = looktransform.GetRotation();
+
+		//Quaternion finalRot = Slerp
+
+		//looktransform.SetRotation(rot);
+	}
+
+
 
 	void EnemyCharacter::Attack(const Vector3& origin, const Vector3& target)
 	{
@@ -144,8 +196,8 @@ namespace SaltnPepperEngine
 	void EnemyCharacter::Die()
 	{
 		m_animator->PlayAnimationbyName("DeathOne",false);
-		m_counter = 0.0f;
-		currentState = EnemyState::DYING;
+		m_deathcounter = 0.0f;
+		m_markedForDeath = true;
 	}
 
 	EnemyCharacter::EnemyCharacter()
@@ -188,10 +240,17 @@ namespace SaltnPepperEngine
 		UpdateState(deltaTime);
 		m_animator->OnUpdate(deltaTime);
 
-		const Vector3 currentPosition = enemyTransform.GetPosition();
+		if (currentState == EnemyState::TAKINGHIT || m_markedForDeath) { return; }
 
+		const Vector3 currentPosition = enemyTransform.GetPosition();
+		const Vector3 currentForward = lookTransform.GetForwardVector();
+
+
+		
 
 		DetectPlayer(currentPosition,playerPos);
+
+		DecideMovement(deltaTime,currentPosition,playerPos, lookTransform);
 
 		if (currentBehaviour == EnemyBehaviour::ATTACK)
 		{
@@ -213,9 +272,9 @@ namespace SaltnPepperEngine
 					m_attackCounter = 0.0f;
 
 					
-					Vector3 origin = currentPosition + (lookTransform.GetForwardVector());
+					Vector3 origin = currentPosition - (currentForward);
 					origin.y = 0.5f;
-					Vector3 destination = currentPosition - (lookTransform.GetForwardVector() * 3.0f);
+					Vector3 destination = currentPosition - (currentForward * 3.0f);
 					destination.y = 0.5f;
 
 					Attack(origin,destination);
@@ -239,7 +298,7 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::TakeDamage(const int damage)
 	{
-		if (currentState == EnemyState::DYING || currentState == EnemyState::DEAD)
+		if (m_markedForDeath || currentState == EnemyState::DEAD)
 		{
 			return;
 		}

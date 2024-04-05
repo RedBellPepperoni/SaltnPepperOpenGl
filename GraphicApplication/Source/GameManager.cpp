@@ -64,8 +64,8 @@ namespace SaltnPepperEngine
 
 
         EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));
-        body = EntitySetup::CreatePlayer(Vector3(5.0f, 5.0f, 5.0f), Vector3(0.0f, 20.0f, 0.0f));
-        EntitySetup::CreateZombie(Vector3(0.0f, 5.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), ZombieType::WALK);
+        body = EntitySetup::CreatePlayer(Vector3(5.0f, 1.0f, 5.0f), Vector3(0.0f, 20.0f, 0.0f));
+        EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), ZombieType::WALK);
         EntitySetup::CreatePhysicsFloor(Vector3(0.0f, -0.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
 
         EntitySetup::CreateSkinnedCharatcer(Vector3(1.27f, 0.0f, 0.0f), Vector3(0.01f));

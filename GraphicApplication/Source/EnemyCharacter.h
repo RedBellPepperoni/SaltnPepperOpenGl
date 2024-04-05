@@ -25,7 +25,6 @@ namespace SaltnPepperEngine
 			WALKING,
 			ATTACKING,
 			TAKINGHIT,
-			DYING,
 			DEAD
 		};
 
@@ -40,7 +39,7 @@ namespace SaltnPepperEngine
 		};
 
 
-		float m_speed = 2.0f;
+		float m_speed = 0.6f;
 
 		const float m_forceMultiplier = 1.0f;
 
@@ -52,6 +51,7 @@ namespace SaltnPepperEngine
 		float m_shootcounter = 0.0f;
 
 		float m_counter = 0.0f;
+		float m_deathcounter = 0.0f;
 		
 
 		const float m_ReloadTimer = 3.6f;
@@ -68,21 +68,26 @@ namespace SaltnPepperEngine
 		EnemyBehaviour currentBehaviour = EnemyBehaviour::DECIDING;
 		ZombieType currentType = ZombieType::WALK;
 
-		const float m_detectionRadius = 8.0f;
-		const float m_attackRadius = 2.5f;
+		const float m_detectionRadius = 5.0f;
+		const float m_attackRadius = 1.5f;
 		
+		const float m_turnRate = 1.25f;
+
 		bool m_playerDetected = false;
 		bool m_playerInRange = false;
 		bool m_playerInAttackRange = false;
+
+		bool m_markedForDeath = false;
+
 
 	private:
 
 		void UpdateState(const float deltaTime);
 
 		void DetectPlayer(const Vector3& position,const Vector3& playerpos);
-		void DecideMovement(const Vector3& currentPosition, const Vector3& playerPosition, const Vector3& currentForward);
+		void DecideMovement(const float deltatime,const Vector3& currentPosition, const Vector3& playerPosition, Transform& lookTrasform);
 		void Move(const Vector3& targetDirection);
-		
+		void RotateModel(float deltatime, const Vector3& target, Transform& looktransform);
 		void Attack(const Vector3& origin, const Vector3& target);
 
 		void Die();
