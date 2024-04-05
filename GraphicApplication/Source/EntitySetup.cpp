@@ -43,7 +43,7 @@ void EntitySetup::LoadAllModels()
 	//skinnedmodelLib->LoadModel("Gun_Fal", "Assets\\Models\\GUN_FAL.dae");
 	skinnedmodelLib->LoadModel("Gun_Pistol", "Assets\\Models\\GUN_PISTOL.fbx");
 	skinnedmodelLib->LoadModel("RacerCharacter", "Assets\\Models\\racer.dae");
-	skinnedmodelLib->LoadModel("EnemyOne", "Assets\\Models\\enemyOne.fbx");
+	skinnedmodelLib->LoadModel("WarZombie", "Assets\\Models\\WarZombie.dae");
 
 
 }
@@ -61,8 +61,8 @@ void EntitySetup::LoadAllTextures()
 	textureLib->LoadTexture("fphand", "Assets\\Textures\\hand.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("fppistol", "Assets\\Textures\\pistol.png", TextureFormat::RGBA);
 
-	textureLib->LoadTexture("enemyOneDiffuse", "Assets\\Textures\\enemyOneDiffuse.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("enemyOneNormal", "Assets\\Textures\\enemyOneNormal.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("zombieOneDiffuse", "Assets\\Textures\\zombie_D.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("zombieOneNormal", "Assets\\Textures\\zombie_N.png", TextureFormat::RGBA);
 
 }
 
@@ -474,10 +474,10 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 }
 
 
-RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rotation, EnemyType type)
+RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rotation, ZombieType type)
 {
 
-	std::string name = "Enemy_" + std::to_string(enemyCount);
+	std::string name = "Zombie_" + std::to_string(enemyCount);
 	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
 
 	enemyCount++;
@@ -497,7 +497,7 @@ RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rota
 	rigidBody->SetEntityId(enemyEntity);
 	EnemyCharacter* enemy = enemyEntity.AddComponent<EnemyComponent>().GetEnemy();
 
-	
+	enemy->SetType(type);
 
 	Hierarchy& playerHie = enemyEntity.AddComponent<Hierarchy>();
 
@@ -513,18 +513,22 @@ RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rota
 	lookEntity.AddComponent<EnemyLook>();
 
 	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();
-	SkinnedModelComponent& modelComp = lookEntity.AddComponent<SkinnedModelComponent>("EnemyOne");
+	SkinnedModelComponent& modelComp = lookEntity.AddComponent<SkinnedModelComponent>("WarZombie");
 	AnimatorComponent& animComp = lookEntity.AddComponent<AnimatorComponent>();
 
 
-	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("EnemyOne_Idle", "Assets\\Models\\Anims\\EnemyOne_Idle.fbx", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("EnemyOne_Hit", "Assets\\Models\\Anims\\EnemyOne_HitOne.fbx", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> deathanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("EnemyOne_DeathOne", "Assets\\Models\\Anims\\EnemyOne_DeathOne.fbx", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Idle", "Assets\\Models\\Anims\\Zombie_Idle.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Hit", "Assets\\Models\\Anims\\Zombie_Hit.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> deathanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Death_One", "Assets\\Models\\Anims\\Zombie_Death_1.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> attackAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Attack", "Assets\\Models\\Anims\\Zombie_Attack.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> walkAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Walk", "Assets\\Models\\Anims\\Zombie_Walk.dae", modelComp.m_handle);
 
 
 	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
 	animComp.GetAnimator()->AddAnimation("HitOne", hitanim);
-	animComp.GetAnimator()->AddAnimation("DeathOne", deathanim);
+	animComp.GetAnimator()->AddAnimation("DeathOne", deathanim); 
+	animComp.GetAnimator()->AddAnimation("Walk", walkAnim);
+	animComp.GetAnimator()->AddAnimation("Attack", attackAnim);
 
 	animComp.GetAnimator()->PlayAnimation(idleanim);
 
@@ -534,8 +538,8 @@ RigidBody* EntitySetup::CreateEnemy(const Vector3& position, const Vector3& rota
 
 
 	SharedPtr<Material>& matOne = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
-	matOne->SetAlbedoTexture("enemyOneDiffuse");
-	matOne->SetNormalTexture("enemyOneNormal");
+	matOne->SetAlbedoTexture("zombieOneDiffuse");
+	matOne->SetNormalTexture("zombieOneNormal");
 	matOne->albedoMapFactor = 1.0f;
 	matOne->normalMapFactor = 1.0f;
 

@@ -54,13 +54,7 @@ public:
 		POLE
 	};
 
-	enum class EnemyType : uint8_t
-	{
-		THUG,
-		MASKED,
-		ZOMBIE_WALK,
-		ZOMBIE_CRAWL
-	};
+	
 
 	static std::array<std::string, 24> LakeModelString;
 	
@@ -87,8 +81,9 @@ public:
 	static RigidBody* CreatePhysicsFloor(const Vector3& position, const Vector3& rotation);
 	static RigidBody* CreatePhysicsTest(const Vector3& position);
 	static RigidBody* CreatePhysicsKinematic(const Vector3& position);
-	static RigidBody* CreateEnemy(const Vector3& position, const Vector3& rotation, EnemyType type = EnemyType::THUG);
-	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, EnemyType type = EnemyType::ZOMBIE_WALK);
+	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, ZombieType type = ZombieType::WALK);
+
+
 
 	static RigidBody* CreatePlayer(const Vector3& position, const Vector3& rotation);
 
