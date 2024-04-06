@@ -342,7 +342,16 @@ namespace SaltnPepperEngine
 		if (currentState == EnemyState::DEAD) { return; }
 
 		UpdateState(deltaTime);
-		m_animator->OnUpdate(deltaTime);
+
+		m_animCounter += deltaTime;
+
+		if (m_animCounter >= animationFrameRate)
+		{
+			m_animCounter = 0.0f;
+			m_animator->OnUpdate(animationFrameRate);
+		}
+
+	
 
 		if (currentState == EnemyState::TAKINGHIT || m_markedForDeath) { return; }
 

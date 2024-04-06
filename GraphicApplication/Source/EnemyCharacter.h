@@ -104,6 +104,10 @@ namespace SaltnPepperEngine
 	
 		float attackSreamcounter = 0.0f;
 
+
+		float m_animCounter = 0.0f;
+		const float animationFrameRate = 1.0f/30.0f;
+
 	private:
 
 		void UpdateState(const float deltaTime);

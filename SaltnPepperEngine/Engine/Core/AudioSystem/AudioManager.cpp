@@ -88,7 +88,7 @@ namespace SaltnPepperEngine
 				listener.GetListener()->Update(listenerTransform, deltaTime);
 			}
 
-			ComponentView sourceView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AudioSourceComponent>();
+			/*ComponentView sourceView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AudioSourceComponent>();
 
 			if (!sourceView.IsEmpty())
 			{
@@ -101,7 +101,7 @@ namespace SaltnPepperEngine
 
 					source->Update(sourcetransform, deltaTime);
 				}
-			}
+			}*/
 
 			CHECKFMODERR(GetInstance().m_audiosystem->update());
 
