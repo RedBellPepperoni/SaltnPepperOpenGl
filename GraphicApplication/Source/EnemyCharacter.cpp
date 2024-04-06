@@ -235,48 +235,27 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::PlayIdleSound()
 	{
-		//if (currentSound == SoundType::IDLESOUND) { return; }
-
-		////m_source->StopPlayback();
-		//m_idlesource->SetAudioClip(m_idleclip);
-		//m_idlesource->SetLoop(true);
-		//m_idlesource->PlayClip();
-
-		//currentSound = SoundType::IDLESOUND;
-
+		LOG_WARN("IDLESOUND PLaying");
+		//m_source->PlayClipLoop(m_idleclip);
 
 	}
 
 	void EnemyCharacter::PlayScreamSound()
 	{
 
-		//m_source->StopPlayback();
-		m_source->SetAudioClip(m_alertclip);
-		m_source->SetLoop(false);
-		m_source->PlayClip();
-
+		m_source->PlayOneShot(m_alertclip);
 		currentSound = SoundType::SCREAMSOUND;
 	}
 
 	void EnemyCharacter::PlayAttackSound()
 	{
-		//m_source->StopPlayback();
-
-		m_source->SetAudioClip(m_attackclip);
-		m_source->SetLoop(false);
-		m_source->PlayClip();
-
+		m_source->PlayOneShot(m_attackclip);
 		currentSound = SoundType::ATTACKSOUND;
 	}
 
 	void EnemyCharacter::PlayDeathSound()
 	{
-		//m_source->StopPlayback();
-
-		m_source->SetAudioClip(m_deathclip);
-		m_source->SetLoop(false);
-		m_source->PlayClip();
-
+		m_source->PlayOneShot(m_deathclip);
 		currentSound = SoundType::DEATHSOUND;
 	}
 
@@ -318,11 +297,15 @@ namespace SaltnPepperEngine
 		m_source = source;
 		m_idlesource = idleSource;
 
-		/*PlayAttackSound();
-		PlayDeathSound();
-		PlayScreamSound();*/
 
-		//m_idlesource->PlayClip();
+		m_source->SetAudioClip(m_alertclip);
+		m_source->SetLoop(false);
+
+		m_source->SetAudioClip(m_deathclip);
+		m_source->SetLoop(false);
+
+		m_source->SetAudioClip(m_attackclip);
+		m_source->SetLoop(false);
 	}
 
 	void EnemyCharacter::SetAudioClips(AudioClip* idle, AudioClip* alert,  AudioClip* attack, AudioClip* death)
@@ -332,9 +315,6 @@ namespace SaltnPepperEngine
 		m_attackclip = attack;
 		m_deathclip = death;
 
-	/*	PlayAttackSound();
-		PlayDeathSound();
-		PlayScreamSound();*/
 	}
 
 	void EnemyCharacter::OnUpdate(float deltaTime, const Vector3& playerPos, Transform& enemyTransform, Transform& lookTransform)

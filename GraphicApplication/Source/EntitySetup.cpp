@@ -516,13 +516,10 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	enemyTransform.SetEularRotation(Vector3(0.0f));
 	Audio::AudioSource* source = AudioManager::GetInstance().CreateSource(enemyEntity);
 	source->SetAudioClip(idleclip);
-	source->SetLoop(true);
-	source->PlayClip();
+	source->PlayClipLoop();
 	source->Set3DMaxDist(6.0f);
 	source->Set3DMinDist(0.1f);
 	
-	
-
 	
 
 	CapsuleCollider& capsuleCol = enemyEntity.AddComponent<CapsuleCollider>();
@@ -582,7 +579,7 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	screamsource->SetLoop(false);
 
 	enemy->SetAudioClips(idleclip, alertclip, attackclip, deathclip);
-	enemy->SetAudioSource(source, screamsource);
+	enemy->SetAudioSource(screamsource,source);
 	
 
 	lookEntity.SetParent(enemyEntity);

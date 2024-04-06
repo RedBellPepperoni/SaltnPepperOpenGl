@@ -32,7 +32,8 @@ namespace SaltnPepperEngine
 
 			AudioClip* GetClip();
 
-			void PlayClip();
+			void PlayClipLoop();
+			void PlayOneShot(AudioClip* clip);
 
 			void Update(const Transform& transform, float deltaTime);
 
@@ -80,11 +81,13 @@ namespace SaltnPepperEngine
 
 			static int sourceCount;
 
-			Vector3 lastPosition = Vector3(0.0f);
-
+			Vector3 lastPosition = Vector3{ 0.0f };
+			Vector3 currentPositiom = Vector3{ 0.0f };
 
 			float m_min3DDistance = 0.01f;
 			float m_max3DDistance = 10.0f;
+
+		
 
 		};
 

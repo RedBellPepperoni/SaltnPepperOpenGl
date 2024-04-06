@@ -39,7 +39,7 @@ namespace SaltnPepperEngine
 		}
 
 
-		void AudioSource::PlayClip()
+		void AudioSource::PlayClipLoop()
 		{
 			if (m_channelIndex < 0)
 			{
@@ -47,8 +47,30 @@ namespace SaltnPepperEngine
 				return;
 			}
 
+			SetLoop(true);
+
 			AudioManager::GetInstance().PlaySound(*GetClip(), m_channelIndex);
 			AudioManager::GetInstance().SetSource3DMinMaxDist(m_channelIndex, m_min3DDistance, m_max3DDistance);
+			AudioManager::GetInstance().SetChannelLoop(m_channelIndex,GetLoop());
+
+		}
+
+		void AudioSource::PlayOneShot(AudioClip* clip)
+		{
+			if (m_channelIndex < 0)
+			{
+				LOG_ERROR("AudioSource : Channel not Initialized for Clip {0}", m_audioClip->name);
+				return;
+			}
+
+			m_audioClip = clip;
+			SetLoop(false);
+
+			AudioManager::GetInstance().PlaySound(*GetClip(), m_channelIndex);
+			
+			//AudioManager::GetInstance().SetChannelLoop(GetLoop());
+			AudioManager::GetInstance().SetSource3DMinMaxDist(m_channelIndex, m_min3DDistance, m_max3DDistance);
+			AudioManager::GetInstance().SetSource3DAttributes(m_channelIndex,currentPositiom, Vector3{0.0f});
 
 		}
 
@@ -56,11 +78,18 @@ namespace SaltnPepperEngine
 
 		void AudioSource::Update(const Transform& transform, float deltaTime)
 		{
+			// Cache the last position
+			lastPosition = currentPositiom;
 
+			// get the new current position;
+			currentPositiom = transform.GetWorldPosition();
 
-			Vector3 position = transform.GetWorldPosition();
-			//CalculateVelocity(transform, deltaTime);
-			AudioManager::GetInstance().SetSource3DAttributes(m_channelIndex, position, Vector3(0.0f));
+			if (m_shouldLoop)
+			{
+				AudioManager::GetInstance().SetSource3DAttributes(m_channelIndex, currentPositiom, Vector3(0.0f));
+			}
+
+			//
 
 
 		}
@@ -93,6 +122,8 @@ namespace SaltnPepperEngine
 		{
 			m_shouldLoop = loop;
 			m_audioClip->m_shouldLoop = loop;
+
+			
 		}
 
 		void AudioSource::AddDSPEffect(DSPEffects filter)

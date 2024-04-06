@@ -147,6 +147,7 @@ namespace SaltnPepperEngine
 			int PlaySound(const AudioClip& clip, const int channelId);
 
 			bool GetChannelPlaying(const int id = 0);
+			void SetChannelLoop(const int id = 0,bool loop = false);
 
 			void StopChannelPlayback(const int id = 0);
 

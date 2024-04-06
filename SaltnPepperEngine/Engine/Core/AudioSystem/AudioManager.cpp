@@ -88,7 +88,7 @@ namespace SaltnPepperEngine
 				listener.GetListener()->Update(listenerTransform, deltaTime);
 			}
 
-			/*ComponentView sourceView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AudioSourceComponent>();
+			ComponentView sourceView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AudioSourceComponent>();
 
 			if (!sourceView.IsEmpty())
 			{
@@ -101,7 +101,7 @@ namespace SaltnPepperEngine
 
 					source->Update(sourcetransform, deltaTime);
 				}
-			}*/
+			}
 
 			CHECKFMODERR(GetInstance().m_audiosystem->update());
 
@@ -272,6 +272,16 @@ namespace SaltnPepperEngine
 			return selectedChannel->isPlaying;
 
 		}
+
+		void AudioManager::SetChannelLoop(const int id, bool loop)
+		{
+			if (id > m_channelMap.size()) { return ; }
+
+			SharedPtr<Channel>& selectedChannel = m_channelMap[id];
+			selectedChannel->fmodCh->setLoopCount(loop ? -1 : 0);
+		}
+
+		
 
 		void AudioManager::StopChannelPlayback(const int id)
 		{
