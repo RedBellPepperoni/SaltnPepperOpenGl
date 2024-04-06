@@ -130,7 +130,7 @@ namespace SaltnPepperEngine
 		struct SkinnedModelComponent
 		{
 			SkinnedModelComponent();
-			SkinnedModelComponent(const std::string& filePath);
+			SkinnedModelComponent(const std::string& filePath, bool duplicateLoad = false);
 			~SkinnedModelComponent();
 
 			SharedPtr<SkinnedModel> m_handle = nullptr;

@@ -36,7 +36,7 @@ namespace SaltnPepperEngine
 			m_animator->SetTransitiontime(0.4f);
 			m_animator->PlayAnimationbyName("Walk");
 
-			PlayIdleSound();
+			//PlayIdleSound();
 			
 			break;
 
@@ -230,6 +230,7 @@ namespace SaltnPepperEngine
 		m_animator->PlayAnimationbyName("DeathOne",false);
 		m_deathcounter = 0.0f;
 		m_markedForDeath = true;
+		m_idlesource->StopPlayback();
 	}
 
 	void EnemyCharacter::PlayIdleSound()
@@ -237,9 +238,9 @@ namespace SaltnPepperEngine
 		//if (currentSound == SoundType::IDLESOUND) { return; }
 
 		////m_source->StopPlayback();
-		//m_source->SetAudioClip(m_idleclip);
-		//m_source->SetLoop(true);
-		//m_source->PlayClip();
+		//m_idlesource->SetAudioClip(m_idleclip);
+		//m_idlesource->SetLoop(true);
+		//m_idlesource->PlayClip();
 
 		//currentSound = SoundType::IDLESOUND;
 
@@ -261,7 +262,7 @@ namespace SaltnPepperEngine
 	{
 		m_source->StopPlayback();
 
-		//m_source->SetAudioClip(m_attackclip);
+		m_source->SetAudioClip(m_attackclip);
 		m_source->SetLoop(false);
 		m_source->PlayClip();
 
@@ -270,7 +271,7 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::PlayDeathSound()
 	{
-		//m_source->StopPlayback();
+		m_source->StopPlayback();
 
 		m_source->SetAudioClip(m_deathclip);
 		m_source->SetLoop(false);
@@ -312,9 +313,14 @@ namespace SaltnPepperEngine
 		m_rigidBody = bodyRef;
 	}
 
-	void EnemyCharacter::SetAudioSource(Audio::AudioSource* source)
+	void EnemyCharacter::SetAudioSource(Audio::AudioSource* source, Audio::AudioSource* idleSource)
 	{
 		m_source = source;
+		m_idlesource = idleSource;
+
+		PlayAttackSound();
+		PlayDeathSound();
+		PlayScreamSound();
 	}
 
 	void EnemyCharacter::SetAudioClips(AudioClip* idle, AudioClip* alert,  AudioClip* attack, AudioClip* death)
@@ -323,6 +329,10 @@ namespace SaltnPepperEngine
 		m_alertclip = alert;
 		m_attackclip = attack;
 		m_deathclip = death;
+
+	/*	PlayAttackSound();
+		PlayDeathSound();
+		PlayScreamSound();*/
 	}
 
 	void EnemyCharacter::OnUpdate(float deltaTime, const Vector3& playerPos, Transform& enemyTransform, Transform& lookTransform)

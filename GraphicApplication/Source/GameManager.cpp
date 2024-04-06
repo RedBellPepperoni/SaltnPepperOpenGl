@@ -32,11 +32,15 @@ namespace SaltnPepperEngine
         ComponentView enemyLookView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<EnemyLook>();
 
 
-        if (!enemyView.IsEmpty() && !enemyLookView.IsEmpty())
+        if (enemyView.IsEmpty() || enemyLookView.IsEmpty()) { return; }
+        
+        const float viewSize = enemyView.Size();
+
+        for(int i = 0; i < viewSize; i++)
         {
-            EnemyCharacter* enemy = enemyView[0].GetComponent<EnemyComponent>().GetEnemy();
-            Transform& enemyTransform = enemyView[0].GetComponent<Transform>();
-            Transform& enemyLook = enemyLookView[0].GetComponent<Transform>();
+            EnemyCharacter* enemy = enemyView[i].GetComponent<EnemyComponent>().GetEnemy();
+            Transform& enemyTransform = enemyView[i].GetComponent<Transform>();
+            Transform& enemyLook = enemyLookView[i].GetComponent<Transform>();
 
             enemy->OnUpdate(deltaTime,  playerPos, enemyTransform, enemyLook);
         }
@@ -68,7 +72,14 @@ namespace SaltnPepperEngine
 
         EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));
         body = EntitySetup::CreatePlayer(Vector3(5.0f, 1.0f, 5.0f), Vector3(0.0f, 20.0f, 0.0f));
+
         EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(15.0f, 1.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(22.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(0.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), ZombieType::WALK);
+
+
         EntitySetup::CreatePhysicsFloor(Vector3(0.0f, -0.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
 
         EntitySetup::CreateSkinnedCharatcer(Vector3(1.27f, 0.0f, 0.0f), Vector3(0.01f));

@@ -535,8 +535,7 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	EnemyCharacter* enemy = enemyEntity.AddComponent<EnemyComponent>().GetEnemy();
 
 	enemy->SetType(type);
-	enemy->SetAudioSource(source);
-	enemy->SetAudioClips(idleclip,alertclip,attackclip,death1clip);
+	
 
 	Hierarchy& playerHie = enemyEntity.AddComponent<Hierarchy>();
 
@@ -573,6 +572,18 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 
 	enemy->SetAnimatorRef(animComp.GetAnimator());
 	enemy->SetRigidBodyRef(rigidBody);
+
+
+	Audio::AudioSource* screamsource = AudioManager::GetInstance().CreateSource(lookEntity);
+	screamsource->SetAudioClip(idleclip);
+	screamsource->Set3DMaxDist(6.0f);
+	screamsource->Set3DMinDist(0.1f);
+	screamsource->SetLoop(false);
+
+	enemy->SetAudioClips(idleclip, alertclip, attackclip, death1clip);
+	enemy->SetAudioSource(source, screamsource);
+	
+
 	lookEntity.SetParent(enemyEntity);
 
 

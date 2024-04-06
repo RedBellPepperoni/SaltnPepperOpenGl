@@ -13,7 +13,7 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		void AudioListener::Update(Transform& transform, float deltaTime)
+		void AudioListener::Update(const Transform& transform, float deltaTime)
 		{
 
 			// Getting the actual forward vector

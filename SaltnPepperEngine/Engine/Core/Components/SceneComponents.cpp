@@ -209,12 +209,19 @@ namespace SaltnPepperEngine
 			LOG_ERROR("Skinned Model Not loaded since filepath wasnt specified");
 		}
 
-		SkinnedModelComponent::SkinnedModelComponent(const std::string& filePath)
+		SkinnedModelComponent::SkinnedModelComponent(const std::string& filePath, bool duplicateLoad )
 		{
 			std::string clampedname = FileSystem::GetFileName(filePath);
 
-			m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->GetResource(clampedname);
+			if (duplicateLoad)
+			{
+				m_handle = MakeShared<SkinnedModel>(filePath);
+				return;
+			}
 
+
+			m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->GetResource(clampedname);
+			//m_handle = MakeShared<SkinnedModel>(filePath);
 
 			if (m_handle == nullptr)
 			{

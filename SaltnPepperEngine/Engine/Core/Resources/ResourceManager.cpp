@@ -129,13 +129,17 @@ namespace SaltnPepperEngine
 		return newModel;
 	}
 
-	SharedPtr<SkinnedAnimation> AnimationLibrary::LoadAnimation(const std::string& friendlyName, const std::string& filePath, SharedPtr<SkinnedModel>& modelRef)
+	SharedPtr<SkinnedAnimation> AnimationLibrary::LoadAnimation(const std::string& friendlyName, const std::string& filePath, SharedPtr<SkinnedModel>& modelRef, bool duplicateLoad)
 	{
+
 		SharedPtr<SkinnedAnimation> newAnim = MakeShared<SkinnedAnimation>(filePath, modelRef);
 
 		if (newAnim != nullptr)
 		{
-			AnimationLibrary::CreateResource(friendlyName, newAnim);
+			if (!duplicateLoad)
+			{
+				AnimationLibrary::CreateResource(friendlyName, newAnim);
+			}
 		}
 
 		return newAnim;

@@ -28,7 +28,7 @@ namespace SaltnPepperEngine
 
 
 
-			void Update(Transform& transform, float deltaTime);
+			void Update(const Transform& transform, float deltaTime);
 
 
 		};

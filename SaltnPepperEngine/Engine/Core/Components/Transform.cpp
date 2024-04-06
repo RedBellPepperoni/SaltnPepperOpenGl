@@ -85,12 +85,12 @@ namespace SaltnPepperEngine
 			return m_scale;
 		}
 
-		const Vector3 Transform::GetWorldPosition()
+		const Vector3 Transform::GetWorldPosition() const
 		{
 			return m_worldMatrix[3];
 		}
 
-		const Quaternion Transform::GetWorldRotation()
+		const Quaternion Transform::GetWorldRotation() const
 		{
 			return GetQuaternion(m_worldMatrix);
 		}
@@ -125,21 +125,21 @@ namespace SaltnPepperEngine
 		}
 
 
-		Vector3 Transform::GetUpVector()
+		Vector3 Transform::GetUpVector() const
 		{
 			Vector3 newUp = Vector3(0.0f, 1.0f, 0.0f);
 
 			return (GetRotation() * newUp);
 		}
 
-		Vector3 Transform::GetRightVector()
+		Vector3 Transform::GetRightVector() const
 		{
 			Vector3 newRight = Vector3(1.0f, 0.0f, 0.0f);
 
 			return (GetRotation() * newRight);
 		}
 
-		Vector3 Transform::GetForwardVector()
+		Vector3 Transform::GetForwardVector() const
 		{
 			// Open GL is stupid and has -z as forward
 			Vector3 newForward = Vector3(0.0f, 0.0f, -1.0f);

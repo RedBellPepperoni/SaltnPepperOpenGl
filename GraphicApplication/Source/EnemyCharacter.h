@@ -74,6 +74,7 @@ namespace SaltnPepperEngine
 		bool isReloading = false;
 
 		Audio::AudioSource* m_source = nullptr;
+		Audio::AudioSource* m_idlesource = nullptr;
 
 		EnemyState currentState = EnemyState::IDLE;
 		EnemyBehaviour currentBehaviour = EnemyBehaviour::DECIDING;
@@ -132,7 +133,7 @@ namespace SaltnPepperEngine
 		SkinnedAnimator* GetAnimator();
 		void SetWeaponTransform(Transform* weaponTransform);
 		void SetRigidBodyRef(RigidBody* bodyRef);
-		void SetAudioSource(Audio::AudioSource* source);
+		void SetAudioSource(Audio::AudioSource* source, Audio::AudioSource* idleSource);
 		void SetAudioClips(AudioClip* idle, AudioClip* alert, AudioClip* attack,AudioClip* death);
 
 		void OnUpdate(float deltaTime,const Vector3& playerPos, Transform& enemyTransform, Transform& lookTransform);
