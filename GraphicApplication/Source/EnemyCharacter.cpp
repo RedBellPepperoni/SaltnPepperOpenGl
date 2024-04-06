@@ -260,7 +260,7 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::PlayAttackSound()
 	{
-		m_source->StopPlayback();
+		//m_source->StopPlayback();
 
 		m_source->SetAudioClip(m_attackclip);
 		m_source->SetLoop(false);
@@ -271,7 +271,7 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::PlayDeathSound()
 	{
-		m_source->StopPlayback();
+		//m_source->StopPlayback();
 
 		m_source->SetAudioClip(m_deathclip);
 		m_source->SetLoop(false);
@@ -318,9 +318,11 @@ namespace SaltnPepperEngine
 		m_source = source;
 		m_idlesource = idleSource;
 
-		PlayAttackSound();
+		/*PlayAttackSound();
 		PlayDeathSound();
-		PlayScreamSound();
+		PlayScreamSound();*/
+
+		//m_idlesource->PlayClip();
 	}
 
 	void EnemyCharacter::SetAudioClips(AudioClip* idle, AudioClip* alert,  AudioClip* attack, AudioClip* death)

@@ -64,7 +64,7 @@ public:
 
 	static void LoadAllModels();	
 	static void LoadAllTextures();
-
+	
 	static void LoadAllAudio();
 
 
@@ -82,11 +82,16 @@ public:
 	static RigidBody* CreatePhysicsFloor(const Vector3& position, const Vector3& rotation);
 	static RigidBody* CreatePhysicsTest(const Vector3& position);
 	static RigidBody* CreatePhysicsKinematic(const Vector3& position);
-	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, ZombieType type = ZombieType::WALK);
+	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips, ZombieType type = ZombieType::WALK);
 
 	
 
 	static RigidBody* CreatePlayer(const Vector3& position, const Vector3& rotation);
+
+
+	
+
+
 
 	//Entity CreateCenterScreen(const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
 	//{

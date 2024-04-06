@@ -88,16 +88,6 @@ namespace SaltnPepperEngine
 				listener.GetListener()->Update(listenerTransform, deltaTime);
 			}
 
-
-			// Update The Sounds
-			/*if (!GetInstance().m_AudioSources.empty())
-			{
-				for (AudioSource* source : GetInstance().m_AudioSources)
-				{
-					source->Update(deltaTime);
-				}
-			}*/
-
 			ComponentView sourceView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<AudioSourceComponent>();
 
 			if (!sourceView.IsEmpty())
@@ -435,8 +425,16 @@ namespace SaltnPepperEngine
 		{
 			FMOD_VECTOR pos = GetFmodVector(position);
 			FMOD_VECTOR vel = GetFmodVector(velocity);
-			m_channelMap;
-			CHECKFMODERR(GetInstance().m_channelMap[channelId]->fmodCh->set3DAttributes(&pos, &vel));
+
+			FMOD::Channel* channel = GetInstance().m_channelMap[channelId]->fmodCh;
+			if (channel == nullptr) 
+			{
+				//LOG_ERROR("Channel NUll for channel Id : {0}", channelId)
+				 return; 
+			}
+
+			CHECKFMODERR(channel->set3DAttributes(&pos, &vel));
+
 		}
 
 		void AudioManager::SetListenerAttributes(const Vector3& position, const Vector3& velocity, const Vector3& forward, const Vector3& up)
@@ -509,7 +507,7 @@ namespace SaltnPepperEngine
 			AudioSource* audioSource = entity.AddComponent<AudioSourceComponent>().GetSource();
 			audioSource->RegisterSource();
 
-			SetSource3DMinMaxDist(audioSource->GetChannelIndex(), audioSource->Get3DMinDist(), audioSource->Get3DMaxDist());
+			//SetSource3DMinMaxDist(audioSource->GetChannelIndex(), audioSource->Get3DMinDist(), audioSource->Get3DMaxDist());
 
 			return audioSource;
 		}

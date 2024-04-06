@@ -496,7 +496,7 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 }
 
 
-RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rotation, ZombieType type)
+RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips,ZombieType type)
 {
 
 	std::string name = "Zombie_" + std::to_string(enemyCount);
@@ -506,21 +506,22 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 
 	Transform& enemyTransform = enemyEntity.GetComponent<Transform>();
 
-	AudioClip* idleclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombieidle1").get();
-	AudioClip* attackclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombieattack1").get();
-	AudioClip* death1clip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiedeath1").get();
-	AudioClip* death2clip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiedeath2").get();
-	AudioClip* alertclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiealert1").get();
-	
-	
+	AudioClip* idleclip = clips[0];
+	AudioClip* attackclip = clips[1];
+	AudioClip* alertclip = clips[2];
+	AudioClip* deathclip = clips[3];
+
+
 	enemyTransform.SetPosition(position);
 	enemyTransform.SetEularRotation(Vector3(0.0f));
 	Audio::AudioSource* source = AudioManager::GetInstance().CreateSource(enemyEntity);
 	source->SetAudioClip(idleclip);
-	source->Set3DMaxDist(6.0f);
-	source->Set3DMinDist(0.1f);
 	source->SetLoop(true);
 	source->PlayClip();
+	source->Set3DMaxDist(6.0f);
+	source->Set3DMinDist(0.1f);
+	
+	
 
 	
 
@@ -580,7 +581,7 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	screamsource->Set3DMinDist(0.1f);
 	screamsource->SetLoop(false);
 
-	enemy->SetAudioClips(idleclip, alertclip, attackclip, death1clip);
+	enemy->SetAudioClips(idleclip, alertclip, attackclip, deathclip);
 	enemy->SetAudioSource(source, screamsource);
 	
 

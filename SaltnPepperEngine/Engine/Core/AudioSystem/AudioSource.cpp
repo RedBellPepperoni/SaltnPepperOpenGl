@@ -59,7 +59,7 @@ namespace SaltnPepperEngine
 
 
 			Vector3 position = transform.GetWorldPosition();
-			CalculateVelocity(transform, deltaTime);
+			//CalculateVelocity(transform, deltaTime);
 			AudioManager::GetInstance().SetSource3DAttributes(m_channelIndex, position, Vector3(0.0f));
 
 
