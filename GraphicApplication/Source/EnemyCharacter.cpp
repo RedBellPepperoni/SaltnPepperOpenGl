@@ -27,12 +27,16 @@ namespace SaltnPepperEngine
 			m_animator->SetTransitiontime(0.4f);
 			m_animator->PlayAnimationbyName("Idle");
 			
+			
+			PlayIdleSound();
 
 			break;
 
 		case EnemyState::WALKING:
 			m_animator->SetTransitiontime(0.4f);
 			m_animator->PlayAnimationbyName("Walk");
+
+			PlayIdleSound();
 			
 			break;
 
@@ -42,6 +46,7 @@ namespace SaltnPepperEngine
 			
 			m_counter += deltaTime;
 			duration = 1.0f;
+
 			if (m_counter > duration)
 			{
 				m_counter = 0.0f;
@@ -72,15 +77,39 @@ namespace SaltnPepperEngine
 		}
 	}
 
-	void EnemyCharacter::DetectPlayer(const Vector3& position,const Vector3& playerpos)
+	void EnemyCharacter::DetectPlayer(const float deltaTime, const Vector3& position,const Vector3& playerpos)
 	{
 		const float sqDist = DistanceSquared(position, playerpos);
 		
 		if (sqDist > m_detectionRadius * m_detectionRadius) 
 		{ 
 			currentBehaviour = EnemyBehaviour::DECIDING;
+			m_shouldScream = true;
 			return; 
 		}
+
+		if (m_canScream && m_shouldScream)
+		{
+			screamCounter = 0.0f;
+			PlayScreamSound();
+			m_canScream = false;
+			m_shouldScream = false;
+		}
+
+		else
+		{
+			screamCounter += deltaTime;
+
+			//LOG_INFO("Counter : {0}",attackSreamcounter);
+
+			if (screamCounter > 2.50)
+			{
+				m_canScream = true;
+			}
+
+			//PlayIdleSound();
+		}
+
 		
 		currentBehaviour = EnemyBehaviour::HUNT;
 		
@@ -172,6 +201,8 @@ namespace SaltnPepperEngine
 		float rayFraction = 0.0f;
 		RigidBody* hitbody = PhysicsUtils::RayCast(origin, target, rayFraction, CollisionMask::STATIC);
 
+		PlayAttackSound();
+
 		if (hitbody)
 		{
 			std::string name = hitbody->GetEntityId().GetComponent<NameComponent>().name;
@@ -195,9 +226,57 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::Die()
 	{
+		PlayDeathSound();
 		m_animator->PlayAnimationbyName("DeathOne",false);
 		m_deathcounter = 0.0f;
 		m_markedForDeath = true;
+	}
+
+	void EnemyCharacter::PlayIdleSound()
+	{
+		//if (currentSound == SoundType::IDLESOUND) { return; }
+
+		////m_source->StopPlayback();
+		//m_source->SetAudioClip(m_idleclip);
+		//m_source->SetLoop(true);
+		//m_source->PlayClip();
+
+		//currentSound = SoundType::IDLESOUND;
+
+
+	}
+
+	void EnemyCharacter::PlayScreamSound()
+	{
+
+		//m_source->StopPlayback();
+		m_source->SetAudioClip(m_alertclip);
+		m_source->SetLoop(false);
+		m_source->PlayClip();
+
+		currentSound = SoundType::SCREAMSOUND;
+	}
+
+	void EnemyCharacter::PlayAttackSound()
+	{
+		m_source->StopPlayback();
+
+		//m_source->SetAudioClip(m_attackclip);
+		m_source->SetLoop(false);
+		m_source->PlayClip();
+
+		currentSound = SoundType::ATTACKSOUND;
+	}
+
+	void EnemyCharacter::PlayDeathSound()
+	{
+		//m_source->StopPlayback();
+
+		m_source->SetAudioClip(m_deathclip);
+		m_source->SetLoop(false);
+		m_source->PlayClip();
+
+		currentSound = SoundType::DEATHSOUND;
 	}
 
 	EnemyCharacter::EnemyCharacter()
@@ -233,6 +312,19 @@ namespace SaltnPepperEngine
 		m_rigidBody = bodyRef;
 	}
 
+	void EnemyCharacter::SetAudioSource(Audio::AudioSource* source)
+	{
+		m_source = source;
+	}
+
+	void EnemyCharacter::SetAudioClips(AudioClip* idle, AudioClip* alert,  AudioClip* attack, AudioClip* death)
+	{
+		m_idleclip = idle;
+		m_alertclip = alert;
+		m_attackclip = attack;
+		m_deathclip = death;
+	}
+
 	void EnemyCharacter::OnUpdate(float deltaTime, const Vector3& playerPos, Transform& enemyTransform, Transform& lookTransform)
 	{
 		if (currentState == EnemyState::DEAD) { return; }
@@ -245,11 +337,7 @@ namespace SaltnPepperEngine
 		const Vector3 currentPosition = enemyTransform.GetPosition();
 		const Vector3 currentForward = lookTransform.GetForwardVector();
 
-
-		
-
-		DetectPlayer(currentPosition,playerPos);
-
+		DetectPlayer(deltaTime,currentPosition,playerPos);
 		DecideMovement(deltaTime,currentPosition,playerPos, lookTransform);
 
 		if (currentBehaviour == EnemyBehaviour::ATTACK)
@@ -281,8 +369,6 @@ namespace SaltnPepperEngine
 					m_canAttack = false;
 
 				}
-
-				
 
 			}
 			

@@ -84,7 +84,7 @@ public:
 	static RigidBody* CreatePhysicsKinematic(const Vector3& position);
 	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, ZombieType type = ZombieType::WALK);
 
-	static Entity CreateTestAudio();
+	
 
 	static RigidBody* CreatePlayer(const Vector3& position, const Vector3& rotation);
 

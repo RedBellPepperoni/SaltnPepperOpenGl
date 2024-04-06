@@ -70,7 +70,11 @@ void EntitySetup::LoadAllAudio()
 {
 	SharedPtr<AudioLibrary>& audioLib = Application::GetCurrent().GetAudioLibrary();
 
-	audioLib->LoadAudio("zombie","Assets\\Audio\\zombie_idle_1.mp3");
+	audioLib->LoadAudio("zombieidle1","Assets\\Audio\\zombie_idle_1.mp3");
+	audioLib->LoadAudio("zombieattack1","Assets\\Audio\\zombie_attack_1.mp3");
+	audioLib->LoadAudio("zombiedeath1","Assets\\Audio\\zombie_dying_1.mp3");
+	audioLib->LoadAudio("zombiedeath2","Assets\\Audio\\zombie_dying_2.mp3");
+	audioLib->LoadAudio("zombiealert1","Assets\\Audio\\zombie_alert_1.mp3");
 
 }
 
@@ -296,25 +300,6 @@ RigidBody* EntitySetup::CreatePhysicsTest(const Vector3& position)
 
 }
 
-Entity EntitySetup::CreateTestAudio()
-{
-	Entity audioentity = Application::GetCurrent().GetCurrentScene()->CreateEntity("AudioTest");
-	Audio::AudioSource* source = AudioManager::GetInstance().CreateSource(audioentity);
-
-	SharedPtr<AudioClip> clip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombie");
-
-	source->SetAudioClip(clip.get());
-	source->SetLoop(true);
-
-	source->Set3DMaxDist(10.0f);
-	source->Set3DMinDist(0.01f);
-	source->PlayClip();
-	
-	
-
-	return audioentity;
-}
-
 
 
 
@@ -521,8 +506,23 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 
 	Transform& enemyTransform = enemyEntity.GetComponent<Transform>();
 
+	AudioClip* idleclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombieidle1").get();
+	AudioClip* attackclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombieattack1").get();
+	AudioClip* death1clip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiedeath1").get();
+	AudioClip* death2clip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiedeath2").get();
+	AudioClip* alertclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiealert1").get();
+	
+	
 	enemyTransform.SetPosition(position);
 	enemyTransform.SetEularRotation(Vector3(0.0f));
+	Audio::AudioSource* source = AudioManager::GetInstance().CreateSource(enemyEntity);
+	source->SetAudioClip(idleclip);
+	source->Set3DMaxDist(6.0f);
+	source->Set3DMinDist(0.1f);
+	source->SetLoop(true);
+	source->PlayClip();
+
+	
 
 	CapsuleCollider& capsuleCol = enemyEntity.AddComponent<CapsuleCollider>();
 
@@ -535,6 +535,8 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	EnemyCharacter* enemy = enemyEntity.AddComponent<EnemyComponent>().GetEnemy();
 
 	enemy->SetType(type);
+	enemy->SetAudioSource(source);
+	enemy->SetAudioClips(idleclip,alertclip,attackclip,death1clip);
 
 	Hierarchy& playerHie = enemyEntity.AddComponent<Hierarchy>();
 

@@ -73,7 +73,7 @@ namespace SaltnPepperEngine
 
         EntitySetup::CreateSkinnedCharatcer(Vector3(1.27f, 0.0f, 0.0f), Vector3(0.01f));
 
-        EntitySetup::CreateTestAudio();
+       
 	}
 
 

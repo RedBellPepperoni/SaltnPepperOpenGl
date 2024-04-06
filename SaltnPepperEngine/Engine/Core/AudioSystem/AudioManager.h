@@ -146,7 +146,9 @@ namespace SaltnPepperEngine
 			// Sound PlayBack
 			int PlaySound(const AudioClip& clip, const int channelId);
 
+			bool GetChannelPlaying(const int id = 0);
 
+			void StopChannelPlayback(const int id = 0);
 
 			// Getter for checking if the current channel is paused
 			const bool GetChannelPaused(const int id = 0) const;

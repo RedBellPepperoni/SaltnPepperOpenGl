@@ -24,11 +24,13 @@ namespace SaltnPepperEngine
 		{
 			m_audioClip = clip;
 
-			AudioManager::GetInstance().LoadSound(*clip, AudioManager::SoundType::Sound3D);
+			if (!clip->hasLoaded)
+			{
+				AudioManager::GetInstance().LoadSound(*clip, AudioManager::SoundType::Sound3D);
+				return true;
+			}
 
-
-
-			return false;
+			return true;
 		}
 
 		AudioClip* AudioSource::GetClip()
@@ -101,6 +103,19 @@ namespace SaltnPepperEngine
 		void AudioSource::SetDSPState(DSPEffects filter, const bool isactive)
 		{
 			AudioManager::GetInstance().SetDSPState(m_channelIndex, filter, isactive);
+		}
+
+		bool AudioSource::IsPlaying()
+		{
+			return AudioManager::GetInstance().GetChannelPlaying(m_channelIndex);
+		}
+
+		void AudioSource::StopPlayback()
+		{
+			if (IsPlaying())
+			{
+				AudioManager::GetInstance().StopChannelPlayback(m_channelIndex);
+			}
 		}
 
 		Vector3 AudioSource::CalculateVelocity(const Transform& transform, const float deltatime)

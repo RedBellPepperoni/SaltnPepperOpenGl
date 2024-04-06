@@ -271,6 +271,28 @@ namespace SaltnPepperEngine
 			return channelId;
 		}
 
+		bool AudioManager::GetChannelPlaying(const int id)
+		{
+			if (id > m_channelMap.size()) { return false; }
+
+			SharedPtr<Channel>& selectedChannel = m_channelMap[id];
+
+			selectedChannel->fmodCh->isPlaying(&selectedChannel->isPlaying);
+
+			return selectedChannel->isPlaying;
+
+		}
+
+		void AudioManager::StopChannelPlayback(const int id)
+		{
+			if (id > m_channelMap.size()) { return ; }
+
+			SharedPtr<Channel>& selectedChannel = m_channelMap[id];
+
+			selectedChannel->fmodCh->stop();
+
+		}
+
 		const bool AudioManager::GetChannelPaused(const int id) const
 		{
 			return false;
@@ -421,7 +443,7 @@ namespace SaltnPepperEngine
 		{
 			FMOD_VECTOR fModPosition = GetFmodVector(position);
 			FMOD_VECTOR fModVelocity = GetFmodVector(velocity);
-			FMOD_VECTOR fModForward = GetFmodVector(forward);
+			FMOD_VECTOR fModForward = GetFmodVector(-forward);
 			FMOD_VECTOR fModUp = GetFmodVector(up);
 
 			CHECKFMODERR(GetInstance().m_audiosystem->set3DListenerAttributes(0, &fModPosition, &fModVelocity, &fModForward, &fModUp));

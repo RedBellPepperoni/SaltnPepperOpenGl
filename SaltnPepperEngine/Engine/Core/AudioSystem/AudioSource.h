@@ -53,6 +53,9 @@ namespace SaltnPepperEngine
 
 			void SetDSPState(DSPEffects filter, const bool isactive);
 
+			bool IsPlaying();
+			void StopPlayback();
+
 		protected:
 
 			Vector3 CalculateVelocity(const Transform& transform, const float deltatime);

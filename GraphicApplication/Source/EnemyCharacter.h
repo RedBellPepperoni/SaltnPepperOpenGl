@@ -38,6 +38,15 @@ namespace SaltnPepperEngine
 			
 		};
 
+		enum SoundType
+		{
+			IDLESOUND,
+			ATTACKSOUND,
+			SCREAMSOUND,
+			DEATHSOUND
+
+		};
+
 
 		float m_speed = 0.6f;
 
@@ -64,9 +73,12 @@ namespace SaltnPepperEngine
 		bool m_canAttack = true;
 		bool isReloading = false;
 
+		Audio::AudioSource* m_source = nullptr;
+
 		EnemyState currentState = EnemyState::IDLE;
 		EnemyBehaviour currentBehaviour = EnemyBehaviour::DECIDING;
 		ZombieType currentType = ZombieType::WALK;
+		SoundType currentSound = SoundType::IDLESOUND;
 
 		const float m_detectionRadius = 5.0f;
 		const float m_attackRadius = 1.5f;
@@ -79,18 +91,34 @@ namespace SaltnPepperEngine
 
 		bool m_markedForDeath = false;
 
+		Audio::AudioClip* m_idleclip = nullptr;
+		Audio::AudioClip* m_alertclip = nullptr;
+		Audio::AudioClip* m_attackclip = nullptr;
+		Audio::AudioClip* m_deathclip = nullptr;
+
+		bool m_canScream = false;
+		bool m_shouldScream = true;
+		float screamCounter = 0.0f;
+		bool m_canattackScream = true;
+	
+		float attackSreamcounter = 0.0f;
 
 	private:
 
 		void UpdateState(const float deltaTime);
 
-		void DetectPlayer(const Vector3& position,const Vector3& playerpos);
+		void DetectPlayer(const float deltaTime, const Vector3& position,const Vector3& playerpos);
 		void DecideMovement(const float deltatime,const Vector3& currentPosition, const Vector3& playerPosition, Transform& lookTrasform);
 		void Move(const Vector3& targetDirection);
 		void RotateModel(float deltatime, const Vector3& target, Transform& looktransform);
 		void Attack(const Vector3& origin, const Vector3& target);
 
 		void Die();
+
+		void PlayIdleSound();
+		void PlayScreamSound();
+		void PlayAttackSound();
+		void PlayDeathSound();
 
 	public:
 
@@ -104,6 +132,8 @@ namespace SaltnPepperEngine
 		SkinnedAnimator* GetAnimator();
 		void SetWeaponTransform(Transform* weaponTransform);
 		void SetRigidBodyRef(RigidBody* bodyRef);
+		void SetAudioSource(Audio::AudioSource* source);
+		void SetAudioClips(AudioClip* idle, AudioClip* alert, AudioClip* attack,AudioClip* death);
 
 		void OnUpdate(float deltaTime,const Vector3& playerPos, Transform& enemyTransform, Transform& lookTransform);
 
