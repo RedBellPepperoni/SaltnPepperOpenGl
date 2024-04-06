@@ -65,6 +65,7 @@ public:
 	static void LoadAllModels();	
 	static void LoadAllTextures();
 
+	static void LoadAllAudio();
 
 
 	static Entity CreateMainCamera(Vector3 Position = Vector3{ 0.0f }, Vector3 Rotation = Vector3{ 0.0f });
@@ -83,7 +84,7 @@ public:
 	static RigidBody* CreatePhysicsKinematic(const Vector3& position);
 	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, ZombieType type = ZombieType::WALK);
 
-
+	static Entity CreateTestAudio();
 
 	static RigidBody* CreatePlayer(const Vector3& position, const Vector3& rotation);
 

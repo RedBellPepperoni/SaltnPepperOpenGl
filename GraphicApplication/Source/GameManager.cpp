@@ -53,6 +53,9 @@ namespace SaltnPepperEngine
         EntitySetup::LoadAllModels();
         // Load all the textures
         EntitySetup::LoadAllTextures();
+        //Load all the audio files
+
+        EntitySetup::LoadAllAudio();
 
   
   
@@ -69,6 +72,8 @@ namespace SaltnPepperEngine
         EntitySetup::CreatePhysicsFloor(Vector3(0.0f, -0.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
 
         EntitySetup::CreateSkinnedCharatcer(Vector3(1.27f, 0.0f, 0.0f), Vector3(0.01f));
+
+        EntitySetup::CreateTestAudio();
 	}
 
 

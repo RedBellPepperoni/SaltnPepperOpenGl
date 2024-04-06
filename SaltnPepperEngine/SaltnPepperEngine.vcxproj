@@ -45,11 +45,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ProjectDir)\Externals\Bullet3\include\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ProjectDir)\Externals\Bullet3\include\;$(ProjectDir)\Externals\fmod\core\inc\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ProjectDir)\Externals\Bullet3\include\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\Externals\;$(ProjectDir)\Externals\glfw\include\;$(ProjectDir)\Externals\glad\include\;$(ProjectDir)\Externals\spdlog\include\;$(ProjectDir)\Externals\entt\src\;$(ProjectDir)\Externals\stb\include\;$(ProjectDir)\Externals\assimp\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\;$(ProjectDir)\Externals\msdf-atlas-gen\include\msdfgen\;$(ProjectDir)\Externals\Bullet3\include\;$(ProjectDir)\Externals\fmod\core\inc\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -90,6 +90,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\AudioSystem\AudioListener.h" />
+    <ClInclude Include="Engine\Core\AudioSystem\AudioManager.h" />
+    <ClInclude Include="Engine\Core\AudioSystem\AudioSource.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCapsule.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCylinder.h" />
@@ -225,6 +228,9 @@
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\OrientedBoundingBox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\AudioSystem\AudioListener.cpp" />
+    <ClCompile Include="Engine\Core\AudioSystem\AudioManager.cpp" />
+    <ClCompile Include="Engine\Core\AudioSystem\AudioSource.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.cpp" />

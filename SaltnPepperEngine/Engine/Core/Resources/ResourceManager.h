@@ -242,7 +242,8 @@ namespace SaltnPepperEngine
 
 		SharedPtr<SkinnedAnimation> LoadAnimation(const std::string& friendlyName, const std::string& filePath, SharedPtr<SkinnedModel>& modelRef);
 	};
-	/*class AudioLibrary : public ResourceLibrary<AudioClip>
+
+	class AudioLibrary : public ResourceLibrary<AudioClip>
 	{
 	public:
 
@@ -250,7 +251,7 @@ namespace SaltnPepperEngine
 		virtual ~AudioLibrary() {};
 
 		SharedPtr<AudioClip> LoadAudio(const std::string friendlyName, const std::string& filePath);
-	};*/
+	};
 
 
 	template <typename Type>

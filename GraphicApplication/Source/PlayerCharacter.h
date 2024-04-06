@@ -53,6 +53,11 @@ namespace SaltnPepperEngine
 		float m_rotationalDampening = 0.00005f;;
 
 
+		Audio::AudioSource* m_footStepSource = nullptr;
+		Audio::AudioSource* m_gunSource = nullptr;
+
+		Audio::AudioListener* m_listener = nullptr;
+
 		float m_Yaw = 0.0f;
 		float m_Pitch = 0.0f;
 

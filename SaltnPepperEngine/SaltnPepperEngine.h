@@ -76,8 +76,10 @@
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 
-
-
+// ========== Audio System ==============================
+#include "Engine/Core/AudioSystem/AudioManager.h"
+#include "Engine/Core/AudioSystem/AudioListener.h"
+#include "Engine/Core/AudioSystem/AudioSource.h"
 
 using namespace SaltnPepperEngine;
 

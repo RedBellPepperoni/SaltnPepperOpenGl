@@ -6,6 +6,8 @@
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
 #include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+#include "Engine/Core/AudioSystem/AudioSource.h"
+#include "Engine/Core/AudioSystem/AudioListener.h"
 
 
 namespace SaltnPepperEngine
@@ -278,6 +280,26 @@ namespace SaltnPepperEngine
 			return m_rigidBody.get();
 		}
 
-}
+		AudioSourceComponent::AudioSourceComponent()
+		{
+			m_handle = MakeUnique<Audio::AudioSource>();
+		}
+
+		Audio::AudioSource* AudioSourceComponent::GetSource()
+		{
+			return m_handle.get();
+		}
+
+		AudioListenerComponent::AudioListenerComponent()
+		{
+			m_handle = MakeUnique<Audio::AudioListener>();
+		}
+
+		Audio::AudioListener* AudioListenerComponent::GetListener()
+		{
+			return m_handle.get();
+		}
+
+	}
 }
 

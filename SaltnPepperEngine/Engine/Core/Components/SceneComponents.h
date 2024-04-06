@@ -21,6 +21,9 @@
 #include <cereal/cereal.hpp>
 
 
+#include "Engine/Core/AudioSystem/AudioSource.h"
+#include "Engine/Core/AudioSystem/AudioListener.h"
+
 
 
 namespace SaltnPepperEngine
@@ -31,6 +34,12 @@ namespace SaltnPepperEngine
 		struct PhysicsProperties;
 		class RigidBody3D;
 		class RigidBody;
+	}
+
+	namespace Audio
+	{
+		class AudioSource;
+		class AudioListener;
 	}
 
 	using Physics::RigidBody3D;
@@ -319,40 +328,32 @@ namespace SaltnPepperEngine
 		};
 
 
-		//class RigidBodyComponent
-		//{
-		//public:
-		//	RigidBodyComponent();
-		//	RigidBodyComponent(const RigidBodyComponent& other);
-		//	RigidBodyComponent(const PhysicsProperties& properties);
-		//	~RigidBodyComponent();
+		class AudioSourceComponent
+		{
+		public:
+			AudioSourceComponent();
+			~AudioSourceComponent() = default;
 
-		//	void OnImgui();
+			Audio::AudioSource* GetSource();
 
-		//	SharedPtr<RigidBody3D> GetRigidBody();
+		private:
+
+			SharedPtr<Audio::AudioSource> m_handle = nullptr;
+		};
 
 
-		//	template <typename Archive>
-		//	void save(Archive& archive) const
-		//	{
-		//		archive(*(m_rigidBody)); 
-		//		//archive(cereal::make_nvp("Body",m_rigidBody));
-		//	}
+		class AudioListenerComponent
+		{
+		public:
+			AudioListenerComponent();
+			~AudioListenerComponent() = default;
 
-		//	template <typename Archive>
-		//	void load(Archive& archive)
-		//	{
-		//		m_rigidBody = MakeShared<RigidBody3D>();
-		//		archive(*(m_rigidBody));
-		//		//archive(cereal::make_nvp("Body", m_rigidBody));
-		//	}
+			Audio::AudioListener* GetListener();
 
-		//private:
+		private:
 
-		//	SharedPtr<RigidBody3D> m_rigidBody = nullptr;
-		//	bool m_ownBody = false;
-		//	
-		//};
+			SharedPtr<Audio::AudioListener> m_handle = nullptr;
+		};
 
 
 		using Physics::RigidBody;

@@ -66,6 +66,14 @@ void EntitySetup::LoadAllTextures()
 
 }
 
+void EntitySetup::LoadAllAudio()
+{
+	SharedPtr<AudioLibrary>& audioLib = Application::GetCurrent().GetAudioLibrary();
+
+	audioLib->LoadAudio("zombie","Assets\\Audio\\zombie_idle_1.mp3");
+
+}
+
 Entity EntitySetup::CreateMainCamera(Vector3 Position, Vector3 Rotation)
 {
 	// Create a new Entity and add it to the ECS
@@ -288,6 +296,25 @@ RigidBody* EntitySetup::CreatePhysicsTest(const Vector3& position)
 
 }
 
+Entity EntitySetup::CreateTestAudio()
+{
+	Entity audioentity = Application::GetCurrent().GetCurrentScene()->CreateEntity("AudioTest");
+	Audio::AudioSource* source = AudioManager::GetInstance().CreateSource(audioentity);
+
+	SharedPtr<AudioClip> clip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombie");
+
+	source->SetAudioClip(clip.get());
+	source->SetLoop(true);
+
+	source->Set3DMaxDist(10.0f);
+	source->Set3DMinDist(0.01f);
+	source->PlayClip();
+	
+	
+
+	return audioentity;
+}
+
 
 
 
@@ -414,6 +441,9 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	Entity lookEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerLook");
 	Transform& lookTransform = lookEntity.GetComponent<Transform>();
 
+	//Audio::AudioSource* source = 
+	Audio::AudioListener* listener = lookEntity.AddComponent<AudioListenerComponent>().GetListener();
+
 	lookTransform.SetPosition(Vector3{0.0f,0.70f,0.0f });
 	lookTransform.SetEularRotation(Vector3(0.0f,rotation.y,0.0f));
 
@@ -463,9 +493,9 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	matThree->SetAlbedoTexture("fphand");
 	matThree->albedoMapFactor = 1.0f;
 
-	/*SharedPtr<Material>& matFour = modelComp.m_handle->GetMeshes()[4]->GetMaterial();
-	matFour->SetAlbedoTexture("fphand");
-	matFour->normalMapFactor = 1.0f;*/
+	SharedPtr<Material>& matFour = modelComp.m_handle->GetMeshes()[1]->GetMaterial();
+	matFour->SetAlbedoTexture("fppistol");
+	matOne->albedoMapFactor = 1.0f;
 	
 	
 	

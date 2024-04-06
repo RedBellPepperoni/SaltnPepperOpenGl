@@ -10,7 +10,7 @@
 #include "Engine/Core/Rendering/Textures/CubeMap.h"
 #include "Engine/Core/Animation/SkinnedAnimation.h"
 
-
+#include "Engine/Core/AudioSystem/AudioManager.h"
 
 
 
@@ -88,17 +88,17 @@ namespace SaltnPepperEngine
 		return newTexture;
 	}
 
-	//SharedPtr<AudioClip> AudioLibrary::LoadAudio(const std::string friendlyName, const std::string& filePath)
-	//{
-	//	SharedPtr<AudioClip> newAudio = Factory<AudioClip>::Create(friendlyName, filePath);
+	SharedPtr<AudioClip> AudioLibrary::LoadAudio(const std::string friendlyName, const std::string& filePath)
+	{
+		SharedPtr<AudioClip> newAudio = Factory<AudioClip>::Create(friendlyName, filePath);
 
-	//	if (newAudio != nullptr)
-	//	{
-	//		AudioLibrary::CreateResource(friendlyName, newAudio);
-	//	}
+		if (newAudio != nullptr)
+		{
+			AudioLibrary::CreateResource(friendlyName, newAudio);
+		}
 
-	//	return newAudio;
-	//}
+		return newAudio;
+	}
 
 	SharedPtr<CubeMap> CubeMapLibrary::LoadCubeMap(const std::string& friendlyName, const std::string& right, const std::string& left, const std::string& top, const std::string& bottom, const std::string& front, const std::string& back)
 	{
