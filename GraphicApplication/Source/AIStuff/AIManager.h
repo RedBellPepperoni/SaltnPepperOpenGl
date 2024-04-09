@@ -1,5 +1,6 @@
 #ifndef AIMANAGER_H
 #define AIMANAGER_H
+
 #include "SaltnPepperEngine.h"
 namespace SaltnPepperEngine
 {

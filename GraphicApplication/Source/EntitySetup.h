@@ -245,7 +245,7 @@ Entity CreateWanderAI(WanderPArams params, EnemyModel model, Vector3 position = 
 	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Wander Enemy");
 	Hierarchy& hierarchyComp = enemyEntity.AddComponent<Hierarchy>();
 	Transform& transform = enemyEntity.GetComponent<Transform>();
-	AI::AIBaseAgent& agent = enemyEntity.AddComponent<AI::AIBaseAgent>();
+	AI::AIBaseAgent* agent = enemyEntity.AddComponent<AIAgentComponent>().GetAgent();
 
 
 	transform.SetPosition(position);
@@ -265,10 +265,10 @@ Entity CreateWanderAI(WanderPArams params, EnemyModel model, Vector3 position = 
 	Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
 	Transform* childtransform = &childEntity.GetComponent<Transform>();
 
-	agent.Init(bodyRef, childtransform);
-	agent.m_lookTransform = &childEntity.GetComponent<Transform>();
-	agent.SetBehaviour(AI::Wander);
-	agent.SetWanderParams(params.primaryRadius, params.secondaryRadius, params.decision);
+	agent->Init(bodyRef, childtransform);
+	agent->m_lookTransform = &childEntity.GetComponent<Transform>();
+	agent->SetBehaviour(AI::Wander);
+	agent->SetWanderParams(params.primaryRadius, params.secondaryRadius, params.decision);
 
 	ModelComponent* modelComp = nullptr;
 	SharedPtr<Material> mat = nullptr;

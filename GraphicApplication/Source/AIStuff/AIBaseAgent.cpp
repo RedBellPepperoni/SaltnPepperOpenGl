@@ -9,8 +9,25 @@ namespace SaltnPepperEngine
 	namespace AI
 	{
 		
+		void AIBaseAgent::SetNextWayPoint()
+		{
+			m_currentWaypointIndex++;
+
+			if (m_currentWaypointIndex < 0 || m_currentWaypointIndex > m_followPathWaypoints.size()) { m_currentWaypointIndex = 0; }
+
+		}
+
+		const Vector3 AIBaseAgent::GetCurrentWayPoint() const
+		{
 			
-		
+
+			if (m_followPathWaypoints.size() > 0)
+			{
+				return m_followPathWaypoints[m_currentWaypointIndex];
+			}
+
+			return Vector3(0.0f);
+		}
 
 		void AIBaseAgent::UpdateState()
 		{
@@ -120,6 +137,29 @@ namespace SaltnPepperEngine
 
 				MoveDirection = Normalize(targetWanderPos - position);
 				break;
+
+
+				case SaltnPepperEngine::AI::PathFollow:
+				
+
+
+					// Path Following
+					Vector3 wayPointPos = GetCurrentWayPoint();
+					distance = DistanceSquared(position, wayPointPos);
+
+
+					// We are close enough
+					if (distance < 0.5f)
+					{
+						SetNextWayPoint();
+					}
+
+
+
+					MoveDirection = Normalize(wayPointPos - position);
+
+				break;
+
 			}
 
 			
@@ -183,6 +223,24 @@ namespace SaltnPepperEngine
 
 		}
 
+		void AIBaseAgent::SetWaypointCenter(const Vector3& center)
+		{
+			m_waypointCenter = center;
+			m_waypointCenter.y = m_rigidBody->GetPosition().y;
+		}
+
+		void AIBaseAgent::SetWaypoints(const std::vector<Vector3>& points)
+		{
+			m_followPathWaypoints = points;
+
+			const float YPos = m_rigidBody->GetPosition().y;
+
+			for (int index = 0; index < m_followPathWaypoints.size(); index++)
+			{
+				m_followPathWaypoints[index].y = YPos;
+			}
+		}
+
 		void AIBaseAgent::Init(RigidBody3D* RigidBodyRef, Transform* lookTransformRef)
 		{
 			m_rigidBody = RigidBodyRef;
@@ -200,10 +258,9 @@ namespace SaltnPepperEngine
 
 			if (m_currentState == AgentState::Idle) { return; }
 
-
 			if (m_behavior == BehaviorState::Wander)
 			{
-				MoveAgent(targetWanderPos, Vector3(0.0f,0.0f,0.0f), deltatime);
+				MoveAgent(targetWanderPos, Vector3(0.0f, 0.0f, 0.0f), deltatime);
 			}
 
 			else
@@ -211,20 +268,35 @@ namespace SaltnPepperEngine
 				MoveAgent(playerPosition, playerDirection, deltatime);
 			}
 
-			if (m_behavior == BehaviorState::Seek || m_behavior == BehaviorState::Pursue || m_behavior == BehaviorState::Approach)
+			switch (m_behavior)
 			{
-				RotateAgent(playerPosition, deltatime);
+			case SaltnPepperEngine::AI::None: 
+				break;
+			case SaltnPepperEngine::AI::Seek: RotateAgent(playerPosition, deltatime);
+				break;
+			case SaltnPepperEngine::AI::Flee: RotateAgent(playerPosition + (playerDirection + 2.0f), deltatime);
+				break;
+			case SaltnPepperEngine::AI::Pursue: RotateAgent(playerPosition, deltatime);
+				break;
+			case SaltnPepperEngine::AI::Evade: RotateAgent(playerPosition + (playerDirection + 2.0f), deltatime);
+				break;
+			case SaltnPepperEngine::AI::Approach: RotateAgent(playerPosition, deltatime);
+				break;
+			case SaltnPepperEngine::AI::Wander: RotateAgent(targetWanderPos, deltatime);
+				break;
+			case SaltnPepperEngine::AI::PathFollow: RotateAgent(GetCurrentWayPoint(),deltatime);
+				break;
+			default:
+				break;
 			}
 
-			else if (m_behavior == BehaviorState::Wander)
-			{
-				RotateAgent(targetWanderPos, deltatime);
-			}
 
-			else
-			{
-				RotateAgent(playerPosition + (playerDirection + 2.0f),deltatime);
-			}
+			
+
+		
+
+		
+			
 
 
 		}
@@ -260,5 +332,23 @@ namespace SaltnPepperEngine
 			m_turnRate = turnRate;
 
 		}
+
 	}
+
+
+
+	AIAgentComponent::AIAgentComponent()
+	{
+		m_handle = MakeShared<AI::AIBaseAgent>();
+	}
+
+	AIAgentComponent::~AIAgentComponent()
+	{
+	}
+
+	AI::AIBaseAgent* AIAgentComponent::GetAgent()
+	{
+		return m_handle.get();
+	}
+
 }

@@ -1,6 +1,7 @@
 #ifndef AIBASEAGENT_H
 #define AIBASEAGENT_H
 #include "Engine/Utils/Maths/MathDefinitions.h"
+#include "Engine/Core/Memory/MemoryDefinitions.h"
 #include <vector>
 namespace SaltnPepperEngine
 {
@@ -27,7 +28,8 @@ namespace SaltnPepperEngine
 			Pursue = 3, // Continuesly move towards a player until a set distance (if player goes near, do the Evade manuaer)
 			Evade = 4,  // Flee from the player till a certain distance,
 			Approach = 5 ,
-			Wander = 6
+			Wander = 6,
+			PathFollow = 7
 		};
 
 		enum AgentState
@@ -58,6 +60,12 @@ namespace SaltnPepperEngine
 
 
 
+			const float m_outerPathRadius = 10.0f;
+			const float m_innerPathRadius = 8.0f;
+			Vector3 m_waypointCenter = Vector3(0.0f);;
+			std::vector<Vector3> m_followPathWaypoints = std::vector<Vector3>();
+			int m_currentWaypointIndex = 0;
+
 
 			float m_primaryWanderRadius = 5.0f;
 			float m_secondaryWanderRadius = 2.0f;
@@ -65,6 +73,7 @@ namespace SaltnPepperEngine
 			float currentTime = 0.0f;
 
 			Vector3 targetWanderPos = Vector3(0.0f);
+
 
 
 			std::vector<float> secondaryAngleList =
@@ -80,8 +89,14 @@ namespace SaltnPepperEngine
 				0
 			};
 
+	
+
 		protected:
 
+
+
+			void SetNextWayPoint();
+			const Vector3 GetCurrentWayPoint() const;
 			// Called when the state has reached its end
 			void UpdateState();
 
@@ -96,7 +111,8 @@ namespace SaltnPepperEngine
 		    AIBaseAgent();
 			virtual ~AIBaseAgent();
 
-
+			void SetWaypointCenter(const Vector3& center);
+			void SetWaypoints(const std::vector<Vector3>& points);
 
 			virtual void Init(RigidBody3D* RigidBodyRef, Transform* lookTransformRef);
 
@@ -109,7 +125,22 @@ namespace SaltnPepperEngine
 		};
 
 
+
 	}
+
+
+	struct AIAgentComponent
+	{
+		AIAgentComponent();
+		~AIAgentComponent();
+
+		AI::AIBaseAgent* GetAgent();
+
+	private:
+
+		SharedPtr<AI::AIBaseAgent> m_handle = nullptr;
+
+	};
 }
 
 #endif // !AIBASEAGENT_H
