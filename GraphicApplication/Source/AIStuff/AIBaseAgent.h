@@ -60,7 +60,7 @@ namespace SaltnPepperEngine
 
 
 
-			const float m_outerPathRadius = 10.0f;
+			const float m_outerPathRadius = 15.0f;
 			const float m_innerPathRadius = 8.0f;
 			Vector3 m_waypointCenter = Vector3(0.0f);;
 			std::vector<Vector3> m_followPathWaypoints = std::vector<Vector3>();
@@ -103,6 +103,8 @@ namespace SaltnPepperEngine
 			void MoveAgent(const Vector3& playerPosition, const Vector3& forwardDirection, const float deltaTime);
 			void RotateAgent(const Vector3& playerPosition, const float deltaTime);
 
+			void DebugDraw();
+
 		public:
 
 			// Pointer to the Display model for Visual Stuff
@@ -116,11 +118,16 @@ namespace SaltnPepperEngine
 
 			virtual void Init(RigidBody3D* RigidBodyRef, Transform* lookTransformRef);
 
+
+
 			virtual void Update(float deltatime, const Vector3& playerPosition, const Vector3& playerDirection);
 
 			virtual void SetBehaviour(BehaviorState newState);
 
 			virtual void SetWanderParams(float primaryRadius, float secondaryRadius, float decisionTime, float turnRate = 1.0f);
+
+
+
 
 		};
 

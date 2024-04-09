@@ -3,6 +3,7 @@
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Utils/Time/Time.h"
 #include "Engine/Utils/Maths/Random.h"
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
@@ -31,6 +32,8 @@ namespace SaltnPepperEngine
 
 		void AIBaseAgent::UpdateState()
 		{
+			
+
 		}
 
 		void AIBaseAgent::MoveAgent(const Vector3& playerPosition, const Vector3& forwardDirection, const float deltaTime)
@@ -42,6 +45,25 @@ namespace SaltnPepperEngine
 			Vector3 position = m_rigidBody->GetPosition();
 			Vector3 forward = Normalize(m_lookTransform->GetForwardVector());
 			float distance = 0;
+
+
+			const float playerCenterDist = Distance(playerPosition, m_waypointCenter);
+			
+			if (playerCenterDist < m_innerPathRadius)
+			{
+				m_behavior = BehaviorState::Seek;
+			}
+
+			else if (playerCenterDist > m_innerPathRadius && playerCenterDist < m_outerPathRadius)
+			{
+				m_behavior = BehaviorState::None;
+			}
+
+			else if(playerCenterDist > m_innerPathRadius && playerCenterDist > m_outerPathRadius)
+			{
+				m_behavior = BehaviorState::PathFollow;
+			}
+
 
 			switch (m_behavior)
 			{
@@ -58,7 +80,15 @@ namespace SaltnPepperEngine
 
 				break;
 
-			case SaltnPepperEngine::AI::Seek: MoveDirection = Normalize(playerPosition - position);
+			case SaltnPepperEngine::AI::Seek: 
+				
+				
+				
+
+				MoveDirection = Normalize(playerPosition - position);
+
+
+
 				break;
 
 			case SaltnPepperEngine::AI::Evade: 
@@ -209,6 +239,40 @@ namespace SaltnPepperEngine
 			m_lookTransform->SetRotation(rotation);
 		}
 
+
+
+		void AIBaseAgent::DebugDraw()
+		{
+			const Vector4 pathPointColor{ 1.0f,1.0f,0.0f,1.0f };
+			const Vector4 pathLineColor{ 1.0f,1.0f,0.0f,1.0f };
+			const Vector4 pathInnerColor{ 1.0f,0.0f,0.0f,1.0f };
+			const Vector4 pathOuterColor{ 0.0f,0.0f,1.0f,1.0f };
+		
+			const Quaternion rot{ 0.0f,0.0f,0.0f,1.0f };
+
+			const Quaternion CircleRot = Rotate(rot, Radians(90.0f), Vector3(1.0f, 0.0f, 0.0f));
+			
+			for (int index = 0; index < m_followPathWaypoints.size(); index++)
+			{
+				Rendering::DebugRenderer::DebugDrawCapsule( m_followPathWaypoints[index], rot,2.0f,0.2f,pathPointColor);
+
+				const Vector3 currentPoint = m_followPathWaypoints[index];
+				int nextIndex = index + 1;
+
+				if (nextIndex >= m_followPathWaypoints.size()) { nextIndex = 0; }
+
+				const Vector3 nextPOsition = m_followPathWaypoints[nextIndex];
+
+				Rendering::DebugRenderer::DrawLine(currentPoint,nextPOsition,pathLineColor);
+
+			}
+			
+
+			Rendering::DebugRenderer::DebugDrawCircle(16,m_innerPathRadius, m_waypointCenter, CircleRot,pathInnerColor);
+			Rendering::DebugRenderer::DebugDrawCircle(16,m_outerPathRadius, m_waypointCenter, CircleRot,pathOuterColor);
+
+		}
+
 	
 
 
@@ -251,7 +315,7 @@ namespace SaltnPepperEngine
 		{	
 			if (!m_rigidBody || !m_lookTransform) { return; }
 			
-			if (m_behavior == BehaviorState::None) { return; }
+			//if (m_behavior == BehaviorState::None) { return; }
 
 			// Check if the state needs to change
 			UpdateState();
@@ -270,7 +334,7 @@ namespace SaltnPepperEngine
 
 			switch (m_behavior)
 			{
-			case SaltnPepperEngine::AI::None: 
+			case SaltnPepperEngine::AI::None:  RotateAgent(playerPosition, deltatime);
 				break;
 			case SaltnPepperEngine::AI::Seek: RotateAgent(playerPosition, deltatime);
 				break;
@@ -295,7 +359,7 @@ namespace SaltnPepperEngine
 
 		
 
-		
+			DebugDraw();
 			
 
 
