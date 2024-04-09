@@ -13,7 +13,7 @@ namespace SaltnPepperEngine
 		{
 			m_currentWaypointIndex++;
 
-			if (m_currentWaypointIndex < 0 || m_currentWaypointIndex > m_followPathWaypoints.size()) { m_currentWaypointIndex = 0; }
+			if (m_currentWaypointIndex < 0 || m_currentWaypointIndex >= m_followPathWaypoints.size()) { m_currentWaypointIndex = 0; }
 
 		}
 

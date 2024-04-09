@@ -28,24 +28,36 @@ class GraphicRuntime : public Application
 
 
         CreatePlayerCharacter(mainCamera);
-       /* CreateEnemyAI(AI::BehaviorState::Seek,EnemyModel::GOBLIN,Vector3(10.0f,0.0f,10.0f));
-        CreateEnemyAI(AI::BehaviorState::Approach,EnemyModel::CAT,Vector3(-10.0f,0.0f,-10.0f));
-        CreateEnemyAI(AI::BehaviorState::Pursue,EnemyModel::SPIDER,Vector3(20.0f,0.0f,10.0f));
-        CreateEnemyAI(AI::BehaviorState::Evade,EnemyModel::DEER,Vector3(10.0f,0.0f,20.0f));
-        CreateEnemyAI(AI::BehaviorState::Flee,EnemyModel::SHEEP,Vector3(20.0f,0.0f,20.0f));*/
+      
+        Vector3 centerOne = Vector3{ -39.68f,0.0f,8.33f };
+        std::vector<Vector3> pathOne
+        {
+            Vector3{-50.73f,0.0f,21.56f},
+            Vector3{-24.94f,0.0f,17.61f},
+            Vector3{-29.74f,0.0f,-3.02f},
+            Vector3{-51.37f,0.0f,-3.0f},
+        };
 
-        WanderPArams paramOne{ 6.0f,2.0f,3.0f };
-        WanderPArams paramTwo{ 2.0f,18.0f,5.0f };
-        WanderPArams paramThree{ 10.0f,20.0f,6.0f };
+        Vector3 centerTwo = Vector3{ -18.13f,0.0f,22.09f };
+        std::vector<Vector3> pathTwo
+        {
+        
+           Vector3{-27.70f,0.0f,4.14f},
+            Vector3{-0.20f,0.0f,13.29f},
+            Vector3{-8.51f,0.0f,47.34f},
+            Vector3{-27.79f,0.0f,30.98f},
+        };
 
 
-       CreateWanderAI(paramOne, EnemyModel::GOBLIN, Vector3(-40.0f, 0.0f, 40.0f));
+        CreatePathFollowAI(pathOne,centerOne,EnemyModel::CAT, Vector3{ -50.73f,0.0f,21.56f });
+        CreatePathFollowAI(pathTwo,centerTwo,EnemyModel::GOBLIN, Vector3{ -27.70f,0.0f,4.14f });
+
+      /* CreateWanderAI(paramOne, EnemyModel::GOBLIN, Vector3(-40.0f, 0.0f, 40.0f));
        CreateWanderAI(paramTwo, EnemyModel::SHEEP, Vector3(-35.0f, 0.0f,40.0f));
-       CreateWanderAI(paramThree, EnemyModel::CAT, Vector3(-40.0f, 0.0f, 35.0f));
+       CreateWanderAI(paramThree, EnemyModel::CAT, Vector3(-40.0f, 0.0f, 35.0f));*/
        
 
        
-
 
 	}
 

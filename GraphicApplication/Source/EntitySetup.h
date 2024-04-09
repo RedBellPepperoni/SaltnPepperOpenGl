@@ -174,7 +174,7 @@ Entity CreateEnemyAI(AI::BehaviorState state, EnemyModel model,Vector3 position 
 	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Seek Enemy");
 	Hierarchy& hierarchyComp = enemyEntity.AddComponent<Hierarchy>();
 	Transform& transform = enemyEntity.GetComponent<Transform>();
-	AI::AIBaseAgent& agent = enemyEntity.AddComponent<AI::AIBaseAgent>();
+	AI::AIBaseAgent* agent = enemyEntity.AddComponent<AIAgentComponent>().GetAgent();
 
 	
 	transform.SetPosition(position);
@@ -194,9 +194,9 @@ Entity CreateEnemyAI(AI::BehaviorState state, EnemyModel model,Vector3 position 
 	Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
 	Transform* childtransform = &childEntity.GetComponent<Transform>();
 
-	agent.Init(bodyRef, childtransform);
-	agent.m_lookTransform = &childEntity.GetComponent<Transform>();
-	agent.SetBehaviour(state);
+	agent->Init(bodyRef, childtransform);
+	agent->m_lookTransform = &childEntity.GetComponent<Transform>();
+	agent->SetBehaviour(state);
 
 	ModelComponent* modelComp = nullptr;
 	SharedPtr<Material> mat = nullptr;
@@ -302,6 +302,68 @@ Entity CreateWanderAI(WanderPArams params, EnemyModel model, Vector3 position = 
 }
 
 
+
+Entity CreatePathFollowAI(std::vector<Vector3> pathPoints, Vector3 center,EnemyModel model, Vector3 position = Vector3(10.0f, 0.0f, 10.0f))
+{
+	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Path Follower Enemy");
+	Hierarchy& hierarchyComp = enemyEntity.AddComponent<Hierarchy>();
+	Transform& transform = enemyEntity.GetComponent<Transform>();
+	AI::AIBaseAgent* agent = enemyEntity.AddComponent<AIAgentComponent>().GetAgent();
+
+
+	transform.SetPosition(position);
+
+
+	PhysicsProperties properties;
+	properties.collider = MakeShared<SphereCollider>(1.0f);
+	properties.mass = 20.0f;
+	properties.friction = 0.8f;
+	properties.position = position;
+	RigidBody3D* bodyRef = enemyEntity.AddComponent<RigidBodyComponent>(properties).GetRigidBody().get();
+
+
+
+
+	Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Enemy Model");
+	Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
+	Transform* childtransform = &childEntity.GetComponent<Transform>();
+
+	agent->Init(bodyRef, childtransform);
+	agent->m_lookTransform = &childEntity.GetComponent<Transform>();
+	agent->SetBehaviour(AI::PathFollow);
+	agent->SetWaypointCenter(center);
+	agent->SetWaypoints(pathPoints);
+
+	ModelComponent* modelComp = nullptr;
+	SharedPtr<Material> mat = nullptr;
+
+	switch (model)
+	{
+	case GOBLIN: modelComp = &childEntity.AddComponent<ModelComponent>("Goblin");
+		mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+		mat->SetAlbedoTexture("goblin");
+		break;
+
+	case SHEEP:modelComp = &childEntity.AddComponent<ModelComponent>("Sheep");
+		mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+		mat->SetAlbedoTexture("sheep");
+		break;
+
+	case CAT:modelComp = &childEntity.AddComponent<ModelComponent>("Cat");
+		mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
+		mat->SetAlbedoTexture("cat");
+		break;
+
+	}
+
+
+
+
+	childEntity.SetParent(enemyEntity);
+
+
+	return enemyEntity;
+}
 
 
 #endif //  EntitySetup
