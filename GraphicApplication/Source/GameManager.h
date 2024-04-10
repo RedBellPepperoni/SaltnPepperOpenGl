@@ -13,6 +13,14 @@ namespace SaltnPepperEngine
 		void UpdatePlayer(const float deltaTime);
 		void UpdateEnemies(const float deltaTime, const Vector3& playerPos);
 
+
+		void OnInitTestScene();
+		void OnInitMainScene();
+
+		void OnUpdateTestScene(const float deltaTime);
+		void OnUpdateMainScene(const float deltaTime);
+
+
 	public:
 
 		GameManager() = default;

@@ -34,7 +34,7 @@ namespace SaltnPepperEngine
 
         if (enemyView.IsEmpty() || enemyLookView.IsEmpty()) { return; }
         
-        const float viewSize = enemyView.Size();
+        const int viewSize = static_cast<int>(enemyView.Size());
 
         for(int i = 0; i < viewSize; i++)
         {
@@ -47,28 +47,8 @@ namespace SaltnPepperEngine
 
     }
 
-
-    void GameManager::OnInit()
-	{
-        // Start the Physics
-        PhysicsSystem::SetPaused(false);
-
-        // LOad all the Models 
-        EntitySetup::LoadAllModels();
-        // Load all the textures
-        EntitySetup::LoadAllTextures();
-        //Load all the audio files
-
-        EntitySetup::LoadAllAudio();
-
-  
-  
-        glPolygonMode(GL_FRONT, GL_FILL);
-        glCullFace(GL_BACK);
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    void GameManager::OnInitTestScene()
+    {
 
         AudioClip* idleclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombieidle1").get();
         AudioClip* attackclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombieattack1").get();
@@ -95,26 +75,50 @@ namespace SaltnPepperEngine
 
         EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(15.0f, 1.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
-        EntitySetup::CreateZombie(Vector3(22.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1,ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(22.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(0.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
-        EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f),clipsVar1, ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
 
 
         EntitySetup::CreatePhysicsFloor(Vector3(0.0f, -0.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
 
-        EntitySetup::CreateSkinnedCharatcer(Vector3(1.27f, 0.0f, 0.0f), Vector3(0.01f));
-
        
-	}
+
+    }
+
+    void GameManager::OnInitMainScene()
+    {
+
+    
+        // TEST SETUP
+       // EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TEST, Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
 
-	void GameManager::OnUpdate(const float deltaTime)
-	{
+
+        // SUBWAY PLATFORM 
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM, Vector3(-0.16f, -3.08f, -4.46f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BACKWALL, Vector3(0.61f, -0.73f, -4.54f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_RIGHTWALLL, Vector3(-2.54f, 0.99f, -26.91f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_RIGHTWALLL, Vector3(-2.54f, 0.99f, 17.94f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+
+
+
+
+        EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));
+        body = EntitySetup::CreatePlayer(Vector3(-4.1f, 1.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
+        EntitySetup::CreatePhysicsFloor(Vector3(0.0f, -0.5f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
+    }
+
+    void GameManager::OnUpdateTestScene(const float deltaTime)
+    {
         // Toggle Physics Simulation
         if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::G))
         {
             PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
         }
+    
+
         UpdateEnemies(deltaTime, playerPosition);
 
         if (Application::GetCurrent().GetEditorActive())
@@ -125,6 +129,59 @@ namespace SaltnPepperEngine
 
 
         UpdatePlayer(deltaTime);
+
+       
+    }
+
+    void GameManager::OnUpdateMainScene(const float deltaTime)
+    {
+
+        if (Application::GetCurrent().GetEditorActive())
+        {
+            Application::GetCurrent().GetAppWindow().SetMouseHidden(false);
+            return;
+        }
+
+
+        UpdatePlayer(deltaTime);
+
+    }
+
+
+    void GameManager::OnInit()
+	{
+        // Start the Physics
+        PhysicsSystem::SetPaused(false);
+
+        // LOad all the Models 
+        EntitySetup::LoadAllModels();
+        // Load all the textures
+        EntitySetup::LoadAllTextures();
+        //Load all the audio files
+
+        EntitySetup::LoadAllAudio();
+
+  
+  
+        glPolygonMode(GL_FRONT, GL_FILL);
+        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+       // OnInitTestScene();
+
+        OnInitMainScene();
+
+
+	}
+
+
+	void GameManager::OnUpdate(const float deltaTime)
+	{
+        //OnUpdateTestScene(deltaTime);
+
+        OnUpdateMainScene(deltaTime);
        
 
 	}

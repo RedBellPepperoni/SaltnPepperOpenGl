@@ -28,7 +28,6 @@ namespace SaltnPepperEngine
 			m_animator->PlayAnimationbyName("Idle");
 			
 			
-			PlayIdleSound();
 
 			break;
 
@@ -330,7 +329,7 @@ namespace SaltnPepperEngine
 			m_animCounter = 0.0f;
 			m_animator->OnUpdate(animationFrameRate);
 		}
-
+		
 	
 
 		if (currentState == EnemyState::TAKINGHIT || m_markedForDeath) { return; }

@@ -14,6 +14,10 @@ static int enemyCount = 0;
 
 class EntitySetup
 {
+
+
+
+
 public:
 	struct FishSchool
 	{
@@ -26,37 +30,32 @@ public:
 		DISTORT
 	};
 
-	enum class LakeModel : uint8_t
+	enum class SubwayModel : uint8_t
 	{
-		BED,
-		BENCH,
-		BOAT,
-		BRANCH,
-		BUCKET,
-		CROW,
-		DOCK,
-		DUCKS,
-		FENCE,
-		FISHSCHOOL,
-		GRASS,
-		GROUND,
-		LAMP,
-		PLANTPOT,
-		PLANTS,
-		ROCK,
-		ROCKS,
-		SHACK,
-		SHROOMS,
-		TREE,
-		WATER,
-		TABLE,
-		STOOL,
-		POLE
+		TEST,
+		PLATFROM,
+		PLATFROM_BACKWALL,
+		PLATFROM_RIGHTWALLL,
+		PLATFROM_PILLAR
+
+	};
+
+	enum class SubwayMaterial : uint8_t
+	{
+		MAT_STRUCTURE,
+		MAT_STAIRS,
+		MAT_ADDITION,
+		MAT_POSTERS,
+		MAT_SUBWAYASSETS,
+		MAT_TICKETMACHINE,
+		MAT_TUNNEL,
+		MAT_TURNSTILE
+
 	};
 
 	
 
-	static std::array<std::string, 24> LakeModelString;
+	static std::vector<std::string> SubwayModelString;
 	
 
 
@@ -73,7 +72,7 @@ public:
 	static Entity CreateDirectionalLight(const Vector3& rotation = Vector3{ 0.0f });
 	 
 
-	static Entity CreateEntity(const LakeModel model, const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), const Vector3& scale = Vector3(1.0f));
+	static Entity CreateStaticEntity(const SubwayModel model, const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), const Vector3& scale = Vector3(1.0f));
 	static void CreateTV(SharedPtr<Texture>& camtex, const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), const DistortType type = DistortType::DISTORT);
 	static SharedPtr<Texture>& CreateSecurityCamera(const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), const Vector3 camRotation = Vector3(0.0f), bool Moving = false);
 
@@ -126,7 +125,9 @@ public:
 	//	return screenEntity;
 	//}
 
+	private:
 
+		static void AssignMaterial(SharedPtr<Material>& mat,const SubwayMaterial type);
 
 	
 	

@@ -1,31 +1,14 @@
 #include "EntitySetup.h"
 
 
-std::array<std::string, 24> EntitySetup::LakeModelString = {
-		"Bed",
-		"Bench",
-		"Boat",
-		"Branch",
-		"Bucket",
-		"Crow",
-		"Dock",
-		"Ducks",
-		"Fence",
-		"FishSchool",
-		"Grass",
-		"Ground",
-		"Lamp",
-		"PlantPot",
-		"Plants",
-		"Rock",
-		"Rocks",
-		"Shack",
-		"Shrooms",
-		"Tree",
-		"Water",
-		"Table",
-		"Stool",
-		"Pole"
+std::vector<std::string> EntitySetup::SubwayModelString = {
+	
+	"SUB_TEST",
+	"SUB_PLATFORM",
+	"SUB_PLAT_BACKWALL",
+	"SUB_PLAT_RIGHTWALL",
+	"SUB_PLAT_PILLAR"
+	
 };
 
 
@@ -34,16 +17,23 @@ void EntitySetup::LoadAllModels()
 	SharedPtr<ModelLibrary>& modelLib = Application::GetCurrent().GetModelLibrary();
 	SharedPtr<SkinnedModelLibrary>& skinnedmodelLib = Application::GetCurrent().GetSkinnedModelLibrary();
 
-
+	// Misc
 	modelLib->LoadModel("Crow", "Assets\\Models\\Lake_Crow.fbx");
 	
-	
 
-	//skinnedmodelLib->LoadModel("SCharacter", "Assets\\Models\\aj.dae");
-	//skinnedmodelLib->LoadModel("Gun_Fal", "Assets\\Models\\GUN_FAL.dae");
+	// Skinned Stuff
 	skinnedmodelLib->LoadModel("Gun_Pistol", "Assets\\Models\\GUN_PISTOL.fbx");
-	skinnedmodelLib->LoadModel("RacerCharacter", "Assets\\Models\\racer.dae");
 	skinnedmodelLib->LoadModel("WarZombie", "Assets\\Models\\WarZombie.dae");
+
+
+	// Static Meshes
+
+
+	modelLib->LoadModel("SUB_TEST", "Assets\\Models\\Subway_Test.fbx");
+	modelLib->LoadModel("SUB_PLATFORM", "Assets\\Models\\Subway_Platform.fbx");
+	modelLib->LoadModel("SUB_PLAT_BACKWALL", "Assets\\Models\\Subway_Platform_BackWall.fbx");
+	modelLib->LoadModel("SUB_PLAT_RIGHTWALL", "Assets\\Models\\Subway_Platform_WallRight.fbx");
+	modelLib->LoadModel("SUB_PLAT_PILLAR", "Assets\\Models\\Subway_Platform_BackWall.fbx");
 
 
 }
@@ -55,14 +45,49 @@ void EntitySetup::LoadAllTextures()
 	
 	textureLib->LoadTexture("noise", "Assets\\Textures\\noise.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("metal", "Assets\\Textures\\metal.jpg", TextureFormat::RGBA);
-	textureLib->LoadTexture("skinned", "Assets\\Textures\\aj.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("racer", "Assets\\Textures\\racer.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("racerNormal", "Assets\\Textures\\racerNormal.png", TextureFormat::RGBA);
+
 	textureLib->LoadTexture("fphand", "Assets\\Textures\\hand.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("fppistol", "Assets\\Textures\\pistol.png", TextureFormat::RGBA);
 
 	textureLib->LoadTexture("zombieOneDiffuse", "Assets\\Textures\\zombie_D.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("zombieOneNormal", "Assets\\Textures\\zombie_N.png", TextureFormat::RGBA);
+
+
+	// ============================= STRUCTURE TEXTURES ======================
+	textureLib->LoadTexture("Struct_Diffuse", "Assets\\Textures\\M_Structure_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Struct_Normal", "Assets\\Textures\\M_Structure_normal.png", TextureFormat::RGBA);
+
+	// ============================= STAIRS TEXTURES ======================
+	textureLib->LoadTexture("Stairs_Diffusee", "Assets\\Textures\\M_Stairs_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Stairs_Normal", "Assets\\Textures\\M_Stairs_normal.png", TextureFormat::RGBA);
+
+
+	// ============================= ADDITION TEXTURES ======================
+	textureLib->LoadTexture("Addition_Diffusee", "Assets\\Textures\\M_Addition_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Addition_Normal", "Assets\\Textures\\M_Addition_normal.png", TextureFormat::RGBA);
+
+
+	// ============================= POSTERS TEXTURES ======================
+	textureLib->LoadTexture("Poster_Diffusee", "Assets\\Textures\\M_Posters_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Poster_Normal", "Assets\\Textures\\M_Posters_normal.png", TextureFormat::RGBA);
+
+	// ============================= SUBWAY ASSETS TEXTURES ======================
+	textureLib->LoadTexture("SubwayAssets_Diffusee", "Assets\\Textures\\M_SubwayAssets_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("SubwayAssets_Normal", "Assets\\Textures\\M_SubwayAssets_normal.png", TextureFormat::RGBA);
+
+	// ============================= TICKET MACHINE TEXTURES ======================
+	textureLib->LoadTexture("Ticketmachine_Diffusee", "Assets\\Textures\\M_TicketMachine_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Ticketmachine_Normal", "Assets\\Textures\\M_TicketMachine_normal.png", TextureFormat::RGBA);
+
+
+	// ============================= TUNNEL TEXTURES ======================
+	textureLib->LoadTexture("Tunnel_Diffusee", "Assets\\Textures\\M_Tunnel_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Tunnel_Normal", "Assets\\Textures\\M_Tunnel_normal.png", TextureFormat::RGBA);
+
+
+	// ============================= TURNSTILE TEXTURES ======================
+	textureLib->LoadTexture("Turnstile_Diffuse", "Assets\\Textures\\M_Turnstile_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Turnstile_Normal", "Assets\\Textures\\M_Turnstile_normal.png", TextureFormat::RGBA);
 
 }
 
@@ -98,27 +123,6 @@ Entity EntitySetup::CreateMainCamera(Vector3 Position, Vector3 Rotation)
 	transform.SetEularRotation(Rotation);
 
 	return cameraEntity;
-}
-
-Entity EntitySetup::CreateParentedEntity(Vector3 Position, Vector3 Rotation)
-{
-	Entity baseEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BaseEntity");
-	Hierarchy& hierarchyComp = baseEntity.AddComponent<Hierarchy>();
-	Transform& transform = baseEntity.GetComponent<Transform>();
-
-	transform.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
-
-	Entity childEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("ChildEntity");
-	Hierarchy& hierarchyChildComp = childEntity.AddComponent<Hierarchy>();
-
-	Transform& childtransform = childEntity.GetComponent<Transform>();
-
-	childtransform.SetPosition(Vector3(0.0f, 5.0f, 0.0f));
-
-
-	childEntity.SetParent(baseEntity);
-
-	return baseEntity;
 }
 
 Entity EntitySetup::CreateDirectionalLight(const Vector3& rotation)
@@ -174,10 +178,10 @@ void EntitySetup::CreateTV(SharedPtr<Texture>& camtex, const Vector3& position, 
 
 }
 
-Entity EntitySetup::CreateEntity(const LakeModel model, const Vector3& position, const Vector3& rotation, const Vector3& scale)
+Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& position, const Vector3& rotation, const Vector3& scale)
 {
-	const std::string Modelname = LakeModelString[(uint8_t)model];
-	std::string name = "Lake_" + Modelname;
+	const std::string Modelname = SubwayModelString[(uint8_t)model];
+	std::string name = "Subway_" + Modelname;
 
 
 	Entity entity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
@@ -193,51 +197,32 @@ Entity EntitySetup::CreateEntity(const LakeModel model, const Vector3& position,
 	SharedPtr<Material> mat = modelComp->m_handle->GetMeshes()[0]->GetMaterial();
 
 
-
-
-
-	if (model == LakeModel::WATER)
+	switch (model)
 	{
-		mat->m_type = MaterialType::Transparent;
-		mat->metallic = 0.9f;
-		mat->roughness = 0.6f;
-		mat->albedoColour = Vector4(0.0f, 0.0f, 0.0f, 0.75f);
+	case SubwayModel::TEST:
+		break;
 
-		//mat->m_type = MaterialType::Opaque;
-		mat->SetAlbedoTexture("water");
+	case SubwayModel::PLATFROM_BACKWALL:
+	case SubwayModel::PLATFROM_RIGHTWALLL:
+	case SubwayModel::PLATFROM: 
+
+		AssignMaterial(mat, SubwayMaterial::MAT_STRUCTURE);
+		break;
+
+	case SubwayModel::PLATFROM_PILLAR:
+
+		AssignMaterial(mat, SubwayMaterial::MAT_STAIRS);
+
+		break;
+
+
+
+	
 	}
-
-	else
-	{
-		mat->m_type = MaterialType::Opaque;
-		mat->SetAlbedoTexture("pallet");
-		mat->albedoMapFactor = 1.0f;
-	}
+	
 
 
-	if (model == LakeModel::FISHSCHOOL)
-	{
-		Entity parententity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name + "_Parent");
-		Hierarchy& hierarchy = parententity.AddComponent<Hierarchy>();
-		Transform& parenttransform = parententity.GetComponent<Transform>();
-		parententity.AddComponent<FishSchool>();
-
-
-		parenttransform.SetPosition(position);
-		parenttransform.SetEularRotation(rotation);
-		parenttransform.SetScale(scale);
-
-		transform.SetPosition(Vector3(-0.7956f, 0.0f, 2.9702f));
-		transform.SetEularRotation(Vector3(0.0f, -14.9953f, 0.0f));
-		transform.SetScale(Vector3(1.0f));
-
-
-
-		entity.SetParent(parententity);
-
-		return parententity;
-
-	}
+	
 
 
 	return entity;
@@ -264,10 +249,10 @@ RigidBody* EntitySetup::CreatePhysicsFloor(const Vector3& position, const Vector
 	body->SetBounceFactor(0.5f);
 	body->SetFriction(0.8f);
 
-	Entity floorDisplay = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_Floor_Display");
+	/*Entity floorDisplay = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_Floor_Display");
 	floorDisplay.GetComponent<Transform>().SetScale(Vector3(100.0f, 1.0f, 100.0f));
 	floorDisplay.GetComponent<Transform>().SetPosition(Vector3(0.0f, -0.5f, 0.0f));
-	ModelComponent& model = floorDisplay.AddComponent<ModelComponent>(PrimitiveType::Cube);
+	ModelComponent& model = floorDisplay.AddComponent<ModelComponent>(PrimitiveType::Cube);*/
 
 
 	return body;
@@ -494,6 +479,86 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	return rigidBody;
 
 }
+
+void EntitySetup::AssignMaterial(SharedPtr<Material>& mat, const SubwayMaterial type)
+{
+	switch (type)
+	{
+	case EntitySetup::SubwayMaterial::MAT_STRUCTURE:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("Struct_Diffuse");
+		mat->SetNormalTexture("Struct_Normal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+
+	case EntitySetup::SubwayMaterial::MAT_STAIRS:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("Stairs_Diffuse");
+		mat->SetNormalTexture("Stairs_Normal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+	case EntitySetup::SubwayMaterial::MAT_ADDITION:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("Addition_Diffuse");
+		mat->SetNormalTexture("Addition_Normal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+	case EntitySetup::SubwayMaterial::MAT_POSTERS:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("Poster_Diffuse");
+		mat->SetNormalTexture("Poster_Normal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+	case EntitySetup::SubwayMaterial::MAT_SUBWAYASSETS:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("SubwayAssets_Diffuse");
+		mat->SetNormalTexture("SubwayAssets_Normal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+	case EntitySetup::SubwayMaterial::MAT_TICKETMACHINE:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("Ticketmachine_Diffuse");
+		mat->SetNormalTexture("Ticketmachine_Normal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+		break;
+	case EntitySetup::SubwayMaterial::MAT_TUNNEL:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("Tunnel_Diffuse");
+		mat->SetNormalTexture("Tunnel_Normal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+		break;
+	case EntitySetup::SubwayMaterial::MAT_TURNSTILE:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("Turnstile_Diffuse");
+		mat->SetNormalTexture("Turnstile_Normal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+		break;
+	default:
+		break;
+	}
+}
+
 
 
 RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips,ZombieType type)
