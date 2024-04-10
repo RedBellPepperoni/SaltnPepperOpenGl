@@ -7,7 +7,10 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"SUB_PLATFORM",
 	"SUB_PLAT_BACKWALL",
 	"SUB_PLAT_RIGHTWALL",
-	"SUB_PLAT_PILLAR"
+	"SUB_PLAT_LEFTWALL",
+	"SUB_PLAT_PILLAR",
+	"SUB_TUNNEL_WALL",
+	"SUB_TUNNEL_PILLAR"
 	
 };
 
@@ -33,7 +36,11 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("SUB_PLATFORM", "Assets\\Models\\Subway_Platform.fbx");
 	modelLib->LoadModel("SUB_PLAT_BACKWALL", "Assets\\Models\\Subway_Platform_BackWall.fbx");
 	modelLib->LoadModel("SUB_PLAT_RIGHTWALL", "Assets\\Models\\Subway_Platform_WallRight.fbx");
-	modelLib->LoadModel("SUB_PLAT_PILLAR", "Assets\\Models\\Subway_Platform_BackWall.fbx");
+	modelLib->LoadModel("SUB_PLAT_LEFTWALL", "Assets\\Models\\Subway_Platform_WallLeft.fbx");
+	modelLib->LoadModel("SUB_PLAT_PILLAR", "Assets\\Models\\Subway_Pillar.fbx");
+
+	modelLib->LoadModel("SUB_TUNNEL_WALL", "Assets\\Models\\Subway_Tunnel_Wall.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_PILLAR", "Assets\\Models\\Subway_Tunnel_Pillar.fbx");
 
 
 }
@@ -58,30 +65,30 @@ void EntitySetup::LoadAllTextures()
 	textureLib->LoadTexture("Struct_Normal", "Assets\\Textures\\M_Structure_normal.png", TextureFormat::RGBA);
 
 	// ============================= STAIRS TEXTURES ======================
-	textureLib->LoadTexture("Stairs_Diffusee", "Assets\\Textures\\M_Stairs_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Stairs_Diffuse", "Assets\\Textures\\M_Stairs_baseColor.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("Stairs_Normal", "Assets\\Textures\\M_Stairs_normal.png", TextureFormat::RGBA);
 
 
 	// ============================= ADDITION TEXTURES ======================
-	textureLib->LoadTexture("Addition_Diffusee", "Assets\\Textures\\M_Addition_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Addition_Diffuse", "Assets\\Textures\\M_Addition_baseColor.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("Addition_Normal", "Assets\\Textures\\M_Addition_normal.png", TextureFormat::RGBA);
 
 
 	// ============================= POSTERS TEXTURES ======================
-	textureLib->LoadTexture("Poster_Diffusee", "Assets\\Textures\\M_Posters_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Poster_Diffuse", "Assets\\Textures\\M_Posters_baseColor.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("Poster_Normal", "Assets\\Textures\\M_Posters_normal.png", TextureFormat::RGBA);
 
 	// ============================= SUBWAY ASSETS TEXTURES ======================
-	textureLib->LoadTexture("SubwayAssets_Diffusee", "Assets\\Textures\\M_SubwayAssets_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("SubwayAssets_Diffuse", "Assets\\Textures\\M_SubwayAssets_baseColor.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("SubwayAssets_Normal", "Assets\\Textures\\M_SubwayAssets_normal.png", TextureFormat::RGBA);
 
 	// ============================= TICKET MACHINE TEXTURES ======================
-	textureLib->LoadTexture("Ticketmachine_Diffusee", "Assets\\Textures\\M_TicketMachine_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Ticketmachine_Diffuse", "Assets\\Textures\\M_TicketMachine_baseColor.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("Ticketmachine_Normal", "Assets\\Textures\\M_TicketMachine_normal.png", TextureFormat::RGBA);
 
 
 	// ============================= TUNNEL TEXTURES ======================
-	textureLib->LoadTexture("Tunnel_Diffusee", "Assets\\Textures\\M_Tunnel_baseColor.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Tunnel_Diffuse", "Assets\\Textures\\M_Tunnel_baseColor.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("Tunnel_Normal", "Assets\\Textures\\M_Tunnel_normal.png", TextureFormat::RGBA);
 
 
@@ -132,7 +139,7 @@ Entity EntitySetup::CreateDirectionalLight(const Vector3& rotation)
 	transform.SetEularRotation(rotation);
 	Light& light = dirLightEntity.AddComponent<Light>();
 	light.type = LightType::DirectionLight;
-	light.intensity = 1.7f;
+	light.intensity = 2.7f;
 
 	return dirLightEntity;
 }
@@ -204,6 +211,7 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 
 	case SubwayModel::PLATFROM_BACKWALL:
 	case SubwayModel::PLATFROM_RIGHTWALLL:
+	case SubwayModel::PLATFROM_LEFTWALLL:
 	case SubwayModel::PLATFROM: 
 
 		AssignMaterial(mat, SubwayMaterial::MAT_STRUCTURE);
@@ -215,6 +223,11 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 
 		break;
 
+
+	case SubwayModel::TUNNEL_WALL:
+	case SubwayModel::TUNNEL_PILLAR:
+
+		AssignMaterial(mat, SubwayMaterial::MAT_TUNNEL);
 
 
 	
@@ -240,10 +253,10 @@ RigidBody* EntitySetup::CreatePhysicsFloor(const Vector3& position, const Vector
 
 	//ModelComponen& model = floorEntity.AddComponent<ModelComponent>
 
-	BoundingBox bounds{ Vector3(-100.0f,-0.5f,-100.0f),Vector3(100.0f,0.5f,100.0f) };
+	BoundingBox bounds{ Vector3(-20.0f,-0.5f,-40.0f),Vector3(20.0f,0.5f,40.0f) };
 	BoxCollider& shape = floorEntity.AddComponent<BoxCollider>();
 	shape.Init(bounds);
-	RigidBody* body = &floorEntity.AddComponent<RigidBody>(floorTransform, shape.GetShape());
+	RigidBody* body = floorEntity.AddComponent<RigidBodyComponent>(floorTransform, shape.GetShape()).GetRigidBody();
 	body->MakeStatic();
 	body->SetEntityId(floorEntity);
 	body->SetBounceFactor(0.5f);
