@@ -135,6 +135,24 @@ namespace SaltnPepperEngine
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_PILLAR, Vector3(-11.196f, -1.638f, 26.027f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_PILLAR, Vector3(-11.196f, -1.638f, 40.154f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
 
+        // ============================= TUNNEL BASE =========================================== 
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_BASE, Vector3(-11.304f, -3.890f, -32.736f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_BASE, Vector3(-11.303f, -3.8905f, -18.609f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_BASE, Vector3(-11.304f, -3.890f, -4.4672f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_BASE, Vector3(-11.303f, -3.8905f, 9.6595f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_BASE, Vector3(-11.304f, -3.890f, 23.7715f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_BASE, Vector3(-11.303f, -3.8905f, 37.898f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+        // ============================= TUNNEL RAILS =========================================== 
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.106f, -3.45f, -32.736f), Vector3(0.0f, 00.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.107f, -3.455f, -18.609f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.106f, -3.45f, -4.4672f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.107f, -3.455f, 9.6595f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.106f, -3.45f, 23.7715f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.107f, -3.455f, 37.898f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+
+
 
 
 

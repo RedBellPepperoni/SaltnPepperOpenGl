@@ -10,7 +10,11 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"SUB_PLAT_LEFTWALL",
 	"SUB_PLAT_PILLAR",
 	"SUB_TUNNEL_WALL",
-	"SUB_TUNNEL_PILLAR"
+	"SUB_TUNNEL_PILLAR",
+	"SUB_TUNNEL_RAIL",
+	"SUB_TUNNEL_BASE",
+	"SUB_TUNNEL_WIRE",
+	"SUB_TUNNEL_CABLE"
 	
 };
 
@@ -41,6 +45,10 @@ void EntitySetup::LoadAllModels()
 
 	modelLib->LoadModel("SUB_TUNNEL_WALL", "Assets\\Models\\Subway_Tunnel_Wall.fbx");
 	modelLib->LoadModel("SUB_TUNNEL_PILLAR", "Assets\\Models\\Subway_Tunnel_Pillar.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_RAIL", "Assets\\Models\\Subway_Tunnel_Rails.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_BASE", "Assets\\Models\\Subway_Tunnel_Base.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_WIRE", "Assets\\Models\\Subway_Tunnel_Wire.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_CABLE", "Assets\\Models\\Subway_Tunnel_Cable.fbx");
 
 
 }
@@ -226,6 +234,10 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 
 	case SubwayModel::TUNNEL_WALL:
 	case SubwayModel::TUNNEL_PILLAR:
+	case SubwayModel::TUNNEL_RAILS:
+	case SubwayModel::TUNNEL_WIRE:
+	case SubwayModel::TUNNEL_CABLE:
+	case SubwayModel::TUNNEL_BASE:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_TUNNEL);
 
