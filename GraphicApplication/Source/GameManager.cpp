@@ -93,7 +93,8 @@ namespace SaltnPepperEngine
         // TEST SETUP
        // EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TEST, Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
-
+        // ========================== SUBWAY CEILING =====================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFORM_CEILING, Vector3(-0.1555f, 1.7249f, -4.4672f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
         // ========================== SUBWAY PLATFORM =======================================
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM, Vector3(-0.16f, -3.08f, -4.46f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
@@ -102,12 +103,36 @@ namespace SaltnPepperEngine
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_RIGHTWALLL, Vector3(-2.54f, 0.99f, -26.91f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_LEFTWALLL, Vector3(-2.54f, 0.466f, 17.94f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
-        // ======================== PILLARS ==========================================
+        // ======================== PLATFORM PILLARS ==========================================
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(-4.91f, -0.67f, -23.07f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(-4.91f, -0.67f, -11.203f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(-4.91f, -0.67f, -5.6f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(-4.91f, -0.67f, 0.33f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(-4.91f, -0.67f, 6.27f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+        // ========================== PLATFORM STAIRS ========================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_STAIR, Vector3(-2.7689f, 2.0338f, -0.5109f), Vector3(0.0f, 00.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_STAIR_RAIL, Vector3(-1.7303f, 2.497f, -0.5720f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_STAIR_RAIL, Vector3(-3.8027f, 2.497f, -0.5720f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_STAIR_WALL, Vector3(-2.7749f, -0.92337f, -2.6512f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+
+        // ============================= PLATFORM PIPE ========================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFORM_PIPE, Vector3(0.2766f, 1.2804f, 17.3489f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+        // ============================= PLATFORM BENCHES =======================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BENCH, Vector3(-2.1826f, -2.2860f, -24.1374f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BENCH, Vector3(-2.1826f, -2.2860f, -21.0217f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BENCH, Vector3(-2.1826f, -2.2860f, -15.3211f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BENCH, Vector3(-2.1826f, -2.2860f, -12.2053f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BENCH, Vector3(-2.1826f, -2.2860f, 10.2039f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BENCH, Vector3(-2.1826f, -2.2860f, 14.327f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+
+
+        // ============================= PLATFORM BINS ==========================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BIN, Vector3(-2.1781f, -2.1309f, -18.1267f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BIN, Vector3(-2.1781f, -2.1309f, 12.214), Vector3(0.0f, 20.0f, 0.0f), Vector3(1.0f));
 
 
         // ============================ TUNNEL WALLS ===================================
@@ -150,10 +175,74 @@ namespace SaltnPepperEngine
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.107f, -3.455f, 9.6595f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.106f, -3.45f, 23.7715f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILS, Vector3(-9.107f, -3.455f, 37.898f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILSSIDE, Vector3(-9.6915f, -3.1774f, 37.9735f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+        // ============================= TUNNEL WIRES =========================================== 
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-6.1329f, -0.0125f, -33.8702f), Vector3(0.0f, 00.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-6.1329f, -0.0125f, 25.3593f), Vector3(0.0f, 00.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-6.1329f, -0.0125f, 39.486f), Vector3(0.0f, 00.0f, 0.0f), Vector3(1.0f));
+
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-10.282f, -0.0125f, -32.7359f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-10.282f, -0.0125f, -18.6091f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-10.282f, -0.0125f, -4.46724f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-10.282f, -0.0125f, 9.6595f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-10.282f, -0.0125f, 23.7711f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_WIRE, Vector3(-10.282f, -0.0125f, 37.8979f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+
+        // ============================== TUNNEL ARCH ==========================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-7.9223f, -0.5832f, -33.8702f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-7.9223f, -0.5832f, 25.3593f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-7.9223f, -0.5832f, 39.486f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
 
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-8.4925f, -0.5832f, 37.8979f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-8.4925f, -0.5832f, 23.7711f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-8.4925f, -0.5832f, 9.6595f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-8.4925f, -0.5832f, -4.4672f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-8.4925f, -0.5832f, -18.6091f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_ARCH, Vector3(-8.4925f, -0.5832f, -32.7359f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
+        
+        // ================================ TUNNEL PIPE , SIDE AND LIGHTS ======================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_LIGHTS, Vector3(-10.0414f, 1.3237f, -30.0984f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_PIPE, Vector3(-6.1681, 1.2387f, 25.3593f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUNNEL_RAILSSIDE, Vector3(-9.6915f, -3.1774f, 37.9735f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+        // ================================   SUBWAY POSTERS =====================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_ADVERTLEFT, Vector3(0.3670f, -0.7983f, -10.0963f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_ADVERTRIGHT, Vector3(0.3670f, -0.7983f, -6.8705f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_LOST, Vector3(0.3670f, -0.798f, -23.3927f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_FOOL, Vector3(0.3670f, -0.7983f, -20.167f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_WORK, Vector3(0.3670f, -0.7983f, -1.446f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_DINO, Vector3(0.3670f, -0.7983f, 4.6722), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+       
+        
+        
+      
+
+        // ========================== TICKET ROOM =================================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_CEILING, Vector3(2.4412f, 5.8751f, 3.6829f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_WALL_FRONT, Vector3(4.5943f, 4.9877f, 13.366f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_WALL_BACK, Vector3(4.5943f, 4.8859f, -3.8520f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_WALL_LEFT, Vector3(15.0921f, 4.8859f, 10.5603f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_WALL_RIGHT, Vector3(-4.6251f, 4.8859f, 1.1267), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+        // ============================ TICKET ROOM POSTERS ========================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_HOTELLEFT, Vector3(1.2933f, 3.8102f, -3.5021f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_HOTELRIGHT, Vector3(4.5190f, 3.8102f, -3.5021f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+       
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_INFO, Vector3(11.7927f, 3.8102f, -0.8949f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::POSTER_HOLIDAY, Vector3(11.7927f, 3.8102f, 2.3307f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
 
+        // ======================== TICKET PILLAR ANd BIN =================================
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(8.1288f, 3.940f, 0.05383f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(1.9173f, 3.940f, 0.05383f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(8.1288f, 3.940f, 8.8039f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_PILLAR, Vector3(1.9173f, 3.940f, 8.8039f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+       
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BIN, Vector3(5.0379f, 2.5403f, -0.08261f), Vector3(0.0f, 20.0f, 0.0f), Vector3(1.0f));
 
 
         EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));

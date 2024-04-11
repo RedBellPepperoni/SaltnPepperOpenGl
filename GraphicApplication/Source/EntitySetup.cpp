@@ -9,12 +9,42 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"SUB_PLAT_RIGHTWALL",
 	"SUB_PLAT_LEFTWALL",
 	"SUB_PLAT_PILLAR",
+
+	"SUB_PLAT_BENCH",
+	"SUB_PLAT_BIN",
+	"SUB_PLAT_STAIR",
+	"SUB_PLAT_STAIR_RAIL",
+	"SUB_PLAT_STAIR_WALL",
+	"SUB_PLAT_PIPE",
+	"SUB_PLAT_CEILING",
+
 	"SUB_TUNNEL_WALL",
 	"SUB_TUNNEL_PILLAR",
 	"SUB_TUNNEL_RAIL",
+	"SUB_TUNNEL_RAILSIDE",
 	"SUB_TUNNEL_BASE",
 	"SUB_TUNNEL_WIRE",
-	"SUB_TUNNEL_CABLE"
+	"SUB_TUNNEL_CABLE",
+	"SUB_TUNNEL_ARCH",
+	"SUB_TUNNEL_LIGHTS",
+	"SUB_TUNNEL_PIPE",
+
+	"POSTER_ADVERTLEFT",
+	"POSTER_ADVERTRIGHT",
+	"POSTER_DINO",
+	"POSTER_FOOL",
+	"POSTER_LOST",
+	"POSTER_WORK",
+	"POSTER_HOTELLEFT",
+	"POSTER_HOTELRIGHT",
+	"POSTER_INFO",
+	"POSTER_HOLIDAY",
+
+	"TICKET_WALL_FRONT",
+	"TICKET_WALL_BACK",
+	"TICKET_WALL_LEFT",
+	"TICKET_WALL_RIGHT",
+	"TICKET_CEILING"
 	
 };
 
@@ -43,12 +73,43 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("SUB_PLAT_LEFTWALL", "Assets\\Models\\Subway_Platform_WallLeft.fbx");
 	modelLib->LoadModel("SUB_PLAT_PILLAR", "Assets\\Models\\Subway_Pillar.fbx");
 
+	modelLib->LoadModel("SUB_PLAT_BENCH", "Assets\\Models\\Subway_Platform_Bench.fbx");
+	modelLib->LoadModel("SUB_PLAT_BIN", "Assets\\Models\\Subway_Platform_Bin.fbx");
+	modelLib->LoadModel("SUB_PLAT_STAIR", "Assets\\Models\\Subway_Platform_Stairs.fbx");
+	modelLib->LoadModel("SUB_PLAT_STAIR_RAIL", "Assets\\Models\\Subway_Platform_Stairs_Rail.fbx");
+	modelLib->LoadModel("SUB_PLAT_STAIR_WALL", "Assets\\Models\\Subway_Platform_Stairs_Wall.fbx");
+	modelLib->LoadModel("SUB_PLAT_PIPE", "Assets\\Models\\Subway_Platform_Pipe.fbx");
+	modelLib->LoadModel("SUB_PLAT_CEILING", "Assets\\Models\\Subway_Ceiling.fbx");
+
 	modelLib->LoadModel("SUB_TUNNEL_WALL", "Assets\\Models\\Subway_Tunnel_Wall.fbx");
 	modelLib->LoadModel("SUB_TUNNEL_PILLAR", "Assets\\Models\\Subway_Tunnel_Pillar.fbx");
 	modelLib->LoadModel("SUB_TUNNEL_RAIL", "Assets\\Models\\Subway_Tunnel_Rails.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_RAILSIDE", "Assets\\Models\\Subway_Tunnel_Rail_Side.fbx");
 	modelLib->LoadModel("SUB_TUNNEL_BASE", "Assets\\Models\\Subway_Tunnel_Base.fbx");
 	modelLib->LoadModel("SUB_TUNNEL_WIRE", "Assets\\Models\\Subway_Tunnel_Wire.fbx");
 	modelLib->LoadModel("SUB_TUNNEL_CABLE", "Assets\\Models\\Subway_Tunnel_Cable.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_ARCH", "Assets\\Models\\Subway_Tunnel_Arch.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_PIPE", "Assets\\Models\\Subway_Tunnel_Pipe.fbx");
+	modelLib->LoadModel("SUB_TUNNEL_LIGHTS", "Assets\\Models\\Subway_Tunnel_Lights.fbx");
+
+	modelLib->LoadModel("POSTER_ADVERTLEFT", "Assets\\Models\\Subway_Poster_AdLeft.fbx");
+	modelLib->LoadModel("POSTER_ADVERTRIGHT", "Assets\\Models\\Subway_Poster_AdRight.fbx");
+	modelLib->LoadModel("POSTER_DINO", "Assets\\Models\\Subway_Poster_Dino.fbx");
+	modelLib->LoadModel("POSTER_FOOL", "Assets\\Models\\Subway_Poster_Fool.fbx");
+	modelLib->LoadModel("POSTER_LOST", "Assets\\Models\\Subway_Poster_Lost.fbx");
+	modelLib->LoadModel("POSTER_WORK", "Assets\\Models\\Subway_Poster_Work.fbx");
+
+	modelLib->LoadModel("POSTER_HOTELLEFT", "Assets\\Models\\Subway_Poster_HotelLeft.fbx");
+	modelLib->LoadModel("POSTER_HOTELRIGHT", "Assets\\Models\\Subway_Poster_HomeRight.fbx");
+	modelLib->LoadModel("POSTER_INFO", "Assets\\Models\\Subway_Poster_Info.fbx");
+	modelLib->LoadModel("POSTER_HOLIDAY", "Assets\\Models\\Subway_Poster_Holiday.fbx");
+
+
+	modelLib->LoadModel("TICKET_WALL_FRONT", "Assets\\Models\\Ticket_Wall_Front.fbx");
+	modelLib->LoadModel("TICKET_WALL_BACK", "Assets\\Models\\Ticket_Wall_Back.fbx");
+	modelLib->LoadModel("TICKET_WALL_LEFT", "Assets\\Models\\Ticket_Wall_Left.fbx");
+	modelLib->LoadModel("TICKET_WALL_RIGHT", "Assets\\Models\\Ticket_Wall_Right.fbx");
+	modelLib->LoadModel("TICKET_CEILING", "Assets\\Models\\Ticket_Ceiling.fbx");
 
 
 }
@@ -147,7 +208,7 @@ Entity EntitySetup::CreateDirectionalLight(const Vector3& rotation)
 	transform.SetEularRotation(rotation);
 	Light& light = dirLightEntity.AddComponent<Light>();
 	light.type = LightType::DirectionLight;
-	light.intensity = 2.7f;
+	light.intensity = 1.2f;
 
 	return dirLightEntity;
 }
@@ -221,16 +282,32 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::PLATFROM_RIGHTWALLL:
 	case SubwayModel::PLATFROM_LEFTWALLL:
 	case SubwayModel::PLATFROM: 
+	case SubwayModel::PLATFORM_CEILING: 
+	case SubwayModel::TICKET_CEILING:
+	case SubwayModel::TICKET_WALL_BACK:
+	case SubwayModel::TICKET_WALL_FRONT:
+	case SubwayModel::TICKET_WALL_LEFT:
+	case SubwayModel::TICKET_WALL_RIGHT:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_STRUCTURE);
 		break;
 
 	case SubwayModel::PLATFROM_PILLAR:
-
+	case SubwayModel::PLATFROM_STAIR:
+	case SubwayModel::PLATFROM_STAIR_RAIL:
+	case SubwayModel::PLATFROM_STAIR_WALL:
 		AssignMaterial(mat, SubwayMaterial::MAT_STAIRS);
 
 		break;
 
+
+	case SubwayModel::PLATFROM_BENCH:
+	case SubwayModel::PLATFROM_BIN:
+	case SubwayModel::PLATFORM_PIPE:
+
+		AssignMaterial(mat, SubwayMaterial::MAT_SUBWAYASSETS);
+
+		break;
 
 	case SubwayModel::TUNNEL_WALL:
 	case SubwayModel::TUNNEL_PILLAR:
@@ -238,11 +315,28 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::TUNNEL_WIRE:
 	case SubwayModel::TUNNEL_CABLE:
 	case SubwayModel::TUNNEL_BASE:
+	case SubwayModel::TUNNEL_ARCH:
+	case SubwayModel::TUNNEL_LIGHTS:
+	case SubwayModel::TUNNEL_RAILSSIDE:
+	case SubwayModel::TUNNEL_PIPE:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_TUNNEL);
 
+		break;
+	case SubwayModel::POSTER_ADVERTLEFT:
+	case SubwayModel::POSTER_ADVERTRIGHT:
+	case SubwayModel::POSTER_DINO:
+	case SubwayModel::POSTER_FOOL:
+	case SubwayModel::POSTER_HOLIDAY:
+	case SubwayModel::POSTER_HOTELLEFT:
+	case SubwayModel::POSTER_HOTELRIGHT:
+	case SubwayModel::POSTER_LOST:
+	case SubwayModel::POSTER_INFO:
+	case SubwayModel::POSTER_WORK:
 
-	
+		AssignMaterial(mat, SubwayMaterial::MAT_POSTERS);
+		break;
+
 	}
 	
 
