@@ -17,6 +17,11 @@ namespace SaltnPepperEngine
 		void OnInitTestScene();
 		void OnInitMainScene();
 
+
+		void SetupStaticMeshes();
+		void SetupStaticPhysics();
+
+
 		void OnUpdateTestScene(const float deltaTime);
 		void OnUpdateMainScene(const float deltaTime);
 

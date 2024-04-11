@@ -74,7 +74,13 @@ public:
 		TICKET_WALL_BACK,
 		TICKET_WALL_LEFT,
 		TICKET_WALL_RIGHT,
-		TICKET_CEILING
+		TICKET_CEILING,
+
+		TICKET_DOOR,
+		TICKET_GATE,
+		TICKET_GRILL,
+		TICKET_MACHINE,
+		TICKET_BLOCKADE
 
 
 	};
@@ -122,7 +128,8 @@ public:
 	static RigidBody* CreatePhysicsKinematic(const Vector3& position);
 	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips, ZombieType type = ZombieType::WALK);
 
-	
+	static Entity CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds);
+
 
 	static RigidBody* CreatePlayer(const Vector3& position, const Vector3& rotation);
 

@@ -198,7 +198,7 @@ namespace SaltnPepperEngine
 			motionHandle = MakeShared<MotionStateNotifier>(transform);
 
 			btRigidBody::btRigidBodyConstructionInfo info(10, motionHandle.get(), shape, btVector3(0, 0, 0));
-			info.m_startWorldTransform = transform;
+			//info.m_startWorldTransform = transform;
 			//bodyHandle = new btRigidBody(info);
 			bodyHandle = MakeShared<btRigidBody>(info);
 

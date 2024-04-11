@@ -44,7 +44,13 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"TICKET_WALL_BACK",
 	"TICKET_WALL_LEFT",
 	"TICKET_WALL_RIGHT",
-	"TICKET_CEILING"
+	"TICKET_CEILING",
+
+	"TICKET_DOOR",
+	"TICKET_GATE",
+	"TICKET_GRILL",
+	"TICKET_MACHINE",
+	"TICKET_BLOCKADE"
 	
 };
 
@@ -110,6 +116,13 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("TICKET_WALL_LEFT", "Assets\\Models\\Ticket_Wall_Left.fbx");
 	modelLib->LoadModel("TICKET_WALL_RIGHT", "Assets\\Models\\Ticket_Wall_Right.fbx");
 	modelLib->LoadModel("TICKET_CEILING", "Assets\\Models\\Ticket_Ceiling.fbx");
+
+
+	modelLib->LoadModel("TICKET_DOOR", "Assets\\Models\\Ticket_Door.fbx");
+	modelLib->LoadModel("TICKET_GATE", "Assets\\Models\\Ticket_Gate.fbx");
+	modelLib->LoadModel("TICKET_GRILL", "Assets\\Models\\Ticket_Grill.fbx");
+	modelLib->LoadModel("TICKET_MACHINE", "Assets\\Models\\Ticket_Machine.fbx");
+	modelLib->LoadModel("TICKET_BLOCKADE", "Assets\\Models\\Ticket_Blockade.fbx");
 
 
 }
@@ -337,6 +350,14 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 		AssignMaterial(mat, SubwayMaterial::MAT_POSTERS);
 		break;
 
+
+	case SubwayModel::TICKET_GRILL:
+
+		AssignMaterial(mat, SubwayMaterial::MAT_ADDITION);
+
+	case SubwayModel::TICKET_MACHINE:
+
+		AssignMaterial(mat, SubwayMaterial::MAT_TURNSTILE);
 	}
 	
 
@@ -359,7 +380,7 @@ RigidBody* EntitySetup::CreatePhysicsFloor(const Vector3& position, const Vector
 
 	//ModelComponen& model = floorEntity.AddComponent<ModelComponent>
 
-	BoundingBox bounds{ Vector3(-20.0f,-0.5f,-40.0f),Vector3(20.0f,0.5f,40.0f) };
+	BoundingBox bounds{ Vector3(-4.0f,-0.5f,-40.0f),Vector3(4.0f,0.5f,40.0f) };
 	BoxCollider& shape = floorEntity.AddComponent<BoxCollider>();
 	shape.Init(bounds);
 	RigidBody* body = floorEntity.AddComponent<RigidBodyComponent>(floorTransform, shape.GetShape()).GetRigidBody();
@@ -598,6 +619,26 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	return rigidBody;
 
 }
+
+Entity EntitySetup::CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds)
+{
+	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_BOX");
+	Transform& boxTransform = boxEntity.GetComponent<Transform>();
+
+	boxTransform.SetPosition(position);
+	boxTransform.SetEularRotation(rotation);
+
+	BoxCollider& shape = boxEntity.AddComponent<BoxCollider>();
+	shape.Init(bounds);
+	RigidBody* body = boxEntity.AddComponent<RigidBodyComponent>(boxTransform, shape.GetShape()).GetRigidBody();
+	body->MakeStatic();
+	body->SetEntityId(boxEntity);
+	body->SetBounceFactor(0.5f);
+	body->SetFriction(0.8f);
+
+	return boxEntity;
+}
+
 
 void EntitySetup::AssignMaterial(SharedPtr<Material>& mat, const SubwayMaterial type)
 {
