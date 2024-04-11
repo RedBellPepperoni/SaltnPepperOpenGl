@@ -63,6 +63,8 @@ namespace SaltnPepperEngine
 				ALL = DYNAMIC_STATIC_KINEMATTIC | CollisionMask::RAYCAST,
 				NO_STATIC_COLLISIONS = ALL & ~CollisionMask::STATIC & ~CollisionMask::KINEMATIC,
 				NO_STATIC_COLLISION_NO_RAYCAST = NO_STATIC_COLLISIONS & ~CollisionMask::RAYCAST
+
+				
 			};
 		}
 

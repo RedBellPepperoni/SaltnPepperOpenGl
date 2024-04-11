@@ -620,7 +620,7 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 
 }
 
-Entity EntitySetup::CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds)
+Entity EntitySetup::CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds,float friction)
 {
 	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_BOX");
 	Transform& boxTransform = boxEntity.GetComponent<Transform>();

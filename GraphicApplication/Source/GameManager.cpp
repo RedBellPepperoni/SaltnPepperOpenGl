@@ -104,7 +104,27 @@ namespace SaltnPepperEngine
        
        // EntitySetup::CreatePhysicsFloor(Vector3(-2.0f, -3.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
 
-       
+
+        AudioClip* idleclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombieidle1").get();
+        AudioClip* attackclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombieattack1").get();
+        AudioClip* death1clip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiedeath1").get();
+        AudioClip* death2clip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiedeath2").get();
+        AudioClip* alertclip = Application::GetCurrent().GetAudioLibrary()->GetResource("zombiealert1").get();
+
+
+
+
+        std::vector<Audio::AudioClip*> clipsVar1;
+        clipsVar1.push_back(idleclip);
+        clipsVar1.push_back(attackclip);
+        clipsVar1.push_back(alertclip);
+        clipsVar1.push_back(death1clip);
+
+        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
+      /*  EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);*/
 
 
 
@@ -283,7 +303,17 @@ namespace SaltnPepperEngine
         BoundingBox platform{ Vector3(-3.3f,-0.85f,-23.3f),Vector3(3.3f,0.85f,23.3f) };
         EntitySetup::CreatePhysicsBox(Vector3(-2.4022f, -3.501f, -4.4798f), Vector3(0.0f), platform);
 
-        
+        BoundingBox platform_pillar{ Vector3(-0.26f,-2.15f,-0.29f),Vector3(0.26f,2.15f,0.29f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-4.91f, -0.67f, -23.07f), Vector3(0.0f), platform_pillar);
+        EntitySetup::CreatePhysicsBox(Vector3(-4.91f, -0.67f, -11.203f), Vector3(0.0f), platform_pillar);
+        EntitySetup::CreatePhysicsBox(Vector3(-4.91f, -0.67f, -5.6f), Vector3(0.0f), platform_pillar);
+        EntitySetup::CreatePhysicsBox(Vector3(-4.91f, -0.67f, 0.33f), Vector3(0.0f), platform_pillar);
+        EntitySetup::CreatePhysicsBox(Vector3(-4.91f, -0.67f, 6.27f), Vector3(0.0f), platform_pillar);
+
+
+
+        BoundingBox platform_stair{ Vector3(-1.0f,-0.25f,-3.54f),Vector3(1.0f,0.25f,3.54f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-2.7714f, -0.54746f, -3.10417f), Vector3(-39.0f,0.0f,0.0f), platform_stair,1.0f);
 
     }
 
@@ -318,6 +348,10 @@ namespace SaltnPepperEngine
         {
             PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
         }
+
+        UpdateEnemies(deltaTime, playerPosition);
+
+    
 
         if (Application::GetCurrent().GetEditorActive())
         {

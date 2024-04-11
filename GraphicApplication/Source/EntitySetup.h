@@ -128,7 +128,7 @@ public:
 	static RigidBody* CreatePhysicsKinematic(const Vector3& position);
 	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips, ZombieType type = ZombieType::WALK);
 
-	static Entity CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds);
+	static Entity CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds, float friction = 0.7f);
 
 
 	static RigidBody* CreatePlayer(const Vector3& position, const Vector3& rotation);

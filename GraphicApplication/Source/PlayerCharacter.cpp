@@ -182,13 +182,13 @@ namespace SaltnPepperEngine
 
 			
 			float rayFraction = 0.0f;
-			RigidBody* hitbody = PhysicsUtils::RayCast(offsetOrigin, targetOffset,rayFraction, CollisionMask::STATIC);
+			RigidBody* hitbody = PhysicsUtils::RayCast(offsetOrigin, targetOffset,rayFraction, CollisionMask::AllFilter);
 
 			if (hitbody)  
 			{
-				/*std::string name = hitbody->GetEntityId().GetComponent<NameComponent>().name;
+				std::string name = hitbody->GetEntityId().GetComponent<NameComponent>().name;
 
-				LOG_CRITICAL("HIT : {0}", name);*/
+				LOG_CRITICAL("HIT : {0}", name);
 
 				Entity hitEntity = hitbody->GetEntityId();
 

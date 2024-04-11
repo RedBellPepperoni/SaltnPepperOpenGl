@@ -9,43 +9,43 @@ namespace SaltnPepperEngine
 	{
 		void RigidBody::DebugDraw(DebugMode mode)
 		{
-			Vector4 color(1.0f, 0.3f, 0.7f, 1.0f);
+			//Vector4 color(1.0f, 0.3f, 0.7f, 1.0f);
 
 
-			if (!IsStatic())
-			{
-				// Make it green to show it is doing physics
-				color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-			}
+			//if (!IsStatic())
+			//{
+			//	// Make it green to show it is doing physics
+			//	color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+			//}
 
-			BoundingBox box = GetAABB();
-			
-
-
-
-			switch (mode)
-			{
-			case DebugMode::NONE:
-				break;
-			case DebugMode::AABB:
+			//BoundingBox box = GetAABB();
+			//
 
 
-				DebugRenderer::DebugDraw(box, color, false);
 
-				break;
-
-			case DebugMode::COLLIDER:
-
-
-				
+			//switch (mode)
+			//{
+			//case DebugMode::NONE:
+			//	break;
+			//case DebugMode::AABB:
 
 
-				break;
-			case DebugMode::ALL:
-				break;
-			default:
-				break;
-			}
+			//	DebugRenderer::DebugDraw(box, color, false);
+
+			//	break;
+
+			//case DebugMode::COLLIDER:
+
+
+			//	
+
+
+			//	break;
+			//case DebugMode::ALL:
+			//	break;
+			//default:
+			//	break;
+			//}
 
 			//DebugRenderer::DebugDraw(box, color, true);
 		}
