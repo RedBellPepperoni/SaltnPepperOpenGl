@@ -15,6 +15,7 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"SUB_PLAT_STAIR",
 	"SUB_PLAT_STAIR_RAIL",
 	"SUB_PLAT_STAIR_WALL",
+	"PLATFROM_STAIR_COVER",
 	"SUB_PLAT_PIPE",
 	"SUB_PLAT_CEILING",
 
@@ -89,6 +90,7 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("SUB_PLAT_STAIR", "Assets\\Models\\Subway_Platform_Stairs.fbx");
 	modelLib->LoadModel("SUB_PLAT_STAIR_RAIL", "Assets\\Models\\Subway_Platform_Stairs_Rail.fbx");
 	modelLib->LoadModel("SUB_PLAT_STAIR_WALL", "Assets\\Models\\Subway_Platform_Stairs_Wall.fbx");
+	modelLib->LoadModel("PLATFROM_STAIR_COVER", "Assets\\Models\\Subway_Stairs_Cover.fbx");
 	modelLib->LoadModel("SUB_PLAT_PIPE", "Assets\\Models\\Subway_Platform_Pipe.fbx");
 	modelLib->LoadModel("SUB_PLAT_CEILING", "Assets\\Models\\Subway_Ceiling.fbx");
 
@@ -311,6 +313,8 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::TICKET_WALL_FRONT:
 	case SubwayModel::TICKET_WALL_LEFT:
 	case SubwayModel::TICKET_WALL_RIGHT:
+	case SubwayModel::PLATFROM_STAIR_COVER:
+
 
 		AssignMaterial(mat, SubwayMaterial::MAT_STRUCTURE);
 		break;

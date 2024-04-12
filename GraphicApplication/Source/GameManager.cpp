@@ -156,6 +156,8 @@ namespace SaltnPepperEngine
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_STAIR_RAIL, Vector3(-3.8027f, 2.497f, -0.5720f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_STAIR_WALL, Vector3(-2.7749f, -0.92337f, -2.6512f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_STAIR_COVER, Vector3(-2.7054f, 5.326f, -1.1832f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
 
         // ============================= PLATFORM PIPE ========================================
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFORM_PIPE, Vector3(0.2766f, 1.2804f, 17.3489f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
@@ -319,12 +321,18 @@ namespace SaltnPepperEngine
         EntitySetup::CreatePhysicsBox(Vector3(-4.91f, -0.67f, 0.33f), Vector3(0.0f), platform_pillar);
         EntitySetup::CreatePhysicsBox(Vector3(-4.91f, -0.67f, 6.27f), Vector3(0.0f), platform_pillar);
 
+        EntitySetup::CreatePhysicsBox(Vector3(1.9173f, 3.9406f, 0.0538f), Vector3(0.0f), platform_pillar);
+        EntitySetup::CreatePhysicsBox(Vector3(8.1288f, 3.9406f, 0.0538f), Vector3(0.0f), platform_pillar);
+        EntitySetup::CreatePhysicsBox(Vector3(1.9173f, 3.9406f, 8.8039f), Vector3(0.0f), platform_pillar);
+        EntitySetup::CreatePhysicsBox(Vector3(8.1288f, 3.9406f, 8.8039f), Vector3(0.0f), platform_pillar);
+       
+
 
 
         BoundingBox platform_stair{ Vector3(-1.0f,-0.25f,-3.54f),Vector3(1.0f,0.25f,3.54f) };
        EntitySetup::CreatePhysicsBox(Vector3(-2.7714f, -0.54746f, -3.10417f), Vector3(-39.0f,0.0f,0.0f), platform_stair);
 
-        BoundingBox stair_wallside{ Vector3(-0.05f,-2.5f,-2.15f),Vector3(0.05f,2.5f,2.15f) };
+        BoundingBox stair_wallside{ Vector3(-0.05f,-2.5f,-2.5f),Vector3(0.05f,2.5f,2.5f) };
         BoundingBox stair_wallback{ Vector3(-1.1f,-2.0f,-0.55f),Vector3(1.1f,2.0f,0.05f) };
         EntitySetup::CreatePhysicsBox(Vector3(-1.6961f, -0.62406f, -3.1440f), Vector3(0.0f, 0.0f, 0.0f), stair_wallside);
         EntitySetup::CreatePhysicsBox(Vector3(-3.8439f, -0.62406f, -3.1440f), Vector3(0.0f, 0.0f, 0.0f), stair_wallside);
@@ -340,9 +348,15 @@ namespace SaltnPepperEngine
         BoundingBox platform_wall_long{ Vector3(-0.25f,-2.5f,-43.0f),Vector3(0.25f,2.5f,43.0f) };
         EntitySetup::CreatePhysicsBox(Vector3(-10.954f, -1.0f, 2.5347f), Vector3(0.0f), platform_wall_long);
 
+        BoundingBox rail_side{ Vector3(-0.15f,-0.5f,-43.0f),Vector3(0.15f,0.5f,43.0f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-9.686f, -3.1434f, 2.5347f), Vector3(0.0f), rail_side);
+
     
         BoundingBox tunnel_long{ Vector3(-0.25f,-2.0f,-22.0f),Vector3(0.25f,2.0f,22.0f) };
-        EntitySetup::CreatePhysicsBox(Vector3(0.6478f, -0.6240f, -4.3531f), Vector3(0.0f), tunnel_long);
+        EntitySetup::CreatePhysicsBox(Vector3(0.6478f, -1.0f, -4.3531f), Vector3(0.0f), tunnel_long);
+
+        BoundingBox tunnel_side{ Vector3(-0.25f,-2.0f,-14.0f),Vector3(0.25f,2.0f,14.0f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-5.323f, -1.0f, 32.15f), Vector3(0.0f), tunnel_side);
         
         BoundingBox tunnel_Left{ Vector3(-3.25f,-2.0f,-0.25f),Vector3(3.25f,2.0f,0.25f) };
         EntitySetup::CreatePhysicsBox(Vector3(-2.598f, -0.62403f, -26.908f), Vector3(0.0f), tunnel_Left);
@@ -357,7 +371,41 @@ namespace SaltnPepperEngine
         EntitySetup::CreatePhysicsBox(Vector3(-2.1854f, -2.1978f, -24.145f), Vector3(0.0f), bench);
 
         BoundingCylinder bin{ 1.0f,0.3f,0.3f ,BoundingCylinder::Axis::Y};
-        EntitySetup::CreatePhysicsCylinder(Vector3(-2.129f, -2.144f,12.2153f),Vector3(0.0f),bin);
+        EntitySetup::CreatePhysicsCylinder(Vector3(-2.1772f, -2.144f,12.2153f),Vector3(0.0f),bin);
+        EntitySetup::CreatePhysicsCylinder(Vector3(-2.1772f, -2.144f, -18.127f),Vector3(0.0f),bin);
+        EntitySetup::CreatePhysicsCylinder(Vector3(5.040f, 2.5224f, -0.07405f),Vector3(0.0f),bin);
+        EntitySetup::CreatePhysicsCylinder(Vector3(0.4490f, 2.5224f, 8.86561f),Vector3(0.0f),bin);
+
+        BoundingBox floorShort{ Vector3(-7.0f,-0.25f,-2.0f),Vector3(7.0f,0.25f,2.0f) };
+        EntitySetup::CreatePhysicsBox(Vector3(5.692f, 1.8591f, -2.1861f), Vector3(0.0f), floorShort);
+
+        BoundingBox floorLong{ Vector3(-8.0f,-0.25f,-7.0f),Vector3(8.0f,0.25f,7.0f) };
+        EntitySetup::CreatePhysicsBox(Vector3(3.7182f, 1.8591f, 6.8062f), Vector3(0.0f), floorLong);
+
+        
+        BoundingBox wallback{ Vector3(-8.0f,-2.0f,-0.1f),Vector3(8.0f,2.0f,0.1f) };
+        EntitySetup::CreatePhysicsBox(Vector3(3.820f, 4.1096f, -3.575f), Vector3(0.0f), wallback);
+
+        BoundingBox wallfrnt{ Vector3(-16.0f,-2.0f,-0.1f),Vector3(16.0f,2.0f,0.1f) };
+        EntitySetup::CreatePhysicsBox(Vector3(1.056f, 4.1096f, 13.138), Vector3(0.0f), wallfrnt);
+
+        BoundingBox wallleft{ Vector3(-0.1f,-2.0f,-7.0f),Vector3(0.1f,2.0f,7.0f) };
+        EntitySetup::CreatePhysicsBox(Vector3(11.8916, 4.1096f, 3.5832f), Vector3(0.0f), wallleft);
+
+        BoundingBox wallright{ Vector3(-0.1f,-2.0f,-6.0f),Vector3(0.1f,2.0f,6.0f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-4.4169f, 4.1096f, 4.801f), Vector3(0.0f), wallright);
+
+        BoundingBox grillLeft{ Vector3(-4.5f,-1.5f,-0.1f),Vector3(4.5f,1.5f,0.1f) };
+        EntitySetup::CreatePhysicsBox(Vector3(7.2157f, 3.6373f, 5.0764f), Vector3(0.0f), grillLeft);
+
+
+        BoundingBox grillRight{ Vector3(-2.5f,-1.5f,-0.1f),Vector3(2.5f,1.5f,0.1f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-2.0096f, 3.6373f, 5.0764f), Vector3(0.0f), grillRight);
+
+        BoundingBox stairCover{ Vector3(-0.2f,-2.0f,-2.5f),Vector3(0.2f,2.0f,2.5f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-4.0176f, 4.173f, -1.1015f), Vector3(0.0f), stairCover);
+        EntitySetup::CreatePhysicsBox(Vector3(-1.443f, 4.173f, -1.1015f), Vector3(0.0f), stairCover);
+
 
     }
 
