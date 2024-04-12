@@ -1,6 +1,7 @@
 #include "DebugRenderer.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingCylinder.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
 
 #include "Engine/Utils/Logging/Log.h"
@@ -287,6 +288,32 @@ namespace SaltnPepperEngine
 				break;
 			}
 
+		}
+
+		void DebugRenderer::DebugDraw(const BoundingCylinder& cylinder, const Vector4& color)
+		{
+			Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+
+			Vector3 position = cylinder.center;
+
+			Vector3 topCircleCentre = position  + cylinder.height * 0.5f * up;
+			Vector3 bottomSphereCentre = position - up * (cylinder.height * 0.5f);
+
+			DebugDrawCircle(8, cylinder.radiusX, topCircleCentre,  Quaternion(Vector3(Radians(90.0f), 0.0f, 0.0f)), color);
+			DebugDrawCircle(8, cylinder.radiusX, bottomSphereCentre,  Quaternion(Vector3(Radians(90.0f), 0.0f, 0.0f)), color);
+
+
+			float step = 360.0f / float(8);
+			for (int i = 0; i < 8; i++)
+			{
+				float z = Cos(step * i) * cylinder.radiusX;
+				float x = Sin(step * i) * cylinder.radiusX;
+
+				Vector3 offset = Vector4(x, 0.0f, z, 0.0f);
+				DrawLine(bottomSphereCentre + offset, topCircleCentre + offset, color);
+
+				
+			}
 		}
 
 

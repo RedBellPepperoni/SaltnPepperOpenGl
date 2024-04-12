@@ -1,5 +1,6 @@
 
 #include "CylinderCollider.h"
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
@@ -34,6 +35,12 @@ namespace SaltnPepperEngine
 		BoundingCylinder::Axis CylinderCollider::GetOrientation() const
 		{
 			return cylinderShape->GetOrientation();
+		}
+
+		void CylinderCollider::DebugDraw(Transform transform)
+		{
+			BoundingCylinder cylinder = GetBoundingCylinder(transform);
+			Rendering::DebugRenderer::DebugDraw(cylinder, Vector4{0.0f,0.0f,1.0f,1.0f});
 		}
 
 		BoundingBox CylinderCollider::GetAABB(const Transform& transform) const

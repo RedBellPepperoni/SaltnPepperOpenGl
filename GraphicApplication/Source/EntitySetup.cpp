@@ -50,7 +50,12 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"TICKET_GATE",
 	"TICKET_GRILL",
 	"TICKET_MACHINE",
-	"TICKET_BLOCKADE"
+	"TICKET_BLOCKADE",
+
+	"WALL_TAG",
+	"PILLAR_TAG",
+	"STAIR_TAG",
+	"EXIT_TAG"
 	
 };
 
@@ -123,6 +128,11 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("TICKET_GRILL", "Assets\\Models\\Ticket_Grill.fbx");
 	modelLib->LoadModel("TICKET_MACHINE", "Assets\\Models\\Ticket_Machine.fbx");
 	modelLib->LoadModel("TICKET_BLOCKADE", "Assets\\Models\\Ticket_Blockade.fbx");
+
+	modelLib->LoadModel("WALL_TAG", "Assets\\Models\\Wall_Tag.fbx");
+	modelLib->LoadModel("PILLAR_TAG", "Assets\\Models\\Pillar_Tag.fbx");
+	modelLib->LoadModel("STAIR_TAG", "Assets\\Models\\Stair_Tag.fbx");
+	modelLib->LoadModel("EXIT_TAG", "Assets\\Models\\Exit_Tag.fbx");
 
 
 }
@@ -309,6 +319,10 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::PLATFROM_STAIR:
 	case SubwayModel::PLATFROM_STAIR_RAIL:
 	case SubwayModel::PLATFROM_STAIR_WALL:
+	case SubwayModel::EXIT_TAG:
+	case SubwayModel::STAIR_TAG:
+	case SubwayModel::PILLAR_TAG:
+
 		AssignMaterial(mat, SubwayMaterial::MAT_STAIRS);
 
 		break;
@@ -346,6 +360,7 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::POSTER_LOST:
 	case SubwayModel::POSTER_INFO:
 	case SubwayModel::POSTER_WORK:
+	case SubwayModel::WALL_TAG:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_POSTERS);
 		break;
@@ -354,10 +369,12 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::TICKET_GRILL:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_ADDITION);
+		break;
 
 	case SubwayModel::TICKET_MACHINE:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_TURNSTILE);
+		break;
 	}
 	
 
@@ -620,7 +637,7 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 
 }
 
-Entity EntitySetup::CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds,float friction)
+Entity EntitySetup::CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds)
 {
 	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_BOX");
 	Transform& boxTransform = boxEntity.GetComponent<Transform>();
@@ -637,6 +654,25 @@ Entity EntitySetup::CreatePhysicsBox(const Vector3& position, const Vector3& rot
 	body->SetFriction(0.8f);
 
 	return boxEntity;
+}
+
+Entity EntitySetup::CreatePhysicsCylinder(const Vector3& position, const Vector3& rotation, const BoundingCylinder bounds)
+{
+	Entity cylinderEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_BOX");
+	Transform& cylinderTransform = cylinderEntity.GetComponent<Transform>();
+
+	cylinderTransform.SetPosition(position);
+	cylinderTransform.SetEularRotation(rotation);
+
+	CylinderCollider& shape = cylinderEntity.AddComponent<CylinderCollider>();
+	shape.Init(bounds);
+	RigidBody* body = cylinderEntity.AddComponent<RigidBodyComponent>(cylinderTransform, shape.GetShape()).GetRigidBody();
+	body->MakeStatic();
+	body->SetEntityId(cylinderEntity);
+	body->SetBounceFactor(0.5f);
+	body->SetFriction(0.8f);
+
+	return cylinderEntity;
 }
 
 

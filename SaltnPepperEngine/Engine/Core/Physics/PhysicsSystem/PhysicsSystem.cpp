@@ -83,6 +83,13 @@ namespace SaltnPepperEngine
 					continue;
 				}
 
+				CylinderCollider* culinderCol = rigidComp.TryGetComponent<CylinderCollider>();
+				if (culinderCol)
+				{
+					culinderCol->DebugDraw(transform);
+					continue;
+				}
+
 			}
 
 			if (data->paused) { return; }
