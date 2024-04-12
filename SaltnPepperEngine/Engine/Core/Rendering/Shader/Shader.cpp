@@ -114,8 +114,72 @@ namespace SaltnPepperEngine
 
 		bool Shader::Load(const std::string& vertexPath, const std::string& geometryPath, const std::string& fragmentPath)
 		{
-			LOG_ERROR("Geometry Shader Loading not implemented");
-			return false;
+			if (!FileSystem::Exists(vertexPath))
+			{
+				std::string errorPath = vertexPath;
+
+				LOG_WARN("Vertex Shader not found : {0}", errorPath);
+
+				return false;
+			}
+
+			if (!FileSystem::Exists(geometryPath))
+			{
+				LOG_ERROR("Geometry Shader not found : {0}", geometryPath);
+				return false;
+			}
+
+
+			if (!FileSystem::Exists(fragmentPath))
+			{
+				LOG_ERROR("Fragment Shader not found : {0}", fragmentPath);
+				return false;
+			}
+
+			
+			// Setting vertex and fragment data
+			std::array subInfo =
+			{
+				ShaderSubInfo
+				{	// Defining the type
+					ShaderType::VERTEX,
+					// Pulling the Shader vertex data into a continuos string
+					FileSystem::ReadFileToString(vertexPath),
+					// Storing the path
+					FileSystem::GetFilePathfromString(vertexPath)
+				},
+
+				ShaderSubInfo
+				{
+					// Defining the typr
+					ShaderType::GEOMETRY,
+					// Pulling the Shader fragment data into a continuos string
+					FileSystem::ReadFileToString(geometryPath),
+					// Storing the path
+					FileSystem::GetFilePathfromString(geometryPath)
+				},
+				ShaderSubInfo
+				{
+					// Defining the typr
+					ShaderType::FRAGMENT,
+					// Pulling the Shader fragment data into a continuos string
+					FileSystem::ReadFileToString(fragmentPath),
+					// Storing the path
+					FileSystem::GetFilePathfromString(fragmentPath)
+				}
+			};
+
+			const size_t subShaderCount = subInfo.size();
+			std::array<ShaderId, subShaderCount> ids;
+
+			// Generating a program id from the given sub shader infos
+			uint32_t glProgram = CreateShaderProgram(ids.data(), subInfo.data(), subShaderCount);
+
+
+			SetNewNativeHandle(glProgram);
+
+			return true;
+
 		}
 
 		
