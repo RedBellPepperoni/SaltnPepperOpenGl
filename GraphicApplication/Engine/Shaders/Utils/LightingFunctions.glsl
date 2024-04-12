@@ -2,7 +2,7 @@
 
 
 
-vec3 CalculateDirectionalLight(Light light,Material material,vec3 normal)
+vec3 CalculateDirectionalLight(Light light,Material material,vec3 normal,vec3 lightCoords)
 {
     vec3 lightDir = normalize(-light.direction);
 
@@ -79,35 +79,6 @@ vec3 CalculateSpotLight(Light light, Material material,vec3 normal,vec3 position
     vec3 lightContrib = (diffuse + specular + ambient) * finalIntensity * finalAttenuation;
 
     return lightContrib;
-}
-
-
-
-
-
-
-
-vec3 ForwardLighting(Light light, Material material,vec3 normal, vec3 position)
-{
-    vec3 value = vec3(0.0f);
-
-        if(light.type == 0)
-        {
-           value = CalculateDirectionalLight(light, material, normal);
-        }
-
-        // PointLight
-        else if(light.type == 2)
-        {
-           value = CalculatePointLight(light, material, normal,position);
-        }
-        // spotlight
-        else if(light.type == 1)
-        {
-            value = CalculateSpotLight(light, material, normal,position);
-        }
-
-        return value;
 }
 
 
