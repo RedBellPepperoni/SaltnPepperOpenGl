@@ -93,6 +93,8 @@
     <ClInclude Include="Engine\Core\AudioSystem\AudioListener.h" />
     <ClInclude Include="Engine\Core\AudioSystem\AudioManager.h" />
     <ClInclude Include="Engine\Core\AudioSystem\AudioSource.h" />
+    <ClInclude Include="Engine\Core\Navigation\NavMesh.h" />
+    <ClInclude Include="Engine\Core\Navigation\PathFinder.h" />
     <ClInclude Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCapsule.h" />
     <ClInclude Include="Engine\Core\Physics\Collision\BoundingStuff\BoundingCylinder.h" />

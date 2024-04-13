@@ -81,6 +81,11 @@
 #include "Engine/Core/AudioSystem/AudioListener.h"
 #include "Engine/Core/AudioSystem/AudioSource.h"
 
+
+//========= Navigation ====================
+#include "Engine/Core/Navigation/NavMesh.h"
+#include "Engine/Core/Navigation/PathFinder.h"
+
 using namespace SaltnPepperEngine;
 
 using namespace SaltnPepperEngine::Physics;

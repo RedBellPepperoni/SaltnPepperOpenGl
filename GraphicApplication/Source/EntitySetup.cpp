@@ -56,7 +56,9 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"WALL_TAG",
 	"PILLAR_TAG",
 	"STAIR_TAG",
-	"EXIT_TAG"
+	"EXIT_TAG",
+
+	"TUBE_LIGHT"
 	
 };
 
@@ -135,6 +137,7 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("PILLAR_TAG", "Assets\\Models\\Pillar_Tag.fbx");
 	modelLib->LoadModel("STAIR_TAG", "Assets\\Models\\Stair_Tag.fbx");
 	modelLib->LoadModel("EXIT_TAG", "Assets\\Models\\Exit_Tag.fbx");
+	modelLib->LoadModel("TUBE_LIGHT", "Assets\\Models\\Subway_TubeLight.fbx");
 
 
 }
@@ -231,9 +234,9 @@ Entity EntitySetup::CreateDirectionalLight(const Vector3& rotation)
 	Entity dirLightEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Directional Light");
 	Transform& transform = dirLightEntity.GetComponent<Transform>();
 	transform.SetEularRotation(rotation);
-	Light& light = dirLightEntity.AddComponent<Light>();
-	light.type = LightType::DirectionLight;
-	light.intensity = 1.2f;
+	Light* dirlight = dirLightEntity.AddComponent<LightComponent>().GetLightData();
+	dirlight->type = LightType::DirectionLight;
+	dirlight->intensity = 1.2f;
 
 	return dirLightEntity;
 }
@@ -326,6 +329,7 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::EXIT_TAG:
 	case SubwayModel::STAIR_TAG:
 	case SubwayModel::PILLAR_TAG:
+	case SubwayModel::TUBE_LIGHT:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_STAIRS);
 
@@ -387,6 +391,26 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 
 
 	return entity;
+}
+
+Entity EntitySetup::CreateTunnelLights(const Vector3& position, const Vector3& color, float radius, float intensity)
+{
+	Entity tunnelLightEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Tunnel Light");
+	Transform& transform = tunnelLightEntity.GetComponent<Transform>();
+	transform.SetEularRotation(Vector3(0.0f));
+	transform.SetPosition(position);
+
+
+	Light* light = tunnelLightEntity.AddComponent<LightComponent>().GetLightData();
+	light->type = LightType::PointLight;
+	light->intensity = intensity;
+	light->color = color;
+	light->radius = radius;
+
+	return tunnelLightEntity;
+
+
+	return Entity();
 }
 
 RigidBody* EntitySetup::CreatePhysicsFloor(const Vector3& position, const Vector3& rotation)

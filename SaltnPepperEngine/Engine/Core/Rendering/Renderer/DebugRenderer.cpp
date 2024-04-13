@@ -3,7 +3,7 @@
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingCylinder.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
-
+#include "Engine/Core/Components/SceneComponents.h"
 #include "Engine/Utils/Logging/Log.h"
 #include <cstdarg>
 
@@ -260,28 +260,30 @@ namespace SaltnPepperEngine
 		}
 
 
-		void DebugRenderer::DebugDraw(const Light& light, const Quaternion& rotation, const Vector4& color)
+		void DebugRenderer::DebugDraw(LightComponent& lightcomp, const Quaternion& rotation, const Vector4& color)
 		{
-			switch (light.type)
+			Light* light = lightcomp.GetLightData();
+
+			switch (light->type)
 			{
 			case LightType::DirectionLight:
 
 				Vector3 offset(0.0f, 0.1f, 0.0f);
-				DrawLine(Vector3(light.position) + offset, Vector3(light.position + (light.direction) * 2.0f) + offset, color);
-				DrawLine(Vector3(light.position) - offset, Vector3(light.position + (light.direction) * 2.0f) - offset, color);
+				DrawLine(Vector3(light->position) + offset, Vector3(light->position + (light->direction) * 2.0f) + offset, color);
+				DrawLine(Vector3(light->position) - offset, Vector3(light->position + (light->direction) * 2.0f) - offset, color);
 
-				DrawLine(Vector3(light.position), Vector3(light.position + (light.direction) * 2.0f), color);
-				DebugDrawCone(20, 4, 30.0f, 1.5f, (light.position - (light.direction) * 1.5f), rotation, color);
+				DrawLine(Vector3(light->position), Vector3(light->position + (light->direction) * 2.0f), color);
+				DebugDrawCone(20, 4, 30.0f, 1.5f, (light->position - (light->direction) * 1.5f), rotation, color);
 
 				break;
 			case LightType::SpotLight:
 
-				DebugDrawCone(20, 4, Degrees(light.innerAngle), light.intensity, light.position, rotation, color);
+				DebugDrawCone(20, 4, Degrees(light->innerAngle), light->intensity, light->position, rotation, color);
 
 				break;
 			case LightType::PointLight:
 
-				DebugDrawSphere(light.radius, light.position, color);
+				DebugDrawSphere(light->radius, light->position, color);
 
 				break;
 			default:

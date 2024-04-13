@@ -5,6 +5,7 @@
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+#include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Animation/SkinnedAnimator.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
@@ -385,6 +386,21 @@ namespace SaltnPepperEngine
 			BoxCollider* GetCollider();
 		private:
 			SharedPtr<BoxCollider> m_collider = nullptr;
+		};
+
+
+		class LightComponent
+		{
+		public :
+
+			LightComponent();
+			~LightComponent();
+
+			Light* GetLightData();
+
+		private:
+
+			SharedPtr<Light> m_light = nullptr;
 		};
 	}
 

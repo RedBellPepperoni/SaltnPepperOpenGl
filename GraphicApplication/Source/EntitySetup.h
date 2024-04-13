@@ -87,7 +87,8 @@ public:
 		WALL_TAG,
 		PILLAR_TAG,
 		STAIR_TAG,
-		EXIT_TAG
+		EXIT_TAG,
+		TUBE_LIGHT
 
 
 	};
@@ -129,6 +130,9 @@ public:
 	static SharedPtr<Texture>& CreateSecurityCamera(const Vector3& position = Vector3(0.0f), const Vector3& rotation = Vector3(0.0f), const Vector3 camRotation = Vector3(0.0f), bool Moving = false);
 
 	static Entity CreateSkinnedCharatcer(const Vector3& position = Vector3{ 0.0f }, const Vector3& scale = Vector3{ 1.0f });
+
+
+	static Entity CreateTunnelLights(const Vector3& position, const Vector3& color, float radius, float intensity);
 
 	static RigidBody* CreatePhysicsFloor(const Vector3& position, const Vector3& rotation);
 	static RigidBody* CreatePhysicsTest(const Vector3& position);

@@ -57,7 +57,6 @@ namespace SaltnPepperEngine
 	get<ActiveComponent>(input).	\
 	get<Hierarchy>(input).			\
 	get<Camera>(input).				\
-    get<Light>(input).				\
 	get<ModelComponent>(input)	
 	//get<RigidBodyComponent>(input). \
 	

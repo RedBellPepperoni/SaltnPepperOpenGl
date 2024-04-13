@@ -307,6 +307,20 @@ namespace SaltnPepperEngine
 			return m_handle.get();
 		}
 
-	}
+		LightComponent::LightComponent()
+		{
+			m_light = MakeShared<Light>();
+		}
+
+		LightComponent::~LightComponent()
+		{
+		}
+
+		Light* LightComponent::GetLightData()
+		{
+			return m_light.get();
+		}
+
+}
 }
 

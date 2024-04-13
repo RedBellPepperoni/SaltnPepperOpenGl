@@ -12,8 +12,13 @@ namespace SaltnPepperEngine
 	class BoundingSphere;
     class BoundingCylinder;
 	class Scene;
+    namespace Components
+    {
+        class LightComponent;
+    }
 
-	namespace Rendering
+    using Components::LightComponent;
+    namespace Rendering
 	{
 		class Renderer;
 		class RenderManager;
@@ -147,7 +152,7 @@ namespace SaltnPepperEngine
 
             static void DebugDraw(const BoundingSphere& sphere, const Vector4& color);
 
-            static void DebugDraw(const Light& light, const Quaternion& rotation, const Vector4& color);
+            static void DebugDraw(LightComponent& light, const Quaternion& rotation, const Vector4& color);
             static void DebugDraw(const BoundingCylinder& cylinder, const Vector4& color);
             //static void DebugDraw()
 

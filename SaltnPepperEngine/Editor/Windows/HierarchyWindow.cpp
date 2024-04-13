@@ -126,11 +126,11 @@ namespace SaltnPepperEngine
                         icon = iconMap[typeid(RigidBody3D).hash_code()];
                     }
                 }
-                else if (registry.all_of<Light>(node))
+                else if (registry.all_of<LightComponent>(node))
                 {
-                    if (iconMap.find(typeid(Light).hash_code()) != iconMap.end())
+                    if (iconMap.find(typeid(LightComponent).hash_code()) != iconMap.end())
                     {
-                        icon = iconMap[typeid(Light).hash_code()];
+                        icon = iconMap[typeid(LightComponent).hash_code()];
                     }
                 }
                
@@ -538,7 +538,7 @@ namespace SaltnPepperEngine
                         if (ImGui::Selectable("Add Light"))
                         {
                             Entity entity = scene->CreateEntity("Light");
-                            entity.AddComponent<Light>();
+                            entity.AddComponent<LightComponent>();
                             entity.GetOrAddComponent<Transform>();
                         }
 

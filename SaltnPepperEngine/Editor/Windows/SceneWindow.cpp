@@ -22,7 +22,7 @@ namespace SaltnPepperEngine
 			m_name = ICON_MDI_GAMEPAD_VARIANT " Scene###scene";
 			m_CurrentScene = nullptr;
 
-			m_ShowComponentGizmoMap[typeid(Light).hash_code()] = true;
+			m_ShowComponentGizmoMap[typeid(LightComponent).hash_code()] = true;
 			m_ShowComponentGizmoMap[typeid(Camera).hash_code()] = true;
 			
 			m_Width = 1920;
@@ -184,7 +184,7 @@ namespace SaltnPepperEngine
 			Matrix4 viewProj = proj * view;
 			const Frustum& f = camera->GetFrustum(view);
 
-			ShowComponentGizmo<Light>(width, height, xPos, yPos, viewProj, f, registry);
+			ShowComponentGizmo<LightComponent>(width, height, xPos, yPos, viewProj, f, registry);
 			ShowComponentGizmo<Camera>(width, height, xPos, yPos, viewProj, f, registry);
 			
 		}

@@ -1022,7 +1022,7 @@ namespace SaltnPepperEngine
 
 
 
-        void Renderer::ProcessLightElement(Light& light, Transform& transform)
+        void Renderer::ProcessLightElement(Light* light, Transform& transform)
         {
             //size_t currentIndex = m_pipeline.lightElementList.size();  
 
@@ -1030,15 +1030,15 @@ namespace SaltnPepperEngine
             LightElement& lightElement = m_pipeline.lightElementList.emplace_back();
 
 
-            lightElement.color = light.color;
-            lightElement.direction = light.direction = Normalize(transform.GetForwardVector());
-            lightElement.innerAngle = light.innerAngle;
-            lightElement.outerAngle = light.outerAngle;
-            lightElement.intensity = light.intensity;
+            lightElement.color = light->color;
+            lightElement.direction = light->direction = Normalize(transform.GetForwardVector());
+            lightElement.innerAngle = light->innerAngle;
+            lightElement.outerAngle = light->outerAngle;
+            lightElement.intensity = light->intensity;
             lightElement.position = transform.GetPosition();
-            light.position = transform.GetPosition();
-            lightElement.radius = light.radius;
-            lightElement.type = light.type;
+            light->position = transform.GetPosition();
+            lightElement.radius = light->radius;
+            lightElement.type = light->type;
 
             //lightElement.uniformName = "uboLights.lights[" + std::to_string(currentIndex) + "]";
 

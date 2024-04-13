@@ -150,6 +150,7 @@
     <ClCompile Include="Source\AIStuff\AIManager.cpp" />
     <ClCompile Include="Source\AIStuff\AIBaseAgent.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
+    <ClCompile Include="Source\TunnelLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaltnPepperEngine\SaltnPepperEngine.vcxproj">
@@ -166,6 +167,7 @@
     <ClInclude Include="Source\IDamagable.h" />
     <ClInclude Include="Source\ScifiScreen.h" />
     <ClInclude Include="Source\SecurityCamera.h" />
+    <ClInclude Include="Source\TunnelLight.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

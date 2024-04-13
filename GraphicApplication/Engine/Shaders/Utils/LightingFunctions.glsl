@@ -2,7 +2,7 @@
 
 
 
-vec3 CalculateDirectionalLight(Light light,Material material,vec3 normal,vec3 lightCoords)
+vec3 CalculateDirectionalLight(Light light,Material material,vec3 normal)
 {
     vec3 lightDir = normalize(-light.direction);
 

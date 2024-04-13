@@ -70,7 +70,7 @@ namespace SaltnPepperEngine
 			// Set the camera the controoler will access
 			m_editorCameraController.SetCamera(m_editorCamera.get());
 
-			m_componentIconMap[typeid(Light).hash_code()] = ICON_MDI_LIGHTBULB;
+			m_componentIconMap[typeid(LightComponent).hash_code()] = ICON_MDI_LIGHTBULB;
 			m_componentIconMap[typeid(Camera).hash_code()] = ICON_MDI_CAMERA;
 			m_componentIconMap[typeid(Transform).hash_code()] = ICON_MDI_VECTOR_LINE;
 			m_componentIconMap[typeid(RigidBody3D).hash_code()] = ICON_MDI_CUBE_OUTLINE;

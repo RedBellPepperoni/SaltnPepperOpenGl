@@ -306,6 +306,20 @@ namespace SaltnPepperEngine
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::EXIT_TAG, Vector3(-2.6701f, 0.977f, -18.291f), Vector3(0.0f, 180.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::EXIT_TAG, Vector3(-2.6701f, 0.977f, 9.001f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUBE_LIGHT, Vector3(-5.2800f, 1.3542f, -4.4672f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+
+
+        // =============== LIGHTS ==============================
+        
+
+
+        EntitySetup::CreateTunnelLights(Vector3(-4.926f,0.0f, 27.040f), Vector3{1.0f,0.8f,0.7f},8.0f,12.0f);
+        EntitySetup::CreateTunnelLights(Vector3(-11.416f,0.0f, 7.137f), Vector3{1.0f,0.8f,0.7f},8.0f,12.0f);
+        EntitySetup::CreateTunnelLights(Vector3(-11.416f,0.0f, -7.193f), Vector3{1.0f,0.8f,0.7f},8.0f,12.0f);
+        EntitySetup::CreateTunnelLights(Vector3(-11.416f,0.0f, -21.335f), Vector3{1.0f,0.8f,0.7f},8.0f,12.0f);
+        EntitySetup::CreateTunnelLights(Vector3(-11.416f,0.0f, -35.81f), Vector3{1.0f,0.8f,0.7f},8.0f,12.0f);
+
+
     }
 
     void GameManager::SetupStaticPhysics()
