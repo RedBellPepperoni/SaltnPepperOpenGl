@@ -1,5 +1,6 @@
 #include "GameManager.h"
 
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
@@ -128,6 +129,51 @@ namespace SaltnPepperEngine
 
 
 
+
+
+
+    }
+
+    void GameManager::SetupNavMesh()
+    {
+      
+
+        SharedPtr<Model> navModel = Application::GetCurrent().GetModelLibrary()->GetResource("NavMesh_Main");
+        SharedPtr<Mesh> navMesh = navModel->GetMeshes()[0];
+
+        std::vector<Vector3> vertices;
+        std::vector<NavTriangle> tris;
+
+        for (const Vertex& vertex : navMesh->GetVertexData())
+        {
+            vertices.push_back(vertex.position);
+        }
+
+        int j = 0;
+        for (int i = 0; i < navMesh->GetIndexCount()/3; i++)
+        {
+            
+
+            int firstindex = static_cast<int>(navMesh->GetIndexData()[i * 3]);
+            int secondindex = static_cast<int>(navMesh->GetIndexData()[i * 3+1]);
+            int thirdindex = static_cast<int>(navMesh->GetIndexData()[i * 3+2]);
+
+            NavTriangle triangle{ vertices[firstindex],vertices[secondindex],vertices[thirdindex] };
+ 
+          
+            tris.push_back(triangle);
+        }
+
+
+        m_navMesh = MakeShared<NavMesh>(tris);
+
+        
+
+    }
+
+    void GameManager::SetupPathFinder()
+    {
+        m_pathFinder = MakeShared<Pathfinder>(m_navMesh.get());
     }
 
     void GameManager::SetupStaticMeshes()
@@ -470,6 +516,28 @@ namespace SaltnPepperEngine
 
     }
 
+    void GameManager::DebugNavmesh()
+    {
+
+
+        //for (Vector3 pos : triCenters)
+        //{
+        //    Rendering::DebugRenderer::DebugDrawSphere(0.2f, pos, Vector4(1.0f, 0.0f,0.0f,1.0f));
+        //}
+
+        if (path.empty())
+        {
+            //LOG_ERROR("NO NAVIGATION PATH");
+            return;
+        }
+
+        for (Vector3 pos : path)
+        {
+            Rendering::DebugRenderer::DebugDrawSphere(0.3f, pos, Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+        }
+
+    }
+
 
     void GameManager::OnInit()
 	{
@@ -495,7 +563,10 @@ namespace SaltnPepperEngine
        // OnInitTestScene();
 
         OnInitMainScene();
+        SetupNavMesh();
+        SetupPathFinder();
 
+        path = m_pathFinder->findPath(Vector3(-3.2979f, -2.564f, -22.866f), Vector3(-3.2979f, -2.564f, -1.866f));
 
 	}
 
@@ -505,7 +576,7 @@ namespace SaltnPepperEngine
         //OnUpdateTestScene(deltaTime);
 
         OnUpdateMainScene(deltaTime);
-       
+        DebugNavmesh();
 
 	}
 }

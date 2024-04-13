@@ -17,6 +17,8 @@ namespace SaltnPepperEngine
 		void OnInitTestScene();
 		void OnInitMainScene();
 
+		void SetupNavMesh();
+		void SetupPathFinder();
 
 		void SetupStaticMeshes();
 		void SetupStaticPhysics();
@@ -25,6 +27,8 @@ namespace SaltnPepperEngine
 		void OnUpdateTestScene(const float deltaTime);
 		void OnUpdateMainScene(const float deltaTime);
 
+
+		void DebugNavmesh();
 
 	public:
 
@@ -41,6 +45,12 @@ namespace SaltnPepperEngine
 
 		RigidBody* body = nullptr;
 		Vector3 playerPosition = Vector3{ 0.0f };
+
+		SharedPtr<NavMesh> m_navMesh = nullptr;
+		SharedPtr<Pathfinder> m_pathFinder = nullptr;
+
+		std::vector<Vector3> triCenters;
+		std::vector<Vector3> path;
 	};
 }
 

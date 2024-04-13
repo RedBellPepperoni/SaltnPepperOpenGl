@@ -89,3 +89,5 @@
 using namespace SaltnPepperEngine;
 
 using namespace SaltnPepperEngine::Physics;
+
+using namespace SaltnPepperEngine::Navigation;

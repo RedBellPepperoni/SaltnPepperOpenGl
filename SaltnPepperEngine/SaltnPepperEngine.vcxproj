@@ -233,6 +233,8 @@
     <ClCompile Include="Engine\Core\AudioSystem\AudioListener.cpp" />
     <ClCompile Include="Engine\Core\AudioSystem\AudioManager.cpp" />
     <ClCompile Include="Engine\Core\AudioSystem\AudioSource.cpp" />
+    <ClCompile Include="Engine\Core\Navigation\NavMesh.cpp" />
+    <ClCompile Include="Engine\Core\Navigation\PathFinder.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\BoxCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CapsuleCollider.cpp" />
     <ClCompile Include="Engine\Core\Physics\PhysicsSystem\Colliders\CylinderCollider.cpp" />

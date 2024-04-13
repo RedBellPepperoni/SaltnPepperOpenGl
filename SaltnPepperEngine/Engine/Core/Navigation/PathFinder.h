@@ -17,69 +17,64 @@ namespace SaltnPepperEngine
 
         class Pathfinder
         {
+        private:
+            NavMesh* graph;
+            vector<int> cameFrom;
+            vector<float> gScore;
+
         public:
-            // Constructor
-            Pathfinder(const NavMesh& navMesh) : m_navMesh(navMesh) 
-            {}
+            Pathfinder(NavMesh* graph_) : graph(graph_) {}
 
-            std::vector<Vector3> FndPath(const Vector3& startPos, const Vector3& goalPos) const {
-                // Find the nearest triangles to the start and goal positions
-                int startIndex = m_navMesh.FindContainingTriangle(startPos);
-                int goalIndex = m_navMesh.FindContainingTriangle(goalPos);
+            // Function to find the shortest path using A*
+            vector<Vector3> findPath(const Vector3& start, const Vector3& goal) {
+                int startNode = graph->getNearestTriangleIndex(start);
+                int goalNode = graph->getNearestTriangleIndex(goal);
 
-                if (startIndex == -1 || goalIndex == -1) {
-                    // Either start or goal position is not inside any triangle
-                    return {};
-                }
+                // Initialize the open and closed sets
+                priority_queue<pair<float, int>, vector<pair<float, int>>, greater<pair<float, int>>> openSet;
+                openSet.push(make_pair(0, startNode));
 
-                const size_t NavmeshSize = m_navMesh.GetNavMesh().size();
-
-                std::priority_queue<Node> openSet;
-                std::vector<bool> closedSet(NavmeshSize, false);
-                std::vector<float> gScore(NavmeshSize, std::numeric_limits<float>::infinity());
-                std::vector<int> cameFrom(NavmeshSize, -1);
-
-                gScore[startIndex] = 0;
-                openSet.push({ startIndex, distance(startPos, goalPos) });
+                cameFrom.assign(graph->getTriangleCount(), -1);
+                gScore.assign(graph->getTriangleCount(), numeric_limits<float>::max());
+                gScore[startNode] = 0;
+            
 
                 while (!openSet.empty()) {
-                    Node current = openSet.top();
+                    int current = openSet.top().second;
                     openSet.pop();
 
-                    if (current.index == goalIndex) {
-                        // Reconstruct path
-                        std::vector<Vector3> path;
-                        int currentIndex = goalIndex;
-                        while (currentIndex != startIndex) {
-                            path.push_back(m_navMesh.CalculateTriangleCenter(currentIndex));
-                            currentIndex = cameFrom[currentIndex];
+                    if (current == goalNode) {
+                        // Reconstruct the path
+                        vector<Vector3> path;
+                        while (current != startNode) {
+                            path.push_back(graph->getTriangleCenter(current));
+                            current = cameFrom[current];
                         }
-                        path.push_back(m_navMesh.CalculateTriangleCenter(startIndex));
-                        std::reverse(path.begin(), path.end());
+                        path.push_back(start);
+                        reverse(path.begin(), path.end());
                         return path;
                     }
 
-                    closedSet[current.index] = true;
+                    for (int neighbor : graph->getNeighbors(current)) {
+                        float tentative_gScore = gScore[current] + Distance(graph->getTriangleCenter(current), graph->getTriangleCenter(neighbor));
 
-                    for (int neighborIndex = 0; neighborIndex < NavmeshSize; ++neighborIndex) {
-                        if (!closedSet[neighborIndex]) {
-                            float tentativeGScore = gScore[current.index] + Distance(m_navMesh.CalculateTriangleCenter(current.index), m_navMesh.CalculateTriangleCenter(neighborIndex));
-                            if (tentativeGScore < gScore[neighborIndex]) {
-                                cameFrom[neighborIndex] = current.index;
-                                gScore[neighborIndex] = tentativeGScore;
-                                float fScore = gScore[neighborIndex] + Distance(m_navMesh.CalculateTriangleCenter(neighborIndex), goalPos);
-                                openSet.push({ neighborIndex, fScore });
-                            }
+                        if (tentative_gScore < gScore[neighbor]) {
+                            cameFrom[neighbor] = current;
+                            gScore[neighbor] = tentative_gScore;
+                            float fScore = tentative_gScore + Distance(graph->getTriangleCenter(neighbor), graph->getTriangleCenter(goalNode));
+                            openSet.push(make_pair(fScore, neighbor));
                         }
                     }
                 }
 
-                return {}; // No path found
+                // No path found
+                return vector<Vector3>();
             }
 
         private:
-            // Member variables
-             NavMesh m_navMesh;
+          
+           
+           
         };
 	}
 }

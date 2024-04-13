@@ -106,6 +106,8 @@ private:
     bool idle = true;
 
     UniquePtr<GameManager> gameManager = nullptr;
+
+   
    
   /*  std::vector<SharedPtr<Texture>> cameraRenders;
     SharedPtr<SkinnedAnimation> idleAnim;
