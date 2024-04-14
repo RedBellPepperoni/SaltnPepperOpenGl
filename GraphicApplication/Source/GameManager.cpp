@@ -566,7 +566,7 @@ namespace SaltnPepperEngine
         SetupNavMesh();
         SetupPathFinder();
 
-        path = m_pathFinder->findPath(Vector3(-3.2979f, -2.564f, -22.866f), Vector3(-3.2979f, -2.564f, -1.866f));
+        path = m_pathFinder->findPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
 
 	}
 

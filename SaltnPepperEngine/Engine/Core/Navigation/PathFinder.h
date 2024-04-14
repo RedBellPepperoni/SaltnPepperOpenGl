@@ -32,7 +32,7 @@ namespace SaltnPepperEngine
 
                 // Initialize the open and closed sets
                 priority_queue<pair<float, int>, vector<pair<float, int>>, greater<pair<float, int>>> openSet;
-                openSet.push(make_pair(0, startNode));
+                openSet.push(make_pair(0.0f, startNode));
 
                 cameFrom.assign(graph->getTriangleCount(), -1);
                 gScore.assign(graph->getTriangleCount(), numeric_limits<float>::max());
