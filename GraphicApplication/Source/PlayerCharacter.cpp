@@ -87,6 +87,15 @@ namespace SaltnPepperEngine
 			m_rigidBody->SetLinearVelocity(Vector3{0.0f,verticalVelocity.y,0.0f});
 		}
 
+		if (InputSystem::GetInstance().GetKeyDown(Key::F))
+		{
+			const Vector3 origin = lookTransform.GetWorldPosition();
+			const Vector3 forward = lookTransform.GetForwardVector();
+
+			// Raycast check if the hit object was an enemy
+			RayCastbyTag(origin, forward, EnvironmentTag::Tag::NAVMESH);
+		}
+
 
 		if (InputSystem::GetInstance().GetKeyDown(Key::R))
 		{
@@ -108,6 +117,9 @@ namespace SaltnPepperEngine
 			}
 
 		}
+
+
+		
 
 		
 	}
@@ -177,31 +189,8 @@ namespace SaltnPepperEngine
 			const Vector3 origin = lookTransform.GetWorldPosition();
 			const Vector3 forward = lookTransform.GetForwardVector();
 
-			const Vector3 offsetOrigin = origin + (forward * (0.4f));
-			const Vector3 targetOffset = origin + (forward * (50.0f));
-
-			
-			float rayFraction = 0.0f;
-			RigidBody* hitbody = PhysicsUtils::RayCast(offsetOrigin, targetOffset,rayFraction, CollisionMask::AllFilter);
-
-			if (hitbody)  
-			{
-				std::string name = hitbody->GetEntityId().GetComponent<NameComponent>().name;
-
-				LOG_CRITICAL("HIT : {0}", name);
-
-				Entity hitEntity = hitbody->GetEntityId();
-
-				EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
-
-				// Enemy Hit
-				if(enemyComp)
-				{ 
-					EnemyCharacter* enemy = enemyComp->GetEnemy();
-					enemy->TakeDamage(20);
-				}
-
-			}
+			// Raycast check if the hit object was an enemy
+			RayCastbyTag(origin, forward, EnvironmentTag::Tag::ENEMY);
 
 		}
 
@@ -214,6 +203,98 @@ namespace SaltnPepperEngine
 		//if (!LeftButtonHeld) { m_animator->PlayAnimationbyName("Idle", true); }
 
 	}
+
+	bool PlayerCharacter::RayCastbyTag(const Vector3& origin, const Vector3& forward, EnvironmentTag::Tag tag)
+	{
+		const Vector3 offsetOrigin = origin + (forward * (0.4f));
+		const Vector3 targetOffset = origin + (forward * (50.0f));
+
+		Vector3 hitPosition = Vector3{0.0f,0.0f,0.0f};
+
+		RigidBody* hitbody = PhysicsUtils::RayCast(offsetOrigin, targetOffset, hitPosition, CollisionMask::AllFilter);
+
+		// Nothing was hit just return back
+		if (hitbody == nullptr)
+		{
+			return false;
+		}
+
+
+		// ================== RIGIDBODY HIT ============================== 
+
+		// get the parent entity from teh body that was hit
+		Entity hitEntity = hitbody->GetEntityId();
+
+		const EnvironmentTag::Tag hitBodyTag = hitEntity.GetComponent<EnvironmentTag>().currentTag;
+
+		if (hitBodyTag != tag)
+		{
+			return false;
+		}
+
+
+		// ============== CORRECT TAGGED ENTITY WAS HIT ===================
+
+
+		switch (tag)
+		{
+			case SaltnPepperEngine::EnvironmentTag::Tag::NONE:
+			{
+
+			}
+			break;
+
+			case SaltnPepperEngine::EnvironmentTag::Tag::ENEMY:
+			{
+				EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
+				if (enemyComp)
+				{
+					EnemyCharacter* enemy = enemyComp->GetEnemy();
+					enemy->TakeDamage(20);
+					return true;
+				}
+
+			}
+			break;
+
+			case SaltnPepperEngine::EnvironmentTag::Tag::BUDDY:
+			{
+
+			}
+
+			break;
+
+			case SaltnPepperEngine::EnvironmentTag::Tag::NAVMESH:
+			{
+				LOG_CRITICAL("Position Hit : {0} , {1} , {2}", hitPosition.x, hitPosition.y, hitPosition.z);
+			}
+			
+			break;
+
+
+			case SaltnPepperEngine::EnvironmentTag::Tag::LIGHT:
+			{
+
+			}
+			break;
+
+			case SaltnPepperEngine::EnvironmentTag::Tag::TV:
+			{
+
+			}
+			break;
+		
+		}
+
+
+		
+
+
+		
+
+	}
+
+	
 
 	void PlayerCharacter::SetAnimatorRef(SkinnedAnimator* animRef)
 	{

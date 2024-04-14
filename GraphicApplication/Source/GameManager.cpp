@@ -121,7 +121,7 @@ namespace SaltnPepperEngine
         clipsVar1.push_back(alertclip);
         clipsVar1.push_back(death1clip);
 
-        //EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
       /*  EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
@@ -150,7 +150,7 @@ namespace SaltnPepperEngine
         }
 
         int j = 0;
-        for (int i = 0; i < navMesh->GetIndexCount()/3; i++)
+        for (uint32_t i = 0; i < navMesh->GetIndexCount()/3; i++)
         {
             
 
@@ -372,7 +372,7 @@ namespace SaltnPepperEngine
     {
 
         BoundingBox platform{ Vector3(-3.3f,-0.85f,-23.3f),Vector3(3.3f,0.85f,23.3f) };
-        EntitySetup::CreatePhysicsBox(Vector3(-2.4022f, -3.501f, -4.4798f), Vector3(0.0f), platform);
+        EntitySetup::CreatePhysicsBox(Vector3(-2.4022f, -3.501f, -4.4798f), Vector3(0.0f), platform, EnvironmentTag::Tag::NAVMESH);
 
         BoundingBox platform_pillar{ Vector3(-0.26f,-2.15f,-0.29f),Vector3(0.26f,2.15f,0.29f) };
         EntitySetup::CreatePhysicsBox(Vector3(-4.91f, -0.67f, -23.07f), Vector3(0.0f), platform_pillar);

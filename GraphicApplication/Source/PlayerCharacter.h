@@ -11,6 +11,21 @@ namespace SaltnPepperEngine
 		std::string look_tag = "PlayerLook";
 	};
 
+	struct EnvironmentTag
+	{
+		enum class Tag : uint8_t
+		{
+			NONE,
+			ENEMY,
+			BUDDY,
+			NAVMESH,
+			LIGHT,
+			TV
+		};
+
+		Tag currentTag = Tag::NONE;
+	};
+
 
 	class PlayerCharacter : public IDamagable
 	{
@@ -19,6 +34,9 @@ namespace SaltnPepperEngine
 
 		void KeyBoardInput(const float deltaTime, Transform& lookTransform);
 		void MouseInput(const float deltaTime, Vector2 mousePosition, Transform& lookTransform);
+
+		
+		bool RayCastbyTag(const Vector3& origin, const Vector3& forward, EnvironmentTag::Tag tag);
 
 
 	public:

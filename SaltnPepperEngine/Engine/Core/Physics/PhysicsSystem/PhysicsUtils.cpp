@@ -54,6 +54,13 @@ namespace SaltnPepperEngine
 			{
 				return this->m_closestHitFraction;
 			}
+
+			Vector3 GetHitPosition() const
+			{
+				Vector3 hitPoint = FromBulletVector3(this->m_hitPointWorld);
+
+				return hitPoint;
+			}
 		};
 
 
@@ -130,19 +137,22 @@ namespace SaltnPepperEngine
 			rayFraction = callback.GetRayFraction();
 
 			return callback.GetResult();
-
-
-			/*bool hit = callback.hasHit();
-
-			RigidBody* body = nullptr;
-
-			if (hit)
-			{
-				body =  PhysicsUtils::GetRigidBodyParent(callback.m_collisionObject);
-			}
 			
-			return body;*/
-			
+		}
+
+		RigidBody* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, Vector3& hitPosition, int rayCastMask)
+		{
+			btVector3 bulletFrom = ToBulletVector3(from);
+			btVector3 bulletTo = ToBulletVector3(to);
+
+			CustomRayCastCallback callback(bulletFrom, bulletTo, rayCastMask);
+
+			//btCollisionWorld::ClosestRayResultCallback callback(bulletFrom, bulletTo);
+
+			PhysicsSystem::GetCurrent()->World->rayTest(bulletFrom, bulletTo, callback);
+			hitPosition = callback.GetHitPosition();
+
+			return callback.GetResult();
 		}
 
 		

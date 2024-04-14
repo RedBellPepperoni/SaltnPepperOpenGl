@@ -667,13 +667,16 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 
 }
 
-Entity EntitySetup::CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds)
+Entity EntitySetup::CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds, const EnvironmentTag::Tag Tag)
 {
 	Entity boxEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Physics_BOX");
 	Transform& boxTransform = boxEntity.GetComponent<Transform>();
 
 	boxTransform.SetPosition(position);
 	boxTransform.SetEularRotation(rotation);
+
+	EnvironmentTag& tagComp = boxEntity.AddComponent<EnvironmentTag>();
+	tagComp.currentTag = Tag;
 
 	BoxCollider& shape = boxEntity.AddComponent<BoxCollider>();
 	shape.Init(bounds);
@@ -811,7 +814,8 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	source->Set3DMaxDist(6.0f);
 	source->Set3DMinDist(0.1f);
 	
-	
+	EnvironmentTag& tagComp = enemyEntity.AddComponent<EnvironmentTag>();
+	tagComp.currentTag = EnvironmentTag::Tag::ENEMY;
 
 	CapsuleCollider& capsuleCol = enemyEntity.AddComponent<CapsuleCollider>();
 
