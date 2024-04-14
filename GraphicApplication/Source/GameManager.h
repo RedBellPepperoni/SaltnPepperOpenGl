@@ -38,22 +38,23 @@ namespace SaltnPepperEngine
 		void OnInit();
 		void OnUpdate(const float deltaTime);
 
-
+		void MoveBuddyTo(const Vector3& position);
 
 	private:
 
 
-		RigidBody* body = nullptr;
-		Vector3 playerPosition = Vector3{ 0.0f };
+		
+		Vector3 m_playerPosition = Vector3{ 0.0f };
 
 		SharedPtr<NavMesh> m_navMesh = nullptr;
 		SharedPtr<Pathfinder> m_pathFinder = nullptr;
 
-		std::vector<Vector3> triCenters;
-		std::vector<Vector3> path;
-		std::vector<Vector3> simplifiedpath;
+		std::vector<Vector3> m_path;
+		std::vector<Vector3> m_simplifiedpath;
+		Vector3 m_buddyPosition;
 
 		PlayerCharacter* m_playerRef = nullptr;
+
 
 
 	};

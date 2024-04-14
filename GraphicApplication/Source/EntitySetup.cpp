@@ -75,6 +75,7 @@ void EntitySetup::LoadAllModels()
 	// Skinned Stuff
 	skinnedmodelLib->LoadModel("Gun_Pistol", "Assets\\Models\\GUN_PISTOL.fbx");
 	skinnedmodelLib->LoadModel("WarZombie", "Assets\\Models\\WarZombie.dae");
+	skinnedmodelLib->LoadModel("BuddyBot", "Assets\\Models\\Buddy\\RoboBuddy.fbx");
 
 
 	// Static Meshes
@@ -194,6 +195,9 @@ void EntitySetup::LoadAllTextures()
 	// ============================= TURNSTILE TEXTURES ======================
 	textureLib->LoadTexture("Turnstile_Diffuse", "Assets\\Textures\\M_Turnstile_baseColor.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("Turnstile_Normal", "Assets\\Textures\\M_Turnstile_normal.png", TextureFormat::RGBA);
+
+	textureLib->LoadTexture("buddynormal", "Assets\\Textures\\buddy_norm.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("buddydiffuse", "Assets\\Textures\\buddy_diffuse.png", TextureFormat::RGBA);
 
 }
 
@@ -664,6 +668,86 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	player->SetRigidBodyRef(rigidBody);
 	player->SetAnimatorRef(animComp.GetAnimator());
 	return player;
+
+}
+
+BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3& rotation)
+{
+	// =============== Base Player ==============
+	Entity buddyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BuddyCharacter");
+	Transform& buddyTransform = buddyEntity.GetComponent<Transform>();
+
+	buddyTransform.SetPosition(position);
+	buddyTransform.SetEularRotation(Vector3(0.0f));
+
+	CapsuleCollider& capsuleCol = buddyEntity.AddComponent<CapsuleCollider>();
+	capsuleCol.Init(BoundingCapsule(1.2f, 0.3f, BoundingCapsule::Axis::Y));
+
+	RigidBody* rigidBody = buddyEntity.AddComponent<RigidBodyComponent>(buddyTransform, capsuleCol.GetShape()).GetRigidBody();
+	rigidBody->SetBounceFactor(0.1f);
+	rigidBody->SetFriction(0.95f);
+	rigidBody->SetEntityId(buddyEntity);
+
+	Hierarchy& buddyHierarchy = buddyEntity.AddComponent<Hierarchy>();
+
+	// =============== Player Look ===============
+	Entity lookEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BuddyLook");
+	Transform& lookTransform = lookEntity.GetComponent<Transform>();
+
+	
+	lookTransform.SetPosition(Vector3{ 0.0f,0.70f,0.0f });
+	lookTransform.SetEularRotation(Vector3(0.0f, rotation.y, 0.0f));
+
+	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();
+	
+	BuddyLook& look = lookEntity.AddComponent<BuddyLook>();
+
+
+	// ================ PLayer Hands ================
+	Entity skinnedEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BuddyModel");
+	Transform& transform = skinnedEntity.GetComponent<Transform>();
+
+	transform.SetPosition(Vector3(0.0f));
+	transform.SetEularRotation(Vector3(0.0f));
+	transform.SetScale(Vector3(1.0f));
+
+	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("BuddyBot");
+	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
+
+
+	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Idle_Unarmed", "Assets\\Models\\Buddy\\Robo_Idle_Unarmed.fbx", modelComp.m_handle);
+	/*SharedPtr<SkinnedAnimation> reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle);*/
+
+	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
+	/*animComp.GetAnimator()->AddAnimation("Reload", reloadanim);
+	animComp.GetAnimator()->AddAnimation("Shoot", shootanim);*/
+
+	animComp.GetAnimator()->PlayAnimation(idleanim);
+
+	skinnedEntity.AddComponent<Hierarchy>();
+
+	skinnedEntity.SetParent(lookEntity);
+
+
+	SharedPtr<Material>& matOne = modelComp.m_handle->GetMeshes()[0]->GetMaterial();
+	matOne->SetAlbedoTexture("buddydiffuse");
+	matOne->SetNormalTexture("buddynormal");
+	matOne->albedoMapFactor = 1.0f;
+	matOne->normalMapFactor = 0.0f;
+
+	
+
+
+
+	// ================ Player Bindings ============
+
+	lookEntity.SetParent(buddyEntity);
+
+	BuddyCharacter* buddy = buddyEntity.AddComponent<BuddyComponent>().GetBuddy();
+	buddy->SetRigidBodyRef(rigidBody);
+	buddy->SetAnimatorRef(animComp.GetAnimator());
+	return buddy;
 
 }
 

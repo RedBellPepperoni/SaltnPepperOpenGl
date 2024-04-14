@@ -6,6 +6,13 @@
 
 namespace SaltnPepperEngine
 {
+	class GameManager;
+
+	struct BuddyLook
+	{
+		std::string look_tag = "BuddyLook";
+	};
+
 	class BuddyCharacter : public IDamagable
 	{
 	public:
@@ -16,6 +23,14 @@ namespace SaltnPepperEngine
 		virtual void TakeDamage(const int damage) override;
 
 		void UpdateTargetandPath(const Vector3& target, const std::vector<Vector3>& newpath);
+
+		void OnUpdate(const float& deltaTime, Transform& buddyTransform, Transform& lookTransform);
+
+
+		void SetAnimatorRef(SkinnedAnimator* animRef);
+		SkinnedAnimator* GetAnimator();
+		void SetRigidBodyRef(RigidBody* bodyRef);
+		void SetGameManagerRef(GameManager* finder);
 
 	private:
 
@@ -31,15 +46,36 @@ namespace SaltnPepperEngine
 
 	private:
 
+		const float m_detectionRadius = 5.0f;
+		const float m_attackRadius = 1.5f;
 
-		Vector3 targetPosition;
-		bool isfollowingPath = false;
+		const float m_turnRate = 1.25f;
+		float m_speed = 0.6f;
+		const float m_forceMultiplier = 1.0f;
 
-		int currentWaypointIndex = 0;
+		Vector3 m_targetPosition = Vector3{0.0f};
+		bool m_isfollowingPath = false;
+		bool m_targetClose = false;
 
+		int m_currentWaypointIndex = 0;
+
+		GameManager* m_gameManagerRef = nullptr;
 		SkinnedAnimator* m_animator = nullptr;
 		RigidBody* m_rigidBody = nullptr;
 
+		std::vector<Vector3> m_currentPath = std::vector<Vector3>{};
+
+	};
+
+	struct BuddyComponent
+	{
+		BuddyComponent();
+		~BuddyComponent();
+
+		BuddyCharacter* GetBuddy();
+	private:
+
+		SharedPtr<BuddyCharacter> m_buddyHandle = nullptr;
 	};
 }
 

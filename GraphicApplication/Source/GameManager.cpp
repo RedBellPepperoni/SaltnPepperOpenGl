@@ -18,7 +18,7 @@ namespace SaltnPepperEngine
         if (!PlayerComponentView.IsEmpty() && !PlayerLookView.IsEmpty())
         {
             PlayerCharacter* player = PlayerComponentView[0].GetComponent<PlayerComponent>().GetPlayer();
-            playerPosition = PlayerComponentView[0].GetComponent<Transform>().GetPosition();
+            m_playerPosition = PlayerComponentView[0].GetComponent<Transform>().GetPosition();
             Transform& playerLook = PlayerLookView[0].GetComponent<Transform>();
 
             player->OnUpdate(deltaTime, mousePosition, playerLook);
@@ -478,7 +478,7 @@ namespace SaltnPepperEngine
         }
     
 
-        UpdateEnemies(deltaTime, playerPosition);
+        UpdateEnemies(deltaTime, m_playerPosition);
 
         if (Application::GetCurrent().GetEditorActive())
         {
@@ -501,7 +501,7 @@ namespace SaltnPepperEngine
             PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
         }
 
-        UpdateEnemies(deltaTime, playerPosition);
+        UpdateEnemies(deltaTime, m_playerPosition);
 
     
 
@@ -518,11 +518,10 @@ namespace SaltnPepperEngine
 
     void GameManager::DebugNavmesh()
     {
-        path = m_playerRef->GetPath();
-        simplifiedpath = m_playerRef->GetSimplifiedPath();
+      
 
       
-        if (path.empty())
+        if (m_path.empty())
         {
             //LOG_ERROR("NO NAVIGATION PATH");
             return;
@@ -530,21 +529,21 @@ namespace SaltnPepperEngine
 
   
 
-        for (int i = 0; i < path.size(); i++)
+        for (int i = 0; i < m_path.size(); i++)
         {
-            Vector3 curPos = path[i];
+            Vector3 curPos = m_path[i];
             Rendering::DebugRenderer::DebugDrawSphere(0.1f, curPos, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
       
         }
 
-        for (int i = 0; i < simplifiedpath.size(); i++)
+        for (int i = 0; i < m_simplifiedpath.size(); i++)
         {
-            Vector3 curPos = simplifiedpath[i];
+            Vector3 curPos = m_simplifiedpath[i];
             Rendering::DebugRenderer::DebugDrawSphere(0.1f, curPos, Vector4(1.0f, 1.0f, 0.0f, 1.0f));
 
-            if (i < simplifiedpath.size() - 1)
+            if (i < m_simplifiedpath.size() - 1)
             {
-                Vector3 nextpos = simplifiedpath[i + 1];
+                Vector3 nextpos = m_simplifiedpath[i + 1];
 
                 Rendering::DebugRenderer::DrawLine(curPos, nextpos, Vector4(1.0f, 1.0f, 0.0f, 1.0f));
             }
@@ -582,11 +581,9 @@ namespace SaltnPepperEngine
         SetupNavMesh();
         SetupPathFinder();
 
-        path = m_pathFinder->FindPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
-        simplifiedpath = m_pathFinder->FindSimplfiedPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
-
+      
         m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
-        m_playerRef->SetPathFinderRef(m_pathFinder.get());
+        m_playerRef->SetGameManagerRef(this);
 	}
 
 
@@ -598,4 +595,10 @@ namespace SaltnPepperEngine
         DebugNavmesh();
 
 	}
+
+    void GameManager::MoveBuddyTo(const Vector3& position)
+    {
+        m_path = m_pathFinder->FindPath(m_buddyPosition,position);
+        m_simplifiedpath = m_pathFinder->FindSimplfiedPath(m_buddyPosition,position);
+    }
 }

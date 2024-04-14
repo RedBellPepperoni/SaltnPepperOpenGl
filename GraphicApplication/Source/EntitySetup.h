@@ -5,6 +5,7 @@
 #include "SecurityCamera.h"
 #include "ScifiScreen.h"
 #include "PlayerCharacter.h"
+#include "BuddyCharacter.h"
 #include "EnemyCharacter.h"
 
 static int cameraCount = 0;
@@ -144,8 +145,7 @@ public:
 	//static Entity CreatePhysicsDynamic(const Vector3& position, const Vector3& rotation,)
 	static PlayerCharacter* CreatePlayer(const Vector3& position, const Vector3& rotation);
 
-
-	
+	static BuddyCharacter* CreateBuddy(const Vector3& position, const Vector3& rotation);
 
 
 

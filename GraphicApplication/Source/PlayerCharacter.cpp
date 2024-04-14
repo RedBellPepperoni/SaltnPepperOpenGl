@@ -1,5 +1,6 @@
 #include "PlayerCharacter.h"
 #include "EnemyCharacter.h"
+#include "GameManager.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
@@ -272,8 +273,7 @@ namespace SaltnPepperEngine
 			{
 				LOG_CRITICAL("Position Hit : {0} , {1} , {2}", hitPosition.x, hitPosition.y, hitPosition.z);
 
-				m_path = m_pathFinder->FindPath(origin, hitPosition);
-				m_simplifiedpath = m_pathFinder->FindSimplfiedPath(origin, hitPosition);
+				m_gameManagerRef->MoveBuddyTo(hitPosition);
 			}
 			
 			break;
@@ -321,10 +321,12 @@ namespace SaltnPepperEngine
 		m_rigidBody = bodyRef;
 	}
 
-	void PlayerCharacter::SetPathFinderRef(Pathfinder* finder)
+	void PlayerCharacter::SetGameManagerRef(GameManager* finder)
 	{
-		m_pathFinder = finder;
+		m_gameManagerRef = finder;
 	}
+
+	
 
 	void PlayerCharacter::OnUpdate(float deltaTime, Vector2 mousePosition, Transform& lookTransform)
 	{
