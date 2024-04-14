@@ -55,20 +55,20 @@ namespace SaltnPepperEngine
             NavMesh(const vector<NavTriangle>& trianglesList);
              
 
-            // Function to check if two triangles share an edge
+           
 			bool trianglesShareEdge(const NavTriangle& t1, const NavTriangle& t2);
 
-            // Function to get the index of the nearest triangle to a given point
+           
 			int getNearestTriangleIndex(const Vector3& point) const;
 
-            // Function to get the neighbors of a triangle
+          
 
             const vector<int>& getNeighbors(int triangleIndex) const
 			{
                 return triangles[triangleIndex].neighbors;
             }
 
-            // Function to get the center of a triangle
+          
             Vector3 getTriangleCenter(int triangleIndex) const
 			{
                 return triangles[triangleIndex].center;
@@ -77,6 +77,8 @@ namespace SaltnPepperEngine
 			int getTriangleCount() const {
 				return static_cast<int>(triangles.size());
 			}
+
+			const NavTriangle& GetTriangle(int i) const { return triangles[i]; }
 
 
 		};
