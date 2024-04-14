@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\BuddyCharacter.cpp" />
     <ClCompile Include="Source\EnemyCharacter.cpp" />
     <ClCompile Include="Source\EntitySetup.cpp" />
     <ClCompile Include="Source\GameManager.cpp" />
@@ -158,6 +159,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="References.h" />
+    <ClInclude Include="Source\BuddyCharacter.h" />
     <ClInclude Include="Source\EnemyCharacter.h" />
     <ClInclude Include="Source\GameManager.h" />
     <ClInclude Include="Source\PlayerCharacter.h" />

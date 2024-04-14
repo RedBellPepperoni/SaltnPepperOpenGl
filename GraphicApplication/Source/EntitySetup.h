@@ -142,7 +142,7 @@ public:
 	static Entity CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds, const EnvironmentTag::Tag Tag = EnvironmentTag::Tag::NONE);
 	static Entity CreatePhysicsCylinder(const Vector3& position, const Vector3& rotation, const BoundingCylinder bounds);
 	//static Entity CreatePhysicsDynamic(const Vector3& position, const Vector3& rotation,)
-	static RigidBody* CreatePlayer(const Vector3& position, const Vector3& rotation);
+	static PlayerCharacter* CreatePlayer(const Vector3& position, const Vector3& rotation);
 
 
 	

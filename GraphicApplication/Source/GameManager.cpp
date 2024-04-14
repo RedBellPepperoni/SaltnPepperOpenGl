@@ -72,7 +72,7 @@ namespace SaltnPepperEngine
 
 
         EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));
-        body = EntitySetup::CreatePlayer(Vector3(5.0f, 1.0f, 5.0f), Vector3(0.0f, 20.0f, 0.0f));
+        EntitySetup::CreatePlayer(Vector3(5.0f, 1.0f, 5.0f), Vector3(0.0f, 20.0f, 0.0f));
 
         EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(15.0f, 1.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
@@ -101,7 +101,7 @@ namespace SaltnPepperEngine
         SetupStaticPhysics();
 
         EntitySetup::CreateDirectionalLight(Vector3(-11.4192f, 51.3504f, -7.0023f));
-        body = EntitySetup::CreatePlayer(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
+      
        
        // EntitySetup::CreatePhysicsFloor(Vector3(-2.0f, -3.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f));
 
@@ -518,7 +518,8 @@ namespace SaltnPepperEngine
 
     void GameManager::DebugNavmesh()
     {
-
+        path = m_playerRef->GetPath();
+        simplifiedpath = m_playerRef->GetSimplifiedPath();
 
       
         if (path.empty())
@@ -584,6 +585,8 @@ namespace SaltnPepperEngine
         path = m_pathFinder->FindPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
         simplifiedpath = m_pathFinder->FindSimplfiedPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
 
+        m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_playerRef->SetPathFinderRef(m_pathFinder.get());
 	}
 
 

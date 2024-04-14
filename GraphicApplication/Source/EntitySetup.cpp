@@ -575,7 +575,7 @@ Entity EntitySetup::CreateSkinnedCharatcer(const Vector3& position, const Vector
 
 }
 
-RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rotation)
+PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rotation)
 {
 	// =============== Base Player ==============
 	Entity playerEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerCharacter");
@@ -663,7 +663,7 @@ RigidBody* EntitySetup::CreatePlayer(const Vector3& position, const Vector3& rot
 	PlayerCharacter* player = playerEntity.AddComponent<PlayerComponent>().GetPlayer();
 	player->SetRigidBodyRef(rigidBody);
 	player->SetAnimatorRef(animComp.GetAnimator());
-	return rigidBody;
+	return player;
 
 }
 

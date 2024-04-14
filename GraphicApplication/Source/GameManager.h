@@ -52,6 +52,10 @@ namespace SaltnPepperEngine
 		std::vector<Vector3> triCenters;
 		std::vector<Vector3> path;
 		std::vector<Vector3> simplifiedpath;
+
+		PlayerCharacter* m_playerRef = nullptr;
+
+
 	};
 }
 

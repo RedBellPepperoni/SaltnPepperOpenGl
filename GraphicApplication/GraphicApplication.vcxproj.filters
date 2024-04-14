@@ -39,6 +39,9 @@
     <ClCompile Include="Source\TunnelLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BuddyCharacter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\EntitySetup.h">
@@ -69,6 +72,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\TunnelLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="References.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BuddyCharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

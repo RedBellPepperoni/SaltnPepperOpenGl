@@ -38,6 +38,7 @@ namespace SaltnPepperEngine
 		
 		bool RayCastbyTag(const Vector3& origin, const Vector3& forward, EnvironmentTag::Tag tag);
 
+		
 
 	public:
 
@@ -47,12 +48,14 @@ namespace SaltnPepperEngine
 		void SetAnimatorRef(SkinnedAnimator* animRef);
 		SkinnedAnimator* GetAnimator();
 		void SetRigidBodyRef(RigidBody* bodyRef);
+		void SetPathFinderRef(Pathfinder* finder);
 
 		void OnUpdate(float deltaTime, Vector2 mousePosition, Transform& lookTransform);
 
 		virtual void TakeDamage(const int damage) override;
 
-
+		const std::vector<Vector3>& GetPath() { return m_path; }
+		const std::vector<Vector3>& GetSimplifiedPath() { return m_simplifiedpath; }
 
 
 	private:
@@ -91,6 +94,10 @@ namespace SaltnPepperEngine
 		SharedPtr<SkinnedAnimation> shootAnim;
 		SharedPtr<SkinnedAnimation> reloadAnim;
 
+		Pathfinder* m_pathFinder = nullptr;
+
+		std::vector<Vector3> m_path;
+		std::vector<Vector3> m_simplifiedpath;
 
 	};
 

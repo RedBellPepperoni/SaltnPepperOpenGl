@@ -1,5 +1,6 @@
 #include "PlayerCharacter.h"
 #include "EnemyCharacter.h"
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
@@ -94,6 +95,9 @@ namespace SaltnPepperEngine
 
 			// Raycast check if the hit object was an enemy
 			RayCastbyTag(origin, forward, EnvironmentTag::Tag::NAVMESH);
+
+
+			
 		}
 
 
@@ -267,6 +271,9 @@ namespace SaltnPepperEngine
 			case SaltnPepperEngine::EnvironmentTag::Tag::NAVMESH:
 			{
 				LOG_CRITICAL("Position Hit : {0} , {1} , {2}", hitPosition.x, hitPosition.y, hitPosition.z);
+
+				m_path = m_pathFinder->FindPath(origin, hitPosition);
+				m_simplifiedpath = m_pathFinder->FindSimplfiedPath(origin, hitPosition);
 			}
 			
 			break;
@@ -296,6 +303,8 @@ namespace SaltnPepperEngine
 
 	
 
+	
+
 	void PlayerCharacter::SetAnimatorRef(SkinnedAnimator* animRef)
 	{
 		m_animator = animRef;
@@ -312,8 +321,15 @@ namespace SaltnPepperEngine
 		m_rigidBody = bodyRef;
 	}
 
+	void PlayerCharacter::SetPathFinderRef(Pathfinder* finder)
+	{
+		m_pathFinder = finder;
+	}
+
 	void PlayerCharacter::OnUpdate(float deltaTime, Vector2 mousePosition, Transform& lookTransform)
 	{
+		
+
 		if (Application::GetCurrent().GetEditorActive()) { return; }
 
 
@@ -321,6 +337,8 @@ namespace SaltnPepperEngine
 		MouseInput(deltaTime, mousePosition,lookTransform);
 
 		m_animator->OnUpdate(deltaTime);
+
+	
 
 	}
 
