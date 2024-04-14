@@ -520,20 +520,35 @@ namespace SaltnPepperEngine
     {
 
 
-        //for (Vector3 pos : triCenters)
-        //{
-        //    Rendering::DebugRenderer::DebugDrawSphere(0.2f, pos, Vector4(1.0f, 0.0f,0.0f,1.0f));
-        //}
-
+      
         if (path.empty())
         {
             //LOG_ERROR("NO NAVIGATION PATH");
             return;
         }
 
-        for (Vector3 pos : path)
+  
+
+        for (int i = 0; i < path.size(); i++)
         {
-            Rendering::DebugRenderer::DebugDrawSphere(0.3f, pos, Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+            Vector3 curPos = path[i];
+            Rendering::DebugRenderer::DebugDrawSphere(0.1f, curPos, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+      
+        }
+
+        for (int i = 0; i < simplifiedpath.size(); i++)
+        {
+            Vector3 curPos = simplifiedpath[i];
+            Rendering::DebugRenderer::DebugDrawSphere(0.1f, curPos, Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+
+            if (i < simplifiedpath.size() - 1)
+            {
+                Vector3 nextpos = simplifiedpath[i + 1];
+
+                Rendering::DebugRenderer::DrawLine(curPos, nextpos, Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+            }
+
+
         }
 
     }
@@ -566,8 +581,8 @@ namespace SaltnPepperEngine
         SetupNavMesh();
         SetupPathFinder();
 
-       // path = m_pathFinder->findPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
-        path = m_pathFinder->FindSimplfiedPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
+        path = m_pathFinder->FindPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
+        simplifiedpath = m_pathFinder->FindSimplfiedPath(Vector3(-1.0243f, -1.564f, -25.866f), Vector3(-2.247f, 1.7f,6.12525));
 
 	}
 

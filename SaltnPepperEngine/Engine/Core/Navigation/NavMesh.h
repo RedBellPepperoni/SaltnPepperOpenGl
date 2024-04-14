@@ -28,7 +28,7 @@ namespace SaltnPepperEngine
 				center = CalculateCenter();
 			}
 
-			// Function to calculate the center of the triangle
+			
 			Vector3 CalculateCenter() const
 			{
 				Vector3 center(0, 0, 0);
@@ -56,25 +56,26 @@ namespace SaltnPepperEngine
              
 
            
-			bool trianglesShareEdge(const NavTriangle& t1, const NavTriangle& t2);
+			const bool TrianglesShareEdge(const NavTriangle& t1, const NavTriangle& t2) const;
 
            
-			int getNearestTriangleIndex(const Vector3& point) const;
+			const int GetNearestTriangleIndex(const Vector3& point) const;
 
           
 
-            const vector<int>& getNeighbors(int triangleIndex) const
+            const vector<int>& GetNeighbors(int triangleIndex) const
 			{
                 return triangles[triangleIndex].neighbors;
             }
 
           
-            Vector3 getTriangleCenter(int triangleIndex) const
+            const Vector3 GetTriangleCenter(int triangleIndex) const
 			{
                 return triangles[triangleIndex].center;
             }
 
-			int getTriangleCount() const {
+			const int GetTriangleCount() const 
+			{
 				return static_cast<int>(triangles.size());
 			}
 
