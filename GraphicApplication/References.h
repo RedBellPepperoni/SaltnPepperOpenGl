@@ -1,7 +1,10 @@
 #pragma once
 
 // ROBOT MODEL LINK
-//https://sketchfab.com/3d-models/heavy-robot-3f18e4e7b6c643c4b7763febf1361ee4
+//https://sketchfab.com/3d-models/rusty-robot-5c70d4ff5d3c4610847efc2b6b8a5e89
+
+// AXE MODEL LINK
+//https://sketchfab.com/3d-models/simple-axe-4550493ccfb34e488030bec949951a99
 
 
 // SUBWAY MODEL LINK 

@@ -56,7 +56,7 @@ namespace SaltnPepperEngine
 		PlayerCharacter* m_playerRef = nullptr;
 		BuddyCharacter* m_buddyRef = nullptr;
 
-
+		std::vector<NavTriangle> m_debugnavmesh;
 
 	};
 }

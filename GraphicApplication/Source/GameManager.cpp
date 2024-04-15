@@ -186,7 +186,7 @@ namespace SaltnPepperEngine
 
         m_navMesh = MakeShared<NavMesh>(tris);
 
-        
+        m_debugnavmesh = tris;
 
     }
 
@@ -542,27 +542,28 @@ namespace SaltnPepperEngine
     void GameManager::DebugNavmesh()
     {
       
+        for (const NavTriangle& tri : m_debugnavmesh)
+        {
+            Vector3 vertexOne = tri.vertices[0];
+            Vector3 vertexTwo = tri.vertices[1];
+            Vector3 vertexThree = tri.vertices[2];
 
-      
-        if (m_path.empty())
+            Rendering::DebugRenderer::DrawLine(vertexOne, vertexTwo, Vector4(0.0f, 1.0f, 0.2f, 1.0f));
+            Rendering::DebugRenderer::DrawLine(vertexTwo, vertexThree, Vector4(0.0f, 1.0f, 0.2f, 1.0f));
+            Rendering::DebugRenderer::DrawLine(vertexThree, vertexOne, Vector4(0.0f, 1.0f, 0.2f, 1.0f));
+        }
+
+       
+        if (m_simplifiedpath.empty())
         {
             //LOG_ERROR("NO NAVIGATION PATH");
             return;
         }
 
-  
-
-        for (int i = 0; i < m_path.size(); i++)
-        {
-            Vector3 curPos = m_path[i];
-            Rendering::DebugRenderer::DebugDrawSphere(0.1f, curPos, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-      
-        }
-
         for (int i = 0; i < m_simplifiedpath.size(); i++)
         {
             Vector3 curPos = m_simplifiedpath[i];
-            Rendering::DebugRenderer::DebugDrawSphere(0.1f, curPos, Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+            Rendering::DebugRenderer::DebugDrawSphere(0.05f, curPos, Vector4(1.0f, 1.0f, 0.0f, 1.0f));
 
             if (i < m_simplifiedpath.size() - 1)
             {
@@ -623,9 +624,8 @@ namespace SaltnPepperEngine
 
     void GameManager::MoveBuddyTo(const Vector3& position)
     {
-        m_path = m_pathFinder->FindPath(m_buddyPosition,position);
+        
         m_simplifiedpath = m_pathFinder->FindSimplfiedPath(m_buddyPosition,position);
-
         m_buddyRef->UpdateTargetandPath(position, m_simplifiedpath);
 
     }

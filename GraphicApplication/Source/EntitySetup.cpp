@@ -716,10 +716,13 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 
 
 	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Idle_Unarmed", "Assets\\Models\\Buddy\\Robo_Idle_Unarmed.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> walkanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Walk_Unarmed", "Assets\\Models\\Buddy\\Robo_Walk_Unarmed.dae", modelComp.m_handle);
+	
 	/*SharedPtr<SkinnedAnimation> reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle);
 	SharedPtr<SkinnedAnimation> shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle);*/
 
-	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
+	animComp.GetAnimator()->AddAnimation("IdleUnarmed", idleanim);
+	animComp.GetAnimator()->AddAnimation("WalkUnarmed", walkanim);
 	/*animComp.GetAnimator()->AddAnimation("Reload", reloadanim);
 	animComp.GetAnimator()->AddAnimation("Shoot", shootanim);*/
 

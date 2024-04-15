@@ -81,7 +81,7 @@ namespace SaltnPepperEngine
 
 			const NavTriangle& GetTriangle(int i) const { return triangles[i]; }
 
-
+			
 		};
 	}
 }

@@ -81,7 +81,7 @@ namespace SaltnPepperEngine
 		const float m_detectionRadius = 5.0f;
 		const float m_attackRadius = 1.5f;
 
-		const float m_turnRate = 1.25f;
+		const float m_turnRate = 2.25f;
 		float m_speed = 1.6f;
 		const float m_forceMultiplier = 1.0f;
 

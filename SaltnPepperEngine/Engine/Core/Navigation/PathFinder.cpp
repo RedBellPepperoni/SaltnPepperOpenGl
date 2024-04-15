@@ -17,22 +17,25 @@ namespace SaltnPepperEngine
 
 			// Return the Simplified path usinf funnel
 			//return SimplifyPath(path, m_graph);
-            const float epsilon = 4.0f;
+            const float epsilon = 3.0f;
 
 			return SimplifyDouglus(path, epsilon);
 		}
 
 		vector<Vector3> Pathfinder::FindPath(const Vector3& start, const Vector3& goal)
 		{
-            int startNode = m_graph->GetNearestTriangleIndex(start);
-            int goalNode = m_graph->GetNearestTriangleIndex(goal);
+            m_gScore.clear();
+            m_cameFrom.clear();
+
+            int startNode = GetGraph()->GetNearestTriangleIndex(start);
+            int goalNode = GetGraph()->GetNearestTriangleIndex(goal);
 
 
             priority_queue<pair<float, int>, vector<pair<float, int>>, greater<pair<float, int>>> openSet;
             openSet.push(make_pair(0.0f, startNode));
 
-            m_cameFrom.assign(m_graph->GetTriangleCount(), -1);
-            m_gScore.assign(m_graph->GetTriangleCount(), numeric_limits<float>::max());
+            m_cameFrom.assign(GetGraph()->GetTriangleCount(), -1);
+            m_gScore.assign(GetGraph()->GetTriangleCount(), numeric_limits<float>::max());
             m_gScore[startNode] = 0;
 
 
@@ -48,7 +51,7 @@ namespace SaltnPepperEngine
 
                     while (current != startNode) 
                     {
-                        path.push_back(m_graph->GetTriangleCenter(current));
+                        path.push_back(GetGraph()->GetTriangleCenter(current));
                         current = m_cameFrom[current];
                     }
 
@@ -57,30 +60,26 @@ namespace SaltnPepperEngine
                     return path;
                 }
 
-                for (int neighbor : m_graph->GetNeighbors(current))
+                for (int neighbor : GetGraph()->GetNeighbors(current))
                 {
-                    float tentative_gScore = m_gScore[current] + Distance(m_graph->GetTriangleCenter(current), m_graph->GetTriangleCenter(neighbor));
+                    float tentative_gScore = m_gScore[current] + Distance(GetGraph()->GetTriangleCenter(current), GetGraph()->GetTriangleCenter(neighbor));
 
                     if (tentative_gScore < m_gScore[neighbor]) 
                     {
                         m_cameFrom[neighbor] = current;
                         m_gScore[neighbor] = tentative_gScore;
-                        float fScore = tentative_gScore + Distance(m_graph->GetTriangleCenter(neighbor), m_graph->GetTriangleCenter(goalNode));
+                        float fScore = tentative_gScore + Distance(GetGraph()->GetTriangleCenter(neighbor), GetGraph()->GetTriangleCenter(goalNode));
                         openSet.push(make_pair(fScore, neighbor));
                     }
                 }
             }
 
             // No path found
-            return vector<Vector3>();
+            return vector<Vector3>{};
 		}
 
 
-        // Calculate the signed area of a triangle
-        float SignedArea(const Vector3& a, const Vector3& b, const Vector3& c) 
-        {
-            return Dot(Cross((b - a), (c- b)), Vector3{ 0, 1, 0 });
-        }
+        
 
         vector<Vector3> Pathfinder::SimplifyPath(const vector<Vector3>& path, const NavMesh* graph) const
         {
@@ -92,7 +91,7 @@ namespace SaltnPepperEngine
             float dmax = 0;
             int index = -1;
 
-            // Find the point with the maximum distance
+          
             for (int i = startIndex + 1; i < endIndex; ++i) {
                 float d = DistanceSquared(path[i], path[startIndex]) + DistanceSquared(path[i], path[endIndex]);
                 if (d > dmax) {
@@ -101,7 +100,7 @@ namespace SaltnPepperEngine
                 }
             }
 
-            // If the maximum distance is greater than epsilon, recursively simplify
+            
             if (dmax > epsilon * epsilon)
             {
                 DouglasPeuckerSimplify(path, epsilon, startIndex, index, simplifiedPath);
@@ -109,7 +108,7 @@ namespace SaltnPepperEngine
             }
             else 
             {
-                // Add the simplified point
+                
                 simplifiedPath.push_back(path[endIndex]);
             }
         }
@@ -118,8 +117,6 @@ namespace SaltnPepperEngine
         {
             std::vector<Vector3> simplifiedPath;
 
-         
-          
 
             // Perform the Douglas-Peucker simplification
             DouglasPeuckerSimplify(path, epsilon, 0, static_cast<int>(path.size() - 1), simplifiedPath);

@@ -4,9 +4,11 @@ namespace SaltnPepperEngine
 {
 	BuddyCharacter::BuddyCharacter()
 	{
+
 	}
 	BuddyCharacter::~BuddyCharacter()
 	{
+
 	}
 
 	void BuddyCharacter::TakeDamage(const int damage)
@@ -22,12 +24,14 @@ namespace SaltnPepperEngine
 		m_isfollowingPath = true;
 		m_targetClose = false;
 
-		
 	}
 
 	void BuddyCharacter::OnUpdate(const float& deltaTime, Transform& buddyTransform, Transform& lookTransform)
 	{
 		const Vector3 currentPosition = buddyTransform.GetPosition() - Vector3{0.0f,0.81,0.0f};
+
+
+		UpdateAnimState(deltaTime);
 
 		m_animCounter += deltaTime;
 
@@ -76,6 +80,7 @@ namespace SaltnPepperEngine
 			{
 				m_isfollowingPath = false;
 				m_targetClose = false;
+				currentState = BuddyState::IDLE;
 			}
 
 			
@@ -115,7 +120,7 @@ namespace SaltnPepperEngine
 		case BuddyState::IDLE:
 
 			m_animator->SetTransitiontime(0.4f);
-			m_animator->PlayAnimationbyName("Idle");
+			m_animator->PlayAnimationbyName("IdleUnarmed");
 
 
 
@@ -123,7 +128,7 @@ namespace SaltnPepperEngine
 
 		case BuddyState::WALKING:
 			m_animator->SetTransitiontime(0.4f);
-			m_animator->PlayAnimationbyName("Walk");
+			m_animator->PlayAnimationbyName("WalkUnarmed");
 
 			//PlayIdleSound();
 
@@ -172,6 +177,8 @@ namespace SaltnPepperEngine
 
 		finalVelocity.y = fallVelo;
 		m_rigidBody->SetLinearVelocity(finalVelocity);
+
+		currentState = BuddyState::WALKING;
 	}
 
 	void BuddyCharacter::RotateModel(float deltatime, const Vector3& target, Transform& looktransform)

@@ -19,6 +19,9 @@ namespace SaltnPepperEngine
             vector<float> m_gScore;
 
         public:
+
+            const NavMesh* GetGraph() const { return m_graph; }
+
             Pathfinder(NavMesh* graph);
 
             vector<Vector3> FindSimplfiedPath(const Vector3& start, const Vector3& goal);
