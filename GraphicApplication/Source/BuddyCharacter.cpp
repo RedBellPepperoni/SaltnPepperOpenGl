@@ -21,13 +21,22 @@ namespace SaltnPepperEngine
 		m_currentWaypointIndex = 1;
 		m_isfollowingPath = true;
 		m_targetClose = false;
+
+		
 	}
 
 	void BuddyCharacter::OnUpdate(const float& deltaTime, Transform& buddyTransform, Transform& lookTransform)
 	{
 		const Vector3 currentPosition = buddyTransform.GetPosition() - Vector3{0.0f,0.81,0.0f};
 
-		m_animator->OnUpdate(deltaTime);
+		m_animCounter += deltaTime;
+
+		if (m_animCounter >= animationFrameRate)
+		{
+			m_animCounter = 0.0f;
+			m_animator->OnUpdate(animationFrameRate);
+		}
+
 
 
 		if (!m_isfollowingPath) { return; }
@@ -38,11 +47,6 @@ namespace SaltnPepperEngine
 
 			float waypointDistance = DistanceSquared(currentWaypoint, currentPosition);
 
-
-		/*	LOG_WARN("Buddy POs {0} {1} {2}", currentPosition.x, currentPosition.y, currentPosition.z);
-			LOG_INFO("Waypint POs {0} {1} {2}", currentWaypoint.x, currentWaypoint.y, currentWaypoint.z);
-			LOG_ERROR("Waypoint : {0}",waypointDistance);*/
-
 			if (waypointDistance < 0.1f)
 			{
 				SetNextWaypoint();
@@ -52,6 +56,7 @@ namespace SaltnPepperEngine
 			{
 				const Vector3 direction = Normalize(currentWaypoint - currentPosition);
 				Move(direction);
+				RotateModel(deltaTime,direction, lookTransform);
 			}
 		}
 
@@ -63,6 +68,8 @@ namespace SaltnPepperEngine
 			{
 				const Vector3 direction = Normalize(m_targetPosition - currentPosition);
 				Move(direction);
+				RotateModel(deltaTime, direction, lookTransform);
+
 			}
 
 			else
@@ -96,6 +103,67 @@ namespace SaltnPepperEngine
 	{
 		m_gameManagerRef = finder;
 	}
+
+	void BuddyCharacter::UpdateAnimState(const float deltaTime)
+	{
+		float duration = 0.0f;
+
+
+
+		switch (currentState)
+		{
+		case BuddyState::IDLE:
+
+			m_animator->SetTransitiontime(0.4f);
+			m_animator->PlayAnimationbyName("Idle");
+
+
+
+			break;
+
+		case BuddyState::WALKING:
+			m_animator->SetTransitiontime(0.4f);
+			m_animator->PlayAnimationbyName("Walk");
+
+			//PlayIdleSound();
+
+			break;
+
+		case BuddyState::ATTACKING:
+			/*m_animator->SetTransitiontime(0.2f);
+			m_animator->PlayAnimationbyName("Attack");
+
+			m_counter += deltaTime;
+			duration = 1.0f;
+
+			if (m_counter > duration)
+			{
+				m_counter = 0.0f;
+				currentState = BuddyState::IDLE;
+			}
+
+			break;*/
+
+
+		case BuddyState::TAKINGHIT:
+
+			/*m_animator->SetTransitiontime(0.05f);
+			m_animator->PlayAnimationbyName("HitOne", false);
+
+			m_counter += deltaTime;
+			duration = 0.6f;
+
+			if (m_counter > duration)
+			{
+				m_counter = 0.0f;
+				currentState = BuddyState::IDLE;
+			}*/
+
+			break;
+
+		}
+	}
+		
 
 	void BuddyCharacter::Move(const Vector3& targetDirection)
 	{

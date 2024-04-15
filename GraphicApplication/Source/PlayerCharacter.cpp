@@ -232,6 +232,8 @@ namespace SaltnPepperEngine
 
 		const EnvironmentTag::Tag hitBodyTag = hitEntity.TryGetComponent<EnvironmentTag>()->currentTag;
 
+		if (hitbody == nullptr) { return false; }
+
 		if (hitBodyTag != tag)
 		{
 			return false;

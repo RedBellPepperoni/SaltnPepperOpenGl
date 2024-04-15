@@ -15,13 +15,43 @@ namespace SaltnPepperEngine
 
 	class BuddyCharacter : public IDamagable
 	{
+
+	public:
+
+		enum BuddyState
+		{
+			IDLE,
+			WALKING,
+			ATTACKING,
+			TAKINGHIT,
+			DEAD
+		};
+
+
+		enum BuddyBehaviour
+		{
+			DECIDING,
+			MOVING,
+			ATTACK
+
+		};
+
+		enum BuddySound
+		{
+			IDLESOUND,
+			ATTACKSOUND,
+			SCREAMSOUND,
+			DEATHSOUND
+
+		};
+
 	public:
 
 		BuddyCharacter();
 		virtual ~BuddyCharacter();
 
 		virtual void TakeDamage(const int damage) override;
-
+		
 		void UpdateTargetandPath(const Vector3& target, const std::vector<Vector3>& newpath);
 
 		void OnUpdate(const float& deltaTime, Transform& buddyTransform, Transform& lookTransform);
@@ -33,6 +63,8 @@ namespace SaltnPepperEngine
 		void SetGameManagerRef(GameManager* finder);
 
 	private:
+
+		void UpdateAnimState(const float deltaTime);
 
 		void Move(const Vector3& targetDirection);
 		void RotateModel(float deltatime, const Vector3& target, Transform& looktransform);
@@ -64,6 +96,13 @@ namespace SaltnPepperEngine
 		RigidBody* m_rigidBody = nullptr;
 
 		std::vector<Vector3> m_currentPath = std::vector<Vector3>{};
+
+
+		float m_animCounter = 0.0f;
+		const float animationFrameRate = 1.0f / 30.0f;
+
+		BuddyState currentState = BuddyState::IDLE;
+		BuddyBehaviour currentBehaviour = BuddyBehaviour::DECIDING;
 
 	};
 

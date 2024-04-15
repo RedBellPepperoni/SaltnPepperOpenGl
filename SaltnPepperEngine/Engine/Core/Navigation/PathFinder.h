@@ -9,23 +9,7 @@ namespace SaltnPepperEngine
 	namespace Navigation
 	{
        
-        class Funnel 
-        {
-        private:
-            Vector3 left;
-            Vector3 right;
-
-        public:
-            Funnel(const Vector3& p1, const Vector3& p2) : left(p1), right(p2) {}
-
-            inline bool isInside(const Vector3& point) const { return Cross(right - left, point - left).z >= 0;}
-
-            inline void UpdateRight(const Vector3& newPoint) {right = newPoint;}
-
-            inline const Vector3& GetLeft() const { return left;}
-            inline const Vector3& GetRight() const { return right; }
-        };
-
+       
 
         class Pathfinder
         {

@@ -122,7 +122,7 @@ namespace SaltnPepperEngine
           
 
             // Perform the Douglas-Peucker simplification
-            DouglasPeuckerSimplify(path, epsilon, 0, path.size() - 1, simplifiedPath);
+            DouglasPeuckerSimplify(path, epsilon, 0, static_cast<int>(path.size() - 1), simplifiedPath);
 
             return simplifiedPath;
         }
