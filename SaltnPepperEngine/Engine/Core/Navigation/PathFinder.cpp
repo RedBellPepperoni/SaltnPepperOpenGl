@@ -17,6 +17,9 @@ namespace SaltnPepperEngine
 
 			// Return the Simplified path usinf funnel
 			return SimplifyPath(path, m_graph);
+           /* const float epsilon = 7.0f;
+
+			return SimplifyDouglus(path, epsilon);*/
 		}
 
 		vector<Vector3> Pathfinder::FindPath(const Vector3& start, const Vector3& goal)
@@ -72,40 +75,60 @@ namespace SaltnPepperEngine
             return vector<Vector3>();
 		}
 
+
+        // Calculate the signed area of a triangle
+        float SignedArea(const Vector3& a, const Vector3& b, const Vector3& c) 
+        {
+            return Dot(Cross((b - a), (c- b)), Vector3{ 0, 1, 0 });
+        }
+
         vector<Vector3> Pathfinder::SimplifyPath(const vector<Vector3>& path, const NavMesh* graph) const
         {
-            if (path.empty()) { return path; }
+            std::vector<Vector3> simplifiedPath;
 
-            vector<Vector3> centers = path;
-
-
-            if (centers.size() < 2) {
-                return centers;
+            int n = path.size();
+            if (n < 3) {
+                return path;
             }
 
+            std::vector<Vector3> left(n);
+            std::vector<Vector3> right(n);
 
-            Funnel funnel(centers[0], centers[1]);
-            vector<Vector3> simplifiedCenters = { centers[0] };
+            left[0] = path[0];
+            right[0] = path[0];
+            left[1] = path[1];
+            right[1] = path[1];
 
+            int leftCount = 2;
+            int rightCount = 2;
 
-            for (size_t i = 2; i < centers.size(); ++i) {
-
-                if (funnel.isInside(centers[i])) {
-
-                    funnel.UpdateRight(centers[i]);
+            for (int i = 2; i < n; ++i) 
+            {
+                while (leftCount >= 2 && SignedArea(left[leftCount - 2], left[leftCount - 1], path[i]) <= 0) 
+                {
+                    leftCount--;
                 }
-                else {
-
-                    simplifiedCenters.push_back(funnel.GetLeft());
-                    funnel = Funnel(funnel.GetRight(), centers[i]);
+                while (rightCount >= 2 && SignedArea(right[rightCount - 2], right[rightCount - 1], path[i]) >= 0) 
+                {
+                    rightCount--;
                 }
+                left[leftCount++] = path[i];
+                right[rightCount++] = path[i];
             }
 
+            for (int i = 0; i < leftCount; ++i) 
+            {
+                simplifiedPath.push_back(left[i]);
+            }
+            for (int i = rightCount - 2; i > 0; --i) 
+            {
+                simplifiedPath.push_back(right[i]);
+            }
 
-            simplifiedCenters.push_back(centers.back());
-
-            return simplifiedCenters;
+            return simplifiedPath;
         }
+
+       
 		
 	}
 }

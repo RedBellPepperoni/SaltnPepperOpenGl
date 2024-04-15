@@ -623,7 +623,7 @@ namespace SaltnPepperEngine
         m_path = m_pathFinder->FindPath(m_buddyPosition,position);
         m_simplifiedpath = m_pathFinder->FindSimplfiedPath(m_buddyPosition,position);
 
-        m_buddyRef->UpdateTargetandPath(position, m_path);
+        m_buddyRef->UpdateTargetandPath(position, m_simplifiedpath);
 
     }
 }

@@ -43,7 +43,7 @@ namespace SaltnPepperEngine
             vector<Vector3> FindPath(const Vector3& start, const Vector3& goal);
              //  Path Simplification using Funnel Algorithm
             vector<Vector3> SimplifyPath(const vector<Vector3>& path, const NavMesh* graph) const;
- 
+    
            
         };
 	}

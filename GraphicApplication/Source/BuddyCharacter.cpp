@@ -39,9 +39,9 @@ namespace SaltnPepperEngine
 			float waypointDistance = DistanceSquared(currentWaypoint, currentPosition);
 
 
-			LOG_WARN("Buddy POs {0} {1} {2}", currentPosition.x, currentPosition.y, currentPosition.z);
+		/*	LOG_WARN("Buddy POs {0} {1} {2}", currentPosition.x, currentPosition.y, currentPosition.z);
 			LOG_INFO("Waypint POs {0} {1} {2}", currentWaypoint.x, currentWaypoint.y, currentWaypoint.z);
-			LOG_ERROR("Waypoint : {0}",waypointDistance);
+			LOG_ERROR("Waypoint : {0}",waypointDistance);*/
 
 			if (waypointDistance < 0.1f)
 			{
