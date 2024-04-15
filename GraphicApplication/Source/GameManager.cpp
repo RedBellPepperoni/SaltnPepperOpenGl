@@ -419,7 +419,7 @@ namespace SaltnPepperEngine
 
 
         BoundingBox platform_railbase{ Vector3(-3.0f,-0.25f,-43.0f),Vector3(3.0f,0.25f,43.0f) };
-        EntitySetup::CreatePhysicsBox(Vector3(-8.5482f, -3.6971f, 2.1050f), Vector3(0.0f, 0.0f, 0.0f), platform_railbase);
+        EntitySetup::CreatePhysicsBox(Vector3(-8.5482f, -3.6971f, 2.1050f), Vector3(0.0f, 0.0f, 0.0f), platform_railbase,  EnvironmentTag::Tag::NAVMESH);
 
       /*  BoundingBox platform_rail{ Vector3(-0.1f,-0.05f,-43.0f),Vector3(0.1f,0.05f,43.0f) };
         EntitySetup::CreatePhysicsBox(Vector3(-6.7852f, -3.33f, 2.1050f), Vector3(0.0f, 0.0f, 0.0f), platform_rail, 1.0f);
@@ -484,6 +484,9 @@ namespace SaltnPepperEngine
         BoundingBox stairCover{ Vector3(-0.2f,-2.0f,-2.5f),Vector3(0.2f,2.0f,2.5f) };
         EntitySetup::CreatePhysicsBox(Vector3(-4.0176f, 4.173f, -1.1015f), Vector3(0.0f), stairCover);
         EntitySetup::CreatePhysicsBox(Vector3(-1.443f, 4.173f, -1.1015f), Vector3(0.0f), stairCover);
+
+        BoundingBox railRamp{ Vector3(-1.0f,-0.25f,-1.25f),Vector3(1.0f,0.25f,1.25f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-6.4311f, -3.3262, 16.19f), Vector3(0.0f,0.0f,27.0f), railRamp, EnvironmentTag::Tag::NAVMESH);
 
 
     }
