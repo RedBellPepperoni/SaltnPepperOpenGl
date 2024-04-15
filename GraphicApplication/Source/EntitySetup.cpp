@@ -140,7 +140,7 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("EXIT_TAG", "Assets\\Models\\Exit_Tag.fbx");
 	modelLib->LoadModel("TUBE_LIGHT", "Assets\\Models\\Subway_TubeLight.fbx");
 
-	modelLib->LoadModel("NavMesh_Main", "Assets\\Models\\NavMeshv3.fbx");
+	modelLib->LoadModel("NavMesh_Main", "Assets\\Models\\NavMeshvFinal.fbx");
 
 
 }

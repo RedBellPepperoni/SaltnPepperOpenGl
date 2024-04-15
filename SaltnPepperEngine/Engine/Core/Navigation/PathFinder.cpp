@@ -16,10 +16,10 @@ namespace SaltnPepperEngine
 			vector<Vector3> path = FindPath(start, goal);
 
 			// Return the Simplified path usinf funnel
-			return SimplifyPath(path, m_graph);
-           /* const float epsilon = 7.0f;
+			//return SimplifyPath(path, m_graph);
+            const float epsilon = 4.0f;
 
-			return SimplifyDouglus(path, epsilon);*/
+			return SimplifyDouglus(path, epsilon);
 		}
 
 		vector<Vector3> Pathfinder::FindPath(const Vector3& start, const Vector3& goal)
@@ -84,51 +84,48 @@ namespace SaltnPepperEngine
 
         vector<Vector3> Pathfinder::SimplifyPath(const vector<Vector3>& path, const NavMesh* graph) const
         {
+           
+        }
+
+        // Douglas-Peucker simplification algorithm
+        void DouglasPeuckerSimplify(const std::vector<Vector3>& path, float epsilon, int startIndex, int endIndex, std::vector<Vector3>& simplifiedPath) {
+            float dmax = 0;
+            int index = -1;
+
+            // Find the point with the maximum distance
+            for (int i = startIndex + 1; i < endIndex; ++i) {
+                float d = DistanceSquared(path[i], path[startIndex]) + DistanceSquared(path[i], path[endIndex]);
+                if (d > dmax) {
+                    index = i;
+                    dmax = d;
+                }
+            }
+
+            // If the maximum distance is greater than epsilon, recursively simplify
+            if (dmax > epsilon * epsilon)
+            {
+                DouglasPeuckerSimplify(path, epsilon, startIndex, index, simplifiedPath);
+                DouglasPeuckerSimplify(path, epsilon, index, endIndex, simplifiedPath);
+            }
+            else 
+            {
+                // Add the simplified point
+                simplifiedPath.push_back(path[endIndex]);
+            }
+        }
+
+        vector<Vector3> Pathfinder::SimplifyDouglus(const vector<Vector3>& path, const float epsilon) const
+        {
             std::vector<Vector3> simplifiedPath;
 
-            int n = path.size();
-            if (n < 3) {
-                return path;
-            }
+         
+          
 
-            std::vector<Vector3> left(n);
-            std::vector<Vector3> right(n);
-
-            left[0] = path[0];
-            right[0] = path[0];
-            left[1] = path[1];
-            right[1] = path[1];
-
-            int leftCount = 2;
-            int rightCount = 2;
-
-            for (int i = 2; i < n; ++i) 
-            {
-                while (leftCount >= 2 && SignedArea(left[leftCount - 2], left[leftCount - 1], path[i]) <= 0) 
-                {
-                    leftCount--;
-                }
-                while (rightCount >= 2 && SignedArea(right[rightCount - 2], right[rightCount - 1], path[i]) >= 0) 
-                {
-                    rightCount--;
-                }
-                left[leftCount++] = path[i];
-                right[rightCount++] = path[i];
-            }
-
-            for (int i = 0; i < leftCount; ++i) 
-            {
-                simplifiedPath.push_back(left[i]);
-            }
-            for (int i = rightCount - 2; i > 0; --i) 
-            {
-                simplifiedPath.push_back(right[i]);
-            }
+            // Perform the Douglas-Peucker simplification
+            DouglasPeuckerSimplify(path, epsilon, 0, path.size() - 1, simplifiedPath);
 
             return simplifiedPath;
         }
-
-       
 		
 	}
 }

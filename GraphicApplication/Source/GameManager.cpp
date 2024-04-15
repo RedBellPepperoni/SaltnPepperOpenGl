@@ -408,8 +408,8 @@ namespace SaltnPepperEngine
 
 
 
-        BoundingBox platform_stair{ Vector3(-1.0f,-0.25f,-3.54f),Vector3(1.0f,0.25f,3.54f) };
-       EntitySetup::CreatePhysicsBox(Vector3(-2.7714f, -0.54746f, -3.10417f), Vector3(-39.0f,0.0f,0.0f), platform_stair);
+        BoundingBox platform_stair{ Vector3(-1.05f,-0.25f,-3.7f),Vector3(1.05f,0.25f,3.7f) };
+       EntitySetup::CreatePhysicsBox(Vector3(-2.7821f, -0.64509f, -3.3332f), Vector3(-42.0f,0.0f,0.0f), platform_stair, EnvironmentTag::Tag::NAVMESH);
 
         BoundingBox stair_wallside{ Vector3(-0.05f,-2.5f,-2.5f),Vector3(0.05f,2.5f,2.5f) };
         BoundingBox stair_wallback{ Vector3(-1.1f,-2.0f,-0.55f),Vector3(1.1f,2.0f,0.05f) };
@@ -455,11 +455,11 @@ namespace SaltnPepperEngine
         EntitySetup::CreatePhysicsCylinder(Vector3(5.040f, 2.5224f, -0.07405f),Vector3(0.0f),bin);
         EntitySetup::CreatePhysicsCylinder(Vector3(0.4490f, 2.5224f, 8.86561f),Vector3(0.0f),bin);
 
-        BoundingBox floorShort{ Vector3(-7.0f,-0.25f,-2.0f),Vector3(7.0f,0.25f,2.0f) };
-        EntitySetup::CreatePhysicsBox(Vector3(5.692f, 1.8591f, -2.1861f), Vector3(0.0f), floorShort);
+        BoundingBox floorShort{ Vector3(-6.0f,-0.25f,-2.0f),Vector3(6.0f,0.25f,2.0f)};
+        EntitySetup::CreatePhysicsBox(Vector3(4.3482f, 1.793f, -2.7210f), Vector3(0.0f), floorShort, EnvironmentTag::Tag::NAVMESH);
 
-        BoundingBox floorLong{ Vector3(-8.0f,-0.25f,-7.0f),Vector3(8.0f,0.25f,7.0f) };
-        EntitySetup::CreatePhysicsBox(Vector3(3.7182f, 1.8591f, 6.8062f), Vector3(0.0f), floorLong);
+        BoundingBox floorLong{ Vector3(-9.0f,-0.25f,-8.0f),Vector3(9.0f,0.25f,8.0f) };
+        EntitySetup::CreatePhysicsBox(Vector3(3.347f, 1.793f, 7.2647f), Vector3(0.0f), floorLong, EnvironmentTag::Tag::NAVMESH);
 
         
         BoundingBox wallback{ Vector3(-8.0f,-2.0f,-0.1f),Vector3(8.0f,2.0f,0.1f) };

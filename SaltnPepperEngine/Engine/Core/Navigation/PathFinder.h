@@ -44,6 +44,7 @@ namespace SaltnPepperEngine
              //  Path Simplification using Funnel Algorithm
             vector<Vector3> SimplifyPath(const vector<Vector3>& path, const NavMesh* graph) const;
     
+            vector<Vector3> SimplifyDouglus(const vector<Vector3>& path, const float epsilon) const;
            
         };
 	}
