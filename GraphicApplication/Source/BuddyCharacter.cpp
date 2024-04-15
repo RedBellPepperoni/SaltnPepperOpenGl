@@ -18,23 +18,32 @@ namespace SaltnPepperEngine
 		m_targetPosition = target;
 		m_currentPath = newpath;
 
-		m_currentWaypointIndex = 0;
+		m_currentWaypointIndex = 1;
 		m_isfollowingPath = true;
+		m_targetClose = false;
 	}
 
 	void BuddyCharacter::OnUpdate(const float& deltaTime, Transform& buddyTransform, Transform& lookTransform)
 	{
-		const Vector3& currentPosition = buddyTransform.GetPosition();
+		const Vector3 currentPosition = buddyTransform.GetPosition() - Vector3{0.0f,0.81,0.0f};
+
+		m_animator->OnUpdate(deltaTime);
+
 
 		if (!m_isfollowingPath) { return; }
 
 		if (!m_targetClose)
 		{
-			const Vector3& currentWaypoint = GetCurrentWayPoint();
+			const Vector3 currentWaypoint = GetCurrentWayPoint();
 
-			const float waypointDistance = DistanceSquared(currentWaypoint, currentPosition);
+			float waypointDistance = DistanceSquared(currentWaypoint, currentPosition);
 
-			if (waypointDistance < 0.2f)
+
+			LOG_WARN("Buddy POs {0} {1} {2}", currentPosition.x, currentPosition.y, currentPosition.z);
+			LOG_INFO("Waypint POs {0} {1} {2}", currentWaypoint.x, currentWaypoint.y, currentWaypoint.z);
+			LOG_ERROR("Waypoint : {0}",waypointDistance);
+
+			if (waypointDistance < 0.1f)
 			{
 				SetNextWaypoint();
 			}
@@ -50,7 +59,7 @@ namespace SaltnPepperEngine
 		{
 			const float distance = DistanceSquared(m_targetPosition, currentPosition);
 
-			if (distance > 0.2f)
+			if (distance > 0.1f)
 			{
 				const Vector3 direction = Normalize(m_targetPosition - currentPosition);
 				Move(direction);
@@ -59,6 +68,7 @@ namespace SaltnPepperEngine
 			else
 			{
 				m_isfollowingPath = false;
+				m_targetClose = false;
 			}
 
 			

@@ -230,7 +230,7 @@ namespace SaltnPepperEngine
 		// get the parent entity from teh body that was hit
 		Entity hitEntity = hitbody->GetEntityId();
 
-		const EnvironmentTag::Tag hitBodyTag = hitEntity.GetComponent<EnvironmentTag>().currentTag;
+		const EnvironmentTag::Tag hitBodyTag = hitEntity.TryGetComponent<EnvironmentTag>()->currentTag;
 
 		if (hitBodyTag != tag)
 		{

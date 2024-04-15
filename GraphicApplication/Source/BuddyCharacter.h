@@ -50,7 +50,7 @@ namespace SaltnPepperEngine
 		const float m_attackRadius = 1.5f;
 
 		const float m_turnRate = 1.25f;
-		float m_speed = 0.6f;
+		float m_speed = 1.6f;
 		const float m_forceMultiplier = 1.0f;
 
 		Vector3 m_targetPosition = Vector3{0.0f};

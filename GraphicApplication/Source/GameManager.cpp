@@ -48,6 +48,25 @@ namespace SaltnPepperEngine
 
     }
 
+    void GameManager::UpdateBuddy(const float deltaTime)
+    {
+        ComponentView buddyCompView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<BuddyComponent>();
+        ComponentView buddyLookView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<BuddyLook>();
+
+
+        if (!buddyCompView.IsEmpty() && !buddyLookView.IsEmpty())
+        {
+            BuddyCharacter* buddy = buddyCompView[0].GetComponent<BuddyComponent>().GetBuddy();
+            Transform& buddyTransform = buddyCompView[0].GetComponent<Transform>();
+
+            m_buddyPosition = buddyTransform.GetPosition();
+            Transform& buddyLook = buddyLookView[0].GetComponent<Transform>();
+
+            buddy->OnUpdate(deltaTime, buddyTransform, buddyLook);
+        }
+
+    }
+
     void GameManager::OnInitTestScene()
     {
 
@@ -503,6 +522,7 @@ namespace SaltnPepperEngine
 
         UpdateEnemies(deltaTime, m_playerPosition);
 
+        UpdateBuddy(deltaTime);
     
 
         if (Application::GetCurrent().GetEditorActive())
@@ -582,8 +602,10 @@ namespace SaltnPepperEngine
         SetupPathFinder();
 
       
-        m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 1.2f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
         m_playerRef->SetGameManagerRef(this);
+
+        m_buddyRef = EntitySetup::CreateBuddy(Vector3(-4.1f, 1.2f, 12.6f), Vector3(0.0f, 0.0f, 0.0f));
 	}
 
 
@@ -600,5 +622,8 @@ namespace SaltnPepperEngine
     {
         m_path = m_pathFinder->FindPath(m_buddyPosition,position);
         m_simplifiedpath = m_pathFinder->FindSimplfiedPath(m_buddyPosition,position);
+
+        m_buddyRef->UpdateTargetandPath(position, m_path);
+
     }
 }

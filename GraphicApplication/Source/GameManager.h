@@ -12,7 +12,7 @@ namespace SaltnPepperEngine
 
 		void UpdatePlayer(const float deltaTime);
 		void UpdateEnemies(const float deltaTime, const Vector3& playerPos);
-
+		void UpdateBuddy(const float deltaTime);
 
 		void OnInitTestScene();
 		void OnInitMainScene();
@@ -54,6 +54,7 @@ namespace SaltnPepperEngine
 		Vector3 m_buddyPosition;
 
 		PlayerCharacter* m_playerRef = nullptr;
+		BuddyCharacter* m_buddyRef = nullptr;
 
 
 

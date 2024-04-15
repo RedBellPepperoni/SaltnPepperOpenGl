@@ -75,7 +75,7 @@ void EntitySetup::LoadAllModels()
 	// Skinned Stuff
 	skinnedmodelLib->LoadModel("Gun_Pistol", "Assets\\Models\\GUN_PISTOL.fbx");
 	skinnedmodelLib->LoadModel("WarZombie", "Assets\\Models\\WarZombie.dae");
-	skinnedmodelLib->LoadModel("BuddyBot", "Assets\\Models\\Buddy\\RoboBuddy.fbx");
+	skinnedmodelLib->LoadModel("BuddyBot", "Assets\\Models\\Buddy\\RoboBuddy.dae");
 
 
 	// Static Meshes
@@ -695,7 +695,7 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 	Transform& lookTransform = lookEntity.GetComponent<Transform>();
 
 	
-	lookTransform.SetPosition(Vector3{ 0.0f,0.70f,0.0f });
+	lookTransform.SetPosition(Vector3{ 0.0f,-0.890f,0.0f });
 	lookTransform.SetEularRotation(Vector3(0.0f, rotation.y, 0.0f));
 
 	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();
@@ -709,13 +709,13 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 
 	transform.SetPosition(Vector3(0.0f));
 	transform.SetEularRotation(Vector3(0.0f));
-	transform.SetScale(Vector3(1.0f));
+	transform.SetScale(Vector3(0.01f));
 
 	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("BuddyBot");
 	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
 
 
-	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Idle_Unarmed", "Assets\\Models\\Buddy\\Robo_Idle_Unarmed.fbx", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Idle_Unarmed", "Assets\\Models\\Buddy\\Robo_Idle_Unarmed.dae", modelComp.m_handle);
 	/*SharedPtr<SkinnedAnimation> reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle);
 	SharedPtr<SkinnedAnimation> shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle);*/
 
