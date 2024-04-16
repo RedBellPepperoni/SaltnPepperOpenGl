@@ -147,6 +147,7 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("NavMesh_Main", "Assets\\Models\\NavMesh.fbx");
 	modelLib->LoadModel("Waypoint_Arrow", "Assets\\Models\\WaypointArrow.fbx");
 	modelLib->LoadModel("Waypoint_Base", "Assets\\Models\\WaypointBase.fbx");
+	modelLib->LoadModel("Waypoint_Skull", "Assets\\Models\\SkullMark.fbx");
 
 
 }
@@ -1041,12 +1042,12 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	Entity markEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Mark_Enemy");
 	Transform& markTransform = markEntity.GetComponent<Transform>();
 
-	markTransform.SetPosition(Vector3(0.0f, 1.0f,0.0f));
+	markTransform.SetPosition(Vector3(0.0f, 1.34f,0.0f));
 	markTransform.SetEularRotation(Vector3(0.0f));
-	markTransform.SetScale(Vector3(1.0f));
+	markTransform.SetScale(Vector3(0.6f));
 
 
-	ModelComponent& markmodle = markEntity.AddComponent<ModelComponent>(PrimitiveType::Sphere);
+	ModelComponent& markmodle = markEntity.AddComponent<ModelComponent>("Waypoint_Skull");
 	SharedPtr<Material>& markMat = markmodle.m_handle->GetMeshes()[0]->GetMaterial();
 	markMat->albedoColour = Vector4{ 1.0f,0.0f,0.0f,1.0f };
 	markMat->albedoMapFactor = 0.0f;

@@ -529,6 +529,25 @@ namespace SaltnPepperEngine
 
         UpdateBuddy(deltaTime);
     
+        ComponentView enemymarkView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<EnemyMark>();
+
+        
+
+        for (Entity entity : enemymarkView)
+        {
+            if (!entity.IsActive()) continue;
+
+            Transform& transform = entity.GetComponent<Transform>();
+
+            Vector3 direction = (transform.GetWorldPosition() - m_playerPosition);
+            direction.y = 0;
+            Quaternion rot = LookAtRotation(direction,Vector3(0.0f,1.0f,0.0f));
+
+
+            transform.SetRotation(rot);
+            break;
+
+        }
 
         if (Application::GetCurrent().GetEditorActive())
         {
@@ -538,6 +557,9 @@ namespace SaltnPepperEngine
 
 
         UpdatePlayer(deltaTime);
+
+
+
 
     }
 
