@@ -1,6 +1,7 @@
 #include "BuddyCharacter.h"
-
+#include "GameManager.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
+
 namespace SaltnPepperEngine
 {
 	BuddyCharacter::BuddyCharacter()
@@ -84,6 +85,7 @@ namespace SaltnPepperEngine
 				m_isfollowingPath = false;
 				m_targetClose = false;
 				currentState = BuddyState::IDLE;
+				m_gameManagerRef->HideMarker();
 			}
 
 			

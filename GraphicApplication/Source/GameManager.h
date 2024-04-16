@@ -27,6 +27,8 @@ namespace SaltnPepperEngine
 		void OnUpdateTestScene(const float deltaTime);
 		void OnUpdateMainScene(const float deltaTime);
 
+		void UpdateMarkerAnim(const float deltaTime);
+
 
 		void DebugNavmesh();
 
@@ -39,6 +41,8 @@ namespace SaltnPepperEngine
 		void OnUpdate(const float deltaTime);
 
 		void MoveBuddyTo(const Vector3& position,RigidBody* markedEnemy = nullptr);
+
+		void HideMarker();
 
 	private:
 
@@ -57,9 +61,13 @@ namespace SaltnPepperEngine
 		BuddyCharacter* m_buddyRef = nullptr;
 
 		std::vector<NavTriangle> m_debugnavmesh;
-
+		Entity m_waypointbaseEntity;
+		Entity m_waypointarrowEntity;
 
 		std::vector<Vector3> enemyPositions;
+
+		float sincounter = 0.0f;
+		float rotcounter = 0.0f;
 	};
 }
 

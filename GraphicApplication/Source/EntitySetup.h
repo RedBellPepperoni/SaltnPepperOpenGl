@@ -147,7 +147,8 @@ public:
 
 	static BuddyCharacter* CreateBuddy(const Vector3& position, const Vector3& rotation);
 
-
+	static Entity CreateWaypointBase(const Vector3& position);
+	static Entity CreateWaypointArrow(const Vector3& position, Entity base);
 
 	//Entity CreateCenterScreen(const Vector3& position = Vector3(0.0f), bool isRightScreen = true)
 	//{

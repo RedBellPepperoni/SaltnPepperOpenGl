@@ -144,7 +144,9 @@ void EntitySetup::LoadAllModels()
 
 	
 
-	modelLib->LoadModel("NavMesh_Main", "Assets\\Models\\NavMeshvFinal.fbx");
+	modelLib->LoadModel("NavMesh_Main", "Assets\\Models\\NavMesh.fbx");
+	modelLib->LoadModel("Waypoint_Arrow", "Assets\\Models\\WaypointArrow.fbx");
+	modelLib->LoadModel("Waypoint_Base", "Assets\\Models\\WaypointBase.fbx");
 
 
 }
@@ -676,6 +678,52 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	player->SetAnimatorRef(animComp.GetAnimator());
 	return player;
 
+}
+
+Entity EntitySetup::CreateWaypointArrow(const Vector3& position, Entity base)
+{
+	Entity arrowEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("MarkerArrow");
+	
+
+	Hierarchy& arrowHierarchy = arrowEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& arrowModel = arrowEntity.AddComponent<ModelComponent>("Waypoint_Arrow");
+
+	arrowEntity.SetParent(base);
+
+	Transform& arrowTransform = arrowEntity.GetComponent<Transform>();
+
+	arrowTransform.SetPosition(position);
+	arrowTransform.SetEularRotation(Vector3(0.0f));
+
+	SharedPtr<Material>& mat = arrowModel.m_handle->GetMeshes()[0]->GetMaterial();
+
+	mat->albedoMapFactor = 0.0f;
+	mat->albedoColour = Vector4{ 0.0f,1.0f,0.0f,1.0f };
+	mat->m_type = MaterialType::Opaque;
+
+	return arrowEntity;
+}
+
+Entity EntitySetup::CreateWaypointBase(const Vector3& position)
+{
+	Entity baseEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("MarkerBase");
+
+	Transform& baseTransform = baseEntity.GetComponent<Transform>();
+
+	baseTransform.SetPosition(position);
+	baseTransform.SetEularRotation(Vector3(0.0f));
+
+	Hierarchy& baseHierarchy = baseEntity.AddComponent<Hierarchy>();
+
+	ModelComponent& baseModel = baseEntity.AddComponent<ModelComponent>("Waypoint_Base");
+	SharedPtr<Material>& mat = baseModel.m_handle->GetMeshes()[0]->GetMaterial();
+
+	mat->albedoMapFactor = 0.0f;
+	mat->albedoColour = Vector4{ 0.0f,1.0f,0.0f,1.0f };
+	mat->m_type = MaterialType::Opaque;
+
+	return baseEntity;
 }
 
 BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3& rotation)

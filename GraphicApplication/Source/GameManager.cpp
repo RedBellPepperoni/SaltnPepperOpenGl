@@ -517,6 +517,8 @@ namespace SaltnPepperEngine
     void GameManager::OnUpdateMainScene(const float deltaTime)
     {
 
+        UpdateMarkerAnim(deltaTime);
+
         // Toggle Physics Simulation
         if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::G))
         {
@@ -536,6 +538,33 @@ namespace SaltnPepperEngine
 
 
         UpdatePlayer(deltaTime);
+
+    }
+
+    void GameManager::UpdateMarkerAnim(const float deltaTime)
+    {
+        if (!m_waypointbaseEntity.IsActive()) { return; }
+
+
+       Transform& transform = m_waypointarrowEntity.GetComponent<Transform>();
+
+       sincounter +=  60 * deltaTime;
+
+       if (sincounter > 360.0f)
+       {
+           sincounter = 0.0f;
+       }
+
+       const float yoffset = Sin(sincounter) * 0.2f + 0.7f;
+
+       transform.SetPosition(Vector3(0.0f, yoffset, 0.0f));
+
+
+       rotcounter += 45 * deltaTime;
+
+       if (rotcounter > 180.0f) { rotcounter = 0.0f; }
+
+       transform.SetEularRotation(Vector3(0.0f, rotcounter, 0.0f));
 
     }
 
@@ -610,6 +639,11 @@ namespace SaltnPepperEngine
         m_playerRef->SetGameManagerRef(this);
 
         m_buddyRef = EntitySetup::CreateBuddy(Vector3(-4.1f, 0.2f, 12.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_buddyRef->SetGameManagerRef(this);
+        m_waypointbaseEntity = EntitySetup::CreateWaypointBase(Vector3(0.0f, 0.0f, 0.0f));
+        m_waypointarrowEntity = EntitySetup::CreateWaypointArrow(Vector3(0.0f, 0.5f, 0.0f), m_waypointbaseEntity);
+
+
 	}
 
 
@@ -619,6 +653,8 @@ namespace SaltnPepperEngine
 
         OnUpdateMainScene(deltaTime);
         DebugNavmesh();
+
+       
 
 	}
 
@@ -634,10 +670,22 @@ namespace SaltnPepperEngine
         if (markedEnemy != nullptr)
         {
             markedEnemy->GetEntityId().GetComponent<EnemyComponent>().GetEnemy()->MarkforBuddy(true);
+            m_waypointbaseEntity.SetActive(false);
+        }
+
+        else
+        {
+            m_waypointbaseEntity.GetComponent<Transform>().SetPosition(position);
+            m_waypointbaseEntity.SetActive(true);
         }
 
         m_simplifiedpath = m_pathFinder->FindSimplfiedPath(m_buddyPosition,position);
         m_buddyRef->UpdateTargetandPath(position, m_simplifiedpath);
 
+    }
+
+    void GameManager::HideMarker()
+    {
+        m_waypointbaseEntity.SetActive(false);
     }
 }
