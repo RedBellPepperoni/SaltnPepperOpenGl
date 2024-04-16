@@ -20,6 +20,8 @@ namespace SaltnPepperEngine
 		// Reset all root transformations
 		m_rootNode.transformation = Matrix4(1.0f);
 		LoadIntermediateBones(animation, model);
+
+		
 	}
 
 	SkinnedAnimation::~SkinnedAnimation()

@@ -83,7 +83,7 @@ namespace SaltnPepperEngine
 
         vector<Vector3> Pathfinder::SimplifyPath(const vector<Vector3>& path, const NavMesh* graph) const
         {
-           
+            return vector<Vector3>{};
         }
 
         // Douglas-Peucker simplification algorithm

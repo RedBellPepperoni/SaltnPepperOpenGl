@@ -13,6 +13,11 @@ namespace SaltnPepperEngine
 		std::string look_tag = "BuddyLook";
 	};
 
+	struct BuddyAxe
+	{
+		std::string axe_tag = "BuddysAxe";
+	};
+
 	class BuddyCharacter : public IDamagable
 	{
 
@@ -104,6 +109,8 @@ namespace SaltnPepperEngine
 		BuddyState currentState = BuddyState::IDLE;
 		BuddyBehaviour currentBehaviour = BuddyBehaviour::DECIDING;
 
+
+		EntityManager* m_entityManger = nullptr;
 	};
 
 	struct BuddyComponent

@@ -1,10 +1,11 @@
 #include "BuddyCharacter.h"
 
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 namespace SaltnPepperEngine
 {
 	BuddyCharacter::BuddyCharacter()
 	{
-
+		m_entityManger = Application::GetCurrent().GetCurrentScene()->GetEntityManager();
 	}
 	BuddyCharacter::~BuddyCharacter()
 	{
@@ -30,7 +31,7 @@ namespace SaltnPepperEngine
 	{
 		const Vector3 currentPosition = buddyTransform.GetPosition() - Vector3{0.0f,0.81,0.0f};
 
-
+		
 		UpdateAnimState(deltaTime);
 
 		m_animCounter += deltaTime;
@@ -39,6 +40,8 @@ namespace SaltnPepperEngine
 		{
 			m_animCounter = 0.0f;
 			m_animator->OnUpdate(animationFrameRate);
+
+
 		}
 
 

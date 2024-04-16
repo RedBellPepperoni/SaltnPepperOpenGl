@@ -76,6 +76,7 @@ void EntitySetup::LoadAllModels()
 	skinnedmodelLib->LoadModel("Gun_Pistol", "Assets\\Models\\GUN_PISTOL.fbx");
 	skinnedmodelLib->LoadModel("WarZombie", "Assets\\Models\\WarZombie.dae");
 	skinnedmodelLib->LoadModel("BuddyBot", "Assets\\Models\\Buddy\\RoboBuddy.dae");
+	//skinnedmodelLib->LoadModel("BuddyBot", "Assets\\Models\\Buddy\\RoboBuddy.fbx");
 
 
 	// Static Meshes
@@ -140,6 +141,9 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("EXIT_TAG", "Assets\\Models\\Exit_Tag.fbx");
 	modelLib->LoadModel("TUBE_LIGHT", "Assets\\Models\\Subway_TubeLight.fbx");
 
+
+	
+
 	modelLib->LoadModel("NavMesh_Main", "Assets\\Models\\NavMeshvFinal.fbx");
 
 
@@ -198,6 +202,9 @@ void EntitySetup::LoadAllTextures()
 
 	textureLib->LoadTexture("buddynormal", "Assets\\Textures\\buddy_norm.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("buddydiffuse", "Assets\\Textures\\buddy_diffuse.png", TextureFormat::RGBA);
+
+	textureLib->LoadTexture("axediffuse", "Assets\\Textures\\axediffuse.jpg", TextureFormat::RGBA);
+	textureLib->LoadTexture("axenormal", "Assets\\Textures\\axenormal.jpg", TextureFormat::RGBA);
 
 }
 
@@ -690,7 +697,7 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 
 	Hierarchy& buddyHierarchy = buddyEntity.AddComponent<Hierarchy>();
 
-	// =============== Player Look ===============
+	// =============== Buddy Look ===============
 	Entity lookEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BuddyLook");
 	Transform& lookTransform = lookEntity.GetComponent<Transform>();
 
@@ -703,7 +710,7 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 	BuddyLook& look = lookEntity.AddComponent<BuddyLook>();
 
 
-	// ================ PLayer Hands ================
+	// ================ Buddy Model ================
 	Entity skinnedEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("BuddyModel");
 	Transform& transform = skinnedEntity.GetComponent<Transform>();
 
@@ -715,16 +722,19 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
 
 
-	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Idle_Unarmed", "Assets\\Models\\Buddy\\Robo_Idle_Unarmed.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> walkanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Walk_Unarmed", "Assets\\Models\\Buddy\\Robo_Walk_Unarmed.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Idle", "Assets\\Models\\Buddy\\Robo_Idle.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> walkanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Walk", "Assets\\Models\\Buddy\\Robo_Walk.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> attackanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Attack", "Assets\\Models\\Buddy\\Robo_Attack.dae", modelComp.m_handle);
+	SharedPtr<SkinnedAnimation> hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Hit", "Assets\\Models\\Buddy\\Robo_Hit.dae", modelComp.m_handle);
 	
 	/*SharedPtr<SkinnedAnimation> reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle);
 	SharedPtr<SkinnedAnimation> shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle);*/
 
-	animComp.GetAnimator()->AddAnimation("IdleUnarmed", idleanim);
-	animComp.GetAnimator()->AddAnimation("WalkUnarmed", walkanim);
-	/*animComp.GetAnimator()->AddAnimation("Reload", reloadanim);
-	animComp.GetAnimator()->AddAnimation("Shoot", shootanim);*/
+	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
+	animComp.GetAnimator()->AddAnimation("Walk", walkanim);
+	animComp.GetAnimator()->AddAnimation("Attack", attackanim);
+	animComp.GetAnimator()->AddAnimation("Hit", hitanim);
+
 
 	animComp.GetAnimator()->PlayAnimation(idleanim);
 
@@ -750,6 +760,10 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 	BuddyCharacter* buddy = buddyEntity.AddComponent<BuddyComponent>().GetBuddy();
 	buddy->SetRigidBodyRef(rigidBody);
 	buddy->SetAnimatorRef(animComp.GetAnimator());
+
+
+	
+
 	return buddy;
 
 }
@@ -976,7 +990,7 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	
 	//==== Spawn the Weapon
 
-	Entity weaponEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Weapon_Rifle");
+	/*Entity weaponEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Weapon_Rifle");
 	Transform& weaponTransform = weaponEntity.GetComponent<Transform>();
 
 	weaponTransform.SetPosition(Vector3(0.0f));
@@ -984,7 +998,7 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	weaponTransform.SetScale(Vector3(1.0f));
 
 
-	enemy->SetWeaponTransform(&weaponTransform);
+	enemy->SetWeaponTransform(&weaponTransform);*/
 
 
 	return rigidBody;
