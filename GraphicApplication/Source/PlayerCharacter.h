@@ -38,7 +38,7 @@ namespace SaltnPepperEngine
 		void MouseInput(const float deltaTime, Vector2 mousePosition, Transform& lookTransform);
 
 		
-		bool RayCastbyTag(const Vector3& origin, const Vector3& forward, EnvironmentTag::Tag tag);
+		bool RayCastbyTag(const Vector3& origin, const Vector3& forward,  bool navcast = false);
 
 		
 

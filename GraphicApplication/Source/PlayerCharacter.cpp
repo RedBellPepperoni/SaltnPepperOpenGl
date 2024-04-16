@@ -95,7 +95,7 @@ namespace SaltnPepperEngine
 			const Vector3 forward = lookTransform.GetForwardVector();
 
 			// Raycast check if the hit object was an enemy
-			RayCastbyTag(origin, forward, EnvironmentTag::Tag::NAVMESH);
+			RayCastbyTag(origin, forward,true);
 
 
 			
@@ -195,7 +195,7 @@ namespace SaltnPepperEngine
 			const Vector3 forward = lookTransform.GetForwardVector();
 
 			// Raycast check if the hit object was an enemy
-			RayCastbyTag(origin, forward, EnvironmentTag::Tag::ENEMY);
+			RayCastbyTag(origin, forward);
 
 		}
 
@@ -209,7 +209,7 @@ namespace SaltnPepperEngine
 
 	}
 
-	bool PlayerCharacter::RayCastbyTag(const Vector3& origin, const Vector3& forward, EnvironmentTag::Tag tag)
+	bool PlayerCharacter::RayCastbyTag(const Vector3& origin, const Vector3& forward,bool navcast)
 	{
 		const Vector3 offsetOrigin = origin + (forward * (0.4f));
 		const Vector3 targetOffset = origin + (forward * (50.0f));
@@ -231,21 +231,17 @@ namespace SaltnPepperEngine
 		Entity hitEntity = hitbody->GetEntityId();
 
 		EnvironmentTag* hitBody = hitEntity.TryGetComponent<EnvironmentTag>();
+		if (hitBody == nullptr) { return false; }
 
 		const EnvironmentTag::Tag hitBodyTag = hitBody->currentTag;
 
-		if (hitBody == nullptr) { return false; }
 
-		if (hitBodyTag != tag)
-		{
-			return false;
-		}
 
 
 		// ============== CORRECT TAGGED ENTITY WAS HIT ===================
 
 
-		switch (tag)
+		switch (hitBodyTag)
 		{
 			case SaltnPepperEngine::EnvironmentTag::Tag::NONE:
 			{
@@ -255,6 +251,15 @@ namespace SaltnPepperEngine
 
 			case SaltnPepperEngine::EnvironmentTag::Tag::ENEMY:
 			{
+
+				if (navcast)
+				{
+					Transform& transform = hitEntity.GetComponent<Transform>();
+					hitPosition = transform.GetPosition() - Vector3{0.0f,0.8f,0.0f};
+					m_gameManagerRef->MoveBuddyTo(hitPosition,hitbody);
+					return true;
+				}
+
 				EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
 				if (enemyComp)
 				{
@@ -275,9 +280,15 @@ namespace SaltnPepperEngine
 
 			case SaltnPepperEngine::EnvironmentTag::Tag::NAVMESH:
 			{
-				LOG_CRITICAL("Position Hit : {0} , {1} , {2}", hitPosition.x, hitPosition.y, hitPosition.z);
+				//LOG_CRITICAL("Position Hit : {0} , {1} , {2}", hitPosition.x, hitPosition.y, hitPosition.z);
 
-				m_gameManagerRef->MoveBuddyTo(hitPosition);
+				if (!navcast)
+				{
+					return false;
+				}
+
+				m_gameManagerRef->MoveBuddyTo(hitPosition,nullptr);
+				return true;
 			}
 			
 			break;

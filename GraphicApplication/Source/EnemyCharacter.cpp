@@ -267,6 +267,11 @@ namespace SaltnPepperEngine
 
 	}
 
+	void EnemyCharacter::SetMarkRef(Entity mark)
+	{
+		markEntity = mark;
+	}
+
 	void EnemyCharacter::SetType(ZombieType type)
 	{
 		currentType = type;
@@ -406,6 +411,14 @@ namespace SaltnPepperEngine
 		currentState = EnemyState::TAKINGHIT;
 
 
+	}
+
+	void EnemyCharacter::MarkforBuddy(bool mark)
+	{
+		m_markedbyBuddy = mark;
+		// Add mark enable disable here
+
+		markEntity.SetActive(mark);
 	}
 
 	EnemyComponent::EnemyComponent()

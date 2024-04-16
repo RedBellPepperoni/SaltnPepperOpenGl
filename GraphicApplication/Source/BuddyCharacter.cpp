@@ -123,7 +123,7 @@ namespace SaltnPepperEngine
 		case BuddyState::IDLE:
 
 			m_animator->SetTransitiontime(0.4f);
-			m_animator->PlayAnimationbyName("IdleUnarmed");
+			m_animator->PlayAnimationbyName("Idle");
 
 
 
@@ -131,14 +131,14 @@ namespace SaltnPepperEngine
 
 		case BuddyState::WALKING:
 			m_animator->SetTransitiontime(0.4f);
-			m_animator->PlayAnimationbyName("WalkUnarmed");
+			m_animator->PlayAnimationbyName("Walk");
 
 			//PlayIdleSound();
 
 			break;
 
 		case BuddyState::ATTACKING:
-			/*m_animator->SetTransitiontime(0.2f);
+			m_animator->SetTransitiontime(0.2f);
 			m_animator->PlayAnimationbyName("Attack");
 
 			m_counter += deltaTime;
@@ -150,13 +150,13 @@ namespace SaltnPepperEngine
 				currentState = BuddyState::IDLE;
 			}
 
-			break;*/
+			break;
 
 
 		case BuddyState::TAKINGHIT:
 
-			/*m_animator->SetTransitiontime(0.05f);
-			m_animator->PlayAnimationbyName("HitOne", false);
+			m_animator->SetTransitiontime(0.05f);
+			m_animator->PlayAnimationbyName("Hit", false);
 
 			m_counter += deltaTime;
 			duration = 0.6f;
@@ -165,7 +165,7 @@ namespace SaltnPepperEngine
 			{
 				m_counter = 0.0f;
 				currentState = BuddyState::IDLE;
-			}*/
+			}
 
 			break;
 

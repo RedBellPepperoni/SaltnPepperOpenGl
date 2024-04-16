@@ -988,18 +988,25 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	matOne->normalMapFactor = 1.0f;
 
 	
-	//==== Spawn the Weapon
+	//==== Spawn the Mark Icon
 
-	/*Entity weaponEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Weapon_Rifle");
-	Transform& weaponTransform = weaponEntity.GetComponent<Transform>();
+	Entity markEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Mark_Enemy");
+	Transform& markTransform = markEntity.GetComponent<Transform>();
 
-	weaponTransform.SetPosition(Vector3(0.0f));
-	weaponTransform.SetEularRotation(Vector3(0.0f));
-	weaponTransform.SetScale(Vector3(1.0f));
+	markTransform.SetPosition(Vector3(0.0f, 1.0f,0.0f));
+	markTransform.SetEularRotation(Vector3(0.0f));
+	markTransform.SetScale(Vector3(1.0f));
 
 
-	enemy->SetWeaponTransform(&weaponTransform);*/
-
+	ModelComponent& markmodle = markEntity.AddComponent<ModelComponent>(PrimitiveType::Sphere);
+	SharedPtr<Material>& markMat = markmodle.m_handle->GetMeshes()[0]->GetMaterial();
+	markMat->albedoColour = Vector4{ 1.0f,0.0f,0.0f,1.0f };
+	markMat->albedoMapFactor = 0.0f;
+	Hierarchy& markHie = markEntity.AddComponent<Hierarchy>();
+	markEntity.AddComponent<EnemyMark>(); 
+	markEntity.SetParent(enemyEntity);
+	markEntity.SetActive(false);
+	enemy->SetMarkRef(markEntity);
 
 	return rigidBody;
 }

@@ -10,6 +10,10 @@ namespace SaltnPepperEngine
 		std::string look_tag = "EnemyLook";
 	};
 
+	struct EnemyMark
+	{
+		std::string mark_tag = "EnemyMArk";
+	};
 
 	enum class ZombieType : uint8_t
 	{
@@ -56,16 +60,13 @@ namespace SaltnPepperEngine
 		RigidBody* m_rigidBody = nullptr;
 		Transform* m_weaponTransform = nullptr;
 
-		const float m_shootCooldown = 0.12f;
-		float m_shootcounter = 0.0f;
+		
 
 		float m_counter = 0.0f;
 		float m_deathcounter = 0.0f;
 		
-
-		const float m_ReloadTimer = 3.6f;
-		float m_reloadCounter = 0.0f;
-
+		bool m_markedbyBuddy = false;
+	
 		const float m_attackTimer = 1.2f;
 		const float m_attackEventTimer = 2.0f;
 		const float m_attackCooldown = 4.0f;
@@ -108,6 +109,8 @@ namespace SaltnPepperEngine
 		float m_animCounter = 0.0f;
 		const float animationFrameRate = 1.0f/30.0f;
 
+		Entity markEntity;
+
 	private:
 
 		void UpdateState(const float deltaTime);
@@ -131,6 +134,7 @@ namespace SaltnPepperEngine
 		EnemyCharacter();
 		virtual ~EnemyCharacter() = default;
 
+		void SetMarkRef(Entity mark);
 		void SetType(ZombieType type);
 
 		void SetAnimatorRef(SkinnedAnimator* animRef);
@@ -143,6 +147,8 @@ namespace SaltnPepperEngine
 		void OnUpdate(float deltaTime,const Vector3& playerPos, Transform& enemyTransform, Transform& lookTransform);
 
 		virtual void TakeDamage(const int damage) override;
+
+		void MarkforBuddy(bool mark);
 	};
 
 

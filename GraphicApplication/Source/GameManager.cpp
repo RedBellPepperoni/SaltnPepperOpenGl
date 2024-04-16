@@ -140,7 +140,7 @@ namespace SaltnPepperEngine
         clipsVar1.push_back(alertclip);
         clipsVar1.push_back(death1clip);
 
-        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
+        EntitySetup::CreateZombie(Vector3(-4.1f, 0.2f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
       /*  EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
@@ -606,10 +606,10 @@ namespace SaltnPepperEngine
         SetupPathFinder();
 
       
-        m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 1.2f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 0.2f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
         m_playerRef->SetGameManagerRef(this);
 
-        m_buddyRef = EntitySetup::CreateBuddy(Vector3(-4.1f, 1.2f, 12.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_buddyRef = EntitySetup::CreateBuddy(Vector3(-4.1f, 0.2f, 12.6f), Vector3(0.0f, 0.0f, 0.0f));
 	}
 
 
@@ -622,9 +622,20 @@ namespace SaltnPepperEngine
 
 	}
 
-    void GameManager::MoveBuddyTo(const Vector3& position)
+    void GameManager::MoveBuddyTo(const Vector3& position, RigidBody* markedEnemy)
     {
+        ComponentView enemymarkView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<EnemyMark>();
         
+        for (Entity enemy : enemymarkView)
+        {
+            enemy.SetActive(false);
+        }
+
+        if (markedEnemy != nullptr)
+        {
+            markedEnemy->GetEntityId().GetComponent<EnemyComponent>().GetEnemy()->MarkforBuddy(true);
+        }
+
         m_simplifiedpath = m_pathFinder->FindSimplfiedPath(m_buddyPosition,position);
         m_buddyRef->UpdateTargetandPath(position, m_simplifiedpath);
 

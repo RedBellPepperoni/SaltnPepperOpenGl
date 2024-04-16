@@ -38,7 +38,7 @@ namespace SaltnPepperEngine
 		void OnInit();
 		void OnUpdate(const float deltaTime);
 
-		void MoveBuddyTo(const Vector3& position);
+		void MoveBuddyTo(const Vector3& position,RigidBody* markedEnemy = nullptr);
 
 	private:
 
@@ -58,6 +58,8 @@ namespace SaltnPepperEngine
 
 		std::vector<NavTriangle> m_debugnavmesh;
 
+
+		std::vector<Vector3> enemyPositions;
 	};
 }
 
