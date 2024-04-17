@@ -66,7 +66,7 @@ namespace SaltnPepperEngine
 		SkinnedAnimator* GetAnimator();
 		void SetRigidBodyRef(RigidBody* bodyRef);
 		void SetGameManagerRef(GameManager* finder);
-
+		void SetMarkedEnemy(const Vector3& position,const bool hasTarget = true);
 	private:
 
 		void UpdateAnimState(const float deltaTime);
@@ -75,8 +75,10 @@ namespace SaltnPepperEngine
 		void RotateModel(float deltatime, const Vector3& target, Transform& looktransform);
 		void Attack(const Vector3& origin, const Vector3& target);
 
+		void DetectEnemyTarget(const float deltaTime, Transform& currTransform,Transform& lookTransform);
+		void UpdateEnemyData(bool hasEnemy, const Vector3& enemyPOsition = Vector3{ 0.0f });
 		void Die();
-
+		
 		void SetNextWaypoint();
 
 		Vector3 GetCurrentWayPoint();
@@ -110,15 +112,18 @@ namespace SaltnPepperEngine
 		BuddyBehaviour currentBehaviour = BuddyBehaviour::DECIDING;
 
 		float m_counter = 0.0f;
-		const float m_attackTimer = 1.2f;
-		const float m_attackEventTimer = 2.0f;
+		const float m_attackEventTimer = 0.8f;
 		const float m_attackCooldown = 2.0f;
 		float m_attackCounter = 0.0f;
 		bool m_canAttack = true;
 		EntityManager* m_entityManger = nullptr;
 
-		/*bool m_hasEnemy = false;
-		Vector3 m_enemyPosition;*/
+		bool m_hasEnemy = false;
+		Vector3 m_enemyPosition;
+
+
+		Vector3 m_attackOrigin;
+		Vector3 m_targetOrigin;
 	};
 
 	struct BuddyComponent

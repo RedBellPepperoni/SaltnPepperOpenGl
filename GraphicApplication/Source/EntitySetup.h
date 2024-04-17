@@ -138,7 +138,7 @@ public:
 	static RigidBody* CreatePhysicsFloor(const Vector3& position, const Vector3& rotation);
 	static RigidBody* CreatePhysicsTest(const Vector3& position);
 	static RigidBody* CreatePhysicsKinematic(const Vector3& position);
-	static RigidBody* CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips, ZombieType type = ZombieType::WALK);
+	static EnemyCharacter* CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips, ZombieType type = ZombieType::WALK);
 
 	static Entity CreatePhysicsBox(const Vector3& position, const Vector3& rotation, const BoundingBox bounds, const EnvironmentTag::Tag Tag = EnvironmentTag::Tag::NONE);
 	static Entity CreatePhysicsCylinder(const Vector3& position, const Vector3& rotation, const BoundingCylinder bounds);

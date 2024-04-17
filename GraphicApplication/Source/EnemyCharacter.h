@@ -5,6 +5,9 @@
 
 namespace SaltnPepperEngine
 {
+
+	class GameManager;
+
 	struct EnemyLook
 	{
 		std::string look_tag = "EnemyLook";
@@ -111,6 +114,8 @@ namespace SaltnPepperEngine
 
 		Entity markEntity;
 
+		GameManager* m_gameManager = nullptr;
+
 	private:
 
 		void UpdateState(const float deltaTime);
@@ -136,7 +141,7 @@ namespace SaltnPepperEngine
 
 		void SetMarkRef(Entity mark);
 		void SetType(ZombieType type);
-
+		void SetGameManagerRef(GameManager* finder);
 		void SetAnimatorRef(SkinnedAnimator* animRef);
 		SkinnedAnimator* GetAnimator();
 		void SetWeaponTransform(Transform* weaponTransform);

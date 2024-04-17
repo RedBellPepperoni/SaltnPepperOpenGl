@@ -41,8 +41,10 @@ namespace SaltnPepperEngine
 		void OnUpdate(const float deltaTime);
 
 		void MoveBuddyTo(const Vector3& position,RigidBody* markedEnemy = nullptr);
-
+		void CheckandUpdateMarkedEnemy(const float& deltatime);
 		void HideMarker();
+
+		void SetEnemyDeath(RigidBody* enemyRef);
 
 	private:
 
@@ -65,9 +67,12 @@ namespace SaltnPepperEngine
 		Entity m_waypointarrowEntity;
 
 		std::vector<Vector3> enemyPositions;
-
+		RigidBody* m_markedEnemy = nullptr;
 		float sincounter = 0.0f;
 		float rotcounter = 0.0f;
+
+		float markenemycounter;
+		const float m_markRefresh = 1.5f;
 	};
 }
 

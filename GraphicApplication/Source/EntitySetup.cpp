@@ -940,7 +940,7 @@ void EntitySetup::AssignMaterial(SharedPtr<Material>& mat, const SubwayMaterial 
 
 
 
-RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips,ZombieType type)
+EnemyCharacter* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rotation, std::vector<AudioClip*> clips,ZombieType type)
 {
 
 	std::string name = "Zombie_" + std::to_string(enemyCount);
@@ -1057,7 +1057,7 @@ RigidBody* EntitySetup::CreateZombie(const Vector3& position, const Vector3& rot
 	markEntity.SetActive(false);
 	enemy->SetMarkRef(markEntity);
 
-	return rigidBody;
+	return enemy;
 }
 
 

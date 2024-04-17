@@ -31,11 +31,12 @@ namespace SaltnPepperEngine
 	void BuddyCharacter::OnUpdate(const float& deltaTime, Transform& buddyTransform, Transform& lookTransform)
 	{
 		const Vector3 currentPosition = buddyTransform.GetPosition() - Vector3{0.0f,0.81,0.0f};
-
+		const Vector3 currentForward = lookTransform.GetForwardVector();
 		
 		UpdateAnimState(deltaTime);
 
 		m_animCounter += deltaTime;
+		m_attackCounter += deltaTime;
 
 		if (m_animCounter >= animationFrameRate)
 		{
@@ -45,50 +46,92 @@ namespace SaltnPepperEngine
 
 		}
 
+		if (currentState == BuddyState::TAKINGHIT) { return; }
 
-
-		if (!m_isfollowingPath) { return; }
-
-		if (!m_targetClose)
+		if (!m_isfollowingPath)
 		{
-			const Vector3 currentWaypoint = GetCurrentWayPoint();
+			
+			DetectEnemyTarget(deltaTime, buddyTransform,lookTransform );
 
-			float waypointDistance = DistanceSquared(currentWaypoint, currentPosition);
+			
 
-			if (waypointDistance < 0.1f)
+			if (currentBehaviour == BuddyBehaviour::ATTACK)
 			{
-				SetNextWaypoint();
-			}
+				if (m_canAttack == false)
+				{
+					if (m_attackCounter < m_attackCooldown) { return; }
 
-			else
-			{
-				const Vector3 direction = Normalize(currentWaypoint - currentPosition);
-				Move(direction);
-				RotateModel(deltaTime,direction, lookTransform);
+					m_attackCounter = 0.0f;
+					m_canAttack = true;
+				}
+				else
+				{
+					currentState = BuddyState::ATTACKING;
+
+					if (m_attackCounter > m_attackEventTimer)
+					{
+						m_attackCounter = 0.0f;
+
+
+						Vector3 origin = currentPosition - (currentForward) * 0.5f;
+						origin.y = origin.y + 0.5f;
+						Vector3 destination = currentPosition - (currentForward * 2.0f);
+						destination.y = destination.y + 0.5f;
+
+						Attack(origin, destination);
+						m_canAttack = false;
+
+					}
+
+				}
 			}
+			
+	
 		}
 
 		else
 		{
-			const float distance = DistanceSquared(m_targetPosition, currentPosition);
-
-			if (distance > 0.1f)
+			if (!m_targetClose)
 			{
-				const Vector3 direction = Normalize(m_targetPosition - currentPosition);
-				Move(direction);
-				RotateModel(deltaTime, direction, lookTransform);
+				const Vector3 currentWaypoint = GetCurrentWayPoint();
 
+				float waypointDistance = DistanceSquared(currentWaypoint, currentPosition);
+
+				if (waypointDistance < 0.1f)
+				{
+					SetNextWaypoint();
+				}
+
+				else
+				{
+					const Vector3 direction = Normalize(currentWaypoint - currentPosition);
+					Move(direction);
+					RotateModel(deltaTime, direction, lookTransform);
+				}
 			}
 
 			else
 			{
-				m_isfollowingPath = false;
-				m_targetClose = false;
-				currentState = BuddyState::IDLE;
-				m_gameManagerRef->HideMarker();
-			}
+				const float distance = DistanceSquared(m_targetPosition, currentPosition);
 
-			
+				if (distance > 0.1f)
+				{
+					const Vector3 direction = Normalize(m_targetPosition - currentPosition);
+					Move(direction);
+					RotateModel(deltaTime, direction, lookTransform);
+
+				}
+
+				else
+				{
+					m_isfollowingPath = false;
+					m_targetClose = false;
+					currentState = BuddyState::IDLE;
+					m_gameManagerRef->HideMarker();
+				}
+
+
+			}
 		}
 
 
@@ -118,6 +161,7 @@ namespace SaltnPepperEngine
 	{
 		float duration = 0.0f;
 
+		DebugRenderer::DrawLine(m_attackOrigin,m_targetOrigin,Vector4(1.0f,0.0f,0.0f,1.0f));
 
 
 		switch (currentState)
@@ -144,7 +188,7 @@ namespace SaltnPepperEngine
 			m_animator->PlayAnimationbyName("Attack");
 
 			m_counter += deltaTime;
-			duration = 1.0f;
+			duration = 0.9f;
 
 			if (m_counter > duration)
 			{
@@ -211,12 +255,90 @@ namespace SaltnPepperEngine
 
 	void BuddyCharacter::Attack(const Vector3& origin, const Vector3& target)
 	{
+		LOG_WARN("BUDDY ATTACKS");
 
+		m_attackOrigin = origin;
+		m_targetOrigin = target;
+
+		//LOG_ERROR("Origin : {0} {1} {2} : Target : {3} {4} {5}", origin.x, origin.y, origin.z, target.x, target.y, target.z);
+
+		Vector3 hitPosition;
+		RigidBody* hitbody = PhysicsUtils::RayCast(origin, target, hitPosition, CollisionMask::AllFilter);
+
+
+		
+		//PlayAttackSound();
+
+		if (hitbody)
+		{
+			
+
+			Entity hitEntity = hitbody->GetEntityId();
+
+			EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
+
+			std::string name = hitEntity.TryGetComponent<NameComponent>()->name;
+
+			// Enemy Hit
+			if (enemyComp)
+			{
+				EnemyCharacter* enemy = enemyComp->GetEnemy();
+				enemy->TakeDamage(20);
+			}
+
+		}
+
+
+	}
+
+	void BuddyCharacter::DetectEnemyTarget(const float deltaTime, Transform& currTransform, Transform& lookTransform)
+	{
+		// Doesnt have enemy target : Do nothing
+		if (m_hasEnemy == false) { return; }
+		if (m_isfollowingPath) { return; }
+
+		const Vector3 currentPos = currTransform.GetPosition() - Vector3{ 0.0f,0.8f,0.0f };
+
+		const float distance = DistanceSquared(m_enemyPosition, currentPos);
+
+		// We have Detected Enemy
+		if (distance < Square(m_detectionRadius))
+		{
+			//m_targetPosition = m_enemyPosition;
+
+			Vector3 direction = (m_enemyPosition - currentPos);
+			direction.y = 0.0f;
+
+			RotateModel(deltaTime, Normalize(direction), lookTransform);
+
+			if (distance < Square(m_attackRadius))
+			{
+				currentBehaviour = BuddyBehaviour::ATTACK;
+			}
+			else
+			{
+				//m_canAttack = false;
+			}
+
+		}
+
+	}
+
+	void BuddyCharacter::UpdateEnemyData(bool hasEnemy, const Vector3& enemyPOsition)
+	{
+		m_hasEnemy = hasEnemy;
+		m_enemyPosition = enemyPOsition;
 	}
 
 	void BuddyCharacter::Die()
 	{
 
+	}
+
+	void BuddyCharacter::SetMarkedEnemy(const Vector3& position,const bool hasTarget)
+	{
+		m_enemyPosition = position;
+		m_hasEnemy = hasTarget;
 	}
 
 	void BuddyCharacter::SetNextWaypoint()

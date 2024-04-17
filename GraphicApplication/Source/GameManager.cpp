@@ -140,16 +140,8 @@ namespace SaltnPepperEngine
         clipsVar1.push_back(alertclip);
         clipsVar1.push_back(death1clip);
 
-        EntitySetup::CreateZombie(Vector3(-4.1f, 0.2f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
-      /*  EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
-        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
-        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
-        EntitySetup::CreateZombie(Vector3(-4.1f, 3.0f, 4.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);*/
-
-
-
-
-
+        EntitySetup::CreateZombie(Vector3(-4.1f, 0.2f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+     
 
     }
 
@@ -528,6 +520,8 @@ namespace SaltnPepperEngine
         UpdateEnemies(deltaTime, m_playerPosition);
 
         UpdateBuddy(deltaTime);
+
+        CheckandUpdateMarkedEnemy(deltaTime);
     
         ComponentView enemymarkView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<EnemyMark>();
 
@@ -682,6 +676,8 @@ namespace SaltnPepperEngine
 
     void GameManager::MoveBuddyTo(const Vector3& position, RigidBody* markedEnemy)
     {
+        m_markedEnemy = markedEnemy;
+
         ComponentView enemymarkView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<EnemyMark>();
         
         for (Entity enemy : enemymarkView)
@@ -689,16 +685,21 @@ namespace SaltnPepperEngine
             enemy.SetActive(false);
         }
 
-        if (markedEnemy != nullptr)
+        if (m_markedEnemy != nullptr)
         {
-            markedEnemy->GetEntityId().GetComponent<EnemyComponent>().GetEnemy()->MarkforBuddy(true);
+            m_markedEnemy->GetEntityId().GetComponent<EnemyComponent>().GetEnemy()->MarkforBuddy(true);
+            const Vector3 position = m_markedEnemy->GetEntityId().GetComponent<Transform>().GetPosition() - Vector3{0.0f,0.8f,0.0f};
+
+
             m_waypointbaseEntity.SetActive(false);
+            m_buddyRef->SetMarkedEnemy(position,true);
         }
 
         else
         {
             m_waypointbaseEntity.GetComponent<Transform>().SetPosition(position);
             m_waypointbaseEntity.SetActive(true);
+            m_buddyRef->SetMarkedEnemy(Vector3{200.0f}, false);
         }
 
         m_simplifiedpath = m_pathFinder->FindSimplfiedPath(m_buddyPosition,position);
@@ -706,8 +707,57 @@ namespace SaltnPepperEngine
 
     }
 
+    void GameManager::CheckandUpdateMarkedEnemy(const float& deltatime)
+    {
+        if (m_markedEnemy)
+        {
+      
+            const Vector3 position = m_markedEnemy->GetEntityId().GetComponent<Transform>().GetPosition() - Vector3{ 0.0f,0.8f,0.0f };
+            m_buddyRef->SetMarkedEnemy(position, true);
+        }
+        else
+        {
+            m_buddyRef->SetMarkedEnemy(Vector3{ 200.0f }, false);
+
+        }
+
+        //if (m_markedEnemy == nullptr)
+        //{
+        //    markenemycounter = 0.0f;
+        //    return;
+        //}
+
+        //markenemycounter += deltatime;
+
+        //if (markenemycounter > m_markRefresh)
+        //{
+        //    markenemycounter = 0.0f;
+        //    //m_markedEnemy->GetEntityId().GetComponent<EnemyCharacter>().get
+
+        //    const Vector3 enemyPosition = m_markedEnemy->GetEntityId().GetComponent<Transform>().GetPosition() - Vector3{ 0.0f,0.8f,0.0f };
+        //    
+        //    MoveBuddyTo(enemyPosition,m_markedEnemy);
+        //}
+        //
+
+       
+    }
+
     void GameManager::HideMarker()
     {
         m_waypointbaseEntity.SetActive(false);
+    }
+
+
+    void GameManager::SetEnemyDeath(RigidBody* enemyRef)
+    {
+        if (m_markedEnemy == enemyRef)
+        {
+            m_markedEnemy = nullptr;
+        }
+
+        std::string name = enemyRef->GetEntityId().GetComponent<NameComponent>().name;
+
+        LOG_WARN("ENEMY KILLED : {0}", name);
     }
 }

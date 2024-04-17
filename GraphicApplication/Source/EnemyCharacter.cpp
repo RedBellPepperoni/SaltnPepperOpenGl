@@ -1,4 +1,6 @@
 #include "EnemyCharacter.h"
+#include "GameManager.h"
+
 namespace SaltnPepperEngine
 {
 	void EnemyCharacter::UpdateState(const float deltaTime)
@@ -230,6 +232,8 @@ namespace SaltnPepperEngine
 		m_deathcounter = 0.0f;
 		m_markedForDeath = true;
 		m_idlesource->StopPlayback();
+
+		m_gameManager->SetEnemyDeath(m_rigidBody);
 	}
 
 	void EnemyCharacter::PlayIdleSound()
@@ -275,6 +279,11 @@ namespace SaltnPepperEngine
 	void EnemyCharacter::SetType(ZombieType type)
 	{
 		currentType = type;
+	}
+
+	void EnemyCharacter::SetGameManagerRef(GameManager* finder)
+	{
+		m_gameManager = finder;
 	}
 
 	void SaltnPepperEngine::EnemyCharacter::SetAnimatorRef(SkinnedAnimator* animRef)
