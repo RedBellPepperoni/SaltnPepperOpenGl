@@ -670,8 +670,6 @@ namespace SaltnPepperEngine
         OnUpdateMainScene(deltaTime);
         DebugNavmesh();
 
-       
-
 	}
 
     void GameManager::MoveBuddyTo(const Vector3& position, RigidBody* markedEnemy)
@@ -754,10 +752,14 @@ namespace SaltnPepperEngine
         if (m_markedEnemy == enemyRef)
         {
             m_markedEnemy = nullptr;
+
+            std::string name = enemyRef->GetEntityId().GetComponent<NameComponent>().name;
+
+            LOG_WARN("ENEMY KILLED : {0}", name);
+
+            m_buddyRef->SetMarkedEnemy(Vector3{200.0f}, false);
         }
 
-        std::string name = enemyRef->GetEntityId().GetComponent<NameComponent>().name;
-
-        LOG_WARN("ENEMY KILLED : {0}", name);
+       
     }
 }

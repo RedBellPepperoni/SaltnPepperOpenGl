@@ -76,7 +76,6 @@ namespace SaltnPepperEngine
 		void Attack(const Vector3& origin, const Vector3& target);
 
 		void DetectEnemyTarget(const float deltaTime, Transform& currTransform,Transform& lookTransform);
-		void UpdateEnemyData(bool hasEnemy, const Vector3& enemyPOsition = Vector3{ 0.0f });
 		void Die();
 		
 		void SetNextWaypoint();

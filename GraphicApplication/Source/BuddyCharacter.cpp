@@ -73,7 +73,7 @@ namespace SaltnPepperEngine
 						m_attackCounter = 0.0f;
 
 
-						Vector3 origin = currentPosition - (currentForward) * 0.5f;
+						Vector3 origin = currentPosition - (currentForward) * 0.01f;
 						origin.y = origin.y + 0.5f;
 						Vector3 destination = currentPosition - (currentForward * 2.0f);
 						destination.y = destination.y + 0.5f;
@@ -294,7 +294,13 @@ namespace SaltnPepperEngine
 	void BuddyCharacter::DetectEnemyTarget(const float deltaTime, Transform& currTransform, Transform& lookTransform)
 	{
 		// Doesnt have enemy target : Do nothing
-		if (m_hasEnemy == false) { return; }
+		if (m_hasEnemy == false) 
+		{ 
+			currentBehaviour = BuddyBehaviour::DECIDING;
+			currentState = BuddyState::IDLE;
+			return;
+		}
+
 		if (m_isfollowingPath) { return; }
 
 		const Vector3 currentPos = currTransform.GetPosition() - Vector3{ 0.0f,0.8f,0.0f };
@@ -324,11 +330,7 @@ namespace SaltnPepperEngine
 
 	}
 
-	void BuddyCharacter::UpdateEnemyData(bool hasEnemy, const Vector3& enemyPOsition)
-	{
-		m_hasEnemy = hasEnemy;
-		m_enemyPosition = enemyPOsition;
-	}
+	
 
 	void BuddyCharacter::Die()
 	{

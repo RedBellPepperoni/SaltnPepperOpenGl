@@ -234,6 +234,7 @@ namespace SaltnPepperEngine
 		m_idlesource->StopPlayback();
 
 		m_gameManager->SetEnemyDeath(m_rigidBody);
+		MarkforBuddy(false);
 	}
 
 	void EnemyCharacter::PlayIdleSound()
