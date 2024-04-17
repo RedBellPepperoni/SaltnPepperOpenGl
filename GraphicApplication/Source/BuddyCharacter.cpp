@@ -36,13 +36,19 @@ namespace SaltnPepperEngine
 		UpdateAnimState(deltaTime);
 
 		m_animCounter += deltaTime;
-		m_attackCounter += deltaTime;
+
+		m_attackCounter -= deltaTime;
+
+		if (m_attackCounter <= 0.0f)
+		{
+			m_attackCounter = 0.0f;
+		}
+
 
 		if (m_animCounter >= animationFrameRate)
 		{
 			m_animCounter = 0.0f;
 			m_animator->OnUpdate(animationFrameRate);
-
 
 		}
 
@@ -59,29 +65,30 @@ namespace SaltnPepperEngine
 			{
 				if (m_canAttack == false)
 				{
-					if (m_attackCounter < m_attackCooldown) { return; }
+					if (m_attackCounter > 0.0f) { return; }
 
-					m_attackCounter = 0.0f;
+					m_attackCounter = m_attackEventTimer;
 					m_canAttack = true;
 				}
 				else
 				{
 					currentState = BuddyState::ATTACKING;
 
-					if (m_attackCounter > m_attackEventTimer)
+					if (m_attackCounter > 0.0f)
 					{
-						m_attackCounter = 0.0f;
-
-
-						Vector3 origin = currentPosition - (currentForward) * 0.01f;
-						origin.y = origin.y + 0.5f;
-						Vector3 destination = currentPosition - (currentForward * 2.0f);
-						destination.y = destination.y + 0.5f;
-
-						Attack(origin, destination);
-						m_canAttack = false;
-
+						return;
 					}
+					
+					m_attackCounter = m_attackCooldown;
+
+					Vector3 origin = currentPosition - (currentForward) * 0.01f;
+					origin.y = origin.y + 0.5f;
+					Vector3 destination = currentPosition - (currentForward * 2.0f);
+					destination.y = destination.y + 0.5f;
+
+					Attack(origin, destination);
+					m_canAttack = false;
+					
 
 				}
 			}

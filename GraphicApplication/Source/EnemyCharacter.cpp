@@ -206,20 +206,17 @@ namespace SaltnPepperEngine
 
 		if (hitbody)
 		{
-			std::string name = hitbody->GetEntityId().GetComponent<NameComponent>().name;
+			
+			Entity hitEntity = hitbody->GetEntityId();
 
-			LOG_CRITICAL("HIT : {0}", name);
+			PlayerComponent* playerComp = hitEntity.TryGetComponent<PlayerComponent>();
 
-			//Entity hitEntity = hitbody->GetEntityId();
-
-			//EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
-
-			//// Enemy Hit
-			//if (enemyComp)
-			//{
-			//	EnemyCharacter* enemy = enemyComp->GetEnemy();
-			//	enemy->TakeDamage(20);
-			//}
+			// Enemy Hit
+			if (playerComp)
+			{
+				PlayerCharacter* player = playerComp->GetPlayer();
+				player->TakeDamage(20);
+			}
 
 		}
 
@@ -357,33 +354,41 @@ namespace SaltnPepperEngine
 
 		if (currentBehaviour == EnemyBehaviour::ATTACK)
 		{
-			m_attackCounter += deltaTime;
+			m_attackCounter -= deltaTime;
+
+			if (m_attackCounter <= 0.0f)
+			{
+				m_attackCounter = 0.0f;
+			}
 
 			if (!m_canAttack) 
 			{ 	
-				if (m_attackCounter < m_attackCooldown) { return; }
+				if (m_attackCounter > 0.0f) { return; }
 			
-				m_attackCounter = 0.0f;
+				m_attackCounter = m_attackEventTimer;
 				m_canAttack = true; 
 			}
 			else
 			{
 				currentState = EnemyState::ATTACKING;
 
-				if (m_attackCounter > m_attackEventTimer)
+				if (m_attackCounter > 0.0f)
 				{
-					m_attackCounter = 0.0f;
-
-					
-					Vector3 origin = currentPosition - (currentForward);
-					origin.y = 0.5f;
-					Vector3 destination = currentPosition - (currentForward * 3.0f);
-					destination.y = 0.5f;
-
-					Attack(origin,destination);
-					m_canAttack = false;
-
+					return;
 				}
+				
+				m_attackCounter = m_attackCooldown;
+
+				Vector3 origin = currentPosition - (currentForward) * 0.01f;
+				origin.y = 0.5f;
+				Vector3 destination = currentPosition - (currentForward * 2.0f);
+				destination.y = 0.5f;
+
+				Attack(origin, destination);
+				m_canAttack = false;
+					
+
+				
 
 			}
 			
