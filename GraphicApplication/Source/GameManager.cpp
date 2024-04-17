@@ -27,7 +27,7 @@ namespace SaltnPepperEngine
 
     }
 
-    void GameManager::UpdateEnemies(const float deltaTime, const Vector3& playerPos)
+    void GameManager::UpdateEnemies(const float deltaTime, const Vector3& playerPos, const Vector3& buddyPos)
     {
         ComponentView enemyView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<EnemyComponent>();
         ComponentView enemyLookView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<EnemyLook>();
@@ -43,7 +43,7 @@ namespace SaltnPepperEngine
             Transform& enemyTransform = enemyView[i].GetComponent<Transform>();
             Transform& enemyLook = enemyLookView[i].GetComponent<Transform>();
 
-            enemy->OnUpdate(deltaTime,  playerPos, enemyTransform, enemyLook);
+            enemy->OnUpdate(deltaTime,  playerPos, buddyPos, enemyTransform, enemyLook);
         }
 
     }
@@ -114,7 +114,7 @@ namespace SaltnPepperEngine
        // EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TEST, Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
         
-        PhysicsSystem::SetPaused(true);
+       // PhysicsSystem::SetPaused(true);
 
         SetupStaticMeshes();
         SetupStaticPhysics();
@@ -492,7 +492,7 @@ namespace SaltnPepperEngine
         }
     
 
-        UpdateEnemies(deltaTime, m_playerPosition);
+        UpdateEnemies(deltaTime, m_playerPosition,m_buddyPosition);
 
         if (Application::GetCurrent().GetEditorActive())
         {
@@ -517,7 +517,7 @@ namespace SaltnPepperEngine
             PhysicsSystem::SetPaused(!PhysicsSystem::GetPaused());
         }
 
-        UpdateEnemies(deltaTime, m_playerPosition);
+        UpdateEnemies(deltaTime, m_playerPosition,m_buddyPosition);
 
         UpdateBuddy(deltaTime);
 

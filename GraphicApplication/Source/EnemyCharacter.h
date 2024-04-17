@@ -71,7 +71,7 @@ namespace SaltnPepperEngine
 		bool m_markedbyBuddy = false;
 	
 		const float m_attackTimer = 1.2f;
-		const float m_attackEventTimer = 2.0f;
+		const float m_attackEventTimer = 1.6f;
 		const float m_attackCooldown = 4.0f;
 		float m_attackCounter = 0.0f;
 		bool m_canAttack = true;
@@ -85,7 +85,7 @@ namespace SaltnPepperEngine
 		ZombieType currentType = ZombieType::WALK;
 		SoundType currentSound = SoundType::IDLESOUND;
 
-		const float m_detectionRadius = 5.0f;
+		const float m_detectionRadius = 4.0f;
 		const float m_attackRadius = 1.5f;
 		
 		const float m_turnRate = 1.25f;
@@ -115,13 +115,17 @@ namespace SaltnPepperEngine
 		Entity markEntity;
 
 		GameManager* m_gameManager = nullptr;
+		bool m_playerCloser = false;
+
+		Vector3 m_attackorigin = Vector3{ 0.0f };
+		Vector3 m_attacktarget = Vector3{ 0.0f };
 
 	private:
 
 		void UpdateState(const float deltaTime);
 
-		void DetectPlayer(const float deltaTime, const Vector3& position,const Vector3& playerpos);
-		void DecideMovement(const float deltatime,const Vector3& currentPosition, const Vector3& playerPosition, Transform& lookTrasform);
+		void DetectPlayerandBuddy(const float deltaTime, const Vector3& position,const Vector3& playerpos, const Vector3& buddypos);
+		void DecideMovement(const float deltatime,const Vector3& currentPosition, const Vector3& playerPosition, const Vector3& buddyPosition,Transform& lookTrasform);
 		void Move(const Vector3& targetDirection);
 		void RotateModel(float deltatime, const Vector3& target, Transform& looktransform);
 		void Attack(const Vector3& origin, const Vector3& target);
@@ -149,7 +153,7 @@ namespace SaltnPepperEngine
 		void SetAudioSource(Audio::AudioSource* source, Audio::AudioSource* idleSource);
 		void SetAudioClips(AudioClip* idle, AudioClip* alert, AudioClip* attack,AudioClip* death);
 
-		void OnUpdate(float deltaTime,const Vector3& playerPos, Transform& enemyTransform, Transform& lookTransform);
+		void OnUpdate(float deltaTime,const Vector3& playerPos, const Vector3& buddyPos, Transform& enemyTransform, Transform& lookTransform);
 
 		virtual void TakeDamage(const int damage) override;
 

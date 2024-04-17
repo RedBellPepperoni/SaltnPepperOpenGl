@@ -15,10 +15,41 @@ namespace SaltnPepperEngine
 
 	void BuddyCharacter::TakeDamage(const int damage)
 	{
+	
+		//const int damagedHealth = GetCurrentHealth() - damage;
+
+		/*if (damagedHealth <= 0)
+		{
+			m_health = 0;
+			Die();
+			return;
+		}*/
+
+		//m_health = damagedHealth;
+
+		LOG_CRITICAL("Took Damage {0}", damage);
+
+		m_counter = 0.0f;
+
+		m_animator->SetTransitiontime(0.05f);
+		currentState = BuddyState::TAKINGHIT;
 	}
 
 	void BuddyCharacter::UpdateTargetandPath(const Vector3& target, const std::vector<Vector3>& newpath)
 	{
+		if (newpath.empty()) { return; }
+
+		if (newpath.size() == 1)
+		{
+			m_targetPosition = target;
+			m_currentPath = newpath;
+
+			m_currentWaypointIndex = 0;
+			m_isfollowingPath = true;
+			m_targetClose = true;
+			return;
+		}
+
 		m_targetPosition = target;
 		m_currentPath = newpath;
 
@@ -119,7 +150,11 @@ namespace SaltnPepperEngine
 
 			else
 			{
+
+				
+
 				const float distance = DistanceSquared(m_targetPosition, currentPosition);
+
 
 				if (distance > 0.1f)
 				{
@@ -136,7 +171,9 @@ namespace SaltnPepperEngine
 					currentState = BuddyState::IDLE;
 					m_gameManagerRef->HideMarker();
 				}
-
+				
+				
+	
 
 			}
 		}

@@ -11,7 +11,7 @@ namespace SaltnPepperEngine
 	private:
 
 		void UpdatePlayer(const float deltaTime);
-		void UpdateEnemies(const float deltaTime, const Vector3& playerPos);
+		void UpdateEnemies(const float deltaTime, const Vector3& playerPos, const Vector3& buddyPos);
 		void UpdateBuddy(const float deltaTime);
 
 		void OnInitTestScene();

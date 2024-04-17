@@ -30,6 +30,11 @@ namespace SaltnPepperEngine
             int startNode = GetGraph()->GetNearestTriangleIndex(start);
             int goalNode = GetGraph()->GetNearestTriangleIndex(goal);
 
+            if (startNode == goalNode)
+            {
+                return std::vector<Vector3>{GetGraph()->GetTriangleCenter(goalNode)};
+            }
+
 
             priority_queue<pair<float, int>, vector<pair<float, int>>, greater<pair<float, int>>> openSet;
             openSet.push(make_pair(0.0f, startNode));
@@ -117,6 +122,11 @@ namespace SaltnPepperEngine
         {
             std::vector<Vector3> simplifiedPath;
 
+
+            if (path.size() < 2 || path.empty())
+            {
+                return path;
+            }
 
             // Perform the Douglas-Peucker simplification
             DouglasPeuckerSimplify(path, epsilon, 0, static_cast<int>(path.size() - 1), simplifiedPath);

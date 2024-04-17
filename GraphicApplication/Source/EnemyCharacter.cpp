@@ -1,5 +1,6 @@
 #include "EnemyCharacter.h"
 #include "GameManager.h"
+#include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
 namespace SaltnPepperEngine
 {
@@ -10,7 +11,7 @@ namespace SaltnPepperEngine
 		if (m_markedForDeath)
 		{
 			m_deathcounter += deltaTime;
-			duration = 3.00f;
+			duration = 3.3f;
 
 			if (m_deathcounter > duration)
 			{
@@ -20,6 +21,9 @@ namespace SaltnPepperEngine
 
 			return;
 		}
+
+
+		DebugRenderer::DrawLine(m_attackorigin, m_attacktarget, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 
 
 		switch (currentState)
@@ -78,11 +82,19 @@ namespace SaltnPepperEngine
 		}
 	}
 
-	void EnemyCharacter::DetectPlayer(const float deltaTime, const Vector3& position,const Vector3& playerpos)
+	void EnemyCharacter::DetectPlayerandBuddy(const float deltaTime, const Vector3& position,const Vector3& playerpos, const Vector3& buddypos)
 	{
-		const float sqDist = DistanceSquared(position, playerpos);
 		
-		if (sqDist > m_detectionRadius * m_detectionRadius) 
+
+		const float sqDistplayer = DistanceSquared(position, playerpos);
+		const float sqDistbuddy = DistanceSquared(position, buddypos);
+
+		m_playerCloser = sqDistplayer < sqDistbuddy;
+		
+		
+		
+
+		if ((m_playerCloser ? sqDistplayer : sqDistbuddy) > m_detectionRadius * m_detectionRadius)
 		{ 
 			currentBehaviour = EnemyBehaviour::DECIDING;
 			m_shouldScream = true;
@@ -115,14 +127,14 @@ namespace SaltnPepperEngine
 		currentBehaviour = EnemyBehaviour::HUNT;
 		
 
-		if (sqDist < m_attackRadius * m_attackRadius)
+		if ((m_playerCloser ? sqDistplayer : sqDistbuddy) < m_attackRadius * m_attackRadius)
 		{
 			currentBehaviour = EnemyBehaviour::ATTACK;
 		}
 
 	}
 
-	void EnemyCharacter::DecideMovement(const float deltatime,const Vector3& currentPosition,const Vector3& playerPosition, Transform& lookTrasform)
+	void EnemyCharacter::DecideMovement(const float deltatime,const Vector3& currentPosition,const Vector3& playerPosition, const Vector3& buddyPosition, Transform& lookTrasform)
 	{
 		Vector3 finalDirection = Vector3(0.0f);
 
@@ -142,7 +154,7 @@ namespace SaltnPepperEngine
 		case EnemyBehaviour::HUNT:
 
 			
-			finalDirection = Normalize(playerPosition - currentPosition);
+			finalDirection = Normalize((m_playerCloser? playerPosition : buddyPosition) - currentPosition);
 			Move(finalDirection);
 
 			RotateModel(deltatime,finalDirection, lookTrasform);
@@ -197,25 +209,37 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::Attack(const Vector3& origin, const Vector3& target)
 	{
-		LOG_INFO("ATATCKED");
 
-		float rayFraction = 0.0f;
-		RigidBody* hitbody = PhysicsUtils::RayCast(origin, target, rayFraction, CollisionMask::STATIC);
+		m_attackorigin = origin;
+		m_attacktarget = target;
+
+		Vector3 hitPosition;
+		RigidBody* hitbody = PhysicsUtils::RayCast(origin, target, hitPosition, CollisionMask::AllFilter);
 
 		PlayAttackSound();
 
 		if (hitbody)
 		{
-			
+
 			Entity hitEntity = hitbody->GetEntityId();
 
+			// PLayer Hit
 			PlayerComponent* playerComp = hitEntity.TryGetComponent<PlayerComponent>();
 
-			// Enemy Hit
 			if (playerComp)
 			{
 				PlayerCharacter* player = playerComp->GetPlayer();
-				player->TakeDamage(20);
+				player->TakeDamage(10.0f);
+				return;
+			}
+
+			// Buddy Hit
+			BuddyComponent* buddyComp = hitEntity.TryGetComponent<BuddyComponent>();
+
+			if (buddyComp)
+			{
+				BuddyCharacter* buddy = buddyComp->GetBuddy();
+				buddy->TakeDamage(5);
 			}
 
 		}
@@ -328,7 +352,7 @@ namespace SaltnPepperEngine
 
 	}
 
-	void EnemyCharacter::OnUpdate(float deltaTime, const Vector3& playerPos, Transform& enemyTransform, Transform& lookTransform)
+	void EnemyCharacter::OnUpdate(float deltaTime, const Vector3& playerPos, const Vector3& buddyPos, Transform& enemyTransform, Transform& lookTransform)
 	{
 		if (currentState == EnemyState::DEAD) { return; }
 
@@ -349,8 +373,8 @@ namespace SaltnPepperEngine
 		const Vector3 currentPosition = enemyTransform.GetPosition();
 		const Vector3 currentForward = lookTransform.GetForwardVector();
 
-		DetectPlayer(deltaTime,currentPosition,playerPos);
-		DecideMovement(deltaTime,currentPosition,playerPos, lookTransform);
+		DetectPlayerandBuddy(deltaTime,currentPosition,playerPos,buddyPos);
+		DecideMovement(deltaTime,currentPosition,playerPos,buddyPos, lookTransform);
 
 		if (currentBehaviour == EnemyBehaviour::ATTACK)
 		{
@@ -380,9 +404,9 @@ namespace SaltnPepperEngine
 				m_attackCounter = m_attackCooldown;
 
 				Vector3 origin = currentPosition - (currentForward) * 0.01f;
-				origin.y = 0.5f;
+				origin.y += 0.2f;
 				Vector3 destination = currentPosition - (currentForward * 2.0f);
-				destination.y = 0.5f;
+				destination.y += 0.2f;
 
 				Attack(origin, destination);
 				m_canAttack = false;
