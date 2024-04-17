@@ -560,11 +560,11 @@ Entity EntitySetup::CreateSkinnedCharatcer(const Vector3& position, const Vector
 
 	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("RacerCharacter");
 
-	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_Idle", "Assets\\Models\\raceridle.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> walkanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_Walk", "Assets\\Models\\racerwalk.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> rightanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_RightStrafe", "Assets\\Models\\racerrightwalk.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> leftanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_LeftStrafe", "Assets\\Models\\racerleftwalk.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> danceanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_LeftStrafe", "Assets\\Models\\racerdance.dae", modelComp.m_handle);
+	SkinnedAnimation* idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_Idle", "Assets\\Models\\raceridle.dae", modelComp.m_handle).get();
+	SkinnedAnimation* walkanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_Walk", "Assets\\Models\\racerwalk.dae", modelComp.m_handle).get();
+	SkinnedAnimation* rightanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_RightStrafe", "Assets\\Models\\racerrightwalk.dae", modelComp.m_handle).get();
+	SkinnedAnimation* leftanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_LeftStrafe", "Assets\\Models\\racerleftwalk.dae", modelComp.m_handle).get();
+	SkinnedAnimation* danceanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Racer_LeftStrafe", "Assets\\Models\\racerdance.dae", modelComp.m_handle).get();
 
 	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
 	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
@@ -636,9 +636,9 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
 
 
-	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Idle", "Assets\\Models\\GUN_PISTOL_IDLE.fbx", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle);
+	SkinnedAnimation* idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Idle", "Assets\\Models\\GUN_PISTOL_IDLE.fbx", modelComp.m_handle).get();
+	SkinnedAnimation* reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle).get();
+	SkinnedAnimation* shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle).get();
 	
 	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
 	animComp.GetAnimator()->AddAnimation("Reload", reloadanim);
@@ -771,10 +771,10 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 	AnimatorComponent& animComp = skinnedEntity.AddComponent<AnimatorComponent>();
 
 
-	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Idle", "Assets\\Models\\Buddy\\Robo_Idle.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> walkanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Walk", "Assets\\Models\\Buddy\\Robo_Walk.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> attackanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Attack", "Assets\\Models\\Buddy\\Robo_Attack.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Hit", "Assets\\Models\\Buddy\\Robo_Hit.dae", modelComp.m_handle);
+	SkinnedAnimation* idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Idle", "Assets\\Models\\Buddy\\Robo_Idle.dae", modelComp.m_handle).get();
+	SkinnedAnimation* walkanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Walk", "Assets\\Models\\Buddy\\Robo_Walk.dae", modelComp.m_handle).get();
+	SkinnedAnimation* attackanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Attack", "Assets\\Models\\Buddy\\Robo_Attack.dae", modelComp.m_handle).get();
+	SkinnedAnimation* hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Buddy_Hit", "Assets\\Models\\Buddy\\Robo_Hit.dae", modelComp.m_handle).get();
 	
 	/*SharedPtr<SkinnedAnimation> reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle);
 	SharedPtr<SkinnedAnimation> shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle);*/
@@ -998,11 +998,11 @@ EnemyCharacter* EntitySetup::CreateZombie(const Vector3& position, const Vector3
 	AnimatorComponent& animComp = lookEntity.AddComponent<AnimatorComponent>();
 
 
-	SharedPtr<SkinnedAnimation> idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Idle", "Assets\\Models\\Anims\\Zombie_Idle.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Hit", "Assets\\Models\\Anims\\Zombie_Hit.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> deathanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Death_One", "Assets\\Models\\Anims\\Zombie_Death_1.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> attackAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Attack", "Assets\\Models\\Anims\\Zombie_Attack.dae", modelComp.m_handle);
-	SharedPtr<SkinnedAnimation> walkAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Walk", "Assets\\Models\\Anims\\Zombie_Walk.dae", modelComp.m_handle);
+	SkinnedAnimation* idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Idle", "Assets\\Models\\Anims\\Zombie_Idle.dae", modelComp.m_handle).get();
+	SkinnedAnimation* hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Hit", "Assets\\Models\\Anims\\Zombie_Hit.dae", modelComp.m_handle).get();
+	SkinnedAnimation* deathanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Death_One", "Assets\\Models\\Anims\\Zombie_Death_1.dae", modelComp.m_handle).get();
+	SkinnedAnimation* attackAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Attack", "Assets\\Models\\Anims\\Zombie_Attack.dae", modelComp.m_handle).get();
+	SkinnedAnimation* walkAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Walk", "Assets\\Models\\Anims\\Zombie_Walk.dae", modelComp.m_handle).get();
 
 
 	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
