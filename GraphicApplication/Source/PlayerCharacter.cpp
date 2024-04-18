@@ -289,6 +289,7 @@ namespace SaltnPepperEngine
 
 			case SaltnPepperEngine::EnvironmentTag::Tag::BUDDY:
 			{
+				if (navcast) { return false; }
 				BuddyComponent* buddyComp = hitEntity.TryGetComponent<BuddyComponent>();
 				if (buddyComp)
 				{

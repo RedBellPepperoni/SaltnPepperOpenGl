@@ -1,6 +1,7 @@
 #include "EntitySetup.h"
 
 
+
 std::vector<std::string> EntitySetup::SubwayModelString = {
 	
 	"SUB_TEST",
@@ -65,7 +66,11 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"CRATE_CLOTH",
 	"BARREL",
 	"BARREL_CLOTH",
-	"WOODPALLET"
+	"WOODPALLET",
+
+	"BARRELGROUPONE",
+	"CRATEGROUPONE",
+	"PALLETGROUPONE",
 	
 };
 
@@ -151,12 +156,17 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("CRATE_GROUP", "Assets\\Models\\CrateGroup.fbx");
 	modelLib->LoadModel("CRATE_CLOTH", "Assets\\Models\\CrateCloth.fbx");
 	modelLib->LoadModel("WOODPALLET", "Assets\\Models\\WoodPallet.fbx");
-	
+	modelLib->LoadModel("BARREL", "Assets\\Models\\Barrel.fbx");
+	modelLib->LoadModel("BARREL_CLOTH", "Assets\\Models\\BarrelCloth.fbx");
+
+	modelLib->LoadModel("BARRELGROUPONE", "Assets\\Models\\BarrelGroupOne.fbx");
+	modelLib->LoadModel("CRATEGROUPONE", "Assets\\Models\\CrateGroupOne.fbx");
+	modelLib->LoadModel("PALLETGROUPONE", "Assets\\Models\\PalletGroupOne.fbx");
 
 
 	
 
-	modelLib->LoadModel("NavMesh_Main", "Assets\\Models\\NavMesh.fbx");
+	modelLib->LoadModel("NavMesh_Main", "Assets\\Models\\NavMeshProduction.fbx");
 	modelLib->LoadModel("Waypoint_Arrow", "Assets\\Models\\WaypointArrow.fbx");
 	modelLib->LoadModel("Waypoint_Base", "Assets\\Models\\WaypointBase.fbx");
 	modelLib->LoadModel("Waypoint_Skull", "Assets\\Models\\SkullMark.fbx");
@@ -228,6 +238,13 @@ void EntitySetup::LoadAllTextures()
 
 	textureLib->LoadTexture("woodpalletdiffuse", "Assets\\Textures\\woodpalletdiffuse.jpg", TextureFormat::RGBA);
 	textureLib->LoadTexture("woodpalletnormal", "Assets\\Textures\\woodpalletnormal.png", TextureFormat::RGBA);
+
+	textureLib->LoadTexture("barreldiffuse", "Assets\\Textures\\barreldiffuse.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("barrelnormal", "Assets\\Textures\\barrelnormal.png", TextureFormat::RGBA);
+
+
+	textureLib->LoadTexture("barrelclothdiffuse", "Assets\\Textures\\barrelclothdiffuse.tga", TextureFormat::RGBA);
+	textureLib->LoadTexture("barrelclothnormal", "Assets\\Textures\\barrelclothnormal.png", TextureFormat::RGBA);
 
 }
 
@@ -443,6 +460,7 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 
 	case SubwayModel::CRATE:
 	case SubwayModel::CRATE_GROUP:
+	case SubwayModel::CRATEGROUPONE:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_CRATE);
 
@@ -454,8 +472,21 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 		break;
 
 	case SubwayModel::WOODPALLET:
+	case SubwayModel::PALLETGROUPONE:
 		AssignMaterial(mat, SubwayMaterial::MAT_WOODPALLET);
 		break;
+
+	case SubwayModel::BARREL:
+	case SubwayModel::BARRELGROUPONE:
+
+		AssignMaterial(mat, SubwayMaterial::MAT_BARREL);
+		break;
+
+	case SubwayModel::BARREL_CLOTH:
+		AssignMaterial(mat, SubwayMaterial::MAT_BARREL_CLOTH);
+
+		break;
+
 	}
 	
 
@@ -1055,6 +1086,26 @@ void EntitySetup::AssignMaterial(SharedPtr<Material>& mat, const SubwayMaterial 
 
 		break;
 
+	case EntitySetup::SubwayMaterial::MAT_BARREL:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("barreldiffuse");
+		mat->SetNormalTexture("barrelnormal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+
+	case EntitySetup::SubwayMaterial::MAT_BARREL_CLOTH:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("barrelclothdiffuse");
+		mat->SetNormalTexture("barrelclothnormal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+
 
 	}
 }
@@ -1067,7 +1118,6 @@ EnemyCharacter* EntitySetup::CreateZombie(const Vector3& position, const Vector3
 	std::string name = "Zombie_" + std::to_string(enemyCount);
 	Entity enemyEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity(name);
 
-	enemyCount++;
 
 	Transform& enemyTransform = enemyEntity.GetComponent<Transform>();
 
@@ -1118,12 +1168,18 @@ EnemyCharacter* EntitySetup::CreateZombie(const Vector3& position, const Vector3
 	SkinnedModelComponent& modelComp = lookEntity.AddComponent<SkinnedModelComponent>("WarZombie");
 	AnimatorComponent& animComp = lookEntity.AddComponent<AnimatorComponent>();
 
+	const std::string enemyname = "_" + std::to_string(enemyCount);
+	const std::string idlename = "Zombie_Idle" + std::string(enemyname);
+	const std::string hitname = "Zombie_Hit" + std::string(enemyname);
+	const std::string deathname = "Zombie_Death_One" + std::string(enemyname);
+	const std::string attackname = "Zombie_Attack" + std::string(enemyname);
+	const std::string walkname = "Zombie_Walk" + std::string(enemyname);
 
-	SkinnedAnimation* idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Idle", "Assets\\Models\\Anims\\Zombie_Idle.dae", modelComp.m_handle).get();
-	SkinnedAnimation* hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Hit", "Assets\\Models\\Anims\\Zombie_Hit.dae", modelComp.m_handle).get();
-	SkinnedAnimation* deathanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Death_One", "Assets\\Models\\Anims\\Zombie_Death_1.dae", modelComp.m_handle).get();
-	SkinnedAnimation* attackAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Attack", "Assets\\Models\\Anims\\Zombie_Attack.dae", modelComp.m_handle).get();
-	SkinnedAnimation* walkAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Zombie_Walk", "Assets\\Models\\Anims\\Zombie_Walk.dae", modelComp.m_handle).get();
+	SkinnedAnimation* idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation(idlename, "Assets\\Models\\Anims\\Zombie_Idle.dae", modelComp.m_handle).get();
+	SkinnedAnimation* hitanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation(hitname , "Assets\\Models\\Anims\\Zombie_Hit.dae", modelComp.m_handle).get();
+	SkinnedAnimation* deathanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation(deathname, "Assets\\Models\\Anims\\Zombie_Death_1.dae", modelComp.m_handle).get();
+	SkinnedAnimation* attackAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation(attackname, "Assets\\Models\\Anims\\Zombie_Attack.dae", modelComp.m_handle).get();
+	SkinnedAnimation* walkAnim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation(walkname, "Assets\\Models\\Anims\\Zombie_Walk.dae", modelComp.m_handle).get();
 
 
 	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
@@ -1177,6 +1233,8 @@ EnemyCharacter* EntitySetup::CreateZombie(const Vector3& position, const Vector3
 	markEntity.SetParent(enemyEntity);
 	markEntity.SetActive(false);
 	enemy->SetMarkRef(markEntity);
+
+	enemyCount++;
 
 	return enemy;
 }

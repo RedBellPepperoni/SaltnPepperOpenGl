@@ -95,7 +95,11 @@ public:
 		CRATE_CLOTH,
 		BARREL,
 		BARREL_CLOTH,
-		WOODPALLET
+		WOODPALLET,
+
+		BARRELGROUPONE,
+		CRATEGROUPONE,
+		PALLETGROUPONE
 
 
 	};
@@ -197,7 +201,6 @@ public:
 	private:
 
 		static void AssignMaterial(SharedPtr<Material>& mat,const SubwayMaterial type);
-
 	
 	
 };

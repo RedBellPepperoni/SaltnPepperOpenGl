@@ -298,15 +298,17 @@ namespace SaltnPepperEngine
 
 				//LOG_ERROR("Lines {0}", Rendering::DebugRenderer::Get()->GetLines().size());
 
-				DebugRenderer::Reset();
+				
 
 				EndFrame();
 
 			}
 			
 			
-			
+			/*LOG_ERROR("Lines {0}", Rendering::DebugRenderer::Get()->GetLines().size());
+			LOG_ERROR("Lines : DT {0}", Rendering::DebugRenderer::Get()->GetLines(true).size());*/
 
+			DebugRenderer::Reset();
 
 	
 

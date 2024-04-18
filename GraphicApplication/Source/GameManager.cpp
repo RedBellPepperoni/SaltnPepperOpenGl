@@ -95,7 +95,7 @@ namespace SaltnPepperEngine
 
         EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(15.0f, 1.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
-        EntitySetup::CreateZombie(Vector3(22.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
+       EntitySetup::CreateZombie(Vector3(22.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(0.0f, 1.0f, 10.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
         EntitySetup::CreateZombie(Vector3(10.0f, 1.0f, 15.0f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK);
 
@@ -140,7 +140,15 @@ namespace SaltnPepperEngine
         clipsVar1.push_back(alertclip);
         clipsVar1.push_back(death1clip);
 
-        EntitySetup::CreateZombie(Vector3(-4.1f, 0.2f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+        EntitySetup::CreateZombie(Vector3(-3.472f, -0.5f, -20.852f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+        EntitySetup::CreateZombie(Vector3(-1.806f, -0.5f, -7.8213f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+        EntitySetup::CreateZombie(Vector3(-4.602f, -0.5f, 15.4552f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+        EntitySetup::CreateZombie(Vector3(-7.972f, -0.5f, 2.6780f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+       
+        EntitySetup::CreateZombie(Vector3(-9.3406f, -0.4f, -4.9650f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+        EntitySetup::CreateZombie(Vector3(-9.116f, -0.4f, -25.245f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+        EntitySetup::CreateZombie(Vector3(0.6353f, 3.4f, 7.0485f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+        EntitySetup::CreateZombie(Vector3(8.381f, 3.4f, 10.1f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
      
 
 
@@ -432,6 +440,20 @@ namespace SaltnPepperEngine
         
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::WOODPALLET, Vector3{ -6.4791f, -3.0165f,15.626f }, Vector3{ 0.0f,0.0f, 27.0f }, Vector3{ 1.34f});
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::WOODPALLET, Vector3{ -6.4637f, -3.0368f,16.70f }, Vector3{ -28.0f,90.0f, 0.0f }, Vector3{ 1.34f});
+        
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::WOODPALLET, Vector3{ -6.1883f, -3.021f,-15.834f }, Vector3{ 0.0f,0.0f, 33.0f }, Vector3{ 1.0f});
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::WOODPALLET, Vector3{ -6.1883f, -3.021f,-12.80f }, Vector3{ 0.0f,0.0f, 33.0f }, Vector3{ 1.0f});
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::WOODPALLET, Vector3{ -6.121f, -2.984f,-14.314f }, Vector3{ -97.438f,90.0f, 116.489f }, Vector3{ 1.5f,1.0f,1.0f});
+        
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::BARRELGROUPONE, Vector3{ -6.0111f, -3.455f,-0.49894f }, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 1.0f});
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATEGROUPONE, Vector3{ -5.0774f, -2.1827f,9.9088f }, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 1.0f});
+       
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PALLETGROUPONE, Vector3{ -6.248f, -2.762f,12.365f }, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 1.0f});
+        
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::BARREL_CLOTH, Vector3{ -4.815f, -2.468f,8.6577f }, Vector3{ 180.0f,11.0f, 180.0f }, Vector3{ 1.0f});
+   
+       
+        
     }
 
     void GameManager::SetupStaticPhysics()
@@ -535,8 +557,15 @@ namespace SaltnPepperEngine
         BoundingBox railRamp{ Vector3(-1.0f,-0.25f,-1.25f),Vector3(1.0f,0.25f,1.25f) };
         EntitySetup::CreatePhysicsBox(Vector3(-6.4311f, -3.3262f, 16.19f), Vector3(0.0f,0.0f,27.0f), railRamp, EnvironmentTag::Tag::NAVMESH);
 
+        BoundingBox railRampMid{ Vector3(-0.7f,-0.25f,-2.1f),Vector3(0.7f,0.25f,2.1f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-6.0378f, -3.2885f, -14.296), Vector3(0.0f, 0.0f, 40.0f), railRampMid, EnvironmentTag::Tag::NAVMESH);
+
+
         BoundingBox tunnelblockright{ Vector3(-2.5f,-1.0f,-1.0f),Vector3(2.5f,1.0f,1.0f) };
-        EntitySetup::CreatePhysicsBox(Vector3(-8.222f, -2.1889f, -27.602), Vector3(0.0f, 0.0f, 0.0f), tunnelblockright);
+        EntitySetup::CreatePhysicsBox(Vector3(-8.222f, -2.1889f, -27.602f), Vector3(0.0f, 0.0f, 0.0f), tunnelblockright);
+
+        BoundingBox platformblockLeft{ Vector3(-1.1f,-0.7f,-6.5f),Vector3(1.1f,0.7f,6.5f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-5.7543f, -2.5f, 6.4871f), Vector3(0.0f, 0.0f, 0.0f), platformblockLeft);
     }
 
     void GameManager::OnUpdateTestScene(const float deltaTime)
