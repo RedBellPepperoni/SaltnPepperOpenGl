@@ -13,6 +13,19 @@ namespace SaltnPepperEngine
 
 	}
 
+	void BuddyCharacter::BeginReset(Transform& transfomr)
+	{
+		m_targetClose = false;
+		currentBehaviour = BuddyBehaviour::DECIDING;
+		currentState = BuddyState::IDLE;
+		m_hasEnemy = false;
+		m_enemyPosition = Vector3{ 200.0f };
+		m_currentPath.clear();
+		m_currentWaypointIndex = 0;
+		m_rigidBody->ForceTransform(transfomr);
+		
+	}
+
 	void BuddyCharacter::TakeDamage(const int damage, const DamageSource& source)
 	{
 	
@@ -102,6 +115,9 @@ namespace SaltnPepperEngine
 
 		if (currentState == BuddyState::TAKINGHIT) { return; }
 
+		
+
+
 		if (!m_isfollowingPath)
 		{
 			
@@ -146,8 +162,17 @@ namespace SaltnPepperEngine
 
 		else
 		{
+
+
 			if (!m_targetClose)
 			{
+				if (m_currentPath.empty())
+				{
+					currentBehaviour = BuddyBehaviour::DECIDING;
+					currentState = BuddyState::IDLE;
+					return;
+				}
+
 				const Vector3 currentWaypoint = GetCurrentWayPoint();
 
 				float waypointDistance = DistanceSquared(currentWaypoint, currentPosition);

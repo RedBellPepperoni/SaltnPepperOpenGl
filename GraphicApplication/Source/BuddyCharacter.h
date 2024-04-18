@@ -62,6 +62,8 @@ namespace SaltnPepperEngine
 		BuddyCharacter();
 		virtual ~BuddyCharacter();
 
+		void BeginReset(Transform& transfomr);
+
 		virtual void TakeDamage(const int damage, const DamageSource& source) override;
 		
 		void MarkTargetandPath(const Vector3& target, const std::vector<Vector3>& newpath);

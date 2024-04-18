@@ -115,6 +115,7 @@ namespace SaltnPepperEngine
 
         
        // PhysicsSystem::SetPaused(true);
+       
 
         SetupStaticMeshes();
         SetupStaticPhysics();
@@ -196,6 +197,7 @@ namespace SaltnPepperEngine
         m_waypointarrowEntity = EntitySetup::CreateWaypointArrow(Vector3(0.0f, 0.5f, 0.0f), m_waypointbaseEntity);
 
 
+        HideMarker();
     }
 
     void GameManager::SetupNavMesh()
@@ -888,6 +890,8 @@ namespace SaltnPepperEngine
 
     void GameManager::ResetLevel()
     {
+        HideMarker();
+
         EntityManager* manager = Application::GetCurrent().GetCurrentScene()->GetEntityManager();
 
         // ============== RESETTING THE PLAYER ===================
@@ -915,12 +919,15 @@ namespace SaltnPepperEngine
         // ================== RESETTING BUDDY ==========================
 
         ComponentView buddyView = manager->GetComponentsOfType<BuddyComponent>();
-        ComponentView buddyLookView = manager->GetComponentsOfType<PlayerLook>();
+        ComponentView buddyLookView = manager->GetComponentsOfType<BuddyLook>();
 
         if (!buddyView.IsEmpty() && !buddyLookView.IsEmpty())
         {
             Transform& buddyTransform = buddyView[0].GetComponent<Transform>();
             buddyTransform.SetPosition(m_buddySpawn);
+
+            BuddyCharacter* buddy = buddyView[0].GetComponent<BuddyComponent>().GetBuddy();
+            buddy->BeginReset(buddyTransform);
 
             Transform& buddyLookTransform = buddyLookView[0].GetComponent<Transform>();
             buddyLookTransform.SetEularRotation(m_buddyLook);
