@@ -753,6 +753,7 @@ namespace SaltnPepperEngine
 
     void GameManager::MoveBuddyTo(const Vector3& position, RigidBody* markedEnemy)
     {
+       
         m_markedEnemy = markedEnemy;
 
         ComponentView enemymarkView = Application::GetCurrent().GetCurrentScene()->GetEntityManager()->GetComponentsOfType<EnemyMark>();
@@ -764,12 +765,20 @@ namespace SaltnPepperEngine
 
         if (m_markedEnemy != nullptr)
         {
-            m_markedEnemy->GetEntityId().GetComponent<EnemyComponent>().GetEnemy()->MarkforBuddy(true);
-            const Vector3 position = m_markedEnemy->GetEntityId().GetComponent<Transform>().GetPosition() - Vector3{0.0f,0.8f,0.0f};
+            EnemyCharacter* enemy = m_markedEnemy->GetEntityId().GetComponent<EnemyComponent>().GetEnemy();
+
+            const Vector3 position = m_markedEnemy->GetEntityId().GetComponent<Transform>().GetPosition() - Vector3{ 0.0f,0.8f,0.0f };
 
 
-            m_waypointbaseEntity.SetActive(false);
-            m_buddyRef->SetMarkedEnemy(position,true);
+            
+           
+           enemy->MarkforBuddy(true);
+               // const Vector3 position = m_markedEnemy->GetEntityId().GetComponent<Transform>().GetPosition() - Vector3{ 0.0f,0.8f,0.0f };
+
+           m_waypointbaseEntity.SetActive(false);
+           m_buddyRef->SetMarkedEnemy(position, true);
+           
+           
         }
 
         else
@@ -777,6 +786,7 @@ namespace SaltnPepperEngine
             m_waypointbaseEntity.GetComponent<Transform>().SetPosition(position);
             m_waypointbaseEntity.SetActive(true);
             m_buddyRef->SetMarkedEnemy(Vector3{200.0f}, false);
+
         }
 
 

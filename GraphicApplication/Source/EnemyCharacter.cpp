@@ -17,6 +17,8 @@ namespace SaltnPepperEngine
 			{
 				m_counter = 0.0f;
 				currentState = EnemyState::DEAD;
+				m_rigidBody->MakeTrigger();
+				//m_rigidBody->SetActivationState(ActivationState::DISABLESIMULATION);
 			}
 
 			return;

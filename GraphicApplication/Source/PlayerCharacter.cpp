@@ -270,16 +270,31 @@ namespace SaltnPepperEngine
 				{
 					Transform& transform = hitEntity.GetComponent<Transform>();
 					hitPosition = transform.GetPosition() - Vector3{0.0f,0.8f,0.0f};
-					m_gameManagerRef->MoveBuddyTo(hitPosition,hitbody);
-					return true;
-				}
 
-				EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
-				if (enemyComp)
-				{
+					EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
 					EnemyCharacter* enemy = enemyComp->GetEnemy();
-					enemy->TakeDamage(20, DamageSource::PLAYER);
-					return true;
+
+					if (enemy->IsDead())
+					{
+						m_gameManagerRef->MoveBuddyTo(hitPosition, nullptr);
+					}
+					else
+					{
+						m_gameManagerRef->MoveBuddyTo(hitPosition, hitbody);
+					}
+
+					
+					
+				}
+				else
+				{
+					EnemyComponent* enemyComp = hitEntity.TryGetComponent<EnemyComponent>();
+					if (enemyComp)
+					{
+						EnemyCharacter* enemy = enemyComp->GetEnemy();
+						enemy->TakeDamage(20, DamageSource::PLAYER);
+						return true;
+					}
 				}
 
 				

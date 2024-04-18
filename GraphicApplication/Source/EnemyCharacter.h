@@ -158,6 +158,8 @@ namespace SaltnPepperEngine
 		virtual void TakeDamage(const int damage, const DamageSource& source) override;
 
 		void MarkforBuddy(bool mark);
+
+		const bool IsDead() { return currentState == EnemyState::DEAD || m_markedForDeath; }
 	};
 
 
