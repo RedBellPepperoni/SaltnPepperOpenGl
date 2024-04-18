@@ -46,6 +46,8 @@ namespace SaltnPepperEngine
 
 		void SetEnemyDeath(RigidBody* enemyRef);
 
+		void ResetLevel();
+
 	private:
 
 
@@ -66,13 +68,20 @@ namespace SaltnPepperEngine
 		Entity m_waypointbaseEntity;
 		Entity m_waypointarrowEntity;
 
-		std::vector<Vector3> enemyPositions;
+		
 		RigidBody* m_markedEnemy = nullptr;
 		float sincounter = 0.0f;
 		float rotcounter = 0.0f;
 
 		float markenemycounter;
 		const float m_markRefresh = 1.5f;
+
+		std::vector<Vector3> m_zombieSpawns;
+		Vector3 m_buddySpawn;
+		Vector3 m_buddyLook;
+		Vector3 m_playerSpawn;
+		Vector3 m_playerLook;
+		
 	};
 }
 

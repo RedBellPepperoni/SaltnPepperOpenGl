@@ -143,6 +143,8 @@ namespace SaltnPepperEngine
 		EnemyCharacter();
 		virtual ~EnemyCharacter() = default;
 
+		void BeginReset(Transform transfomr);
+
 		void SetMarkRef(Entity mark);
 		void SetType(ZombieType type);
 		void SetGameManagerRef(GameManager* finder);

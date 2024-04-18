@@ -57,8 +57,15 @@ namespace SaltnPepperEngine
 		
 	public:
 
+
+
 		PlayerCharacter() = default;
 		virtual ~PlayerCharacter() = default;
+
+
+		void BeginReset(Transform& transform);
+		void ConfirmReset();
+
 
 		void SetAnimatorRef(SkinnedAnimator* animRef);
 		SkinnedAnimator* GetAnimator();

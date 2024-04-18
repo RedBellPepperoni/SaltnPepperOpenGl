@@ -163,6 +163,9 @@ namespace SaltnPepperEngine
 			
 			~RigidBody();
 
+
+			void ForceTransform(Transform& ecsTransform);
+
 		
 			void SetEntityId(Entity parentId);
 			Entity GetEntityId() const;

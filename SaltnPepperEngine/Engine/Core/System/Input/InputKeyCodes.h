@@ -237,7 +237,13 @@ namespace SaltnPepperEngine
                     { GLFW_KEY_RIGHT_CONTROL, Key::RightControl },
                     { GLFW_KEY_TAB, Key::Tab },
 
-                    { GLFW_KEY_GRAVE_ACCENT, Key::GraveAccent}
+                    { GLFW_KEY_GRAVE_ACCENT, Key::GraveAccent},
+                    { 	GLFW_KEY_F1 , Key::F1},
+                    { 	GLFW_KEY_F2 , Key::F2},
+                    { 	GLFW_KEY_F3 , Key::F3},
+                    { 	GLFW_KEY_F4 , Key::F4},
+                    { 	GLFW_KEY_F5 , Key::F5},
+                    { 	GLFW_KEY_F6 , Key::F6}
 
 
                 };

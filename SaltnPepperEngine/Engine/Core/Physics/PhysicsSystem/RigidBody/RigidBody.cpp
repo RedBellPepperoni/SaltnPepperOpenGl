@@ -216,6 +216,13 @@ namespace SaltnPepperEngine
 			DestroyBody();
 		}
 
+		void RigidBody::ForceTransform(Transform& ecsTransform)
+		{
+			btTransform transform;
+			ToBulletTransform(ecsTransform, transform);
+			bodyHandle->setWorldTransform(transform);
+		}
+
 		void RigidBody::SetScale(const Vector3& scale)
 		{
 			if (shapeHandle != nullptr)

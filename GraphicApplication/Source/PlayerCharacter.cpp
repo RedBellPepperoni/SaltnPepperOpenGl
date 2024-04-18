@@ -408,6 +408,21 @@ namespace SaltnPepperEngine
 
 	
 
+	void PlayerCharacter::BeginReset(Transform& transform)
+	{
+		//m_rigidBody->MakeKinematic();
+		m_rigidBody->ForceTransform(transform);
+
+		m_health = m_maxHealth;
+		m_magzineBullets = m_magzineSize;
+		m_totalBullets = m_maxBullets;
+	}
+
+	void PlayerCharacter::ConfirmReset()
+	{
+		//m_rigidBody->MakeDynamic();
+	}
+
 	void PlayerCharacter::SetAnimatorRef(SkinnedAnimator* animRef)
 	{
 		m_animator = animRef;

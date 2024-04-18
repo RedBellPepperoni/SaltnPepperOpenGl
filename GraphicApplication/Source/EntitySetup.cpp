@@ -53,6 +53,7 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"TICKET_GRILL",
 	"TICKET_MACHINE",
 	"TICKET_BLOCKADE",
+	"TICKET_DISPENSER",
 
 	"WALL_TAG",
 	"PILLAR_TAG",
@@ -71,6 +72,7 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"BARRELGROUPONE",
 	"CRATEGROUPONE",
 	"PALLETGROUPONE",
+	"EXITSTAIR"
 	
 };
 
@@ -146,6 +148,7 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("TICKET_GRILL", "Assets\\Models\\Ticket_Grill.fbx");
 	modelLib->LoadModel("TICKET_MACHINE", "Assets\\Models\\Ticket_Machine.fbx");
 	modelLib->LoadModel("TICKET_BLOCKADE", "Assets\\Models\\Ticket_Blockade.fbx");
+	modelLib->LoadModel("TICKET_DISPENSER", "Assets\\Models\\TicketDispenser.fbx");
 
 	modelLib->LoadModel("WALL_TAG", "Assets\\Models\\Wall_Tag.fbx");
 	modelLib->LoadModel("PILLAR_TAG", "Assets\\Models\\Pillar_Tag.fbx");
@@ -162,6 +165,7 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("BARRELGROUPONE", "Assets\\Models\\BarrelGroupOne.fbx");
 	modelLib->LoadModel("CRATEGROUPONE", "Assets\\Models\\CrateGroupOne.fbx");
 	modelLib->LoadModel("PALLETGROUPONE", "Assets\\Models\\PalletGroupOne.fbx");
+	modelLib->LoadModel("EXITSTAIR", "Assets\\Models\\ExitStair.fbx");
 
 
 	
@@ -390,6 +394,7 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::TICKET_WALL_LEFT:
 	case SubwayModel::TICKET_WALL_RIGHT:
 	case SubwayModel::PLATFROM_STAIR_COVER:
+	case SubwayModel::TICKET_DOOR:
 
 
 		AssignMaterial(mat, SubwayMaterial::MAT_STRUCTURE);
@@ -403,6 +408,7 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::STAIR_TAG:
 	case SubwayModel::PILLAR_TAG:
 	case SubwayModel::TUBE_LIGHT:
+	case SubwayModel::EXITSTAIR:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_STAIRS);
 
@@ -457,6 +463,9 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 		AssignMaterial(mat, SubwayMaterial::MAT_TURNSTILE);
 		break;
 
+	case SubwayModel::TICKET_DISPENSER:
+		AssignMaterial(mat, SubwayMaterial::MAT_TICKETMACHINE);
+		break;
 
 	case SubwayModel::CRATE:
 	case SubwayModel::CRATE_GROUP:

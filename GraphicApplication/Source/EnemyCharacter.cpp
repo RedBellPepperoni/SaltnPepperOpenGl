@@ -295,6 +295,18 @@ namespace SaltnPepperEngine
 
 	}
 
+	void EnemyCharacter::BeginReset(Transform transfomr)
+	{
+		m_rigidBody->MakeDynamic();
+		m_rigidBody->ForceTransform(transfomr);
+
+		currentBehaviour = EnemyBehaviour::DECIDING;
+		currentState = EnemyState::IDLE;
+		m_markedForDeath = false;
+		m_health = m_maxHealth;
+
+	}
+
 	void EnemyCharacter::SetMarkRef(Entity mark)
 	{
 		markEntity = mark;

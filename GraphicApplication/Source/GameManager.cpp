@@ -140,24 +140,31 @@ namespace SaltnPepperEngine
         clipsVar1.push_back(alertclip);
         clipsVar1.push_back(death1clip);
 
-        EntitySetup::CreateZombie(Vector3(-3.472f, -0.5f, -20.852f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
-        EntitySetup::CreateZombie(Vector3(-1.806f, -0.5f, -7.8213f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
-        EntitySetup::CreateZombie(Vector3(-4.602f, -0.5f, 15.4552f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
-        EntitySetup::CreateZombie(Vector3(-7.972f, -0.5f, 2.6780f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
-       
-        EntitySetup::CreateZombie(Vector3(-9.3406f, -0.4f, -4.9650f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
-        EntitySetup::CreateZombie(Vector3(-9.116f, -0.4f, -25.245f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
-        EntitySetup::CreateZombie(Vector3(0.6353f, 3.4f, 7.0485f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
-        EntitySetup::CreateZombie(Vector3(8.381f, 3.4f, 10.1f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
-     
+        m_zombieSpawns = std::vector<Vector3>
+        { Vector3(-3.472f, -0.5f, -20.852f),
+            Vector3(-1.806f, -0.5f, -7.8213f),
+            Vector3(-4.602f, -0.5f, 15.4552f),
+            Vector3(-7.972f, -0.5f, 2.6780f),
+            Vector3(-9.3406f, -0.4f, -4.9650f),
+            Vector3(-9.116f, -0.4f, -25.245f),
+            Vector3(0.6353f, 3.4f, 7.0485f),
+            Vector3(8.381f, 3.4f, 10.1f)
+        };
 
+        for (const Vector3& position : m_zombieSpawns)
+        {
+            EntitySetup::CreateZombie(position, Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
+
+        }
 
         AudioClip* gunshootClip = Application::GetCurrent().GetAudioLibrary()->GetResource("gunshoot").get();
         AudioClip* gunreloadClip = Application::GetCurrent().GetAudioLibrary()->GetResource("gunreload").get();
         AudioClip* gunemptyClip = Application::GetCurrent().GetAudioLibrary()->GetResource("gunempty").get();
 
+        m_playerLook = Vector3{ 0.0f };
+        m_playerSpawn = Vector3{ -7.3680f,-2.2f,27.0749f };
 
-        m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 0.2f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_playerRef = EntitySetup::CreatePlayer(m_playerSpawn, m_playerLook);
         m_playerRef->SetGameManagerRef(this);
 
         m_playerRef->SetAudioClipsGun(gunshootClip,gunemptyClip,gunreloadClip);
@@ -174,8 +181,9 @@ namespace SaltnPepperEngine
         AudioClip* robodontshoot = Application::GetCurrent().GetAudioLibrary()->GetResource("robo_dontshoot").get();
 
        
-
-        m_buddyRef = EntitySetup::CreateBuddy(Vector3(-4.1f, 0.2f, 12.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_buddySpawn = Vector3{ -8.6472f ,-2.5471f, 24.7592f };
+        m_buddyLook = Vector3{ 0.0f,15.59f ,0.0f };
+        m_buddyRef = EntitySetup::CreateBuddy(m_buddySpawn, m_buddyLook);
         m_buddyRef->SetGameManagerRef(this);
 
 
@@ -243,6 +251,7 @@ namespace SaltnPepperEngine
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_BACKWALL, Vector3(0.61f, -0.73f, -4.54f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_RIGHTWALLL, Vector3(-2.54f, 0.99f, -26.91f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_RIGHTWALLL, Vector3(12.44f, 5.71f, 12.91f), Vector3(90.0f, -90.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PLATFROM_LEFTWALLL, Vector3(-2.54f, 0.466f, 17.94f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
         // ======================== PLATFORM PILLARS ==========================================
@@ -378,6 +387,7 @@ namespace SaltnPepperEngine
 
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_GRILL, Vector3(9.3551f, 3.5645f, 5.0689f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_GRILL, Vector3(-1.8865f, 3.5645f, 5.0689f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_GRILL, Vector3(-4.732f, 3.5645f, 10.62f), Vector3(0.0f, 90.0f, 0.0f), Vector3(1.0f));
 
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_MACHINE, Vector3(2.8286f, 3.2776, 5.5924f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
@@ -409,6 +419,8 @@ namespace SaltnPepperEngine
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::EXIT_TAG, Vector3(-2.6701f, 0.977f, 9.001f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
 
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TUBE_LIGHT, Vector3(-5.2800f, 1.3542f, -4.4672f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f));
+       
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::EXITSTAIR, Vector3(13.40f, 3.507f,11.96f), Vector3(0.0f, 0.0f, 0.0f), Vector3(1.0f,1.2f,1.0f));
 
 
         // =============== LIGHTS ==============================
@@ -450,7 +462,9 @@ namespace SaltnPepperEngine
        
         EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::PALLETGROUPONE, Vector3{ -6.248f, -2.762f,12.365f }, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 1.0f});
         
-        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::BARREL_CLOTH, Vector3{ -4.815f, -2.468f,8.6577f }, Vector3{ 180.0f,11.0f, 180.0f }, Vector3{ 1.0f});
+      
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_DISPENSER, Vector3{ 11.293f, 3.2207f,6.93501f }, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 1.0f});
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::TICKET_DISPENSER, Vector3{ 11.293f, 3.2207f,8.36f }, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 1.0f});
    
        
         
@@ -566,6 +580,16 @@ namespace SaltnPepperEngine
 
         BoundingBox platformblockLeft{ Vector3(-1.1f,-0.7f,-6.5f),Vector3(1.1f,0.7f,6.5f) };
         EntitySetup::CreatePhysicsBox(Vector3(-5.7543f, -2.5f, 6.4871f), Vector3(0.0f, 0.0f, 0.0f), platformblockLeft);
+
+        BoundingBox ticketdispenser{ Vector3(-0.5f,-1.2f,-1.3f),Vector3(0.5f,1.2f,1.3f) };
+        EntitySetup::CreatePhysicsBox(Vector3(11.348f, 3.2563f, 7.6480f), Vector3(0.0f, 0.0f, 0.0f), ticketdispenser);
+
+        BoundingBox exitstair{ Vector3(-0.5f,-1.2f,-1.3f),Vector3(0.5f,1.2f,1.3f) };
+        EntitySetup::CreatePhysicsBox(Vector3(11.348f, 3.2563f, 7.6480f), Vector3(0.0f, 0.0f, 0.0f), exitstair);
+
+        BoundingBox ticketblock{ Vector3(-0.25f,-1.2f,-1.1f),Vector3(0.25f,1.2f,1.1f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-4.799f, 3.4390f, 11.940f), Vector3(0.0f, 0.0f, 0.0f), ticketblock);
+
     }
 
     void GameManager::OnUpdateTestScene(const float deltaTime)
@@ -746,6 +770,13 @@ namespace SaltnPepperEngine
 	{
         //OnUpdateTestScene(deltaTime);
 
+        if (Input::InputSystem::GetInstance().GetKeyDown(Key::F6))
+        {
+            LOG_WARN("HELLO");
+            ResetLevel();
+        }
+
+
         OnUpdateMainScene(deltaTime);
         DebugNavmesh();
 
@@ -853,5 +884,49 @@ namespace SaltnPepperEngine
         }
 
        
+    }
+
+    void GameManager::ResetLevel()
+    {
+        EntityManager* manager = Application::GetCurrent().GetCurrentScene()->GetEntityManager();
+
+        // ============== RESETTING THE PLAYER ===================
+
+        ComponentView playerView = manager->GetComponentsOfType<PlayerComponent>();
+        ComponentView playerLookView = manager->GetComponentsOfType<PlayerLook>();
+        
+        if (!playerView.IsEmpty() && !playerLookView.IsEmpty())
+        {
+            Transform& playerTransform = playerView[0].GetComponent<Transform>();
+            playerTransform.SetPosition(m_playerSpawn);
+
+
+            PlayerCharacter* player = playerView[0].GetComponent<PlayerComponent>().GetPlayer();
+            player->BeginReset(playerTransform);
+
+           
+
+            Transform& playerLookTransform = playerLookView[0].GetComponent<Transform>();
+            playerLookTransform.SetEularRotation(m_playerLook);
+
+          
+        }
+
+        // ================== RESETTING BUDDY ==========================
+
+        ComponentView buddyView = manager->GetComponentsOfType<BuddyComponent>();
+        ComponentView buddyLookView = manager->GetComponentsOfType<PlayerLook>();
+
+        if (!buddyView.IsEmpty() && !buddyLookView.IsEmpty())
+        {
+            Transform& buddyTransform = buddyView[0].GetComponent<Transform>();
+            buddyTransform.SetPosition(m_buddySpawn);
+
+            Transform& buddyLookTransform = buddyLookView[0].GetComponent<Transform>();
+            buddyLookTransform.SetEularRotation(m_buddyLook);
+        }
+
+
+
     }
 }
