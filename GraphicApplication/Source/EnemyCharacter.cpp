@@ -229,7 +229,7 @@ namespace SaltnPepperEngine
 			if (playerComp)
 			{
 				PlayerCharacter* player = playerComp->GetPlayer();
-				player->TakeDamage(10.0f, DamageSource::ZOMBIE);
+				player->TakeDamage(10, DamageSource::ZOMBIE);
 				return;
 			}
 

@@ -58,7 +58,14 @@ std::vector<std::string> EntitySetup::SubwayModelString = {
 	"STAIR_TAG",
 	"EXIT_TAG",
 
-	"TUBE_LIGHT"
+	"TUBE_LIGHT",
+
+	"CRATE",
+	"CRATE_GROUP",
+	"CRATE_CLOTH",
+	"BARREL",
+	"BARREL_CLOTH",
+	"WOODPALLET"
 	
 };
 
@@ -140,6 +147,11 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("STAIR_TAG", "Assets\\Models\\Stair_Tag.fbx");
 	modelLib->LoadModel("EXIT_TAG", "Assets\\Models\\Exit_Tag.fbx");
 	modelLib->LoadModel("TUBE_LIGHT", "Assets\\Models\\Subway_TubeLight.fbx");
+	modelLib->LoadModel("CRATE", "Assets\\Models\\Crate.fbx");
+	modelLib->LoadModel("CRATE_GROUP", "Assets\\Models\\CrateGroup.fbx");
+	modelLib->LoadModel("CRATE_CLOTH", "Assets\\Models\\CrateCloth.fbx");
+	modelLib->LoadModel("WOODPALLET", "Assets\\Models\\WoodPallet.fbx");
+	
 
 
 	
@@ -164,22 +176,22 @@ void EntitySetup::LoadAllTextures()
 	textureLib->LoadTexture("fphand", "Assets\\Textures\\hand.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("fppistol", "Assets\\Textures\\pistol.png", TextureFormat::RGBA);
 
-	textureLib->LoadTexture("zombieOneDiffuse", "Assets\\Textures\\zombie_D.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("zombieOneNormal", "Assets\\Textures\\zombie_N.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("zombieOneDiffuse", "Assets\\Textures\\zombie_D.png", TextureFormat::RGB);
+	textureLib->LoadTexture("zombieOneNormal", "Assets\\Textures\\zombie_N.png", TextureFormat::RGB);
 
 
 	// ============================= STRUCTURE TEXTURES ======================
-	textureLib->LoadTexture("Struct_Diffuse", "Assets\\Textures\\M_Structure_baseColor.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("Struct_Normal", "Assets\\Textures\\M_Structure_normal.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Struct_Diffuse", "Assets\\Textures\\M_Structure_baseColor.png", TextureFormat::RGB);
+	textureLib->LoadTexture("Struct_Normal", "Assets\\Textures\\M_Structure_normal.png", TextureFormat::RGB);
 
 	// ============================= STAIRS TEXTURES ======================
-	textureLib->LoadTexture("Stairs_Diffuse", "Assets\\Textures\\M_Stairs_baseColor.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("Stairs_Normal", "Assets\\Textures\\M_Stairs_normal.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Stairs_Diffuse", "Assets\\Textures\\M_Stairs_baseColor.png", TextureFormat::RGB);
+	textureLib->LoadTexture("Stairs_Normal", "Assets\\Textures\\M_Stairs_normal.png", TextureFormat::RGB);
 
 
 	// ============================= ADDITION TEXTURES ======================
-	textureLib->LoadTexture("Addition_Diffuse", "Assets\\Textures\\M_Addition_baseColor.png", TextureFormat::RGBA);
-	textureLib->LoadTexture("Addition_Normal", "Assets\\Textures\\M_Addition_normal.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("Addition_Diffuse", "Assets\\Textures\\M_Addition_baseColor.png", TextureFormat::RGB);
+	textureLib->LoadTexture("Addition_Normal", "Assets\\Textures\\M_Addition_normal.png", TextureFormat::RGB);
 
 
 	// ============================= POSTERS TEXTURES ======================
@@ -207,8 +219,15 @@ void EntitySetup::LoadAllTextures()
 	textureLib->LoadTexture("buddynormal", "Assets\\Textures\\buddy_norm.png", TextureFormat::RGBA);
 	textureLib->LoadTexture("buddydiffuse", "Assets\\Textures\\buddy_diffuse.png", TextureFormat::RGBA);
 
-	textureLib->LoadTexture("axediffuse", "Assets\\Textures\\axediffuse.jpg", TextureFormat::RGBA);
-	textureLib->LoadTexture("axenormal", "Assets\\Textures\\axenormal.jpg", TextureFormat::RGBA);
+	textureLib->LoadTexture("cratediffuse", "Assets\\Textures\\cratediffuse.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("cratenormal", "Assets\\Textures\\cratenormal.png", TextureFormat::RGBA);
+
+
+	textureLib->LoadTexture("clothcratediffuse", "Assets\\Textures\\clothcratediffuse.tga", TextureFormat::RGBA);
+	textureLib->LoadTexture("clothcratenormal", "Assets\\Textures\\clothcratenormal.png", TextureFormat::RGBA);
+
+	textureLib->LoadTexture("woodpalletdiffuse", "Assets\\Textures\\woodpalletdiffuse.jpg", TextureFormat::RGBA);
+	textureLib->LoadTexture("woodpalletnormal", "Assets\\Textures\\woodpalletnormal.png", TextureFormat::RGBA);
 
 }
 
@@ -419,6 +438,23 @@ Entity EntitySetup::CreateStaticEntity(const SubwayModel model, const Vector3& p
 	case SubwayModel::TICKET_MACHINE:
 
 		AssignMaterial(mat, SubwayMaterial::MAT_TURNSTILE);
+		break;
+
+
+	case SubwayModel::CRATE:
+	case SubwayModel::CRATE_GROUP:
+
+		AssignMaterial(mat, SubwayMaterial::MAT_CRATE);
+
+		break;
+
+	case SubwayModel::CRATE_CLOTH:
+
+		AssignMaterial(mat, SubwayMaterial::MAT_CRATE_CLOTH);
+		break;
+
+	case SubwayModel::WOODPALLET:
+		AssignMaterial(mat, SubwayMaterial::MAT_WOODPALLET);
 		break;
 	}
 	
@@ -698,7 +734,7 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 
 	crossTransform.SetPosition(Vector3{ 0.0f,0.0f,-0.1f });
 	crossTransform.SetEularRotation(Vector3{ 0.0f });
-	crossTransform.SetScale(Vector3{ 0.1f });
+	crossTransform.SetScale(Vector3{ 0.05f });
 
 	ModelComponent& crossmodel = crossEntity.AddComponent<ModelComponent>("Crosshair");
 	SharedPtr<Material>& crossmat = crossmodel.m_handle->GetMeshes()[0]->GetMaterial();
@@ -988,8 +1024,38 @@ void EntitySetup::AssignMaterial(SharedPtr<Material>& mat, const SubwayMaterial 
 		mat->normalMapFactor = 1.0f;
 		mat->albedoMapFactor = 1.0f;
 		break;
-	default:
+
+	case EntitySetup::SubwayMaterial::MAT_CRATE:
+		
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("cratediffuse");
+		mat->SetNormalTexture("cratenormal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
 		break;
+
+	case EntitySetup::SubwayMaterial::MAT_CRATE_CLOTH:
+		
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("clothcratediffuse");
+		mat->SetNormalTexture("clothcratenormal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+	
+	case EntitySetup::SubwayMaterial::MAT_WOODPALLET:
+
+		mat->m_type = MaterialType::Opaque;
+		mat->SetAlbedoTexture("woodpalletdiffuse");
+		mat->SetNormalTexture("woodpalletnormal");
+		mat->normalMapFactor = 1.0f;
+		mat->albedoMapFactor = 1.0f;
+
+		break;
+
+
 	}
 }
 

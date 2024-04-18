@@ -413,7 +413,25 @@ namespace SaltnPepperEngine
         EntitySetup::CreateTunnelLights(Vector3(-11.416f,0.0f, -21.335f), Vector3{1.0f,0.8f,0.7f},8.0f,12.0f);
         EntitySetup::CreateTunnelLights(Vector3(-11.416f,0.0f, -35.81f), Vector3{1.0f,0.8f,0.7f},8.0f,12.0f);
 
+        
+        // ============ CRATE AND BARRELS ==============
 
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE, Vector3{ -7.7025f, -2.931f,-27.575f }, Vector3{ 0.0f,-27.0f,0.0f }, Vector3{ 1.0f });
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE, Vector3{ -6.160f, -2.929f,-28.110f }, Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 1.0f });
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE, Vector3{ -7.340f, -2.929f,-28.7205f }, Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 1.0f });
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE, Vector3{ -9.1098f, -2.929f,-27.422f }, Vector3{ 0.0f,-2.857f,0.0f }, Vector3{0.83f, 1.0f,1.0f });
+
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE, Vector3{ -10.325f, -2.998f,-27.575f }, Vector3{ 0.0f,-27.37f,0.0f }, Vector3{ 0.74f,1.0f ,1.0f});
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE, Vector3{ -9.109f, -2.998f,-28.720f }, Vector3{ 0.0f,-2.85f,0.0f }, Vector3{ 0.827f,1.0f ,1.0f});
+       
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE_GROUP, Vector3{ -7.289f, -1.9812f,-28.137f }, Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 1.0f,1.0f ,1.0f});
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE_CLOTH, Vector3{ -7.1655f, -1.8518f,-28.507f }, Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 1.0f,1.0f ,1.0f });
+
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE_GROUP, Vector3{ -9.45f, -1.9812f,-28.035f }, Vector3{ 0.0f,-150.0f,0.0f }, Vector3{ 1.0f,1.0f ,1.0f});
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::CRATE_CLOTH, Vector3{ -9.373f, -1.8518f,-27.65f }, Vector3{ 0.0f,-150.0f,0.0f }, Vector3{ 1.0f,1.0f ,1.0f});
+        
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::WOODPALLET, Vector3{ -6.4791f, -3.0165f,15.626f }, Vector3{ 0.0f,0.0f, 27.0f }, Vector3{ 1.34f});
+        EntitySetup::CreateStaticEntity(EntitySetup::SubwayModel::WOODPALLET, Vector3{ -6.4637f, -3.0368f,16.70f }, Vector3{ -28.0f,90.0f, 0.0f }, Vector3{ 1.34f});
     }
 
     void GameManager::SetupStaticPhysics()
@@ -515,9 +533,10 @@ namespace SaltnPepperEngine
         EntitySetup::CreatePhysicsBox(Vector3(-1.443f, 4.173f, -1.1015f), Vector3(0.0f), stairCover);
 
         BoundingBox railRamp{ Vector3(-1.0f,-0.25f,-1.25f),Vector3(1.0f,0.25f,1.25f) };
-        EntitySetup::CreatePhysicsBox(Vector3(-6.4311f, -3.3262, 16.19f), Vector3(0.0f,0.0f,27.0f), railRamp, EnvironmentTag::Tag::NAVMESH);
+        EntitySetup::CreatePhysicsBox(Vector3(-6.4311f, -3.3262f, 16.19f), Vector3(0.0f,0.0f,27.0f), railRamp, EnvironmentTag::Tag::NAVMESH);
 
-
+        BoundingBox tunnelblockright{ Vector3(-2.5f,-1.0f,-1.0f),Vector3(2.5f,1.0f,1.0f) };
+        EntitySetup::CreatePhysicsBox(Vector3(-8.222f, -2.1889f, -27.602), Vector3(0.0f, 0.0f, 0.0f), tunnelblockright);
     }
 
     void GameManager::OnUpdateTestScene(const float deltaTime)

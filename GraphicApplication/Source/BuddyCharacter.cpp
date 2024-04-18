@@ -476,7 +476,7 @@ namespace SaltnPepperEngine
 		{
 			case SpeechAudio::WAYPOINT:
 			{
-				randomIndex = Random32::Range.GetRandom(0, m_moveClips.size()-1);
+				randomIndex = Random32::Range.GetRandom(0, static_cast<int>(m_moveClips.size()-1));
 				randomClip = m_moveClips[randomIndex];
 
 				
@@ -486,7 +486,7 @@ namespace SaltnPepperEngine
 			case SpeechAudio::ATTACK:
 			{
 
-				randomIndex = Random32::Range.GetRandom(0, m_KillClips.size() - 1);
+				randomIndex = Random32::Range.GetRandom(0, static_cast<int>(m_KillClips.size() - 1));
 				randomClip = m_KillClips[randomIndex];
 
 				
@@ -495,7 +495,7 @@ namespace SaltnPepperEngine
 
 			case SpeechAudio::FRIENDLYHIT:
 			{
-				randomIndex = Random32::Range.GetRandom(0, m_friendlyFireClips.size() - 1);
+				randomIndex = Random32::Range.GetRandom(0, static_cast<int>(m_friendlyFireClips.size() - 1));
 				randomClip = m_friendlyFireClips[randomIndex];
 			}
 				break;
