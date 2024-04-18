@@ -33,3 +33,9 @@
 //https://freesound.org/people/Lukeo135/sounds/518155/
 
 
+// TEXTURE
+// BLOOD SCREEN
+//https://www.deviantart.com/xiuyanderekun/art/MMD-Bloody-Screen-Effect-DL-858960325
+
+//MUZZE FLASH
+//https://www.deviantart.com/iantsrichards/art/Muzzle-Flash-110571773

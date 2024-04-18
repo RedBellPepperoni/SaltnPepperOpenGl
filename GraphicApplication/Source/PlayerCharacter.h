@@ -62,7 +62,8 @@ namespace SaltnPepperEngine
 		PlayerCharacter() = default;
 		virtual ~PlayerCharacter() = default;
 
-
+		void SetMuzzleLight(Light* light);
+		void SetMuzzleFlash(Entity flash);
 		void BeginReset(Transform& transform);
 		void ConfirmReset();
 
@@ -129,6 +130,12 @@ namespace SaltnPepperEngine
 		const int m_maxBullets = 60;
 		int m_totalBullets = 60;
 
+		Light* m_muzzleLight = nullptr;
+
+		const float m_flashCooldown = 0.3f;
+		float m_flashCounter = 0.3f;
+
+		Entity muzzleflash;
 	};
 
 

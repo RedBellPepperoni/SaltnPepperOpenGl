@@ -1041,8 +1041,8 @@ namespace SaltnPepperEngine
             lightElement.innerAngle = light->innerAngle;
             lightElement.outerAngle = light->outerAngle;
             lightElement.intensity = light->intensity;
-            lightElement.position = transform.GetPosition();
-            light->position = transform.GetPosition();
+            lightElement.position = transform.GetWorldPosition();
+            light->position = transform.GetWorldPosition();
             lightElement.radius = light->radius;
             lightElement.type = light->type;
 

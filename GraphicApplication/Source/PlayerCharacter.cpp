@@ -387,6 +387,12 @@ namespace SaltnPepperEngine
 	{
 		m_animator->PlayAnimationbyName("Shoot", false);
 		m_shootcounter = 0.0f;
+		m_flashCounter = m_flashCooldown;
+
+		const int index = Random32::Range.GetRandom(0, 6);
+
+		muzzleflash.GetComponent<Transform>().SetEularRotation(Vector3(0.0f,0.0f,(float)index * 10.0f));
+		muzzleflash.SetActive(true);
 
 		// ========== SHOOT LOGIC ================
 		PlayGunAudio(GunAudio::SHOOT);
@@ -407,6 +413,16 @@ namespace SaltnPepperEngine
 	
 
 	
+
+	void PlayerCharacter::SetMuzzleLight(Light* light)
+	{
+		m_muzzleLight = light;
+	}
+
+	void PlayerCharacter::SetMuzzleFlash(Entity flash)
+	{
+		muzzleflash = flash;
+	}
 
 	void PlayerCharacter::BeginReset(Transform& transform)
 	{
@@ -458,7 +474,17 @@ namespace SaltnPepperEngine
 
 		m_animator->OnUpdate(deltaTime);
 
-	
+		if (m_flashCounter <= 0.0f) 
+		{ 
+			muzzleflash.SetActive(false);
+			return; 
+		
+		}
+
+		m_flashCounter -= deltaTime;
+
+		m_muzzleLight->intensity = m_flashCounter * 16.0f;
+		
 
 	}
 

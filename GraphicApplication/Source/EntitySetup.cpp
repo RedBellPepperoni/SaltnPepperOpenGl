@@ -176,6 +176,8 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("Waypoint_Skull", "Assets\\Models\\SkullMark.fbx");
 	modelLib->LoadModel("Crosshair", "Assets\\Models\\Crosshair.fbx");
 
+	modelLib->LoadModel("MuzzleFlash", "Assets\\Models\\MuzzleFlash.fbx");
+
 
 }
 
@@ -248,7 +250,9 @@ void EntitySetup::LoadAllTextures()
 
 
 	textureLib->LoadTexture("barrelclothdiffuse", "Assets\\Textures\\barrelclothdiffuse.tga", TextureFormat::RGBA);
+	
 	textureLib->LoadTexture("barrelclothnormal", "Assets\\Textures\\barrelclothnormal.png", TextureFormat::RGBA);
+	textureLib->LoadTexture("muzzleflash", "Assets\\Textures\\MuzzleFlash.tga", TextureFormat::RGBA);
 
 }
 
@@ -778,12 +782,37 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 
 	ModelComponent& crossmodel = crossEntity.AddComponent<ModelComponent>("Crosshair");
 	SharedPtr<Material>& crossmat = crossmodel.m_handle->GetMeshes()[0]->GetMaterial();
+	LightComponent& pointLight = crossEntity.AddComponent<LightComponent>();
+	Light* light = pointLight.GetLightData();
+
+	light->color = Vector3{ 1.0f,0.6f,0.0f};
+	light->type = LightType::PointLight;
+	light->intensity = 0.0f;
+	light->radius = 6.0f;
 
 	crossmat->albedoColour = Vector4{ 1.0f,1.0f,1.0f,1.0f };
 	crossmat->albedoMapFactor = 0.0f;
 
 	Hierarchy& crosshie = crossEntity.AddComponent<Hierarchy>();
 	crossEntity.SetParent(lookEntity);
+
+	// MuzzleFlash Entity
+	Entity muzzleEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("MuzzleFlash");
+	Transform& muzzleTransform = muzzleEntity.GetComponent<Transform>();
+
+	muzzleTransform.SetPosition(Vector3{ 0.1041f,-0.0332f,-0.6194f });
+	muzzleTransform.SetEularRotation(Vector3{ 0.0f,0.0f,-12.0f });
+	muzzleTransform.SetScale(Vector3{ 0.16f });
+
+	ModelComponent& muzzlemodel = muzzleEntity.AddComponent<ModelComponent>("MuzzleFlash");
+	SharedPtr<Material>& muzzlemat = muzzlemodel.m_handle->GetMeshes()[0]->GetMaterial();
+
+	muzzlemat->SetAlbedoTexture("muzzleflash");
+	muzzlemat->albedoMapFactor = 1.0f;
+
+	Hierarchy& muzzleshie = muzzleEntity.AddComponent<Hierarchy>();
+	muzzleEntity.SetParent(lookEntity);
+
 	// ================ Player Bindings ============
 
 	lookEntity.SetParent(playerEntity);
@@ -799,7 +828,8 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	player->SetAnimatorRef(animComp.GetAnimator());
 
 	player->SetAudioSources(footsource, gunsource);
-
+	player->SetMuzzleLight(light);
+	player->SetMuzzleFlash(muzzleEntity);
 
 	return player;
 
@@ -940,7 +970,7 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 
 	Audio::AudioSource* speechSource = Audio::AudioManager::GetInstance().CreateSource(buddyEntity);
 	Audio::AudioSource* actionSource = Audio::AudioManager::GetInstance().CreateSource(buddyEntity);
-
+	speechSource->Set3DMaxDist(20.0f);
 	buddy->SetAudioSource(speechSource,actionSource);
 	
 
