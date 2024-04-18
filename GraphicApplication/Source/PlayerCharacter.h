@@ -31,8 +31,19 @@ namespace SaltnPepperEngine
 
 	class PlayerCharacter : public IDamagable
 	{
+	private:
+
+		enum class GunAudio : uint8_t
+		{
+			SHOOT,
+			RELOAD,
+			EMPTY
+		};
+
 
 	private:
+
+
 
 		void KeyBoardInput(const float deltaTime, Transform& lookTransform);
 		void MouseInput(const float deltaTime, Vector2 mousePosition, Transform& lookTransform);
@@ -40,8 +51,10 @@ namespace SaltnPepperEngine
 		
 		bool RayCastbyTag(const Vector3& origin, const Vector3& forward,  bool navcast = false);
 
+		void PlayGunAudio(const GunAudio& audiotype);
 		
-
+		void Shoot(const Transform& look);
+		
 	public:
 
 		PlayerCharacter() = default;
@@ -54,8 +67,10 @@ namespace SaltnPepperEngine
 
 		void OnUpdate(float deltaTime, Vector2 mousePosition, Transform& lookTransform);
 
-		virtual void TakeDamage(const int damage) override;
+		virtual void TakeDamage(const int damage, const DamageSource& source) override;
 
+		void SetAudioSources(Audio::AudioSource* footstep, Audio::AudioSource*gun);
+		void SetAudioClipsGun(AudioClip* shoot, AudioClip* empty, AudioClip* reload);
 	
 
 	private:
@@ -97,6 +112,15 @@ namespace SaltnPepperEngine
 	
 		GameManager* m_gameManagerRef = nullptr;
 
+
+		AudioClip* m_gunShootClip = nullptr;
+		AudioClip* m_gunEmptyClip= nullptr;
+		AudioClip* m_gunReloadClip = nullptr;
+
+		int m_magzineBullets = 12;
+		const int m_magzineSize = 12;
+		const int m_maxBullets = 60;
+		int m_totalBullets = 60;
 
 	};
 

@@ -229,7 +229,7 @@ namespace SaltnPepperEngine
 			if (playerComp)
 			{
 				PlayerCharacter* player = playerComp->GetPlayer();
-				player->TakeDamage(10.0f);
+				player->TakeDamage(10.0f, DamageSource::ZOMBIE);
 				return;
 			}
 
@@ -239,7 +239,7 @@ namespace SaltnPepperEngine
 			if (buddyComp)
 			{
 				BuddyCharacter* buddy = buddyComp->GetBuddy();
-				buddy->TakeDamage(5);
+				buddy->TakeDamage(5, DamageSource::ZOMBIE);
 			}
 
 		}
@@ -426,7 +426,7 @@ namespace SaltnPepperEngine
 	
 
 
-	void EnemyCharacter::TakeDamage(const int damage)
+	void EnemyCharacter::TakeDamage(const int damage, const DamageSource& source)
 	{
 		if (m_markedForDeath || currentState == EnemyState::DEAD)
 		{

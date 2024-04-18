@@ -191,12 +191,12 @@ namespace SaltnPepperEngine
 			std::vector<LineVertexElement> lineDataBuffer;
 
 			// the Data buffer storing the Point Vertex data
-			std::vector<PointVertexElement> pointDataBuffer;
+			//std::vector<PointVertexElement> pointDataBuffer;
 
 			std::vector<VertexAttribute> vertexLayout;
 
 			uint32_t lineIndexCount = 0;
-			uint32_t pointIndexCount = 0;
+			//uint32_t pointIndexCount = 0;
 
 			SharedPtr<VertexBuffer> VBO;
 			SharedPtr<VertexArray> VAO;

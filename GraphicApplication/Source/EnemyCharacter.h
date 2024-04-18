@@ -155,7 +155,7 @@ namespace SaltnPepperEngine
 
 		void OnUpdate(float deltaTime,const Vector3& playerPos, const Vector3& buddyPos, Transform& enemyTransform, Transform& lookTransform);
 
-		virtual void TakeDamage(const int damage) override;
+		virtual void TakeDamage(const int damage, const DamageSource& source) override;
 
 		void MarkforBuddy(bool mark);
 	};

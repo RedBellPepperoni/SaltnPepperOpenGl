@@ -10,7 +10,8 @@ namespace SaltnPepperEngine
 
 	namespace Audio
 	{
-		AudioSource::AudioSource()
+		AudioSource::AudioSource(const bool is3D)
+			:m_is3D(is3D)
 		{
 
 		}
@@ -26,7 +27,14 @@ namespace SaltnPepperEngine
 
 			if (!clip->hasLoaded)
 			{
-				AudioManager::GetInstance().LoadSound(*clip, AudioManager::SoundType::Sound3D);
+				if (m_is3D)
+				{
+					AudioManager::GetInstance().LoadSound(*clip, AudioManager::SoundType::Sound3D);
+				}
+				else
+				{
+					AudioManager::GetInstance().LoadSound(*clip, AudioManager::SoundType::Sound2D);
+				}
 				return true;
 			}
 

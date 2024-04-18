@@ -332,7 +332,7 @@ namespace SaltnPepperEngine
 		class AudioSourceComponent
 		{
 		public:
-			AudioSourceComponent();
+			AudioSourceComponent(bool is3D);
 			~AudioSourceComponent() = default;
 
 			Audio::AudioSource* GetSource();

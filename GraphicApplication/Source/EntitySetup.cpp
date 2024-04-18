@@ -148,6 +148,7 @@ void EntitySetup::LoadAllModels()
 	modelLib->LoadModel("Waypoint_Arrow", "Assets\\Models\\WaypointArrow.fbx");
 	modelLib->LoadModel("Waypoint_Base", "Assets\\Models\\WaypointBase.fbx");
 	modelLib->LoadModel("Waypoint_Skull", "Assets\\Models\\SkullMark.fbx");
+	modelLib->LoadModel("Crosshair", "Assets\\Models\\Crosshair.fbx");
 
 
 }
@@ -220,6 +221,26 @@ void EntitySetup::LoadAllAudio()
 	audioLib->LoadAudio("zombiedeath1","Assets\\Audio\\zombie_dying_1.mp3");
 	audioLib->LoadAudio("zombiedeath2","Assets\\Audio\\zombie_dying_2.mp3");
 	audioLib->LoadAudio("zombiealert1","Assets\\Audio\\zombie_alert_1.mp3");
+
+	audioLib->LoadAudio("gunshoot","Assets\\Audio\\PistolFire.mp3");
+	audioLib->LoadAudio("gunempty","Assets\\Audio\\PistolEmpty.mp3");
+	audioLib->LoadAudio("gunreload","Assets\\Audio\\PistolReload.mp3");
+
+
+
+	audioLib->LoadAudio("robo_okay","Assets\\Audio\\Robo_Okay.wav");
+	audioLib->LoadAudio("robo_moving","Assets\\Audio\\Robo_Moving.wav");
+	audioLib->LoadAudio("robo_going","Assets\\Audio\\Robo_Going.wav");
+
+	audioLib->LoadAudio("robo_diecreature","Assets\\Audio\\Robo_DieCreature.wav");
+	audioLib->LoadAudio("robo_kill","Assets\\Audio\\Robo_Kill.wav");
+
+	audioLib->LoadAudio("robo_stop","Assets\\Audio\\Robo_Stop.wav");
+	audioLib->LoadAudio("robo_dontshoot","Assets\\Audio\\Robo_DontShoot.wav");
+
+	
+	
+
 
 }
 
@@ -599,15 +620,15 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	playerTransform.SetEularRotation(Vector3(0.0f));
 
 	CapsuleCollider& capsuleCol = playerEntity.AddComponent<CapsuleCollider>();
-	capsuleCol.Init(BoundingCapsule(1.2f,0.3f,BoundingCapsule::Axis::Y));
+	capsuleCol.Init(BoundingCapsule(1.2f, 0.3f, BoundingCapsule::Axis::Y));
 
-	RigidBody* rigidBody = playerEntity.AddComponent<RigidBodyComponent>(playerTransform,capsuleCol.GetShape()).GetRigidBody();
+	RigidBody* rigidBody = playerEntity.AddComponent<RigidBodyComponent>(playerTransform, capsuleCol.GetShape()).GetRigidBody();
 	rigidBody->SetBounceFactor(0.1f);
 	rigidBody->SetFriction(0.95f);
 	rigidBody->SetEntityId(playerEntity);
 
 	Hierarchy& playerHie = playerEntity.AddComponent<Hierarchy>();
-	
+
 	// =============== Player Look ===============
 	Entity lookEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PlayerLook");
 	Transform& lookTransform = lookEntity.GetComponent<Transform>();
@@ -615,21 +636,22 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	//Audio::AudioSource* source = 
 	Audio::AudioListener* listener = lookEntity.AddComponent<AudioListenerComponent>().GetListener();
 
-	lookTransform.SetPosition(Vector3{0.0f,0.70f,0.0f });
-	lookTransform.SetEularRotation(Vector3(0.0f,rotation.y,0.0f));
+	lookTransform.SetPosition(Vector3{ 0.0f,0.70f,0.0f });
+	lookTransform.SetEularRotation(Vector3(0.0f, rotation.y, 0.0f));
 
 	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();
-	Camera& playerCamera = lookEntity.AddComponent<Camera>(70.0f,0.01f,1000.0f,16.0f/10.0f);
+	Camera& playerCamera = lookEntity.AddComponent<Camera>(70.0f, 0.01f, 1000.0f, 16.0f / 10.0f);
 
 	PlayerLook& look = lookEntity.AddComponent<PlayerLook>();
 
+	
 
 	// ================ PLayer Hands ================
 	Entity skinnedEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("PLayerHands");
 	Transform& transform = skinnedEntity.GetComponent<Transform>();
 
-	transform.SetPosition(Vector3(0.0f,-1.55f,-0.40f));
-	transform.SetEularRotation(Vector3(180.0f,-0.02f,180.0f));
+	transform.SetPosition(Vector3(0.0f, -1.55f, -0.40f));
+	transform.SetEularRotation(Vector3(180.0f, -0.02f, 180.0f));
 	transform.SetScale(Vector3(0.01f));
 
 	SkinnedModelComponent& modelComp = skinnedEntity.AddComponent<SkinnedModelComponent>("Gun_Pistol");
@@ -639,7 +661,7 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	SkinnedAnimation* idleanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Idle", "Assets\\Models\\GUN_PISTOL_IDLE.fbx", modelComp.m_handle).get();
 	SkinnedAnimation* reloadanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Reload", "Assets\\Models\\GUN_PISTOL_RELOAD.fbx", modelComp.m_handle).get();
 	SkinnedAnimation* shootanim = Application::GetCurrent().GetAnimationLibrary()->LoadAnimation("Gun_Pistol_Shoot", "Assets\\Models\\GUN_PISTOL_SHOOT.fbx", modelComp.m_handle).get();
-	
+
 	animComp.GetAnimator()->AddAnimation("Idle", idleanim);
 	animComp.GetAnimator()->AddAnimation("Reload", reloadanim);
 	animComp.GetAnimator()->AddAnimation("Shoot", shootanim);
@@ -667,16 +689,42 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	SharedPtr<Material>& matFour = modelComp.m_handle->GetMeshes()[1]->GetMaterial();
 	matFour->SetAlbedoTexture("fppistol");
 	matOne->albedoMapFactor = 1.0f;
-	
-	
-	
+
+
+	// ======== Crosshair Entity ==========
+
+	Entity crossEntity = Application::GetCurrent().GetCurrentScene()->CreateEntity("Crosshair");
+	Transform& crossTransform = crossEntity.GetComponent<Transform>();
+
+	crossTransform.SetPosition(Vector3{ 0.0f,0.0f,-0.1f });
+	crossTransform.SetEularRotation(Vector3{ 0.0f });
+	crossTransform.SetScale(Vector3{ 0.1f });
+
+	ModelComponent& crossmodel = crossEntity.AddComponent<ModelComponent>("Crosshair");
+	SharedPtr<Material>& crossmat = crossmodel.m_handle->GetMeshes()[0]->GetMaterial();
+
+	crossmat->albedoColour = Vector4{ 1.0f,1.0f,1.0f,1.0f };
+	crossmat->albedoMapFactor = 0.0f;
+
+	Hierarchy& crosshie = crossEntity.AddComponent<Hierarchy>();
+	crossEntity.SetParent(lookEntity);
 	// ================ Player Bindings ============
 
 	lookEntity.SetParent(playerEntity);
 
+	Audio::AudioSource* gunsource = AudioManager::GetInstance().CreateSource(playerEntity,false);
+	Audio::AudioSource* footsource = AudioManager::GetInstance().CreateSource(playerEntity);
+
+	
+
+
 	PlayerCharacter* player = playerEntity.AddComponent<PlayerComponent>().GetPlayer();
 	player->SetRigidBodyRef(rigidBody);
 	player->SetAnimatorRef(animComp.GetAnimator());
+
+	player->SetAudioSources(footsource, gunsource);
+
+
 	return player;
 
 }
@@ -743,6 +791,9 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 	rigidBody->SetBounceFactor(0.1f);
 	rigidBody->SetFriction(0.95f);
 	rigidBody->SetEntityId(buddyEntity);
+
+	EnvironmentTag& tagComp = buddyEntity.AddComponent<EnvironmentTag>();
+	tagComp.currentTag = EnvironmentTag::Tag::BUDDY;
 
 	Hierarchy& buddyHierarchy = buddyEntity.AddComponent<Hierarchy>();
 
@@ -811,6 +862,10 @@ BuddyCharacter* EntitySetup::CreateBuddy(const Vector3& position, const Vector3&
 	buddy->SetAnimatorRef(animComp.GetAnimator());
 
 
+	Audio::AudioSource* speechSource = Audio::AudioManager::GetInstance().CreateSource(buddyEntity);
+	Audio::AudioSource* actionSource = Audio::AudioManager::GetInstance().CreateSource(buddyEntity);
+
+	buddy->SetAudioSource(speechSource,actionSource);
 	
 
 	return buddy;

@@ -480,7 +480,7 @@ namespace SaltnPepperEngine
 
 			if (ignoreDepthtest)
 			{
-				DebugLineData data = m_debugInstance->m_drawListAlwaysFront.debugLines.emplace_back(startPos, endPos, color, width);
+				m_debugInstance->m_drawListAlwaysFront.debugLines.emplace_back(startPos, endPos, color, width);
 
 
 			}

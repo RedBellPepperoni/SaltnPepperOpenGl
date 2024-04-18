@@ -50,23 +50,33 @@ namespace SaltnPepperEngine
 
 		};
 
+		enum class SpeechAudio : uint8_t
+		{
+			WAYPOINT,
+			ATTACK,
+			FRIENDLYHIT
+		};
+
 	public:
 
 		BuddyCharacter();
 		virtual ~BuddyCharacter();
 
-		virtual void TakeDamage(const int damage) override;
+		virtual void TakeDamage(const int damage, const DamageSource& source) override;
 		
-		void UpdateTargetandPath(const Vector3& target, const std::vector<Vector3>& newpath);
+		void MarkTargetandPath(const Vector3& target, const std::vector<Vector3>& newpath);
 
 		void OnUpdate(const float& deltaTime, Transform& buddyTransform, Transform& lookTransform);
 
-
+		void SetSpeechClips(std::vector<AudioClip*>& move, std::vector<AudioClip*>& kill, std::vector<AudioClip*>& hit);
+		void SetAudioSource(Audio::AudioSource* speech, Audio::AudioSource* action);
 		void SetAnimatorRef(SkinnedAnimator* animRef);
 		SkinnedAnimator* GetAnimator();
 		void SetRigidBodyRef(RigidBody* bodyRef);
 		void SetGameManagerRef(GameManager* finder);
 		void SetMarkedEnemy(const Vector3& position,const bool hasTarget = true);
+
+
 	private:
 
 		void UpdateAnimState(const float deltaTime);
@@ -81,6 +91,9 @@ namespace SaltnPepperEngine
 		void SetNextWaypoint();
 
 		Vector3 GetCurrentWayPoint();
+
+
+		void PlaySpeechAudio(const SpeechAudio& speechtag);
 
 	private:
 
@@ -123,6 +136,13 @@ namespace SaltnPepperEngine
 
 		Vector3 m_attackOrigin;
 		Vector3 m_targetOrigin;
+
+		Audio::AudioSource* m_speechSource = nullptr;
+		Audio::AudioSource* m_actionSource = nullptr;
+
+		std::vector<AudioClip*> m_moveClips;
+		std::vector<AudioClip*> m_KillClips;
+		std::vector<AudioClip*> m_friendlyFireClips;
 	};
 
 	struct BuddyComponent

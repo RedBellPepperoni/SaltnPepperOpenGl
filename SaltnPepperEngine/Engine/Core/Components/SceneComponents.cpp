@@ -287,9 +287,9 @@ namespace SaltnPepperEngine
 			return m_rigidBody.get();
 		}
 
-		AudioSourceComponent::AudioSourceComponent()
+		AudioSourceComponent::AudioSourceComponent(bool is3D)
 		{
-			m_handle = MakeUnique<Audio::AudioSource>();
+			m_handle = MakeUnique<Audio::AudioSource>(is3D);
 		}
 
 		Audio::AudioSource* AudioSourceComponent::GetSource()

@@ -104,7 +104,18 @@ namespace SaltnPepperEngine
 
 		if (InputSystem::GetInstance().GetKeyDown(Key::R))
 		{
-			isReloading = true;
+			if (m_totalBullets == 0)
+			{
+				PlayGunAudio(GunAudio::EMPTY);
+				return;
+			}
+
+			if (!isReloading)
+			{
+				PlayGunAudio(GunAudio::RELOAD);
+				isReloading = true;
+			}
+
 		}
 
 
@@ -113,10 +124,13 @@ namespace SaltnPepperEngine
 			m_reloadCounter += deltaTime;
 
 			m_animator->PlayAnimationbyName("Reload");
+			
 
 			if (m_reloadCounter > m_ReloadTimer)
 			{
 				isReloading = false;
+
+				m_magzineBullets = m_magzineSize;
 				m_reloadCounter = 0.0f;
 				
 			}
@@ -186,16 +200,16 @@ namespace SaltnPepperEngine
 		{
 			LeftButtonHeld = true;
 
-			m_animator->PlayAnimationbyName("Shoot",false);
-			m_shootcounter = 0.0f;
 
-			//LOG_CRITICAL("SHOOT");
-
-			const Vector3 origin = lookTransform.GetWorldPosition();
-			const Vector3 forward = lookTransform.GetForwardVector();
-
-			// Raycast check if the hit object was an enemy
-			RayCastbyTag(origin, forward);
+			if (m_magzineBullets > 0)
+			{
+				Shoot(lookTransform);
+			}
+			else
+			{
+				PlayGunAudio(GunAudio::EMPTY);
+			}
+			
 
 		}
 
@@ -264,16 +278,24 @@ namespace SaltnPepperEngine
 				if (enemyComp)
 				{
 					EnemyCharacter* enemy = enemyComp->GetEnemy();
-					enemy->TakeDamage(20);
+					enemy->TakeDamage(20, DamageSource::PLAYER);
 					return true;
 				}
+
+				
 
 			}
 			break;
 
 			case SaltnPepperEngine::EnvironmentTag::Tag::BUDDY:
 			{
-
+				BuddyComponent* buddyComp = hitEntity.TryGetComponent<BuddyComponent>();
+				if (buddyComp)
+				{
+					BuddyCharacter* buddy = buddyComp->GetBuddy();
+					buddy->TakeDamage(20, DamageSource::PLAYER);
+					return true;
+				}
 			}
 
 			break;
@@ -311,10 +333,60 @@ namespace SaltnPepperEngine
 
 		
 
-
+		return false;
 		
 
 	}
+
+	void PlayerCharacter::PlayGunAudio(const GunAudio& audiotype)
+	{
+
+		switch (audiotype)
+		{
+			case GunAudio::SHOOT:
+			{	
+				if (m_gunShootClip == nullptr) { return; }
+				m_gunSource->PlayOneShot(m_gunShootClip);
+			}
+			break;
+
+			case GunAudio::RELOAD:
+			{
+				if (m_gunReloadClip == nullptr) { return; }
+				m_gunSource->PlayOneShot(m_gunReloadClip);
+			}
+			break;
+
+			case GunAudio::EMPTY:
+			{
+				if (m_gunEmptyClip == nullptr) { return; }
+				m_gunSource->PlayOneShot(m_gunEmptyClip);
+			}
+			break;
+
+		}
+	}
+
+	void PlayerCharacter::Shoot(const Transform& look)
+	{
+		m_animator->PlayAnimationbyName("Shoot", false);
+		m_shootcounter = 0.0f;
+
+		// ========== SHOOT LOGIC ================
+		PlayGunAudio(GunAudio::SHOOT);
+
+		const Vector3 origin = look.GetWorldPosition();
+		const Vector3 forward = look.GetForwardVector();
+
+		// Decrement currentbullets
+		m_magzineBullets -= 1;
+		m_totalBullets -= 1;
+
+		// Raycast check if the hit object was an enemy
+		RayCastbyTag(origin, forward);
+
+	}
+
 
 	
 
@@ -359,9 +431,27 @@ namespace SaltnPepperEngine
 
 	}
 
-	void PlayerCharacter::TakeDamage(const int damage)
+	void PlayerCharacter::TakeDamage(const int damage, const DamageSource& source)
 	{
 
+
+	}
+
+	void PlayerCharacter::SetAudioSources(Audio::AudioSource* footstep, Audio::AudioSource* gun)
+	{
+		m_footStepSource = footstep;
+		m_gunSource = gun;
+	}
+
+	void PlayerCharacter::SetAudioClipsGun(AudioClip* shoot, AudioClip* empty, AudioClip* reload)
+	{
+		m_gunShootClip = shoot;
+		m_gunEmptyClip = empty;
+		m_gunReloadClip = reload;
+
+		m_gunSource->SetAudioClip(m_gunShootClip);
+		m_gunSource->SetAudioClip(m_gunEmptyClip);
+		m_gunSource->SetAudioClip(m_gunReloadClip);
 
 	}
 

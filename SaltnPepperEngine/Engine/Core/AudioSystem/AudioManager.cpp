@@ -425,7 +425,7 @@ namespace SaltnPepperEngine
 
 			CHECKFMODERR(GetInstance().m_channelMap[channelId]->fmodCh->get3DMinMaxDistance(&minTest, &maxtest));
 
-			LOG_WARN("{0} || {1}", std::to_string(minTest), std::to_string(maxtest));
+			//LOG_WARN("{0} || {1}", std::to_string(minTest), std::to_string(maxtest));
 
 
 			GetInstance().m_channelMap[channelId]->fmodCh->set3DDopplerLevel(5.0f);
@@ -511,10 +511,10 @@ namespace SaltnPepperEngine
 			return audioGeo;
 		}
 
-		AudioSource* AudioManager::CreateSource(Entity& entity)
+		AudioSource* AudioManager::CreateSource(Entity& entity, const bool is3D)
 		{
 
-			AudioSource* audioSource = entity.AddComponent<AudioSourceComponent>().GetSource();
+			AudioSource* audioSource = entity.AddComponent<AudioSourceComponent>(is3D).GetSource();
 			audioSource->RegisterSource();
 
 			//SetSource3DMinMaxDist(audioSource->GetChannelIndex(), audioSource->Get3DMinDist(), audioSource->Get3DMaxDist());

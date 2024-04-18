@@ -13,7 +13,7 @@ namespace SaltnPepperEngine
 
 	}
 
-	void BuddyCharacter::TakeDamage(const int damage)
+	void BuddyCharacter::TakeDamage(const int damage, const DamageSource& source)
 	{
 	
 		//const int damagedHealth = GetCurrentHealth() - damage;
@@ -27,17 +27,34 @@ namespace SaltnPepperEngine
 
 		//m_health = damagedHealth;
 
+		if (source == DamageSource::PLAYER)
+		{
+			PlaySpeechAudio(SpeechAudio::FRIENDLYHIT);
+		}
+
 		LOG_CRITICAL("Took Damage {0}", damage);
 
 		m_counter = 0.0f;
 
 		m_animator->SetTransitiontime(0.05f);
 		currentState = BuddyState::TAKINGHIT;
+
+
+
 	}
 
-	void BuddyCharacter::UpdateTargetandPath(const Vector3& target, const std::vector<Vector3>& newpath)
+	void BuddyCharacter::MarkTargetandPath(const Vector3& target, const std::vector<Vector3>& newpath)
 	{
 		if (newpath.empty()) { return; }
+
+		if (m_hasEnemy)
+		{
+			PlaySpeechAudio(SpeechAudio::ATTACK);
+		}
+		else
+		{
+			PlaySpeechAudio(SpeechAudio::WAYPOINT);
+		}
 
 		if (newpath.size() == 1)
 		{
@@ -179,6 +196,37 @@ namespace SaltnPepperEngine
 		}
 
 
+	}
+
+	void BuddyCharacter::SetSpeechClips(std::vector<AudioClip*>& move, std::vector<AudioClip*>& kill, std::vector<AudioClip*>& hit)
+	{
+		m_moveClips = move;
+		m_KillClips = kill;
+		m_friendlyFireClips = hit;
+
+		if (m_actionSource == nullptr) return;
+
+		for (AudioClip* clip : m_moveClips)
+		{
+			m_actionSource->SetAudioClip(clip);
+		}
+
+		for (AudioClip* clip : m_KillClips)
+		{
+			m_actionSource->SetAudioClip(clip);
+		}
+
+		for (AudioClip* clip : m_friendlyFireClips)
+		{
+			m_actionSource->SetAudioClip(clip);
+		}
+		
+	}
+
+	void BuddyCharacter::SetAudioSource(Audio::AudioSource* speech, Audio::AudioSource* action)
+	{
+		m_speechSource = speech;
+		m_actionSource = action;
 	}
 
 	void BuddyCharacter::SetAnimatorRef(SkinnedAnimator* animRef)
@@ -327,7 +375,7 @@ namespace SaltnPepperEngine
 			if (enemyComp)
 			{
 				EnemyCharacter* enemy = enemyComp->GetEnemy();
-				enemy->TakeDamage(20);
+				enemy->TakeDamage(20,DamageSource::BUDDY);
 			}
 
 		}
@@ -414,6 +462,50 @@ namespace SaltnPepperEngine
 		}
 
 		return m_currentPath[m_currentWaypointIndex];
+	}
+
+
+	void BuddyCharacter::PlaySpeechAudio(const SpeechAudio& speechtag)
+	{
+		if (m_speechSource == nullptr) {return;}
+
+		AudioClip* randomClip = nullptr;
+		int randomIndex = 0;
+
+		switch (speechtag)
+		{
+			case SpeechAudio::WAYPOINT:
+			{
+				randomIndex = Random32::Range.GetRandom(0, m_moveClips.size()-1);
+				randomClip = m_moveClips[randomIndex];
+
+				
+			}
+				break;
+
+			case SpeechAudio::ATTACK:
+			{
+
+				randomIndex = Random32::Range.GetRandom(0, m_KillClips.size() - 1);
+				randomClip = m_KillClips[randomIndex];
+
+				
+			}
+				break;
+
+			case SpeechAudio::FRIENDLYHIT:
+			{
+				randomIndex = Random32::Range.GetRandom(0, m_friendlyFireClips.size() - 1);
+				randomClip = m_friendlyFireClips[randomIndex];
+			}
+				break;
+
+		default:
+			break;
+		}
+
+		m_speechSource->PlayOneShot(randomClip);
+
 	}
 
 

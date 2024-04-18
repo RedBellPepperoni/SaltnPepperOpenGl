@@ -7,11 +7,19 @@ namespace SaltnPepperEngine
 	{
 	public:
 
+		enum class DamageSource : uint8_t
+		{
+			PLAYER,
+			BUDDY,
+			ZOMBIE,
+			ENVIRONMENT
+		};
+
 		IDamagable() = default;
 		virtual ~IDamagable() = default;
 
 
-		virtual void TakeDamage(const int damage) = 0;
+		virtual void TakeDamage(const int damage, const DamageSource& source) = 0;
 
 
 		const int GetCurrentHealth() const { return m_health; }

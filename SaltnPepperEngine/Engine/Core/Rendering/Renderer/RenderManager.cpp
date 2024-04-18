@@ -1,4 +1,5 @@
 #include "RenderManager.h"
+#include "DebugRenderer.h"
 
 #include "Engine/Core/Scene/Scene.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
@@ -293,6 +294,11 @@ namespace SaltnPepperEngine
 					//CopyTexture(cameraElement.albedoTexture,cameraElement.outputTexture);
 				
 				}
+
+
+				//LOG_ERROR("Lines {0}", Rendering::DebugRenderer::Get()->GetLines().size());
+
+				DebugRenderer::Reset();
 
 				EndFrame();
 

@@ -143,6 +143,43 @@ namespace SaltnPepperEngine
         EntitySetup::CreateZombie(Vector3(-4.1f, 0.2f, 8.6f), Vector3(0.0f, 0.0f, 0.0f), clipsVar1, ZombieType::WALK)->SetGameManagerRef(this);
      
 
+
+        AudioClip* gunshootClip = Application::GetCurrent().GetAudioLibrary()->GetResource("gunshoot").get();
+        AudioClip* gunreloadClip = Application::GetCurrent().GetAudioLibrary()->GetResource("gunreload").get();
+        AudioClip* gunemptyClip = Application::GetCurrent().GetAudioLibrary()->GetResource("gunempty").get();
+
+
+        m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 0.2f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_playerRef->SetGameManagerRef(this);
+
+        m_playerRef->SetAudioClipsGun(gunshootClip,gunemptyClip,gunreloadClip);
+
+       
+        AudioClip* robookay = Application::GetCurrent().GetAudioLibrary()->GetResource("robo_okay").get();
+        AudioClip* robomoving = Application::GetCurrent().GetAudioLibrary()->GetResource("robo_moving").get();
+        AudioClip* robogoing = Application::GetCurrent().GetAudioLibrary()->GetResource("robo_going").get();
+       
+        AudioClip* robodie = Application::GetCurrent().GetAudioLibrary()->GetResource("robo_diecreature").get();
+        AudioClip* robokill = Application::GetCurrent().GetAudioLibrary()->GetResource("robo_kill").get();
+
+        AudioClip* robostop = Application::GetCurrent().GetAudioLibrary()->GetResource("robo_stop").get();
+        AudioClip* robodontshoot = Application::GetCurrent().GetAudioLibrary()->GetResource("robo_dontshoot").get();
+
+       
+
+        m_buddyRef = EntitySetup::CreateBuddy(Vector3(-4.1f, 0.2f, 12.6f), Vector3(0.0f, 0.0f, 0.0f));
+        m_buddyRef->SetGameManagerRef(this);
+
+
+        std::vector<AudioClip*> moveSpeech{ robookay,robomoving,robogoing };
+        std::vector<AudioClip*> killSpeech{ robodie,robokill };
+        std::vector<AudioClip*> stopSpeech{ robostop,robodontshoot };
+        m_buddyRef->SetSpeechClips(moveSpeech,killSpeech,stopSpeech);
+
+        m_waypointbaseEntity = EntitySetup::CreateWaypointBase(Vector3(0.0f, 0.0f, 0.0f));
+        m_waypointarrowEntity = EntitySetup::CreateWaypointArrow(Vector3(0.0f, 0.5f, 0.0f), m_waypointbaseEntity);
+
+
     }
 
     void GameManager::SetupNavMesh()
@@ -651,13 +688,7 @@ namespace SaltnPepperEngine
         SetupPathFinder();
 
       
-        m_playerRef = EntitySetup::CreatePlayer(Vector3(-4.1f, 0.2f, 4.6f), Vector3(0.0f, 0.0f, 0.0f));
-        m_playerRef->SetGameManagerRef(this);
-
-        m_buddyRef = EntitySetup::CreateBuddy(Vector3(-4.1f, 0.2f, 12.6f), Vector3(0.0f, 0.0f, 0.0f));
-        m_buddyRef->SetGameManagerRef(this);
-        m_waypointbaseEntity = EntitySetup::CreateWaypointBase(Vector3(0.0f, 0.0f, 0.0f));
-        m_waypointarrowEntity = EntitySetup::CreateWaypointArrow(Vector3(0.0f, 0.5f, 0.0f), m_waypointbaseEntity);
+       
 
 
 	}
@@ -700,8 +731,11 @@ namespace SaltnPepperEngine
             m_buddyRef->SetMarkedEnemy(Vector3{200.0f}, false);
         }
 
+
+
+
         m_simplifiedpath = m_pathFinder->FindSimplfiedPath(m_buddyPosition,position);
-        m_buddyRef->UpdateTargetandPath(position, m_simplifiedpath);
+        m_buddyRef->MarkTargetandPath(position, m_simplifiedpath);
 
     }
 

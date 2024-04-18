@@ -25,7 +25,7 @@ namespace SaltnPepperEngine
 		{
 		public:
 
-			AudioSource();
+			AudioSource(const bool is3D = true);
 			~AudioSource();
 
 			bool SetAudioClip(AudioClip* clip);

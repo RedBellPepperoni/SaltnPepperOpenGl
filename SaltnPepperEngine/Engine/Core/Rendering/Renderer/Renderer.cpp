@@ -682,16 +682,22 @@ namespace SaltnPepperEngine
             }
 
 
-
-            // Two Passes one for no depth and other for Depthtested
-            DebugPassInternal(camera, false); 
-            DebugPassInternal(camera, true);
-
+            else
+            {
+                // Two Passes one for no depth and other for Depthtested
+                DebugPassInternal(camera, false);
+                //DebugPassInternal(camera, true);
+            }
+           
 
             m_debugDrawData.lineIndexCount = 0;
             m_debugDrawData.lineDataBuffer.clear();
 
             DebugRenderer::Reset();
+
+           // LOG_ERROR("Lines {0}",DebugRenderer::m_debugInstance->GetLines().size());
+
+
         }
 
 
