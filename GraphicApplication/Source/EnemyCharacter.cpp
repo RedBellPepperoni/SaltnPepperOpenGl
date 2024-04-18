@@ -297,9 +297,10 @@ namespace SaltnPepperEngine
 
 	void EnemyCharacter::BeginReset(Transform transfomr)
 	{
+		//m_rigidBody->
 		m_rigidBody->MakeDynamic();
 		m_rigidBody->ForceTransform(transfomr);
-
+		m_rigidBody->ApplyCentralForce(Vector3(1.0f));
 		currentBehaviour = EnemyBehaviour::DECIDING;
 		currentState = EnemyState::IDLE;
 		m_markedForDeath = false;

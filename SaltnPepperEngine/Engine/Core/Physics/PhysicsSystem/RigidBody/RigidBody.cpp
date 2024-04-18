@@ -343,6 +343,7 @@ namespace SaltnPepperEngine
 			if (GetMass() == 0.0f) { SetMass(1.0f); } 
 			SetCollisionFilter(CollisionMask::DYNAMIC, CollisionGroup::ALL); 
 			UnsetKinematicFlag(); 
+			UnsetTriggerFlag();
 		}
 
 		const bool RigidBody::IsDynamic() const

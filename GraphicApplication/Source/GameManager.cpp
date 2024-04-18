@@ -933,7 +933,29 @@ namespace SaltnPepperEngine
             buddyLookTransform.SetEularRotation(m_buddyLook);
         }
 
+        ComponentView enemyView = manager->GetComponentsOfType<EnemyComponent>();
+        ComponentView enemyLookView = manager->GetComponentsOfType<EnemyLook>();
 
+        if (!enemyView.IsEmpty() && !enemyLookView.IsEmpty())
+        {
+            for (Entity look : enemyLookView)
+            {
+                Transform& lookTransform = look.GetComponent<Transform>();
+                lookTransform.SetEularRotation(Vector3{ 0.0f });
+            }
+
+            for (int index = 0; index < enemyView.Size();index ++)
+            {
+                Entity enemyEntity = enemyView[index];
+
+                Transform& enemyTransform = enemyEntity.GetComponent<Transform>();
+                enemyTransform.SetPosition(m_zombieSpawns[index]);
+
+                EnemyCharacter* enemy = enemyEntity.GetComponent<EnemyComponent>().GetEnemy();
+
+                enemy->BeginReset(enemyTransform);
+            }
+        }
 
     }
 }
