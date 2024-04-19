@@ -720,7 +720,7 @@ PlayerCharacter* EntitySetup::CreatePlayer(const Vector3& position, const Vector
 	lookTransform.SetEularRotation(Vector3(0.0f, rotation.y, 0.0f));
 
 	Hierarchy& lookHie = lookEntity.AddComponent<Hierarchy>();
-	Camera& playerCamera = lookEntity.AddComponent<Camera>(70.0f, 0.01f, 1000.0f, 16.0f / 10.0f);
+	Camera& playerCamera = lookEntity.AddComponent<Camera>(70.0f, 0.01f, 1000.0f, 16.0f / 9.0f);
 
 	PlayerLook& look = lookEntity.AddComponent<PlayerLook>();
 
