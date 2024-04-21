@@ -11,6 +11,10 @@ namespace SaltnPepperEngine
 {
 	using namespace Rendering;
 
+	CRITICAL_SECTION cs;
+	HANDLE semaphore;
+	bool shouldContinue = true;
+
 	namespace Physics
 	{
 
@@ -432,6 +436,53 @@ namespace SaltnPepperEngine
 			}
 
 		}
+		void ProcessObject(SoftBody* body, float deltatime)
+		{
+			WaitForSingleObject(semaphore, INFINITE);
+
+			// Critical section code
+			EnterCriticalSection(&cs);
+
+			body->PreSolve(deltatime);
+			body->Solve(deltatime);
+			body->PostSolve(deltatime);
+
+			LeaveCriticalSection(&cs);
+
+			// Release semaphore
+			ReleaseSemaphore(semaphore, 1, NULL);
+		}
+
+		DWORD __stdcall ProcessChunk(LPVOID lpParam)
+		{
+			//std::vector<SharedPtr<SoftBody>>* chunk = reinterpret_cast<std::vector<SharedPtr<SoftBody>>*>(lpParam);
+			std::vector<SoftBody*>* chunk = reinterpret_cast<std::vector<SoftBody*>*>(lpParam);
+
+			double lastTime = glfwGetTime();
+
+			while (shouldContinue)
+			{
+				double currentTime = glfwGetTime();
+				double deltaTime = currentTime - lastTime;
+				lastTime = currentTime;
+
+
+
+				// Process each object in the chunk
+				//for (SharedPtr<SoftBody> obj : *chunk)
+				for (SoftBody* obj : *chunk)
+				{
+					ProcessObject(obj, deltaTime);
+				}
+
+				// Return from the thread if it should exit
+				if (!shouldContinue) {
+					return 0;
+				}
+			}
+			return 0;
+		}
+
 
 
 
@@ -442,7 +493,7 @@ namespace SaltnPepperEngine
 
 		ThreadedSolver::~ThreadedSolver()
 		{
-
+			shouldContinue = false;
 		}
 
 		void ThreadedSolver::OnInit()
@@ -460,6 +511,52 @@ namespace SaltnPepperEngine
 			}
 
 		}
+
+		void ThreadedSolver::SetupCriticalThreads()
+		{
+			// Initialize critical section
+			InitializeCriticalSection(&cs);
+
+			// Create semaphore
+			semaphore = CreateSemaphore(NULL, 1, 1, NULL);
+
+			// Define chunk size
+			const int chunkSize = 12;
+
+			int softbodycount = softBodies.size();
+
+			// Create threads for each chunk of objects
+			const int numChunks = softBodies.size() / chunkSize + (softBodies.size() % chunkSize == 0 ? 0 : 1);
+
+			handleThreads.resize(numChunks);
+
+			for (int i = 0; i < numChunks; ++i)
+			{
+				int startIdx = i * numChunks;
+			
+				SharedPtr<std::vector<SoftBody*>> chunk = MakeShared<std::vector<SoftBody*>>();
+				
+
+
+
+				for (int j = 0; j < 12; j++)
+				{
+					chunk->push_back((softBodies.begin() + startIdx + j)->get());
+				}
+
+				chunkList.push_back(chunk);
+
+				handleThreads[i] = CreateThread(NULL, 0, ProcessChunk, chunk.get(), 0, NULL);
+				
+				if (handleThreads[i] == NULL) 
+				{
+					std::cerr << "Error creating thread for chunk " << i << std::endl;
+					return;
+				}
+			}
+		}
+
+		
 
 		DWORD WINAPI UpdateThreadedSoftBody(LPVOID lpParameter)
 		{
@@ -514,7 +611,7 @@ namespace SaltnPepperEngine
 			return 0;
 		}
 
-
+		
 		// call this function only Once
 		void ThreadedSolver::SetupSoftBodyThreads()
 		{

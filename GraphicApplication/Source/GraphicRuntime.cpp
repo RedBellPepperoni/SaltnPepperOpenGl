@@ -106,7 +106,8 @@ class GraphicRuntime : public Application
 		//softbodySolver = MakeShared<Solver>();
 
 		softbodySolver->OnInit();
-		softbodySolver->SetupSoftBodyThreads();
+		//softbodySolver->SetupSoftBodyThreads();
+		softbodySolver->SetupCriticalThreads();
 	}
 
 

@@ -199,6 +199,8 @@ namespace SaltnPepperEngine
 
 		DWORD WINAPI UpdateThreadedSoftBody(LPVOID lpParameter);
 
+		DWORD WINAPI ProcessChunk(LPVOID lpParam);
+
 		class ThreadedSolver
 		{
 		public:
@@ -208,7 +210,7 @@ namespace SaltnPepperEngine
 			void OnInit();
 
 			
-
+			void SetupCriticalThreads();
 			
 			// call this function only Once
 			void SetupSoftBodyThreads();
@@ -220,7 +222,7 @@ namespace SaltnPepperEngine
 		private:
 
 
-			int maximumThreadCount = 16;
+			int maximumThreadCount = 12;
 
 			Vector3 gravity = Vector3(0.0f, -10.0f, 0.0f);
 			float fixedDeltaTime = 1.0f / 60.0f;
@@ -232,6 +234,24 @@ namespace SaltnPepperEngine
 
 			std::vector<SharedPtr<SoftBody>> softBodies;
 			std::vector<SharedPtr<SoftBodyThreadInfo>> threadInfoList;
+			std::vector<HANDLE> handleThreads;
+
+
+			std::vector<SharedPtr<std::vector<SoftBody*>>> chunkList;
+
+		/*	std::vector<SoftBody*> testBodiesOne;
+			std::vector<SoftBody*> testBodiesTwo;
+			std::vector<SoftBody*> testBodiesThree;
+			std::vector<SoftBody*> testBodiesFour;
+			std::vector<SoftBody*> testBodiesFive;
+			std::vector<SoftBody*> testBodiesSix;
+			std::vector<SoftBody*> testBodiesSeven;
+			std::vector<SoftBody*> testBodiesEight;
+			std::vector<SoftBody*> testBodiesNine;
+			std::vector<SoftBody*> testBodiesTen;
+			std::vector<SoftBody*> testBodiesEleven;
+			std::vector<SoftBody*> testBodiesTwelve;*/
+
 		};
 
 
