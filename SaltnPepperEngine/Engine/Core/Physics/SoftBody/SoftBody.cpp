@@ -443,9 +443,21 @@ namespace SaltnPepperEngine
 			// Critical section code
 			EnterCriticalSection(&cs);
 
-			body->PreSolve(deltatime);
+			const float substepDelta = deltatime / 12;
+
+			for (int i = 0; i < 12; i++)
+			{
+				
+					body->PreSolve(substepDelta);
+					body->Solve(substepDelta);
+					body->PostSolve(substepDelta);
+				
+
+			}
+
+			/*body->PreSolve(deltatime);
 			body->Solve(deltatime);
-			body->PostSolve(deltatime);
+			body->PostSolve(deltatime);*/
 
 			LeaveCriticalSection(&cs);
 
@@ -459,6 +471,9 @@ namespace SaltnPepperEngine
 			std::vector<SoftBody*>* chunk = reinterpret_cast<std::vector<SoftBody*>*>(lpParam);
 
 			double lastTime = glfwGetTime();
+			float counter = 0.0f;
+
+			const float fixedDeltatime = 1.0f /12.0f;
 
 			while (shouldContinue)
 			{
@@ -466,19 +481,28 @@ namespace SaltnPepperEngine
 				double deltaTime = currentTime - lastTime;
 				lastTime = currentTime;
 
+				counter += deltaTime;
 
-
-				// Process each object in the chunk
-				//for (SharedPtr<SoftBody> obj : *chunk)
-				for (SoftBody* obj : *chunk)
+				if (counter >= fixedDeltatime)
 				{
-					ProcessObject(obj, deltaTime);
+
+					counter = 0.0f;
+					// Process each object in the chunk
+					//for (SharedPtr<SoftBody> obj : *chunk)
+					for (SoftBody* obj : *chunk)
+					{
+						ProcessObject(obj, fixedDeltatime);
+					}
+
+					
 				}
 
 				// Return from the thread if it should exit
 				if (!shouldContinue) {
 					return 0;
 				}
+
+
 			}
 			return 0;
 		}
