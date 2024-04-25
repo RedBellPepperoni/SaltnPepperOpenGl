@@ -1,6 +1,6 @@
-# Graphic MidTerm (Term - 2  :Jan - April)
+# Final game Jam (Term - 2  :Jan - April)
 
-This Project deals with the Graphic Midterm questionaire
+This Project deals with the Final game Jam
 
 
 # Building Notes : 
@@ -16,9 +16,16 @@ You can find these files in the [Dlls] folder at the root of the solution direct
 
 [W] [A] [S] [D] to move Player
 
-[RightClick] + [MousePan] to look around
+[MousePan] to look around
 
-Press [2] or [KeyPad 2 ] to toggle the screens active /inactive; 
+Use [LeftClick] to shoot zombies.
+USe [R] to reload the gun
+Point to the ground and press [F] to move Buddy-Bot to that location
+Point to a zombie and press [F] to make buddy attack the zombie
+
+Use [F6] to reset the Game
+
+
 
 # Editor Controls
 Press [`] Key to toggle the Editor Mode 
@@ -29,16 +36,11 @@ Selecting the Entity from the inspector and pressing [F] will focus the editor c
 
 # General Notes: 
 
-All three questions are answered sucessfully.
+The main focus of this gamejam is the implementation of navigational mesh.
 
-There are 3 types of Translucent glass effects for each window.
-1) LeftMost : has Scratches + fingerprints
-2) Middle : has Dirt + fingerprints
-3) RightMost : has Another variation of Dirt + fingerprints
+The Navmesh class takes a mesh (eg: .fbx file) and creates a Graph of waypoint nodes 
 
-There are 2 screen Effects :
-1) Chromatic : The R G B channels are skewd for the image
-2) Distortion : staticis added to the image and theres a glitch effect
+Another feature is multiple floor in the navigation, the pathfinder differntaites between multiple heights
 
-[Bonus] : 
-The camera actually Pan around
+
+It also uses Douglus Pecker algorith to simplify the found path

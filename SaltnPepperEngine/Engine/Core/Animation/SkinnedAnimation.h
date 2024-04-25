@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <unordered_map>
+
 
 #include "Bone.h"
 #include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
@@ -43,7 +45,11 @@ namespace SaltnPepperEngine
 
 		inline const std::vector<BoneProps>& getBoneProps() { return m_boneProps; }
 
+		
+
 	private:
+
+		typedef std::unordered_map<std::string, Bone> BoneMap;
 
 		void LoadIntermediateBones(const aiAnimation* animation, SharedPtr<SkinnedModel>& model);
 
@@ -51,7 +57,10 @@ namespace SaltnPepperEngine
 
 		float m_duration = 0.0f;
 		float m_tps = 0.0f;
-		std::vector<Bone> m_bones;
+		std::vector<Bone> m_bones{};
+
+		BoneMap m_boneMap{};
+
 		AssimpNodeData m_rootNode;
 		std::vector<BoneProps> m_boneProps;
 	};

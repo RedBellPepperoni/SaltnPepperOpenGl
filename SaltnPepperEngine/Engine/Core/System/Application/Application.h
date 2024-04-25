@@ -26,6 +26,11 @@ namespace SaltnPepperEngine
 	class AudioLibrary;
 	class GameObjectRegistry;
 	class Scene;
+
+	namespace Audio
+	{
+		class AudioManager;
+	}
 	
 
 	namespace Rendering
@@ -116,7 +121,7 @@ namespace SaltnPepperEngine
 
 		// The container for all loaded sounds
 		SharedPtr<AudioLibrary> m_audioLibrary;
-
+		
 		// Pointer to the currently loaded scene
 		Scene* m_currentScene;
 
@@ -246,7 +251,7 @@ namespace SaltnPepperEngine
 		Transform* GetEditorCameraTransform();
 
 		ImGuiManager* GetImguiManager() { return m_imguiManager.get(); }
-
+		
 		const bool GetEditorActive() const;
 
 		void AddDefaultScene();

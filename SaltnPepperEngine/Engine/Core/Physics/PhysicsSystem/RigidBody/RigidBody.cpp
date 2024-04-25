@@ -2,49 +2,50 @@
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 #include "Engine/Core/Rendering/Renderer/DebugRenderer.h"
 
+
 namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
 		void RigidBody::DebugDraw(DebugMode mode)
 		{
-			Vector4 color(1.0f, 0.3f, 0.7f, 1.0f);
+			//Vector4 color(1.0f, 0.3f, 0.7f, 1.0f);
 
 
-			if (!IsStatic())
-			{
-				// Make it green to show it is doing physics
-				color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-			}
+			//if (!IsStatic())
+			//{
+			//	// Make it green to show it is doing physics
+			//	color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+			//}
 
-			BoundingBox box = GetAABB();
-			
-
-
-
-			switch (mode)
-			{
-			case DebugMode::NONE:
-				break;
-			case DebugMode::AABB:
+			//BoundingBox box = GetAABB();
+			//
 
 
-				DebugRenderer::DebugDraw(box, color, false);
 
-				break;
-
-			case DebugMode::COLLIDER:
-
-
-				
+			//switch (mode)
+			//{
+			//case DebugMode::NONE:
+			//	break;
+			//case DebugMode::AABB:
 
 
-				break;
-			case DebugMode::ALL:
-				break;
-			default:
-				break;
-			}
+			//	DebugRenderer::DebugDraw(box, color, false);
+
+			//	break;
+
+			//case DebugMode::COLLIDER:
+
+
+			//	
+
+
+			//	break;
+			//case DebugMode::ALL:
+			//	break;
+			//default:
+			//	break;
+			//}
 
 			//DebugRenderer::DebugDraw(box, color, true);
 		}
@@ -80,7 +81,7 @@ namespace SaltnPepperEngine
 				SetScale(selfScale);
 			}
 
-			//DebugDraw(debugMode);
+			DebugDraw(debugMode);
 
 		}
 
@@ -132,6 +133,16 @@ namespace SaltnPepperEngine
 				this->GetNativeHandle()->setCollisionShape(shapeHandle);
 				this->ReAddRigidBody();
 			}
+		}
+
+		void RigidBody::SetEntityId(Entity parentId)
+		{
+			entityID = parentId;
+		}
+
+		Entity RigidBody::GetEntityId() const
+		{
+			return entityID;
 		}
 
 		void RigidBody::SetKinematicFlag()
@@ -187,20 +198,29 @@ namespace SaltnPepperEngine
 			motionHandle = MakeShared<MotionStateNotifier>(transform);
 
 			btRigidBody::btRigidBodyConstructionInfo info(10, motionHandle.get(), shape, btVector3(0, 0, 0));
+			//info.m_startWorldTransform = transform;
 			//bodyHandle = new btRigidBody(info);
 			bodyHandle = MakeShared<btRigidBody>(info);
 
 			SetBounceFactor(0.1f);
-
+			PhysicsUtils::SetRigidBodyParent(bodyHandle.get(),this);
 			PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle(), collisionGroup, collisionMask);
 			//PhysicsSystem::GetCurrent()->World->addRigidBody(GetNativeHandle());
 
+			//bodyHandle->setWorldTransform(transform);
 
 		}
 
 		RigidBody::~RigidBody()
 		{
 			DestroyBody();
+		}
+
+		void RigidBody::ForceTransform(Transform& ecsTransform)
+		{
+			btTransform transform;
+			ToBulletTransform(ecsTransform, transform);
+			bodyHandle->setWorldTransform(transform);
 		}
 
 		void RigidBody::SetScale(const Vector3& scale)
@@ -323,6 +343,7 @@ namespace SaltnPepperEngine
 			if (GetMass() == 0.0f) { SetMass(1.0f); } 
 			SetCollisionFilter(CollisionMask::DYNAMIC, CollisionGroup::ALL); 
 			UnsetKinematicFlag(); 
+			UnsetTriggerFlag();
 		}
 
 		const bool RigidBody::IsDynamic() const
@@ -438,6 +459,17 @@ namespace SaltnPepperEngine
 		{
 			Activate();
 			bodyHandle->applyCentralForce(ToBulletVector3(force));
+		}
+
+		void RigidBody::SetLinearVelocity(const Vector3& velocity)
+		{
+			Activate();
+			bodyHandle->setLinearVelocity(ToBulletVector3(velocity));
+		}
+
+		const Vector3 RigidBody::GetLinearVelocity() const
+		{
+			return FromBulletVector3(bodyHandle->getLinearVelocity());
 		}
 	}
 }

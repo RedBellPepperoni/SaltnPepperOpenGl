@@ -77,7 +77,7 @@ const float PHI = 1.6180339;
 
 vec3 DeGamma(vec3 color)
 {
-    return pow(color, vec3(2.2));
+    return pow(color, vec3(1.4));
 }
 
 vec4 DeGamma(vec4 color)

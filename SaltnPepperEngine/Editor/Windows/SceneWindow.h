@@ -10,6 +10,7 @@
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/Components/Transform.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
+#include "Engine/Core/Components/SceneComponents.h"
 
 #include <imgui/imgui.h>
 DISABLE_PUSH_WARNING

@@ -191,12 +191,12 @@ namespace SaltnPepperEngine
 			std::vector<LineVertexElement> lineDataBuffer;
 
 			// the Data buffer storing the Point Vertex data
-			std::vector<PointVertexElement> pointDataBuffer;
+			//std::vector<PointVertexElement> pointDataBuffer;
 
 			std::vector<VertexAttribute> vertexLayout;
 
 			uint32_t lineIndexCount = 0;
-			uint32_t pointIndexCount = 0;
+			//uint32_t pointIndexCount = 0;
 
 			SharedPtr<VertexBuffer> VBO;
 			SharedPtr<VertexArray> VAO;
@@ -374,7 +374,7 @@ namespace SaltnPepperEngine
 
 			// Adds a Render Element to the Queue
 			void ProcessRenderElement(const SharedPtr<Mesh>& mesh, const SharedPtr<Material>& material, Transform& transform, const std::vector<Matrix4>& boneTs);
-			void ProcessLightElement(Light& light, Transform& transform);
+			void ProcessLightElement(Light* light, Transform& transform);
 			void RenderScreenQuad(SharedPtr<Shader> shader, const SharedPtr<Texture>& texture, int lod = 0);
 
 

@@ -36,7 +36,7 @@ namespace SaltnPepperEngine
 		if (m_currentAnimation) {
 			m_currentTime = fmod(m_currentTime + m_currentAnimation->GetTicksPerSecond() * deltatime, m_currentAnimation->GetDuration());
 
-			float transitionTime = m_currentAnimation->GetTicksPerSecond() * 0.2f;
+			float transitionTime = m_currentAnimation->GetTicksPerSecond() * m_transition;
 			if (m_interpolating && m_interTime <= transitionTime) {
 				m_interTime += m_currentAnimation->GetTicksPerSecond() * deltatime;
 				CalculateBoneTranslation(m_currentAnimation->getRootNode(), glm::mat4(1.0f), m_currentAnimation, m_nextAnimation, m_haltTime, m_interTime, transitionTime);
@@ -65,7 +65,7 @@ namespace SaltnPepperEngine
 		}
 	}
 
-	void SkinnedAnimator::PlayAnimation(SharedPtr<SkinnedAnimation>& animation, bool repeat)
+	void SkinnedAnimator::PlayAnimation(SkinnedAnimation* animation, bool repeat)
 	{
 		if (!m_currentAnimation) {
 			m_currentAnimation = animation;
@@ -92,7 +92,7 @@ namespace SaltnPepperEngine
 
 	void SkinnedAnimator::PlayAnimationbyName(const std::string& name, bool repeat)
 	{
-		SharedPtr<SkinnedAnimation> animRef = GetAnimationByName(name);
+		SkinnedAnimation* animRef = GetAnimationByName(name);
 
 		if (animRef != nullptr)
 		{
@@ -100,7 +100,7 @@ namespace SaltnPepperEngine
 		}
 	}
 
-	void SkinnedAnimator::AddAnimation(const std::string& name, SharedPtr<SkinnedAnimation> animref)
+	void SkinnedAnimator::AddAnimation(const std::string& name, SkinnedAnimation* animref)
 	{
 		auto itr = m_animationMap.find(name);
 
@@ -116,7 +116,7 @@ namespace SaltnPepperEngine
 
 	}
 
-	SharedPtr<SkinnedAnimation> SkinnedAnimator::GetAnimationByName(const std::string& name)
+	SkinnedAnimation* SkinnedAnimator::GetAnimationByName(const std::string& name)
 	{
 		auto itr = m_animationMap.find(name);
 
@@ -130,7 +130,7 @@ namespace SaltnPepperEngine
 		return itr->second;
 	}
 
-	void SkinnedAnimator::CalculateBoneTranslation(const AssimpNodeData* curNode, Matrix4 parentTransform, SharedPtr<SkinnedAnimation>& prevAnimation, SharedPtr<SkinnedAnimation>& nextAnimation, float haltTime, float currentTime, float transitionTime)
+	void SkinnedAnimator::CalculateBoneTranslation(const AssimpNodeData* curNode, Matrix4 parentTransform, SkinnedAnimation* prevAnimation, SkinnedAnimation* nextAnimation, float haltTime, float currentTime, float transitionTime)
 	{
 		std::string nodeName = curNode->name;
 		glm::mat4 transform = curNode->transformation;
@@ -178,7 +178,7 @@ namespace SaltnPepperEngine
 			CalculateBoneTranslation(&curNode->children[i], globalTransformation, prevAnimation, nextAnimation, haltTime, currentTime, transitionTime);
 	}
 
-	void SkinnedAnimator::CalculateBoneTransform(const AssimpNodeData* node, Matrix4 parentTransform, SharedPtr<SkinnedAnimation>& animation, float currentTime)
+	void SkinnedAnimator::CalculateBoneTransform(const AssimpNodeData* node, Matrix4 parentTransform, SkinnedAnimation* animation, float currentTime)
 	{
 		std::string nodeName = node->name;
 		glm::mat4 boneTransform = node->transformation;
@@ -212,5 +212,9 @@ namespace SaltnPepperEngine
 	std::vector<Matrix4>& SkinnedAnimator::GetFinalBoneMatrices()
 	{
 		return m_finalBoneMatrices;
+	}
+	SkinnedAnimation* SkinnedAnimator::GetCurrentAnimation()
+	{
+		return m_currentAnimation;
 	}
 }

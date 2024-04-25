@@ -1,7 +1,7 @@
 #ifndef PHYSICSAPI_H
 #define PHYSICSAPI_H
 
-#include "RigidBody/BulletRigidBody.h"
+//#include "RigidBody/BulletRigidBody.h"
 
 
 #include "Shapes/BoxShape.h"

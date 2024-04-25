@@ -24,6 +24,7 @@ namespace SaltnPepperEngine
 
             void SetOrientation(const BoundingBox& aabb, BoundingCylinder::Axis axis);
             BoundingCylinder::Axis GetOrientation() const;
+            virtual void DebugDraw(Transform transform) override;
 
             BoundingBox GetAABB(const Transform& transform) const;
             BoundingSphere GetBoundingSphere(const Transform& transform) const;

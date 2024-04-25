@@ -1,8 +1,9 @@
 #include "DebugRenderer.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingSphere.h"
+#include "Engine/Core/Physics/Collision/BoundingStuff/BoundingCylinder.h"
 #include "Engine/Core/Rendering/Lights/Light.h"
-
+#include "Engine/Core/Components/SceneComponents.h"
 #include "Engine/Utils/Logging/Log.h"
 #include <cstdarg>
 
@@ -259,34 +260,62 @@ namespace SaltnPepperEngine
 		}
 
 
-		void DebugRenderer::DebugDraw(const Light& light, const Quaternion& rotation, const Vector4& color)
+		void DebugRenderer::DebugDraw(LightComponent& lightcomp, const Quaternion& rotation, const Vector4& color)
 		{
-			switch (light.type)
+			Light* light = lightcomp.GetLightData();
+
+			switch (light->type)
 			{
 			case LightType::DirectionLight:
 
 				Vector3 offset(0.0f, 0.1f, 0.0f);
-				DrawLine(Vector3(light.position) + offset, Vector3(light.position + (light.direction) * 2.0f) + offset, color);
-				DrawLine(Vector3(light.position) - offset, Vector3(light.position + (light.direction) * 2.0f) - offset, color);
+				DrawLine(Vector3(light->position) + offset, Vector3(light->position + (light->direction) * 2.0f) + offset, color);
+				DrawLine(Vector3(light->position) - offset, Vector3(light->position + (light->direction) * 2.0f) - offset, color);
 
-				DrawLine(Vector3(light.position), Vector3(light.position + (light.direction) * 2.0f), color);
-				DebugDrawCone(20, 4, 30.0f, 1.5f, (light.position - (light.direction) * 1.5f), rotation, color);
+				DrawLine(Vector3(light->position), Vector3(light->position + (light->direction) * 2.0f), color);
+				DebugDrawCone(20, 4, 30.0f, 1.5f, (light->position - (light->direction) * 1.5f), rotation, color);
 
 				break;
 			case LightType::SpotLight:
 
-				DebugDrawCone(20, 4, Degrees(light.innerAngle), light.intensity, light.position, rotation, color);
+				DebugDrawCone(20, 4, Degrees(light->innerAngle), light->intensity, light->position, rotation, color);
 
 				break;
 			case LightType::PointLight:
 
-				DebugDrawSphere(light.radius, light.position, color);
+				DebugDrawSphere(light->radius, light->position, color);
 
 				break;
 			default:
 				break;
 			}
 
+		}
+
+		void DebugRenderer::DebugDraw(const BoundingCylinder& cylinder, const Vector4& color)
+		{
+			Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+
+			Vector3 position = cylinder.center;
+
+			Vector3 topCircleCentre = position  + cylinder.height * 0.5f * up;
+			Vector3 bottomSphereCentre = position - up * (cylinder.height * 0.5f);
+
+			DebugDrawCircle(8, cylinder.radiusX, topCircleCentre,  Quaternion(Vector3(Radians(90.0f), 0.0f, 0.0f)), color);
+			DebugDrawCircle(8, cylinder.radiusX, bottomSphereCentre,  Quaternion(Vector3(Radians(90.0f), 0.0f, 0.0f)), color);
+
+
+			float step = 360.0f / float(8);
+			for (int i = 0; i < 8; i++)
+			{
+				float z = Cos(step * i) * cylinder.radiusX;
+				float x = Sin(step * i) * cylinder.radiusX;
+
+				Vector3 offset = Vector4(x, 0.0f, z, 0.0f);
+				DrawLine(bottomSphereCentre + offset, topCircleCentre + offset, color);
+
+				
+			}
 		}
 
 
@@ -451,7 +480,7 @@ namespace SaltnPepperEngine
 
 			if (ignoreDepthtest)
 			{
-				DebugLineData data = m_debugInstance->m_drawListAlwaysFront.debugLines.emplace_back(startPos, endPos, color, width);
+				m_debugInstance->m_drawListAlwaysFront.debugLines.emplace_back(startPos, endPos, color, width);
 
 
 			}

@@ -1,16 +1,20 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
+#include "Engine/Core/EntitySystem/EntityManager.h"
 #include"Engine/Core/Physics/PhysicsSystem/Bullet3Bindings.h"
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
 #include "Engine/Core/Memory/MemoryDefinitions.h"
 #include "Engine/Core/Physics/Collision/BoundingStuff/BoundingBox.h"
 
+
 namespace SaltnPepperEngine
 {
+	//class Entity;
+
 	namespace Physics
 	{
-		namespace CollisionMask
+		/*namespace CollisionMask
 		{
 			enum Mask : uint32_t
 			{
@@ -34,7 +38,36 @@ namespace SaltnPepperEngine
 				NO_STATIC_COLLISIONS = ALL & ~CollisionMask::STATIC & ~CollisionMask::KINEMATIC,
 				NO_STATIC_COLLISION_NO_RAYCAST = NO_STATIC_COLLISIONS & ~CollisionMask::RAYCAST_ONLY
 			};
+		}*/
+		namespace CollisionMask
+		{
+			enum Mask 
+			{
+				DYNAMIC = 1,
+				STATIC = 2,
+				KINEMATIC = 4,
+				RAYCAST = 8,
+				TRIGGER = 16,
+				CHARACTER = 32,
+				AllFilter = -1  //all bits sets: DefaultFilter | StaticFilter | KinematicFilter | DebrisFilter | SensorTrigger
+			};
 		}
+
+		namespace CollisionGroup
+		{
+			enum Group 
+			{
+				NONE = 0,
+				RAYCAST_ONLY = CollisionMask::RAYCAST,
+				DYNAMIC_STATIC_KINEMATTIC = CollisionMask::DYNAMIC | CollisionMask::STATIC | CollisionMask::KINEMATIC,
+				ALL = DYNAMIC_STATIC_KINEMATTIC | CollisionMask::RAYCAST,
+				NO_STATIC_COLLISIONS = ALL & ~CollisionMask::STATIC & ~CollisionMask::KINEMATIC,
+				NO_STATIC_COLLISION_NO_RAYCAST = NO_STATIC_COLLISIONS & ~CollisionMask::RAYCAST
+
+				
+			};
+		}
+
 
 
 		enum class ActivationState
@@ -94,6 +127,8 @@ namespace SaltnPepperEngine
 
 			DebugMode debugMode = DebugMode::AABB;
 
+			Entity entityID;
+
 
 		private:
 
@@ -102,6 +137,8 @@ namespace SaltnPepperEngine
 			void ReAddRigidBody();
 
 			void UpdateCollider(float mass, btCollisionShape* newShape);
+
+		
 
 			// Collision Flags : KINEMATIC
 			void SetKinematicFlag();
@@ -126,8 +163,12 @@ namespace SaltnPepperEngine
 			
 			~RigidBody();
 
+
+			void ForceTransform(Transform& ecsTransform);
+
 		
-		
+			void SetEntityId(Entity parentId);
+			Entity GetEntityId() const;
 
 			void UpdateTransform(Transform& ecsTransform);
 
@@ -203,6 +244,11 @@ namespace SaltnPepperEngine
 			void ApplyTorqueTurnImpulse(const Vector3& impulse);
 
 			void ApplyCentralForce(const Vector3& force);
+
+			void SetLinearVelocity(const Vector3& velocity);
+			const Vector3 GetLinearVelocity() const;
+
+
 		};
 
 	}

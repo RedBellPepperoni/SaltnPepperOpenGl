@@ -27,8 +27,8 @@ namespace SaltnPepperEngine
 
 				if (!colliderOne->getCollisionShape()->isNonMoving() && !colliderTwo->getCollisionShape()->isNonMoving())
 				{
-					RigidBody_Dep* objectOne = PhysicsUtils::GetRigidBodyParent(colliderOne);
-					RigidBody_Dep* objectTwo = PhysicsUtils::GetRigidBodyParent(colliderTwo);
+					RigidBody* objectOne = PhysicsUtils::GetRigidBodyParent(colliderOne);
+					RigidBody* objectTwo = PhysicsUtils::GetRigidBodyParent(colliderTwo);
 
 					PhysicsSystem::AddCollisionEntry(objectOne, objectTwo);
 				}
@@ -37,14 +37,14 @@ namespace SaltnPepperEngine
 
 		struct CustomRayCastCallback : public btCollisionWorld::ClosestRayResultCallback
 		{
-			CustomRayCastCallback(const btVector3& from, const btVector3& to, CollisionMask::Mask rayCastMask)
+			CustomRayCastCallback(const btVector3& from, const btVector3& to, int rayCastMask)
 				: btCollisionWorld::ClosestRayResultCallback(from, to)
 			{
 				this->m_collisionFilterGroup = CollisionGroup::ALL;
 				this->m_collisionFilterMask = rayCastMask;
 			}
 
-			RigidBody_Dep* GetResult() const
+			RigidBody* GetResult() const
 			{
 				if (!this->hasHit()) return nullptr;
 				return PhysicsUtils::GetRigidBodyParent(this->m_collisionObject);
@@ -53,6 +53,13 @@ namespace SaltnPepperEngine
 			float GetRayFraction() const
 			{
 				return this->m_closestHitFraction;
+			}
+
+			Vector3 GetHitPosition() const
+			{
+				Vector3 hitPoint = FromBulletVector3(this->m_hitPointWorld);
+
+				return hitPoint;
 			}
 		};
 
@@ -89,37 +96,61 @@ namespace SaltnPepperEngine
 			}
 		}
 
-		void PhysicsUtils::SetRigidBodyParent(btRigidBody* body, RigidBody_Dep* entity)
+		void PhysicsUtils::SetRigidBodyParent(btRigidBody* body, RigidBody* entity)
 		{
-			(body)->setUserPointer(reinterpret_cast<void*>(entity));
+			(body)->setUserPointer((void*)(entity));
 		}
 
-		RigidBody_Dep* PhysicsUtils::GetRigidBodyParent(const void* body)
+		RigidBody* PhysicsUtils::GetRigidBodyParent(const void* body)
 		{
-			RigidBody_Dep* returnBody = reinterpret_cast<RigidBody_Dep*>(((btRigidBody*)body)->getUserPointer());
+			//RigidBody* returnBody = (RigidBody*)(((btRigidBody*)body)->getUserPointer());
+			void* q = const_cast<void*>(body);
+
+			btCollisionObject* collisionBody = static_cast<btCollisionObject*>(q);
+
+			RigidBody* returnBody = static_cast<RigidBody*>(collisionBody->getUserPointer());
+
 			return returnBody;
 		}
 
-		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to)
+		RigidBody* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to)
 		{
 			float rayFraction = 0.0f;
 			return PhysicsUtils::RayCast(from, to, rayFraction);
 		}
 
-		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction)
+		RigidBody* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction)
 		{
-			return PhysicsUtils::RayCast(from, to, rayFraction, CollisionMask::RAYCAST_ONLY);
+			return PhysicsUtils::RayCast(from, to, rayFraction, CollisionMask::RAYCAST);
 		}
 
-		RigidBody_Dep* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction, CollisionMask::Mask rayCastMask)
+		RigidBody* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, float& rayFraction, int rayCastMask)
 		{
 			btVector3 bulletFrom = ToBulletVector3(from);
 			btVector3 bulletTo = ToBulletVector3(to);
 
 			CustomRayCastCallback callback(bulletFrom, bulletTo, rayCastMask);
 
+			//btCollisionWorld::ClosestRayResultCallback callback(bulletFrom, bulletTo);
+
 			PhysicsSystem::GetCurrent()->World->rayTest(bulletFrom, bulletTo, callback);
 			rayFraction = callback.GetRayFraction();
+
+			return callback.GetResult();
+			
+		}
+
+		RigidBody* PhysicsUtils::RayCast(const Vector3& from, const Vector3& to, Vector3& hitPosition, int rayCastMask)
+		{
+			btVector3 bulletFrom = ToBulletVector3(from);
+			btVector3 bulletTo = ToBulletVector3(to);
+
+			CustomRayCastCallback callback(bulletFrom, bulletTo, rayCastMask);
+
+			//btCollisionWorld::ClosestRayResultCallback callback(bulletFrom, bulletTo);
+
+			PhysicsSystem::GetCurrent()->World->rayTest(bulletFrom, bulletTo, callback);
+			hitPosition = callback.GetHitPosition();
 
 			return callback.GetResult();
 		}

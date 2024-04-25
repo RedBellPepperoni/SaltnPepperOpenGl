@@ -82,35 +82,6 @@ vec3 CalculateSpotLight(Light light, Material material,vec3 normal,vec3 position
 }
 
 
-
-
-
-
-
-vec3 ForwardLighting(Light light, Material material,vec3 normal, vec3 position)
-{
-    vec3 value = vec3(0.0f);
-
-        if(light.type == 0)
-        {
-           value = CalculateDirectionalLight(light, material, normal);
-        }
-
-        // PointLight
-        else if(light.type == 2)
-        {
-           value = CalculatePointLight(light, material, normal,position);
-        }
-        // spotlight
-        else if(light.type == 1)
-        {
-            value = CalculateSpotLight(light, material, normal,position);
-        }
-
-        return value;
-}
-
-
 vec3 ImageBasedLighting(vec3 albedo, vec3 lightReflection, Material material)
 {
     return vec3(1.0f);

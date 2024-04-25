@@ -1,4 +1,5 @@
 #include "RenderManager.h"
+#include "DebugRenderer.h"
 
 #include "Engine/Core/Scene/Scene.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
@@ -39,7 +40,7 @@ namespace SaltnPepperEngine
 			// Add other Defaultr Shaders below <----
 
 			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueForward", FileSystem::GetShaderDir().string() + "Opaque_Forward_Vert.glsl", FileSystem::GetShaderDir().string() + "Opaque_Forward_Frag.glsl"));
-			CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueShadowed", FileSystem::GetShaderDir().string() + "Opaque_Forward_Vert.glsl", FileSystem::GetShaderDir().string() + "Opaque_FShadow_Frag.glsl"));
+			//CHECKNULL(GetShaderLibrary()->LoadShader("OpaqueShadowed", FileSystem::GetShaderDir().string() + "Opaque_Shadowed_Vert.glsl", FileSystem::GetShaderDir().string() + "Opaque_Shadowed_Frag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("TransparentShader", FileSystem::GetShaderDir().string() + "transparentVert.glsl", FileSystem::GetShaderDir().string() + "transparentFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("ScreenShaderOne", FileSystem::GetShaderDir().string() + "chromaticShaderVert.glsl", FileSystem::GetShaderDir().string() + "chromaticShaderFrag.glsl"));
 			CHECKNULL(GetShaderLibrary()->LoadShader("SkyboxShader", FileSystem::GetShaderDir().string() + "skyboxVert.glsl", FileSystem::GetShaderDir().string() + "skyboxFrag.glsl"));
@@ -163,13 +164,13 @@ namespace SaltnPepperEngine
 
 			}
 
-			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<Light>();
+			ComponentView lightView = scene->GetEntityManager()->GetComponentsOfType<LightComponent>();
 
 			for (Entity lightObject : lightView)
 			{
 				
 
-				Light& lightComponent = lightObject.GetComponent<Light>(); 
+				Light* lightComponent = lightObject.GetComponent<LightComponent>().GetLightData(); 
 				Transform* transform = &lightObject.GetComponent<Transform>(); 
 						
 				if (lightObject.IsActive())
@@ -294,13 +295,20 @@ namespace SaltnPepperEngine
 				
 				}
 
+
+				//LOG_ERROR("Lines {0}", Rendering::DebugRenderer::Get()->GetLines().size());
+
+				
+
 				EndFrame();
 
 			}
 			
 			
-			
+			/*LOG_ERROR("Lines {0}", Rendering::DebugRenderer::Get()->GetLines().size());
+			LOG_ERROR("Lines : DT {0}", Rendering::DebugRenderer::Get()->GetLines(true).size());*/
 
+			DebugRenderer::Reset();
 
 	
 

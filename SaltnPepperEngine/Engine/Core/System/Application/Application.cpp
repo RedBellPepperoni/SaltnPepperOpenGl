@@ -19,6 +19,7 @@
 #include "Editor/ImGuiManager.h"
 #include "Engine/Core/EntitySystem/EntityManager.h"
 
+#include "Engine/Core/AudioSystem/AudioManager.h"
 
 namespace SaltnPepperEngine
 {
@@ -51,7 +52,7 @@ namespace SaltnPepperEngine
 		m_textureLibrary = MakeShared<TextureLibrary>();
 		m_cubeMapLibrary = MakeShared<CubeMapLibrary>();
 		m_animationLibrary = MakeShared<AnimationLibrary>();
-		//m_audioLibrary = MakeShared<AudioLibrary>();
+		m_audioLibrary = MakeShared<AudioLibrary>();
 
 
 		/*m_physicsSystem = MakeUnique<PhysicsEngine>();
@@ -67,7 +68,7 @@ namespace SaltnPepperEngine
 
 		m_mainCameraIndex = 0;
 
-	
+		Audio::AudioManager::Init();
 		//m_physicsSystem->UpdateScene(m_currentScene);
 		
 
@@ -202,7 +203,7 @@ namespace SaltnPepperEngine
 
 		//LuaManager::GetInstance().OnInit();
 
-
+		
 
 		
 
@@ -285,21 +286,17 @@ namespace SaltnPepperEngine
 			PhysicsSystem::OnUpdate(m_deltaTime);
 			//PhysicsSystem::InvoveCollisionUpdate();
 
+			Audio::AudioManager::Update(m_deltaTime);
+
 			OnUpdate(m_deltaTime);
 
 
 			if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::GraveAccent))
 			{
 				m_editorVisible = !m_editorVisible;
-				//m_editor->Toggle(m_editorVisible);
 			}
 
-			if (Input::InputSystem::GetInstance().GetKeyDown(Input::Key::G))
-			{
-				/*bool testPause = m_physicsSystem->GetIsPaused();
-				m_physicsSystem->SetPaused(!testPause);*/
-				
-			}
+			
 
 
 
@@ -475,6 +472,8 @@ namespace SaltnPepperEngine
 	{
 		return &m_editor->GetEditorCameraTransform();
 	}
+
+	
 
 	const bool Application::GetEditorActive() const
 	{

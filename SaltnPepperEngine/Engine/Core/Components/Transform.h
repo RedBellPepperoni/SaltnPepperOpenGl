@@ -49,8 +49,8 @@ namespace SaltnPepperEngine
 			const Vector3 GetScale() const;
 
 
-			const Vector3 GetWorldPosition();
-			const Quaternion GetWorldRotation();
+			const Vector3 GetWorldPosition() const;
+			const Quaternion GetWorldRotation() const;
 			
 
 
@@ -75,11 +75,11 @@ namespace SaltnPepperEngine
 
 			void SetScale(const Vector3& newScale);
 
-			Vector3 GetUpVector();
+			Vector3 GetUpVector() const;
 
-			Vector3 GetRightVector();
+			Vector3 GetRightVector() const;
 
-			Vector3 GetForwardVector();
+			Vector3 GetForwardVector() const;
 
 			template <typename Archive>
 			void save(Archive& archive) const

@@ -20,21 +20,33 @@ namespace SaltnPepperEngine
 		// Reset all root transformations
 		m_rootNode.transformation = Matrix4(1.0f);
 		LoadIntermediateBones(animation, model);
+
+		
 	}
 
 	SkinnedAnimation::~SkinnedAnimation()
 	{
 	}
 
-	Bone* SkinnedAnimation::FindBone(const std::string& BoneName)
+	 Bone* SkinnedAnimation::FindBone(const std::string& BoneName)
 	{
-		for (unsigned int i = 0; i < m_bones.size(); i++) 
+		/*for (unsigned int i = 0; i < m_bones.size(); i++) 
 		{
 			if (m_bones[i].getBoneName() == BoneName)
 			{
 				return &m_bones[i];
 			}
+		}*/
+
+
+		const BoneMap::iterator& iterator = m_boneMap.find(BoneName);
+
+		if (iterator != m_boneMap.end())
+		{
+			 Bone* bone = &iterator->second;
+			 return bone;
 		}
+
 
 		return nullptr;
 	}
@@ -64,7 +76,11 @@ namespace SaltnPepperEngine
 					boneId = (int)boneProps.size() - 1;
 				}
 			}
-			m_bones.push_back(Bone(channel->mNodeName.data, boneId, channel));
+			//m_bones.push_back(Bone(channel->mNodeName.data, boneId, channel));
+
+			Bone bone = Bone{ channel->mNodeName.data, boneId, channel };
+			m_boneMap.emplace(bone.getBoneName(),bone);
+
 		}
 
 		this->m_boneProps = boneProps;

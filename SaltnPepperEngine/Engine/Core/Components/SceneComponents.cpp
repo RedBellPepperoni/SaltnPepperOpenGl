@@ -4,8 +4,10 @@
 #include "Engine/Core/Rendering/Geometry/Primitives.h"
 #include "Engine/Core/System/Application/Application.h"
 #include "Engine/Core/Rendering/Camera/FlyCameraController.h"
-#include "Engine/Core/Physics/PhysicsEngine/RigidBody3D.h"
+#include "Engine/Core/Physics/PhysicsSystem/RigidBody/RigidBody.h"
 #include "Engine/Core/Physics/PhysicsEngine/PhysicsEngine.h"
+#include "Engine/Core/AudioSystem/AudioSource.h"
+#include "Engine/Core/AudioSystem/AudioListener.h"
 
 
 namespace SaltnPepperEngine
@@ -207,12 +209,19 @@ namespace SaltnPepperEngine
 			LOG_ERROR("Skinned Model Not loaded since filepath wasnt specified");
 		}
 
-		SkinnedModelComponent::SkinnedModelComponent(const std::string& filePath)
+		SkinnedModelComponent::SkinnedModelComponent(const std::string& filePath, bool duplicateLoad )
 		{
 			std::string clampedname = FileSystem::GetFileName(filePath);
 
-			m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->GetResource(clampedname);
+			if (duplicateLoad)
+			{
+				m_handle = MakeShared<SkinnedModel>(filePath);
+				return;
+			}
 
+
+			m_handle = Application::GetCurrent().GetSkinnedModelLibrary()->GetResource(clampedname);
+			//m_handle = MakeShared<SkinnedModel>(filePath);
 
 			if (m_handle == nullptr)
 			{
@@ -234,9 +243,9 @@ namespace SaltnPepperEngine
 		{
 		}
 
-		SharedPtr<SkinnedAnimator>& AnimatorComponent::GetAnimator()
+		SkinnedAnimator* AnimatorComponent::GetAnimator()
 		{
-			return m_animator;
+			return m_animator.get();
 		}
 
 		/*RigidBodyComponent::RigidBodyComponent()
@@ -266,6 +275,50 @@ namespace SaltnPepperEngine
 		BoxCollider* BoxColliderComponent::GetCollider()
 		{
 			return m_collider.get();
+		}
+
+		RigidBodyComponent::RigidBodyComponent(const Transform& ecstransform, btCollisionShape* shape)
+		{
+			m_rigidBody = MakeShared<RigidBody>(ecstransform, shape);
+		}
+
+		RigidBody* RigidBodyComponent::GetRigidBody()
+		{
+			return m_rigidBody.get();
+		}
+
+		AudioSourceComponent::AudioSourceComponent(bool is3D)
+		{
+			m_handle = MakeUnique<Audio::AudioSource>(is3D);
+		}
+
+		Audio::AudioSource* AudioSourceComponent::GetSource()
+		{
+			return m_handle.get();
+		}
+
+		AudioListenerComponent::AudioListenerComponent()
+		{
+			m_handle = MakeUnique<Audio::AudioListener>();
+		}
+
+		Audio::AudioListener* AudioListenerComponent::GetListener()
+		{
+			return m_handle.get();
+		}
+
+		LightComponent::LightComponent()
+		{
+			m_light = MakeShared<Light>();
+		}
+
+		LightComponent::~LightComponent()
+		{
+		}
+
+		Light* LightComponent::GetLightData()
+		{
+			return m_light.get();
 		}
 
 }

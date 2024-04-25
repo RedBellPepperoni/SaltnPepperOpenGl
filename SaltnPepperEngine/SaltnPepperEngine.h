@@ -26,6 +26,8 @@
 // ============= RENDERING GEOMETRY ==============
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
+#include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+#include "Engine/Core/Animation/SkinnedAnimator.h"
 
 // ============= RENDERING ESSENTAILS ================
 #include "Engine/Core/Rendering/Material/Material.h"
@@ -74,9 +76,18 @@
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsSystem.h"
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsUtils.h"
 
+// ========== Audio System ==============================
+#include "Engine/Core/AudioSystem/AudioManager.h"
+#include "Engine/Core/AudioSystem/AudioListener.h"
+#include "Engine/Core/AudioSystem/AudioSource.h"
 
 
+//========= Navigation ====================
+#include "Engine/Core/Navigation/NavMesh.h"
+#include "Engine/Core/Navigation/PathFinder.h"
 
 using namespace SaltnPepperEngine;
 
 using namespace SaltnPepperEngine::Physics;
+
+using namespace SaltnPepperEngine::Navigation;

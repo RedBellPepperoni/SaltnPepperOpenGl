@@ -10,9 +10,15 @@ namespace SaltnPepperEngine
 
 	class BoundingBox;
 	class BoundingSphere;
+    class BoundingCylinder;
 	class Scene;
+    namespace Components
+    {
+        class LightComponent;
+    }
 
-	namespace Rendering
+    using Components::LightComponent;
+    namespace Rendering
 	{
 		class Renderer;
 		class RenderManager;
@@ -146,8 +152,8 @@ namespace SaltnPepperEngine
 
             static void DebugDraw(const BoundingSphere& sphere, const Vector4& color);
 
-            static void DebugDraw(const Light& light, const Quaternion& rotation, const Vector4& color);
-
+            static void DebugDraw(LightComponent& light, const Quaternion& rotation, const Vector4& color);
+            static void DebugDraw(const BoundingCylinder& cylinder, const Vector4& color);
             //static void DebugDraw()
 
 
@@ -155,7 +161,7 @@ namespace SaltnPepperEngine
             static void DebugDrawCircle(int numVertices, float radius, const Vector3& position, const Quaternion& rotation, const Vector4& color);
             static void DebugDrawCone(int numCircleVertices, int numCircleLines, float angle, float length, const Vector3& position, const Quaternion& rotation, const Vector4& color);
             static void DebugDrawCapsule(const Vector3& position, const Quaternion& rotation, float height, float radius, const Vector4& color);
-
+           
 
             const std::vector<DebugTriangleData>& GetTriangles(bool depthtested = false) const;
             const std::vector<DebugLineData>& GetLines(bool depthtested = false) const;

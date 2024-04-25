@@ -2,11 +2,14 @@
 #define RIGIDBODY_DEP_H
 
 #include "Engine/Core/Physics/PhysicsSystem/PhysicsAPI.h"
+#include "BulletRigidBody.h"
 
 namespace SaltnPepperEngine
 {
 	namespace Physics
 	{
+
+        //class BulletRigidBody;
 
 		enum class AnisotropicFriction
         {

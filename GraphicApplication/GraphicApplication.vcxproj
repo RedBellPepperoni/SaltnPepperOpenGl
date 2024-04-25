@@ -72,11 +72,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)Source\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\include\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\include\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\inc\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)Source\;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\include\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)SaltnPepperEngine\Externals\glfw\include\;$(SolutionDir)SaltnPepperEngine\Externals\glad\include\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\include\;$(SolutionDir)SaltnPepperEngine\Externals\spdlog\include\;$(SolutionDir)SaltnPepperEngine\Externals\entt\src\;$(SolutionDir)SaltnPepperEngine\Externals\;$(SolutionDir)SaltnPepperEngine\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\include\;$(SolutionDir)SaltnPepperEngine\Externals\fmod\core\inc\;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,8 +118,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)SaltnPepperEngine\Externals\glfw\lib\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\lib\;$(SolutionDir)SaltnPepperEngine\Externals\msdf-atlas-gen\lib\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\libs\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SaltnPepperEngine.lib;glfw3.lib;assimp-vc143-mt.lib;msdf-atlas-gen.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)SaltnPepperEngine\Externals\glfw\lib\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\lib\;$(SolutionDir)SaltnPepperEngine\Externals\msdf-atlas-gen\lib\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\libs\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\\Externals\fmod\core\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SaltnPepperEngine.lib;glfw3.lib;assimp-vc143-mt.lib;msdf-atlas-gen.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,14 +138,20 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)SaltnPepperEngine\Externals\glfw\lib\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\lib\;$(SolutionDir)SaltnPepperEngine\Externals\msdf-atlas-gen\lib\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\libs\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SaltnPepperEngine.lib;glfw3.lib;assimp-vc143-mt.lib;msdf-atlas-gen.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)SaltnPepperEngine\Externals\glfw\lib\;$(SolutionDir)SaltnPepperEngine\Externals\assimp\lib\;$(SolutionDir)SaltnPepperEngine\Externals\msdf-atlas-gen\lib\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\Externals\Bullet3\libs\$(Configuration)\;$(SolutionDir)SaltnPepperEngine\\Externals\fmod\core\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SaltnPepperEngine.lib;glfw3.lib;assimp-vc143-mt.lib;msdf-atlas-gen.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\BuddyCharacter.cpp" />
+    <ClCompile Include="Source\EnemyCharacter.cpp" />
+    <ClCompile Include="Source\EntitySetup.cpp" />
+    <ClCompile Include="Source\GameManager.cpp" />
+    <ClCompile Include="Source\PlayerCharacter.cpp" />
     <ClCompile Include="Source\AIStuff\AIManager.cpp" />
     <ClCompile Include="Source\AIStuff\AIBaseAgent.cpp" />
     <ClCompile Include="Source\GraphicRuntime.cpp" />
+    <ClCompile Include="Source\TunnelLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SaltnPepperEngine\SaltnPepperEngine.vcxproj">
@@ -153,11 +159,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="References.h" />
+    <ClInclude Include="Source\BuddyCharacter.h" />
+    <ClInclude Include="Source\EnemyCharacter.h" />
+    <ClInclude Include="Source\GameManager.h" />
+    <ClInclude Include="Source\PlayerCharacter.h" />
     <ClInclude Include="Source\AIStuff\AIManager.h" />
     <ClInclude Include="Source\AIStuff\AIBaseAgent.h" />
     <ClInclude Include="Source\EntitySetup.h" />
+    <ClInclude Include="Source\IDamagable.h" />
     <ClInclude Include="Source\ScifiScreen.h" />
     <ClInclude Include="Source\SecurityCamera.h" />
+    <ClInclude Include="Source\TunnelLight.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

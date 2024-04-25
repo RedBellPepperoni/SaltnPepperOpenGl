@@ -5,6 +5,7 @@
 #include "Engine/Core/Rendering/Geometry/Mesh.h"
 #include "Engine/Core/Rendering/Geometry/Model.h"
 #include "Engine/Core/Rendering/Geometry/SkinnedModel.h"
+#include "Engine/Core/Rendering/Lights/Light.h"
 #include "Engine/Core/Animation/SkinnedAnimator.h"
 #include "Engine/Core/Rendering/Material/Material.h"
 #include "Engine/Core/Rendering/Camera/CameraController.h"
@@ -21,6 +22,9 @@
 #include <cereal/cereal.hpp>
 
 
+#include "Engine/Core/AudioSystem/AudioSource.h"
+#include "Engine/Core/AudioSystem/AudioListener.h"
+
 
 
 namespace SaltnPepperEngine
@@ -30,6 +34,13 @@ namespace SaltnPepperEngine
 	{
 		struct PhysicsProperties;
 		class RigidBody3D;
+		class RigidBody;
+	}
+
+	namespace Audio
+	{
+		class AudioSource;
+		class AudioListener;
 	}
 
 	using Physics::RigidBody3D;
@@ -120,7 +131,7 @@ namespace SaltnPepperEngine
 		struct SkinnedModelComponent
 		{
 			SkinnedModelComponent();
-			SkinnedModelComponent(const std::string& filePath);
+			SkinnedModelComponent(const std::string& filePath, bool duplicateLoad = false);
 			~SkinnedModelComponent();
 
 			SharedPtr<SkinnedModel> m_handle = nullptr;
@@ -133,7 +144,7 @@ namespace SaltnPepperEngine
 			AnimatorComponent();
 			~AnimatorComponent();
 
-			SharedPtr<SkinnedAnimator>& GetAnimator();
+			SkinnedAnimator* GetAnimator();
 
 			SharedPtr<SkinnedAnimator> m_animator = nullptr;
 		};
@@ -318,58 +329,50 @@ namespace SaltnPepperEngine
 		};
 
 
-		//class RigidBodyComponent
-		//{
-		//public:
-		//	RigidBodyComponent();
-		//	RigidBodyComponent(const RigidBodyComponent& other);
-		//	RigidBodyComponent(const PhysicsProperties& properties);
-		//	~RigidBodyComponent();
+		class AudioSourceComponent
+		{
+		public:
+			AudioSourceComponent(bool is3D);
+			~AudioSourceComponent() = default;
 
-		//	void OnImgui();
+			Audio::AudioSource* GetSource();
 
-		//	SharedPtr<RigidBody3D> GetRigidBody();
+		private:
 
-
-		//	template <typename Archive>
-		//	void save(Archive& archive) const
-		//	{
-		//		archive(*(m_rigidBody)); 
-		//		//archive(cereal::make_nvp("Body",m_rigidBody));
-		//	}
-
-		//	template <typename Archive>
-		//	void load(Archive& archive)
-		//	{
-		//		m_rigidBody = MakeShared<RigidBody3D>();
-		//		archive(*(m_rigidBody));
-		//		//archive(cereal::make_nvp("Body", m_rigidBody));
-		//	}
-
-		//private:
-
-		//	SharedPtr<RigidBody3D> m_rigidBody = nullptr;
-		//	bool m_ownBody = false;
-		//	
-		//};
+			SharedPtr<Audio::AudioSource> m_handle = nullptr;
+		};
 
 
-		/*using Physics::RigidBody_Dep;
+		class AudioListenerComponent
+		{
+		public:
+			AudioListenerComponent();
+			~AudioListenerComponent() = default;
+
+			Audio::AudioListener* GetListener();
+
+		private:
+
+			SharedPtr<Audio::AudioListener> m_handle = nullptr;
+		};
+
+
+		using Physics::RigidBody;
 
 		class RigidBodyComponent
 		{
 		public:
 
-			RigidBodyComponent();
+			RigidBodyComponent(const Transform& ecstransform, btCollisionShape* shape);
 			~RigidBodyComponent() = default;
 
-			SharedPtr<RigidBody_Dep>& GetRigidBody();
+			RigidBody* GetRigidBody();
 
 		private:
 
-			SharedPtr<RigidBody_Dep> m_rigidBody = nullptr;
+			SharedPtr<RigidBody> m_rigidBody = nullptr;
 
-		};*/
+		};
 
 		using namespace Physics;
 
@@ -383,6 +386,21 @@ namespace SaltnPepperEngine
 			BoxCollider* GetCollider();
 		private:
 			SharedPtr<BoxCollider> m_collider = nullptr;
+		};
+
+
+		class LightComponent
+		{
+		public :
+
+			LightComponent();
+			~LightComponent();
+
+			Light* GetLightData();
+
+		private:
+
+			SharedPtr<Light> m_light = nullptr;
 		};
 	}
 

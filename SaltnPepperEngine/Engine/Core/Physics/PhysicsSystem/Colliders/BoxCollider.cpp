@@ -30,24 +30,11 @@ namespace SaltnPepperEngine
 
 		void BoxCollider::DebugDraw(Transform transform)
 		{
-			//BoundingBox debugBox = boxShape->GetBoundingBoxTransformed(transform); 
+			BoundingBox debugBox = boxShape->GetBoundingBoxTransformed(transform); 
 
-			btBoxShape* shape = static_cast<btBoxShape*>(boxShape->GetNativeHandle());
 			
-			int edgeCount = shape->getNumEdges();
 
-			for (int i = 0; i < edgeCount; i++)
-			{
-				btVector3 pointOne;
-				btVector3 pointTwo;
-
-				shape->getEdge(i,pointOne,pointTwo);
-				
-				Rendering::DebugRenderer::DrawLine(FromBulletVector3(pointOne),FromBulletVector3(pointTwo),Vector4(0.0f,0.0f,1.0f,1.0f));
-			}
-
-
-			//Rendering::DebugRenderer::DebugDraw(debugBox, Vector4(0.0f, 0.0f, 1.0f, 1.0f),false);
+			Rendering::DebugRenderer::DebugDraw(debugBox, Vector4(0.0f, 0.0f, 1.0f, 1.0f),false);
 		}
 
 		BoundingBox BoxCollider::GetAABB(Transform& transform) const

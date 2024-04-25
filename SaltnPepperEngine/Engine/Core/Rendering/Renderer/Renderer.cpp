@@ -682,16 +682,22 @@ namespace SaltnPepperEngine
             }
 
 
-
-            // Two Passes one for no depth and other for Depthtested
-            DebugPassInternal(camera, false); 
-            DebugPassInternal(camera, true);
-
+            else
+            {
+                // Two Passes one for no depth and other for Depthtested
+                DebugPassInternal(camera, false);
+                DebugPassInternal(camera, true);
+            }
+           
 
             m_debugDrawData.lineIndexCount = 0;
             m_debugDrawData.lineDataBuffer.clear();
 
             DebugRenderer::Reset();
+
+           // LOG_ERROR("Lines {0}",DebugRenderer::m_debugInstance->GetLines().size());
+
+
         }
 
 
@@ -1022,7 +1028,7 @@ namespace SaltnPepperEngine
 
 
 
-        void Renderer::ProcessLightElement(Light& light, Transform& transform)
+        void Renderer::ProcessLightElement(Light* light, Transform& transform)
         {
             //size_t currentIndex = m_pipeline.lightElementList.size();  
 
@@ -1030,15 +1036,15 @@ namespace SaltnPepperEngine
             LightElement& lightElement = m_pipeline.lightElementList.emplace_back();
 
 
-            lightElement.color = light.color;
-            lightElement.direction = light.direction = Normalize(transform.GetForwardVector());
-            lightElement.innerAngle = light.innerAngle;
-            lightElement.outerAngle = light.outerAngle;
-            lightElement.intensity = light.intensity;
-            lightElement.position = transform.GetPosition();
-            light.position = transform.GetPosition();
-            lightElement.radius = light.radius;
-            lightElement.type = light.type;
+            lightElement.color = light->color;
+            lightElement.direction = light->direction = Normalize(transform.GetForwardVector());
+            lightElement.innerAngle = light->innerAngle;
+            lightElement.outerAngle = light->outerAngle;
+            lightElement.intensity = light->intensity;
+            lightElement.position = transform.GetWorldPosition();
+            light->position = transform.GetWorldPosition();
+            lightElement.radius = light->radius;
+            lightElement.type = light->type;
 
             //lightElement.uniformName = "uboLights.lights[" + std::to_string(currentIndex) + "]";
 
